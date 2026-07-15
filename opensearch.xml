@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://mozzilla.org/2006/browser/search/">
+    <ShortName>КАВ СТАЛЬ</ShortName>
+    <Description>Поиск металлопроката на сайте КАВ СТАЛЬ</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Image width="96" height="96" type="image/png">https://www.kavstal.ru/public/assets/images/icons/favicon/favicon-96x96.png</Image>
+    <Image width="16" height="16" type="image/vnd.microsoft.icon">https://www.kavstal.ru/public/assets/images/icons/favicon/favicon.ico</Image>
+    <Url type="text/html" method="get" template="https://www.kavstal.ru/market?search={searchTerms}"/>
+    <Url type="application/x-suggestions+json" method="get" template="https://www.kavstal.ru/api/search/suggest?q={searchTerms}"/>
+    <moz:SearchForm>https://www.kavstal.ru/market</moz:SearchForm>
+</OpenSearchDescription>

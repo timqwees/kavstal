@@ -1,0 +1,979 @@
+<?php declare(strict_types=1);
+
+namespace Setting\route\function;
+
+use App\Models\Router\Routes;
+use App\Models\Network\Network;
+use App\Controllers\{MailController, TelegramController};
+
+class Functions
+{
+    private static $_template_product = '_template_product';
+    private static $_template_category = '_template_category';
+    private static $_template_subcategory = '_template_subcategory';
+
+    // Кэш для списка продуктов
+    private static ?array $_productsCache = null;
+    private static ?array $_randomProductsCache = null;
+    private static int $_productsCacheTime = 0;
+    private static int $_cacheTtl = 300; // 5 минут кэширования
+
+    //======СПИСОК ФУНКЦИЙ / LIST FUNCTIONS===========//
+
+    # Главная страница || Main page (В маршрутных функциях писать, только маршрут в path болье ничего не нужно)
+    public function on_Main($path = '/public/index.php')
+    {
+        Routes::auto_element(dirname(__DIR__, 3) . $path, get_defined_vars());
+    }
+
+    /**
+     * @param string $productID ID продукта
+     * @return array
+     */
+    public static function showProduct(string $productID, ?string $table = null): array
+    {
+        $csvDir = self::getCsvDir();
+        $product = null;
+
+        if (is_dir($csvDir)) {
+            $tables = [];
+            if ($table) {
+                $tables = [$table];
+            } else {
+                $tables = self::listCsvTables($csvDir);
+            }
+
+            foreach ($tables as $tableName) {
+                $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
+                foreach ($rows as $row) {
+                    // Генерируем ID из названия для сравнения (как в normalizeProductRow)
+                    $rowName = $row['название'] ?? $row['марка'] ?? '';
+                    $rowId = self::slugify($rowName);
+                    if ($rowId === $productID || ($row['id'] ?? null) === $productID) {
+                        $product = self::normalizeProductRow($row);
+                        break 2;
+                    }
+                }
+            }
+        }
+
+        if (!$product && file_exists('./setting/config/product.json')) {
+            $productsData = json_decode(file_get_contents('./setting/config/product.json'), true);
+            foreach (($productsData['products'] ?? []) as $data) {
+                if (($data['id'] ?? null) === $productID) {
+                    $product = $data;
+                    break;
+                }
+            }
+        }
+
+        // undefined product return
+        if (!$product) {
+            $product = [
+                'title' => 'Uknown',
+                'name' => 'Uknown',
+                'description' => 'Uknown',
+                'units' => ['Uknown' => 0],
+                'in_stock' => false,
+                'rating' => 0,
+                'reviews' => 0,
+                'badge' => 'Uknown',
+                'image' => 'Uknown',
+                'specs' => [],
+                'seo' => [
+                    'metaTitle' => 'Uknown',
+                    'metaDescription' => 'Uknown',
+                    'keywords' => ['Uknown'],
+                    'canonicalUrl' => 'Uknown'
+                ]
+            ];
+        }
+
+        return (array) $product;
+    }
+
+    /**
+     * @return array
+     */
+    public static function site(): array
+    {
+        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
+        $baseUrl = $protocol . $host;
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+        $canonical = $baseUrl . $requestUri;
+
+        $data = [
+            'canonical' => $canonical,
+            'baseUrl' => $baseUrl,
+            'company' => 'КАВ СТАЛЬ',
+            'logo' => $baseUrl . '/public/assets/images/icons/logo/favicon.svg',
+            'phone' => '+7 (495) 989-24-20',
+            'phone_clean' => '74959892420',
+            'email' => 'zakaz@kavstal.ru',
+            'address' => 'г. Москва, ул. Семёновская площадь, дом 7',
+            'kartaAdress' => 'г. Москва, ул. Семёновская площадь, дом 7',
+            'workingHours' => 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00',
+            'deliveryAreas' => ['Москва', 'Московская область', 'Россия'],
+            'whatsapp' => '74959892420',
+            'telegram' => 'kavstal_bot',
+            'vk' => 'kavstal',
+            'instagram' => '',
+            'max' => ''
+        ];
+
+        $csvPath = self::getCsvDir() . '/siteinfo.csv';
+        if (file_exists($csvPath)) {
+            $rows = self::readCsvTable($csvPath);
+            if (!empty($rows)) {
+                $row = $rows[0];
+                if (!empty($row['телефон'])) $data['phone'] = $row['телефон'];
+                if (!empty($row['phone_clean'])) $data['phone_clean'] = $row['phone_clean'];
+                if (!empty($row['почта'])) $data['email'] = $row['почта'];
+                if (!empty($row['адрес'])) $data['address'] = $row['адрес'];
+                if (!empty($row['режим_работы'])) $data['workingHours'] = $row['режим_работы'];
+                if (!empty($row['зоны_доставки'])) $data['deliveryAreas'] = array_map('trim', explode(';', $row['зоны_доставки']));
+                if (!empty($row['компания'])) $data['company'] = $row['компания'];
+                if (!empty($row['whatsapp'])) $data['whatsapp'] = $row['whatsapp'];
+                if (!empty($row['telegram'])) $data['telegram'] = $row['telegram'];
+                if (!empty($row['vk'])) $data['vk'] = $row['vk'];
+                if (!empty($row['instagram'])) $data['instagram'] = $row['instagram'];
+            }
+        }
+
+        return $data;
+    }
+
+    public static function listProducts(?string $table = null): array
+    {
+        // Используем кэш если нет фильтра по таблице
+        if ($table === null && self::$_productsCache !== null && (time() - self::$_productsCacheTime) < self::$_cacheTtl) {
+            return self::$_productsCache;
+        }
+
+        $csvDir = self::getCsvDir();
+        $products = [];
+
+        if (is_dir($csvDir)) {
+            $tables = $table ? [$table] : self::listCsvTables($csvDir);
+            $categoriesSeen = [];
+            $subcategoriesSeen = [];
+            $categoryImages = [];
+            $subcategoryImages = [];
+
+            foreach ($tables as $tableName) {
+                $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
+                foreach ($rows as $row) {
+                    $product = self::normalizeProductRow($row);
+                    $product['_table'] = $tableName;
+                    $products[] = $product;
+
+                    // Собираем уникальные категории из русских колонок
+                    $catTitle = trim($row['категория'] ?? $row['category_title'] ?? '');
+                    if ($catTitle && !isset($categoriesSeen[$catTitle])) {
+                        $categoriesSeen[$catTitle] = self::slugify($catTitle);
+                    }
+
+                    // Собираем уникальные подкатегории (уникальные в рамках категории)
+                    $subTitle = trim($row['подкатегория'] ?? $row['subcategory_title'] ?? '');
+                    $subKey = $catTitle . '::' . $subTitle; // уникальный ключ
+                    if ($subTitle && !isset($subcategoriesSeen[$subKey])) {
+                        $subcategoriesSeen[$subKey] = [
+                            'slug' => self::slugify($subTitle),
+                            'parent_title' => $catTitle,
+                            'table' => $tableName,
+                            'title' => $subTitle,
+                        ];
+                    }
+
+                    // Собираем первое фото для каждой категории и подкатегории
+                    $pImages = $product['images'] ?? [];
+                    $firstImg = null;
+                    foreach ($pImages as $img) {
+                        if ($img && strpos($img, 'unknown.png') === false) { $firstImg = $img; break; }
+                    }
+                    if ($firstImg) {
+                        if ($catTitle && empty($categoryImages[$catTitle])) { $categoryImages[$catTitle] = $firstImg; }
+                        if ($subTitle && empty($subcategoryImages[$subKey])) { $subcategoryImages[$subKey] = $firstImg; }
+                    }
+                }
+            }
+
+            // Добавляем виртуальные записи категорий (badge = 'Категория')
+            foreach ($categoriesSeen as $catTitle => $catSlug) {
+                array_unshift($products, [
+                    'id' => $catSlug,
+                    'title' => $catTitle,
+                    'name' => $catTitle,
+                    'description' => '',
+                    'units' => [],
+                    'in_stock' => false,
+                    'rating' => 0,
+                    'reviews' => 0,
+                    'badge' => 'Категория',
+                    'images' => [$categoryImages[$catTitle] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
+                    'specs' => [],
+                    'seo' => [
+                        'metaTitle' => $catTitle . ' | Купить в Москве | КАВ СТАЛЬ',
+                        'metaDescription' => $catTitle . ' - купить в Москве по выгодной цене.',
+                        'keywords' => [],
+                        'canonicalUrl' => '/market/katalog/' . $catSlug,
+                    ],
+                    'categories' => [],
+                    '_table' => null,
+                ]);
+            }
+
+            // Добавляем виртуальные записи подкатегорий (badge = 'Подкатегория')
+            foreach ($subcategoriesSeen as $subKey => $subData) {
+                $parentSlug = $categoriesSeen[$subData['parent_title']] ?? '';
+                // Уникальный slug включает родительскую категорию
+                $uniqueSlug = $parentSlug . '-' . $subData['slug'];
+                array_unshift($products, [
+                    'id' => $uniqueSlug,
+                    'title' => $subData['title'],
+                    'name' => $subData['title'],
+                    'description' => '',
+                    'units' => [],
+                    'in_stock' => false,
+                    'rating' => 0,
+                    'reviews' => 0,
+                    'badge' => 'Подкатегория',
+                    'images' => [$subcategoryImages[$subKey] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
+                    'specs' => [],
+                    'seo' => [
+                        'metaTitle' => $subData['title'] . ' | Купить в Москве | КАВ СТАЛЬ',
+                        'metaDescription' => $subData['title'] . ' - купить в Москве по выгодной цене.',
+                        'keywords' => [],
+                        'canonicalUrl' => '/market/katalog/' . $parentSlug . '/' . $uniqueSlug,
+                    ],
+                    'categories' => [
+                        'id' => $uniqueSlug,
+                        'parent_id' => $parentSlug,
+                    ],
+                    '_table' => $subData['table'],
+                ]);
+            }
+
+            // Сохраняем в кэш если нет фильтра
+            if ($table === null) {
+                self::$_productsCache = $products;
+                self::$_productsCacheTime = time();
+            }
+            return $products;
+        }
+
+        if (file_exists('./setting/config/product.json')) {
+            $productsData = json_decode(file_get_contents('./setting/config/product.json'), true);
+            return (array) ($productsData['products'] ?? []);
+        }
+
+        return [];
+    }
+
+    /**
+     * Получить все товары из конкретной таблицы (подкатегории)
+     * @param string $tableName Имя таблицы (например 'armatura')
+     * @return array
+     */
+    public static function showTable(string $tableName): array
+    {
+        $csvDir = self::getCsvDir();
+        $path = $csvDir . '/' . $tableName . '.csv';
+
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $rows = self::readCsvTable($path);
+        $products = [];
+        foreach ($rows as $row) {
+            $product = self::normalizeProductRow($row);
+            $product['_table'] = $tableName;
+            $products[] = $product;
+        }
+
+        return $products;
+    }
+
+    /**
+     * @param object $data Данные письма
+     * @return void
+     */
+    public static function sendMail(object $data): void
+    {
+        $message = "Информация:\n";
+        foreach ($data as $key => $value) {
+            $message .= ucfirst($key) . ': ' . $value . "\n";
+        }
+        try {
+            (new MailController())->sendMail('zakaz@kavstal.ru', 'Заявление с сайта', $message);
+        } catch (\Exception $e) {
+            error_log('Mail Error: ' . $e->getMessage());
+        }
+        if (!isset($data->both))
+            Network::onRedirect('/');
+    }
+
+    /**
+     * @param object $data Данные телеграм
+     * @return void
+     */
+    public static function sendTelegram(object $data): void
+    {
+        $message = strval("Информация:\n");
+        foreach ($data as $key => $value) {
+            $message .= ucfirst($key) . ': ' . $value . "\n";
+        }
+        try {
+            $token = $_ENV['TELEGRAM_BOT_TOKEN'] ?? getenv('TELEGRAM_BOT_TOKEN') ?: '';
+            $chatId = $_ENV['TELEGRAM_CHAT_ID'] ?? getenv('TELEGRAM_CHAT_ID') ?: '';
+            if ($token && $chatId) {
+                (new TelegramController())->sendMessage($token, [$chatId], $message);
+            }
+        } catch (\Exception $e) {
+            error_log('Telegram API Error: ' . $e->getMessage());
+        }
+        if (!isset($data->both))
+            Network::onRedirect('/');
+    }
+
+    /**
+     * @param object $data
+     * @return void
+     */
+    public static function sendBoth(object $data): void
+    {
+        $data = (array) $data;
+        $data['both'] = true;
+        try {
+            self::sendMail((object) $data);
+            self::sendTelegram((object) $data);
+        } catch (\Exception $e) {
+            error_log('ошибка' . $e->getMessage());
+        }
+        Network::onRedirect('/');
+        exit(1);
+    }
+
+    private static function getCsvDir(): string
+    {
+        return './setting/config/excel';
+    }
+
+    private static function listCsvTables(string $csvDir): array
+    {
+        $files = @scandir($csvDir);
+        if (!is_array($files)) {
+            return [];
+        }
+
+        $tables = [];
+        foreach ($files as $file) {
+            if (!is_string($file)) {
+                continue;
+            }
+            if (strtolower(pathinfo($file, PATHINFO_EXTENSION)) !== 'csv') {
+                continue;
+            }
+            $name = pathinfo($file, PATHINFO_FILENAME);
+            if ($name === 'siteinfo') {
+                continue;
+            }
+            $tables[] = $name;
+        }
+        return $tables;
+    }
+
+    public static function readCsvTable(string $path): array
+    {
+        if (!file_exists($path)) {
+            return [];
+        }
+
+        $handle = fopen($path, 'r');
+        if ($handle === false) {
+            return [];
+        }
+
+        $headers = null;
+        $rows = [];
+        while (($data = fgetcsv($handle, 0, ',', '"', "")) !== false) {
+            if ($headers === null) {
+                // Remove BOM from first header if present
+                $headers = array_map(function ($h) {
+                    $h = (string) $h;
+                    // Remove UTF-8 BOM if present
+                    if (substr($h, 0, 3) === "\xEF\xBB\xBF") {
+                        $h = substr($h, 3);
+                    }
+                    return trim($h);
+                }, $data);
+                continue;
+            }
+            if ($headers === []) {
+                continue;
+            }
+            $row = [];
+            foreach ($headers as $i => $key) {
+                if ($key === '') {
+                    continue;
+                }
+                $value = isset($data[$i]) ? (string) $data[$i] : '';
+                // Remove UTF-8 BOM if present
+                if (substr($value, 0, 3) === "\xEF\xBB\xBF") {
+                    $value = substr($value, 3);
+                }
+                // Remove surrounding quotes
+                $value = trim($value, '"');
+                $row[$key] = trim($value);
+            }
+            $rows[] = $row;
+        }
+
+        fclose($handle);
+        return $rows;
+    }
+
+    public static function normalizeProductRow(array $row): array
+    {
+        // Маппинг русских колонок → внутренние ключи
+        $марка = $row['марка'] ?? $row['title'] ?? '';  // Марка стали (ст3, С255, А500С)
+        $название = $row['название'] ?? $row['name'] ?? '';  // Полное название товара
+        $описание = $row['описание'] ?? $row['description'] ?? '';
+        $диаметр = $row['диаметр'] ?? '';
+        $цена = $row['цена'] ?? '';
+        $единица = $row['единица'] ?? 'тн';
+        $в_наличии = $row['в_наличии'] ?? $row['in_stock'] ?? '0';
+        $рейтинг = $row['рейтинг'] ?? $row['rating'] ?? '0';
+        $отзывы = $row['отзывы'] ?? $row['reviews'] ?? '0';
+        $фото = $row['фото'] ?? $row['images'] ?? '';
+        $ключевые = $row['ключевые_слова'] ?? $row['keywords'] ?? '';
+        $категория = $row['категория'] ?? '';
+        $подкатегория = $row['подкатегория'] ?? '';
+
+        // Авто-ID из названия (slugify)
+        $id = $row['id'] ?? self::slugify($название);
+
+        // Авто-units из цена + единица (поддержка множественных через ;)
+        $units = [];
+        if ($цена !== '' && $единица !== '') {
+            $prices = array_map('trim', explode(';', $цена));
+            $units_list = array_map('trim', explode(';', $единица));
+            foreach ($units_list as $i => $unit) {
+                if ($unit !== '' && isset($prices[$i]) && $prices[$i] !== '') {
+                    $units[$unit] = (float) str_replace(' ', '', $prices[$i]);
+                }
+            }
+        } elseif (isset($row['units'])) {
+            $decoded = json_decode((string) $row['units'], true);
+            $units = is_array($decoded) ? $decoded : [];
+        }
+
+        // Авто-images
+        $images = [];
+        if ($фото !== '') {
+            $images = array_values(array_filter(array_map('trim', explode(';', (string) $фото))));
+        }
+
+        // Авто-keywords
+        $keywords = [];
+        if ($ключевые !== '') {
+            $keywords = array_values(array_filter(array_map('trim', explode(';', (string) $ключевые))));
+        }
+
+        // Авто-categories из категория/подкатегория
+        $categorySlug = $категория ? self::slugify($категория) : null;
+        $subcategorySlug = $подкатегория ? self::slugify($подкатегория) : null;
+        $categories = [];
+        if ($подкатегория || $категория) {
+            // Уникальный ID подкатегории включает категорию
+            $uniqueSubSlug = ($categorySlug && $subcategorySlug) ? $categorySlug . '-' . $subcategorySlug : $subcategorySlug;
+            $categories = [
+                'id' => $uniqueSubSlug ?? $categorySlug,
+                'parent_id' => $подкатегория ? $categorySlug : null,
+                'title' => $категория,
+                'subcategory_title' => $подкатегория,
+            ];
+        }
+        // Fallback на старые колонки categories_id / categories_parent_id
+        if (empty($categories) && (isset($row['categories_id']) || isset($row['category_id']))) {
+            $catId = $row['subcategory_id'] ?? $row['categories_id'] ?? $row['category_id'] ?? null;
+            $parentId = $row['categories_parent_id'] ?? ($row['subcategory_id'] ? ($row['category_id'] ?? null) : null);
+            $categories = ['id' => $catId, 'parent_id' => $parentId];
+        }
+
+        // specs - из JSON колонки specs или из spec_* колонок CSV
+        $specs = [];
+        if (isset($row['specs'])) {
+            $decoded = json_decode((string) $row['specs'], true);
+            $specs = is_array($decoded) ? $decoded : [];
+        }
+
+        // Собираем specs из колонок вида spec_Название
+        foreach ($row as $key => $value) {
+            if (str_starts_with($key, 'spec_') && $value !== '' && $value !== null) {
+                $specName = substr($key, 5); // Убираем префикс "spec_"
+                if (!isset($specs[$specName])) {
+                    $specs[$specName] = $value;
+                }
+            }
+        }
+
+        // Авто-SEO
+        $specsPart = '';
+        if (!empty($specs)) {
+            $specLabels = ['ГОСТ', 'Марка стали', 'диаметр', 'стенка', 'ширина', 'длина', 'толщина'];
+            $parts = [];
+            foreach ($specLabels as $label) {
+                if (!empty($specs[$label])) {
+                    $parts[] = $specs[$label];
+                }
+            }
+            if (!empty($parts)) {
+                $specsPart = ' (' . implode(', ', $parts) . ')';
+            }
+        }
+        $metaDesc = $описание;
+        if (empty($metaDesc)) {
+            $metaDesc = $название . $specsPart . ' – продажа с доставкой по Москве и МО. Цена от ' . ($цена ?: 'уточняйте') . ' ₽/тн, наличие на складе.';
+        }
+        $seo = [
+            'metaTitle' => $название . $specsPart . ' – цена за тонну, характеристики, купить в Москве | КАВ СТАЛЬ',
+            'metaDescription' => $metaDesc,
+            'keywords' => $keywords,
+            'canonicalUrl' => '',
+        ];
+        // Авто-canonicalUrl из категория/подкатегория/марка
+        if ($категория || $подкатегория) {
+            $parts = array_filter([$categorySlug, $subcategorySlug, $id]);
+            $seo['canonicalUrl'] = '/market/katalog/' . implode('/', $parts);
+        }
+        // Fallback на старые SEO-колонки
+        if (isset($row['seo_metaTitle']))
+            $seo['metaTitle'] = $row['seo_metaTitle'];
+        if (isset($row['seo_metaDescription']))
+            $seo['metaDescription'] = $row['seo_metaDescription'];
+        if (isset($row['seo_canonicalUrl']))
+            $seo['canonicalUrl'] = $row['seo_canonicalUrl'];
+
+        // in_stock
+        $inStock = in_array(strtolower((string) $в_наличии), ['1', 'true', 'yes', 'y'], true);
+
+        return [
+            'id' => $id,
+            'title' => $марка, // Марка стали для отображения в таблице
+            'name' => $название,
+            'description' => $описание,
+            'диаметр' => $диаметр,
+            'units' => $units,
+            'in_stock' => $inStock,
+            'rating' => (float) $рейтинг,
+            'reviews' => (int) $отзывы,
+            'images' => $images,
+            'specs' => $specs,
+            'keywords' => $keywords,
+            'seo' => $seo,
+            'categories' => $categories,
+        ];
+    }
+
+    /**
+     * Генерация страниц товаров по шаблону
+     * @param string $templatePath Путь к шаблону
+     * @param string $outputBasePath Базовый путь для создания страниц
+     * @param array $products Список товаров для генерации
+     * @return array Результат генерации
+     */
+    public static function generateProductPages(string $templatePath, string $outputBasePath, array $products): array
+    {
+        $result = ['created' => [], 'errors' => []];
+
+        if (!is_dir($templatePath)) {
+            $result['errors'][] = "Template not found: $templatePath";
+            return $result;
+        }
+
+        foreach ($products as $product) {
+            $productId = $product['id'] ?? null;
+            if (!$productId) {
+                continue;
+            }
+
+            $categoryId = $product['categories']['id'] ?? 'uncategorized';
+            $parentId = $product['categories']['parent_id'] ?? null;
+
+            // Формируем путь: base/parent/category/product или base/category/product
+            if ($parentId) {
+                $productPath = "$outputBasePath/$parentId/$categoryId/$productId";
+            } else {
+                $productPath = "$outputBasePath/$categoryId/$productId";
+            }
+
+            // Создаём директории
+            if (!is_dir($productPath)) {
+                if (!mkdir($productPath, 0755, true)) {
+                    $result['errors'][] = "Failed to create directory: $productPath";
+                    continue;
+                }
+            }
+
+            // Копируем шаблон товара
+            $templateIndex = "$templatePath/" . self::$_template_product . "/index.php";
+            $targetIndex = "$productPath/index.php";
+
+            if (!file_exists($templateIndex)) {
+                $result['errors'][] = "Template index not found: $templateIndex";
+                continue;
+            }
+
+            $content = file_get_contents($templateIndex);
+            // Заменяем productID в шаблоне
+            $content = preg_replace("/\\\$productID\s*=\s*['\"][^'\"]*['\"];/", "\$productID = '$productId';", $content);
+
+            if (file_put_contents($targetIndex, $content) === false) {
+                $result['errors'][] = "Failed to write: $targetIndex";
+                continue;
+            }
+
+            $result['created'][] = $productPath;
+        }
+
+        return $result;
+    }
+
+    public static function slugify(string $text, string $separator = '-'): string
+    {
+        $map = [
+            'а' => 'a',
+            'б' => 'b',
+            'в' => 'v',
+            'г' => 'g',
+            'д' => 'd',
+            'е' => 'e',
+            'ё' => 'e',
+            'ж' => 'zh',
+            'з' => 'z',
+            'и' => 'i',
+            'й' => 'y',
+            'к' => 'k',
+            'л' => 'l',
+            'м' => 'm',
+            'н' => 'n',
+            'о' => 'o',
+            'п' => 'p',
+            'р' => 'r',
+            'с' => 's',
+            'т' => 't',
+            'у' => 'u',
+            'ф' => 'f',
+            'х' => 'kh',
+            'ц' => 'ts',
+            'ч' => 'ch',
+            'ш' => 'sh',
+            'щ' => 'shch',
+            'ы' => 'y',
+            'э' => 'e',
+            'ю' => 'yu',
+            'я' => 'ya',
+            'ь' => '',
+            'ъ' => '',
+        ];
+
+        $text = mb_strtolower($text);
+        $result = '';
+
+        $chars = preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY);
+        foreach ($chars as $char) {
+            if (isset($map[$char])) {
+                $result .= $map[$char];
+                continue;
+            }
+            if (preg_match('/[a-z0-9]/', $char) === 1) {
+                $result .= $char;
+                continue;
+            }
+            $result .= $separator;
+        }
+
+        $result = preg_replace('/' . preg_quote($separator, '/') . '+/', $separator, $result) ?? $result;
+        $result = trim($result, $separator);
+        return $result;
+    }
+
+    /**
+     * Автоматическая генерация страницы если она не существует
+     * @param string $targetPath Путь к целевой странице (например ./public/market/katalog/sortovoy-prokat/ugolok/index.php)
+     * @param array $routeParams Параметры роута (katalog, name, subcategory и т.д.)
+     * @return bool Успешно ли создана страница
+     */
+    public static function autoGeneratePage(string $targetPath, array $routeParams = []): bool
+    {
+        // Если файл уже существует — ничего не делаем
+        if (file_exists($targetPath)) {
+            return true;
+        }
+
+        $baseDir = dirname(__DIR__, 3); // Корень проекта
+        $relativePath = str_replace($baseDir, '', $targetPath);
+        $parts = explode('/', trim($relativePath, '/'));
+
+        // Определяем тип страницы по структуре пути (без index.php)
+        // public/market/katalog/{katalog}/index.php — категория (5 частей с index.php, 4 без)
+        // public/market/katalog/{katalog}/{name}/index.php — подкатегория (6 частей с index.php, 5 без)
+        // public/market/katalog/{katalog}/{subcategory}/{name}/index.php — товар (7 частей с index.php, 6 без)
+
+        // Убираем 'index.php' из подсчёта
+        $partsWithoutIndex = array_filter($parts, fn($p) => $p !== 'index.php');
+        $count = count($partsWithoutIndex);
+
+        $isCategory = $count === 4 && $parts[0] === 'public' && $parts[1] === 'market' && $parts[2] === 'katalog';
+        $isSubcategory = $count === 5 && $parts[0] === 'public' && $parts[1] === 'market' && $parts[2] === 'katalog';
+        $isProduct = $count === 6 && $parts[0] === 'public' && $parts[1] === 'market' && $parts[2] === 'katalog';
+
+        $templateBase = './public/market/katalog/.template';
+        $outputDir = dirname($targetPath);
+
+        // Создаём директории
+        if (!is_dir($outputDir)) {
+            if (!mkdir($outputDir, 0755, true)) {
+                error_log("Failed to create directory: $outputDir");
+                return false;
+            }
+        }
+
+        // Выбираем шаблон в зависимости от типа
+        if ($isCategory) {
+            $templatePath = "$templateBase/" . self::$_template_category . "/index.php";
+        } elseif ($isSubcategory) {
+            $templatePath = "$templateBase/" . self::$_template_subcategory . "/index.php";
+        } elseif ($isProduct) {
+            $templatePath = "$templateBase/" . self::$_template_product . "/index.php";
+        } else {
+            error_log("Unknown page type for path: $relativePath");
+            return false;
+        }
+
+        if (!file_exists($templatePath)) {
+            error_log("Template not found: $templatePath");
+            return false;
+        }
+
+        // Копируем шаблон как есть — QweesCore сам подставит переменные при вызове
+        if (!copy($templatePath, $targetPath)) {
+            error_log("Failed to copy template to: $targetPath");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Получение топ-N товаров для главной страницы (оптимизировано)
+     * @param int $limit Количество товаров (по умолчанию 10)
+     * @return array Товары с иконками, ценами и наличием
+     */
+    public static function getTopProducts(int $limit = 10): array
+    {
+        $csvDir = self::getCsvDir();
+        $result = [];
+        $found = 0;
+
+        // Иконки для категорий
+        $categoryIcons = [
+            'арматура' => 'fa-bars-staggered',
+            'балка' => 'fa-building',
+            'круг' => 'fa-circle',
+            'лист' => 'fa-square',
+            'полоса' => 'fa-minus',
+            'проволока' => 'fa-circle',
+            'профнастил' => 'fa-border-all',
+            'свая' => 'fa-hexagon',
+            'рельс' => 'fa-square',
+            'сетка' => 'fa-border-all',
+            'труба' => 'fa-minus',
+            'уголок' => 'fa-angle-right',
+            'швеллер' => 'fa-shield-alt',
+            'метиз' => 'fa-bolt',
+            'нержавеющий' => 'fa-th',
+            'цветной' => 'fa-palette',
+            'б/у' => 'fa-recycle',
+        ];
+
+        if (!is_dir($csvDir)) {
+            return [];
+        }
+
+        $files = glob($csvDir . '/*.csv');
+
+        foreach ($files as $file) {
+            if ($found >= $limit)
+                break;
+
+            $rows = self::readCsvTable($file);
+            $tableName = basename($file, '.csv');
+
+            foreach ($rows as $row) {
+                if ($found >= $limit)
+                    break;
+
+                $product = self::normalizeProductRow($row);
+                if (empty($product['name']))
+                    continue;
+
+                // Получаем цену
+                $price = 0;
+                if (!empty($product['units'])) {
+                    $price = $product['units'][array_key_first($product['units'])] ?? 0;
+                }
+
+                // Определяем иконку по категории
+                $icon = 'fa-box';
+                $categoryTitle = mb_strtolower($product['categories']['title'] ?? '');
+                foreach ($categoryIcons as $keyword => $faIcon) {
+                    if (mb_stripos($categoryTitle, $keyword) !== false) {
+                        $icon = $faIcon;
+                        break;
+                    }
+                }
+
+                $result[] = [
+                    'name' => $product['name'],
+                    'title' => $product['title'] ?? '',
+                    'price' => $price,
+                    'priceDisplay' => $price > 0 ? number_format($price, 0, '', ' ') . ' ₽/т' : 'Цена по запросу',
+                    'inStock' => $product['in_stock'] ?? false,
+                    'stockText' => ($product['in_stock'] ?? false) ? 'В наличии' : 'Под заказ',
+                    'availability' => ($product['in_stock'] ?? false) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    'url' => $product['seo']['canonicalUrl'] ?? '/market',
+                    'icon' => $icon,
+                ];
+
+                $found++;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Получение случайных товаров (оптимизировано)
+     * @param int $limit Количество товаров (по умолчанию 10)
+     * @return array Случайные товары с иконками, ценами и наличием
+     */
+    public static function getRandomProducts(int $limit = 10): array
+    {
+        // Используем кэш
+        if (self::$_randomProductsCache !== null && (time() - self::$_productsCacheTime) < self::$_cacheTtl) {
+            return array_slice(self::$_randomProductsCache, 0, $limit);
+        }
+
+        $csvDir = self::getCsvDir();
+        $allProducts = [];
+        $targetCount = $limit * 3; // Собираем в 3 раза больше для случайности
+
+        // Иконки для категорий
+        $categoryIcons = [
+            'арматура' => 'fa-bars-staggered',
+            'балка' => 'fa-building',
+            'круг' => 'fa-circle',
+            'лист' => 'fa-square',
+            'полоса' => 'fa-minus',
+            'проволока' => 'fa-circle',
+            'профнастил' => 'fa-border-all',
+            'свая' => 'fa-hexagon',
+            'рельс' => 'fa-square',
+            'сетка' => 'fa-border-all',
+            'труба' => 'fa-minus',
+            'уголок' => 'fa-angle-right',
+            'швеллер' => 'fa-shield-alt',
+            'метиз' => 'fa-bolt',
+            'нержавеющий' => 'fa-th',
+            'цветной' => 'fa-palette',
+            'б/у' => 'fa-recycle',
+        ];
+
+        if (!is_dir($csvDir)) {
+            return [];
+        }
+
+        $files = glob($csvDir . '/*.csv');
+        shuffle($files); // Перемешиваем файлы для случайности
+
+        foreach ($files as $file) {
+            // Ранний выход если уже достаточно товаров
+            if (count($allProducts) >= $targetCount) {
+                break;
+            }
+
+            $rows = self::readCsvTable($file);
+            shuffle($rows); // Перемешиваем строки внутри файла
+
+            foreach ($rows as $row) {
+                // Ранний выход если уже достаточно товаров
+                if (count($allProducts) >= $targetCount) {
+                    break 2;
+                }
+
+                $product = self::normalizeProductRow($row);
+                if (empty($product['name']))
+                    continue;
+
+                // Получаем цену
+                $price = 0;
+                if (!empty($product['units'])) {
+                    $price = $product['units'][array_key_first($product['units'])] ?? 0;
+                }
+
+                // Определяем иконку по категории
+                $icon = 'fa-box';
+                $categoryTitle = mb_strtolower($product['categories']['title'] ?? '');
+                foreach ($categoryIcons as $keyword => $faIcon) {
+                    if (mb_stripos($categoryTitle, $keyword) !== false) {
+                        $icon = $faIcon;
+                        break;
+                    }
+                }
+
+                $allProducts[] = [
+                    'name' => $product['name'],
+                    'title' => $product['title'] ?? '',
+                    'price' => $price,
+                    'priceDisplay' => $price > 0 ? number_format($price, 0, '', ' ') . ' ₽/т' : 'Цена по запросу',
+                    'inStock' => $product['in_stock'] ?? false,
+                    'stockText' => ($product['in_stock'] ?? false) ? 'В наличии' : 'Под заказ',
+                    'availability' => ($product['in_stock'] ?? false) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    'url' => $product['seo']['canonicalUrl'] ?? '/market',
+                    'icon' => $icon,
+                ];
+            }
+        }
+
+        // Перемешиваем и сохраняем в кэш
+        shuffle($allProducts);
+        self::$_randomProductsCache = $allProducts;
+        self::$_productsCacheTime = time();
+
+        // Возвращаем только нужное количество
+        return array_slice($allProducts, 0, $limit);
+    }
+
+    /**
+     * Отдача файла по прямому пути
+     */
+    public static function getFile(string $path): void
+    {
+        $file = __DIR__ . '/../../../' . $path;
+
+        if (!file_exists($file) || is_dir($file)) {
+            http_response_code(404);
+            echo 'File not found';
+            return;
+        }
+
+        $mime = mime_content_type($file) ?: 'application/octet-stream';
+        header('Content-Type: ' . $mime);
+        readfile($file);
+        exit;
+    }
+}
