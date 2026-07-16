@@ -546,7 +546,7 @@ class Network extends Session
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <title>Call to unknown method: <?= htmlspecialchars($callbackName) ?></title>
-            <script src='https://cdn.tailwindcss.com'></script>
+            <link rel='stylesheet' href='/public/assets/styles/tailwind.min.css'>
         </head>
 
         <body class='flex items-center justify-center h-[100dvh]'>

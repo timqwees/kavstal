@@ -69,6 +69,17 @@ $(document).ready(() => {
             });
         });
         
+        // News Swiper
+        if (document.querySelector('.newsSwiper')) {
+            new Swiper('.newsSwiper', {
+                loop: false,
+                slidesPerView: 'auto',
+                spaceBetween: 14,
+                freeMode: true,
+                navigation: { nextEl: '#newsSwiperNext', prevEl: '#newsSwiperPrev' },
+            });
+        }
+
         console.log('Все слайдеры инициализированы!');
         
     } else {

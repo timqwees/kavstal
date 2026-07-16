@@ -39,17 +39,32 @@ class Sitemap
     {
         $filePath = './file/sitemap_' . $format . '.xml';
 
-        // Всегда генерируем свежий sitemap
+        // Проверяем кэш (1 час)
+        if (file_exists($filePath)) {
+            $fileAge = time() - filemtime($filePath);
+            if ($fileAge < 3600) {
+                $etag = md5_file($filePath);
+                if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+                    http_response_code(304);
+                    return;
+                }
+                header('Content-Type: application/xml; charset=utf-8');
+                header('ETag: ' . $etag);
+                header('Cache-Control: public, max-age=3600');
+                readfile($filePath);
+                return;
+            }
+        }
+
+        // Генерируем свежий sitemap
         $xml = self::generate($format);
         $etag = md5($xml);
 
-        // Проверяем ETag заголовок от клиента
         if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
             http_response_code(304);
             return;
         }
 
-        // Сохраняем в файл для статической отдачи через .htaccess
         if ($createFile) {
             self::saveToFile($filePath, $xml);
         }

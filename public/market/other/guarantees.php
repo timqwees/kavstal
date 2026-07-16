@@ -42,26 +42,9 @@
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-    <style>
-        .mobile-menu-overlay {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-menu-toggle span:nth-child(1) {
-            transform-origin: top left;
-        }
-        .mobile-menu-toggle span:nth-child(3) {
-            transform-origin: bottom left;
-        }
-    </style>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
     <!-- Schema.org Organization with Warranty -->
     <script type="application/ld+json">
@@ -119,109 +102,7 @@
 
 <body class="bg-gray-50">
 
-    <!-- Top Bar -->
-    <div class="bg-gray-900 text-gray-300 text-xs hidden lg:block">
-        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-9">
-            <div class="flex items-center space-x-4">
-                <span><i class="far fa-clock mr-1"></i>Работаем с 9:00 до 18:00</span>
-                <span><i class="fas fa-truck mr-1"></i>Доставка по Москве и МО</span>
-            </div>
-            <div class="flex items-center space-x-6">
-                <a href="/delivery" class="hover:text-white transition">Доставка и оплата</a>
-                <a href="/guarantees" class="hover:text-white transition">Гарантии</a>
-                <a href="/contacts" class="hover:text-white transition">Контакты</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <nav class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between h-16 lg:h-20">
-                <a href="/" class="flex items-center flex-shrink-0">
-                    <img loading="lazy" class="h-10 lg:h-12"
-                        src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg"
-                        alt="<?= htmlspecialchars($site['company']) ?>">
-                </a>
-                <div class="hidden lg:flex items-center space-x-1">
-                    <a href="/market" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Каталог</a>
-                    <a href="/services" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Услуги</a>
-                    <a href="/about" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">О компании</a>
-                    <a href="/delivery" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Доставка и оплата</a>
-                    <a href="/guarantees" class="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 rounded-lg transition">Гарантии</a>
-                    <a href="/contacts" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Контакты</a>
-                </div>
-                <div class="hidden lg:flex items-center space-x-4">
-                    <a href="/cart" class="relative p-2 text-gray-700 hover:text-red-600 transition">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span class="cart-count-badge absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">0</span>
-                    </a>
-                    <div class="text-right">
-                        <a href="tel:+74959892420"
-                            class="text-lg font-bold text-gray-900 hover:text-red-600 transition whitespace-nowrap">
-                            +7 (495) 989-24-20
-                        </a>
-                        <p class="text-xs text-gray-500">Пн-Пт 9:00-18:00</p>
-                    </div>
-                    <a href="tel:+74959892420"
-                        class="bg-red-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 transition flex items-center gap-2">
-                        <i class="fas fa-phone-alt"></i>
-                        <span class="hidden xl:inline">Заказать звонок</span>
-                    </a>
-                </div>
-                <div class="lg:hidden flex items-center gap-3">
-                    <a href="/cart" class="relative text-gray-700 p-2">
-                        <i class="fas fa-shopping-cart text-lg"></i>
-                        <span class="cart-count-badge absolute -top-0.5 -right-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">0</span>
-                    </a>
-                    <a href="tel:+74959892420" class="text-gray-700 p-2">
-                        <i class="fas fa-phone-alt text-lg"></i>
-                    </a>
-                    <button class="mobile-menu-toggle p-2" aria-label="Открыть меню">
-                        <div class="relative w-6 h-5">
-                            <span class="absolute top-0 left-0 w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
-                            <span class="absolute top-2 left-0 w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
-                            <span class="absolute top-4 left-0 w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
-                        </div>
-                    </button>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu-overlay fixed inset-0 bg-black/50 z-40 lg:hidden">
-        <div class="absolute right-0 top-0 h-full w-72 bg-white shadow-xl p-6">
-            <button class="mobile-menu-overlay-close text-gray-500 hover:text-gray-700 mb-6">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-            <nav class="space-y-2">
-                <a href="/market" class="block py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium">Каталог</a>
-                <a href="/services" class="block py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium">Услуги</a>
-                <a href="/about" class="block py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium">О компании</a>
-                <a href="/delivery" class="block py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium">Доставка и оплата</a>
-                <a href="/guarantees" class="block py-3 px-4 text-red-600 bg-red-50 rounded-lg font-medium">Гарантии</a>
-                <a href="/contacts" class="block py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium">Контакты</a>
-                <div class="border-t border-gray-200 my-4"></div>
-                <a href="tel:+74959892420" class="flex items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium">
-                    <i class="fas fa-phone-alt mr-3 text-red-600"></i>
-                    +7 (495) 989-24-20
-                </a>
-            </nav>
-        </div>
-    </div>
-    <script>
-    document.querySelector('.mobile-menu-toggle')?.addEventListener('click', function() {
-        document.querySelector('.mobile-menu-overlay')?.classList.toggle('active');
-    });
-    document.querySelector('.mobile-menu-overlay-close')?.addEventListener('click', function() {
-        document.querySelector('.mobile-menu-overlay')?.classList.remove('active');
-    });
-    document.querySelector('.mobile-menu-overlay')?.addEventListener('click', function(e) {
-        if (e.target === this) {
-            this.classList.remove('active');
-        }
-    });
-    </script>
+    <?php include_once __DIR__ . '/../../components/header-shared.php'; ?>
 
     <!-- Breadcrumb -->
     <div class="bg-white border-b border-gray-200">
@@ -436,17 +317,7 @@
     </main>
 
     <?php include_once './public/components/footer.php'; ?>
-    <script>
-    function updateCartCount() {
-        fetch('/api/cart/count').then(r => r.json()).then(d => {
-            document.querySelectorAll('.cart-count-badge').forEach(el => {
-                el.textContent = d.count > 99 ? '99+' : d.count;
-                el.style.display = d.count > 0 ? 'flex' : 'none';
-            });
-        });
-    }
-    document.addEventListener('DOMContentLoaded', updateCartCount);
-    </script>
+    <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
 </body>
 
 </html>

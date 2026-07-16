@@ -12,11 +12,83 @@ class Functions
     private static $_template_category = '_template_category';
     private static $_template_subcategory = '_template_subcategory';
 
-    // Кэш для списка продуктов
+    // Кэш для списка продуктов (внутри процесса)
     private static ?array $_productsCache = null;
     private static ?array $_randomProductsCache = null;
     private static int $_productsCacheTime = 0;
-    private static int $_cacheTtl = 300; // 5 минут кэширования
+    private static int $_cacheTtl = 300; // 5 минут
+
+    // Файловый кэш (между запросами)
+    private static string $_cacheDir = __DIR__ . '/../../../app/Storage/cache';
+
+    // Иконки для категорий
+    private static array $_categoryIcons = [
+        'арматура' => 'fa-bars-staggered',
+        'балка' => 'fa-building',
+        'круг' => 'fa-circle',
+        'лист' => 'fa-square',
+        'полоса' => 'fa-minus',
+        'проволока' => 'fa-circle',
+        'профнастил' => 'fa-border-all',
+        'свая' => 'fa-hexagon',
+        'рельс' => 'fa-square',
+        'сетка' => 'fa-border-all',
+        'труба' => 'fa-minus',
+        'уголок' => 'fa-angle-right',
+        'швеллер' => 'fa-shield-alt',
+        'метиз' => 'fa-bolt',
+        'нержавеющий' => 'fa-th',
+        'цветной' => 'fa-palette',
+        'б/у' => 'fa-recycle',
+    ];
+
+    private static function getCacheDir(): string
+    {
+        if (!is_dir(self::$_cacheDir)) {
+            mkdir(self::$_cacheDir, 0755, true);
+        }
+        return self::$_cacheDir;
+    }
+
+    private static function cacheGet(string $key, int $ttl = 300): mixed
+    {
+        $file = self::getCacheDir() . '/' . $key . '.json';
+        if (!file_exists($file)) return null;
+        if ((time() - filemtime($file)) > $ttl) {
+            unlink($file);
+            return null;
+        }
+        $json = @file_get_contents($file);
+        if ($json === false || $json === '') {
+            @unlink($file);
+            return null;
+        }
+        $data = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            @unlink($file);
+            return null;
+        }
+        return is_array($data) ? $data : null;
+    }
+
+    private static function cacheSet(string $key, mixed $data): void
+    {
+        $file = self::getCacheDir() . '/' . $key . '.json';
+        $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        file_put_contents($file, $json, LOCK_EX);
+    }
+
+    public static function cacheClear(): void
+    {
+        $dir = self::getCacheDir();
+        if (is_dir($dir)) {
+            foreach (glob($dir . '/*.json') as $file) {
+                unlink($file);
+            }
+        }
+        self::$_productsCache = null;
+        self::$_randomProductsCache = null;
+    }
 
     //======СПИСОК ФУНКЦИЙ / LIST FUNCTIONS===========//
 
@@ -32,6 +104,15 @@ class Functions
      */
     public static function showProduct(string $productID, ?string $table = null): array
     {
+        // Используем кэш списка продуктов для быстрого поиска
+        $allProducts = self::listProducts();
+        foreach ($allProducts as $product) {
+            if (($product['id'] ?? '') === $productID) {
+                return $product;
+            }
+        }
+
+        // Fallback: прямое чтение CSV если не найден в кэше
         $csvDir = self::getCsvDir();
         $product = null;
 
@@ -46,7 +127,6 @@ class Functions
             foreach ($tables as $tableName) {
                 $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
                 foreach ($rows as $row) {
-                    // Генерируем ID из названия для сравнения (как в normalizeProductRow)
                     $rowName = $row['название'] ?? $row['марка'] ?? '';
                     $rowId = self::slugify($rowName);
                     if ($rowId === $productID || ($row['id'] ?? null) === $productID) {
@@ -97,6 +177,11 @@ class Functions
      */
     public static function site(): array
     {
+        $cached = self::cacheGet('site_data', self::$_cacheTtl);
+        if ($cached !== null) {
+            return $cached;
+        }
+
         $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
         $baseUrl = $protocol . $host;
@@ -141,12 +226,13 @@ class Functions
             }
         }
 
+        self::cacheSet('site_data', $data);
         return $data;
     }
 
     public static function listProducts(?string $table = null): array
     {
-        // Используем кэш если нет фильтра по таблице
+        // Внутрипроцессный кэш (без файлового кэша — 15K+ товаров слишком grandes для unserialize/json_decode в 128MB)
         if ($table === null && self::$_productsCache !== null && (time() - self::$_productsCacheTime) < self::$_cacheTtl) {
             return self::$_productsCache;
         }
@@ -683,7 +769,7 @@ class Functions
         $text = mb_strtolower($text);
         $result = '';
 
-        $chars = preg_split('//u', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $chars = mb_str_split($text);
         foreach ($chars as $char) {
             if (isset($map[$char])) {
                 $result .= $map[$char];
@@ -779,26 +865,7 @@ class Functions
         $result = [];
         $found = 0;
 
-        // Иконки для категорий
-        $categoryIcons = [
-            'арматура' => 'fa-bars-staggered',
-            'балка' => 'fa-building',
-            'круг' => 'fa-circle',
-            'лист' => 'fa-square',
-            'полоса' => 'fa-minus',
-            'проволока' => 'fa-circle',
-            'профнастил' => 'fa-border-all',
-            'свая' => 'fa-hexagon',
-            'рельс' => 'fa-square',
-            'сетка' => 'fa-border-all',
-            'труба' => 'fa-minus',
-            'уголок' => 'fa-angle-right',
-            'швеллер' => 'fa-shield-alt',
-            'метиз' => 'fa-bolt',
-            'нержавеющий' => 'fa-th',
-            'цветной' => 'fa-palette',
-            'б/у' => 'fa-recycle',
-        ];
+        $categoryIcons = self::$_categoryIcons;
 
         if (!is_dir($csvDir)) {
             return [];
@@ -872,26 +939,7 @@ class Functions
         $allProducts = [];
         $targetCount = $limit * 3; // Собираем в 3 раза больше для случайности
 
-        // Иконки для категорий
-        $categoryIcons = [
-            'арматура' => 'fa-bars-staggered',
-            'балка' => 'fa-building',
-            'круг' => 'fa-circle',
-            'лист' => 'fa-square',
-            'полоса' => 'fa-minus',
-            'проволока' => 'fa-circle',
-            'профнастил' => 'fa-border-all',
-            'свая' => 'fa-hexagon',
-            'рельс' => 'fa-square',
-            'сетка' => 'fa-border-all',
-            'труба' => 'fa-minus',
-            'уголок' => 'fa-angle-right',
-            'швеллер' => 'fa-shield-alt',
-            'метиз' => 'fa-bolt',
-            'нержавеющий' => 'fa-th',
-            'цветной' => 'fa-palette',
-            'б/у' => 'fa-recycle',
-        ];
+        $categoryIcons = self::$_categoryIcons;
 
         if (!is_dir($csvDir)) {
             return [];

@@ -70,124 +70,18 @@ $products = Setting\route\function\Functions::listProducts();
     </script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <link rel="preload" href="/public/assets/styles/catalog.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.css"></noscript>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+    <script src="/public/assets/scripts/components/search.min.js" defer></script>
+    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
+    <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
 
-    <!-- ===================== HEADER ===================== -->
-    <header class="ozon-header">
-        <!-- Row 1: Logo + Каталог + Search + Actions -->
-        <div class="ozon-header-main">
-            <div class="ozon-header-inner">
-                <button class="ozon-burger mobile-menu-toggle" aria-label="Открыть меню">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-                </button>
-                <a href="/" class="ozon-logo">
-                    <img loading="lazy" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg" alt="<?= htmlspecialchars($site['company']) ?>">
-                </a>
-                <button class="ozon-catalog-btn" id="ozonCatalogToggle">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 7.556C4 4.628 4.628 4 7.556 4s3.555.628 3.555 3.556-.627 3.555-3.555 3.555S4 10.484 4 7.556m0 8.888c0-2.928.628-3.555 3.556-3.555s3.555.627 3.555 3.555S10.484 20 7.556 20 4 19.372 4 16.444M16.444 4c-2.928 0-3.555.628-3.555 3.556s.627 3.555 3.555 3.555S20 10.484 20 7.556 19.372 4 16.444 4m-3.555 12.444c0-2.928.627-3.555 3.555-3.555S20 13.516 20 16.444 19.372 20 16.444 20s-3.555-.628-3.555-3.556"/></svg>
-                    <span>Каталог</span>
-                </button>
-                <div class="ozon-search" id="searchWrap">
-                    <form method="GET" action="/market" id="searchForm">
-                        <input type="text" name="search" id="searchInput" value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>" placeholder="Искать в каталоге" autocomplete="off">
-                        <button type="submit" aria-label="Поиск" class="ozon-search-btn">
-                            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.892 15.064a8 8 0 1 0-2.828 2.828l2.522 2.522a2 2 0 1 0 2.828-2.828zM11 16a5 5 0 1 1 0-10 5 5 0 0 1 0 10"/></svg>
-                        </button>
-                    </form>
-                    <div id="searchDropdown" class="absolute left-0 right-0 top-full mt-1 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 hidden overflow-hidden"></div>
-                </div>
-                <a href="/cart" class="ozon-header-action">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.925 5.371a1 1 0 1 0-1.858-.742L6.317 9h-1.2c-1.076 0-1.614 0-1.913.346-.3.346-.222.878-.067 1.942l.271 1.864c.475 3.265.902 4.898 2.03 5.873s2.778.975 6.08.975h.96c3.302 0 4.953 0 6.08-.975 1.128-.975 1.559-2.608 2.034-5.873l.271-1.864c.155-1.064.233-1.596-.067-1.942S19.96 9 18.883 9h-1.205l-1.75-4.371a1 1 0 0 0-1.857.742L15.523 9h-7.05zM10.997 14v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 2 0M14 13a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1"/></svg>
-                    <span class="ozon-cart-badge cart-count-badge" style="display:none;">0</span>
-                    <span>Корзина</span>
-                </a>
-                <a href="/favorites" class="ozon-header-action" id="headerFavBtn">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 10.163C3 7.262 5.13 5 8 5c1.929 0 3.244 1.102 4 2.066C12.756 6.102 14.071 5 16 5c2.87 0 5 2.264 5 5.163 0 4.561-4.568 7.856-8.243 9.66a1.71 1.71 0 0 1-1.514 0C7.568 18.02 3 14.724 3 10.163"/></svg>
-                    <span class="ozon-cart-badge" id="favCountBadge" style="display:none;">0</span>
-                    <span>Избранное</span>
-                </a>
-                <a href="/orders" class="ozon-header-action">
-                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14.692 5.694c.368-.205.365-.469-.009-.664C13.367 4.343 12.708 4 12 4s-1.367.343-2.683 1.03l-2 1.044c-1.614.842-2.42 1.263-2.869 2.02C4 8.85 4 9.79 4 11.673v1.652c0 1.883 0 2.824.448 3.58s1.255 1.178 2.869 2.02l2 1.044C10.633 20.657 11.292 21 12 21s1.367-.343 2.683-1.03l2-1.044c1.614-.842 2.42-1.263 2.869-2.02.448-.756.448-1.697.448-3.58v-1.652c0-1.883 0-2.824-.448-3.58-.329-.556-.851-.93-1.744-1.423-.367-.203-.389-.204-.763.004L11 10c-.344.19-.739.394-.91.77-.09.197-.09.375-.09.73V14a1 1 0 0 1-2 0v-4a1 1 0 0 1 .514-.874z"/></svg>
-                    <span>Заказы</span>
-                </a>
-            </div>
-        </div>
-        <!-- Row 2: Nav links + City -->
-        <div class="ozon-header-nav">
-            <div class="ozon-header-nav-inner">
-                <div class="ozon-header-nav-links">
-                    <a href="tel:+74959892420" class="ozon-nav-link ozon-nav-phone">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.58 1 1 0 01-.25 1.01l-2.2 2.2z"/></svg>
-                        +7 (495) 989-24-20
-                    </a>
-                    <span class="ozon-nav-sep"></span>
-                    <a href="/delivery" class="ozon-nav-link">Доставка</a>
-                    <a href="/services" class="ozon-nav-link">Услуги</a>
-                    <a href="/about" class="ozon-nav-link">О компании</a>
-                    <a href="/contacts" class="ozon-nav-link">Контакты</a>
-                </div>
-                <div class="ozon-header-nav-right">
-                    <span class="ozon-nav-text">Пн-Пт 9:00–18:00</span>
-                    <span class="ozon-nav-dot">·</span>
-                    <span class="ozon-nav-text">Москва и МО</span>
-                </div>
-            </div>
-        </div>
-        <!-- Mega Menu -->
-        <div class="ozon-mega-menu" id="ozonMegaMenu">
-            <div class="ozon-mega-menu-inner">
-                <div class="ozon-mega-sidebar" id="ozonMegaSidebar">
-                    <?php
-                    $catList = []; $subList = [];
-                    foreach ($products as $p) {
-                        $b = $p['badge'] ?? '';
-                        if ($b === 'Категория') { $catList[$p['id']] = $p; }
-                        elseif ($b === 'Подкатегория') { $pid = $p['categories']['parent_id'] ?? null; if ($pid) $subList[$pid][] = $p; }
-                    }
-                    foreach ($catList as $cid => $cat):
-                    ?>
-                    <a href="<?= htmlspecialchars($cat['seo']['canonicalUrl'] ?? '#') ?>" class="ozon-mega-item" data-category-id="<?= htmlspecialchars($cid) ?>">
-                        <span><?= htmlspecialchars($cat['title']) ?></span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
-                    <?php endforeach; ?>
-                </div>
-                <div class="ozon-mega-content" id="ozonMegaContent">
-                    <?php $firstDone = false; foreach ($catList as $cid => $cat): $subcategories = $subList[$cid] ?? []; ?>
-                    <div class="ozon-mega-content-panel" data-category-id="<?= htmlspecialchars($cid) ?>" <?= $firstDone ? 'style="display:none;"' : '' ?>>
-                        <div class="ozon-mega-content-title"><?= htmlspecialchars($cat['title']) ?></div>
-                        <?php if (!empty($subcategories)): ?>
-                        <div class="ozon-mega-grid">
-                            <?php foreach ($subcategories as $sub):
-                                $subImages = $sub['images'] ?? [];
-                                $subThumb = !empty($subImages) ? $subImages[0] : '';
-                            ?>
-                            <a href="<?= htmlspecialchars($sub['seo']['canonicalUrl'] ?? '#') ?>" class="ozon-mega-subcategory">
-                                <?php if ($subThumb): ?>
-                                <div class="w-12 h-12 rounded-lg overflow-hidden bg-zinc-100 flex-shrink-0">
-                                    <img src="<?= htmlspecialchars($subThumb) ?>" alt="<?= htmlspecialchars($sub['title']) ?>" class="w-full h-full object-contain" loading="lazy">
-                                </div>
-                                <?php endif; ?>
-                                <span><?= htmlspecialchars($sub['title']) ?></span>
-                            </a>
-                            <?php endforeach; ?>
-                        </div>
-                        <?php else: ?>
-                        <div class="ozon-mega-empty">Все товары этой категории</div>
-                        <?php endif; ?>
-                    </div>
-                    <?php $firstDone = true; endforeach; ?>
-                </div>
-            </div>
-        </div>
-    </header>
+    <?php include './public/components/header-ozon.php'; ?>
 
     <!-- ===================== MOBILE MENU ===================== -->
     <div class="mobile-menu-overlay fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden opacity-0 invisible transition-all duration-300"></div>
@@ -215,7 +109,7 @@ $products = Setting\route\function\Functions::listProducts();
                 </div>
                 <?php endforeach; ?>
                 <div class="border-t border-gray-100 pt-3 mt-3 space-y-1">
-                    <a href="/services" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg> Услуги</a>
+                    <a href="/contacts" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg> Контакты</a>
                     <a href="/about" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> О компании</a>
                     <a href="/delivery" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Доставка и оплата</a>
                     <a href="/contacts" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Контакты</a>
@@ -573,9 +467,9 @@ $products = Setting\route\function\Functions::listProducts();
 
     <?php include_once './public/components/footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-    <script src="/public/assets/scripts/components/catalog.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js" defer></script>
+    <script src="/public/assets/scripts/components/catalog.min.js"></script>
     <script>
     $(document).ready(function () { if (typeof window.catalogAPI !== 'undefined') { window.catalogAPI.init(); } });
     </script>
@@ -651,211 +545,7 @@ $products = Setting\route\function\Functions::listProducts();
         function closeM() { if (mm) mm.classList.add('-translate-x-full'); if (mo) { mo.classList.add('opacity-0', 'invisible'); mo.classList.remove('opacity-100', 'visible'); } document.body.style.overflow = ''; }
         if (mt) mt.addEventListener('click', openM); if (mc) mc.addEventListener('click', closeM); if (mo) mo.addEventListener('click', closeM);
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeM(); });
-
-        document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var card = this.closest('[itemscope]'), pid = this.getAttribute('data-pid'), unit = this.getAttribute('data-unit'), row = card ? card.querySelector('.hidden-cart-row') : null, qtyInput = row ? row.querySelector('.cart-qty') : null, qty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
-                var wasInCart = btn.classList.contains('in-cart');
-                var originalSvg = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>';
-                this.disabled = true;
-                this.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white animate-spin"><circle cx="12" cy="12" r="10" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg>';
-                addToCart(pid, qty, unit).then(function(r) {
-                    if (r.success) {
-                        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-                        btn.classList.add('bg-red-600', 'in-cart');
-                        setTimeout(function() { btn.disabled = false; btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'; }, 1500);
-                        updateCartCount();
-                    } else {
-                        btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-500"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
-                        setTimeout(function() { btn.disabled = false; btn.innerHTML = wasInCart ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' : originalSvg; }, 1500);
-                    }
-                }).catch(function() {
-                    btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-red-400"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
-                    setTimeout(function() { btn.disabled = false; btn.innerHTML = wasInCart ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>' : originalSvg; }, 1500);
-                });
-            });
-        });
     });
-
-    function updateCartCount() {
-        fetch('/api/cart/count').then(function(r) { return r.json(); }).then(function(d) {
-            document.querySelectorAll('.cart-count-badge').forEach(function(el) { el.textContent = d.count > 99 ? '99+' : d.count; el.style.display = d.count > 0 ? 'flex' : 'none'; });
-        });
-    }
-    function addToCart(pid, qty, unit) { var fd = new URLSearchParams(); fd.append('product_id', pid); fd.append('quantity', qty); fd.append('unit', unit); return fetch('/api/cart/add', { method: 'POST', body: fd }).then(function(r) { return r.json(); }); }
-
-    /* Restore cart count + button states on page load */
-    updateCartCount();
-    fetch('/api/cart/products').then(function(r) { return r.json(); }).then(function(d) {
-        var ids = d.products || [];
-        if (!ids.length) return;
-        document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
-            var pid = btn.getAttribute('data-pid');
-            if (ids.indexOf(pid) !== -1) {
-                btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-                btn.classList.add('bg-red-600', 'in-cart');
-            }
-        });
-    });
-
-    /* ===== LIVE SEARCH ===== */
-    (function() {
-        var input = document.getElementById('searchInput'),
-            dropdown = document.getElementById('searchDropdown'),
-            wrap = document.getElementById('searchWrap'),
-            timer = null,
-            lastQuery = '',
-            abortCtrl = null;
-        if (!input || !dropdown) return;
-
-        function highlight(text, q) {
-            if (!q) return text;
-            var esc = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            return text.replace(new RegExp('(' + esc + ')', 'gi'), '<mark class="bg-yellow-100 text-yellow-800 rounded px-0.5">$1</mark>');
-        }
-
-        function showLoading(q) {
-            dropdown.innerHTML =
-                '<div class="flex items-center gap-3 px-4 py-3">' +
-                    '<div class="w-5 h-5 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>' +
-                    '<span class="text-sm text-zinc-400">Поиск «' + q.replace(/</g,'&lt;') + '»…</span>' +
-                '</div>';
-            showDD();
-        }
-
-        function renderResults(items, q) {
-            if (!items.length) {
-                dropdown.innerHTML =
-                    '<div class="px-4 py-6 text-center">' +
-                        '<svg class="w-8 h-8 mx-auto text-zinc-300 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>' +
-                        '<div class="text-sm text-zinc-400">Ничего не найдено</div>' +
-                        '<div class="text-xs text-zinc-300 mt-1">Попробуйте другой запрос</div>' +
-                    '</div>';
-                showDD();
-                return;
-            }
-            var html = '<div class="max-h-[360px] overflow-y-auto">';
-            items.forEach(function(p, i) {
-                var img = p.image
-                    ? '<img src="' + p.image.replace(/"/g,'&quot;') + '" class="w-11 h-11 object-contain rounded-lg bg-zinc-50 border border-zinc-100 flex-shrink-0" loading="lazy">'
-                    : '<div class="w-11 h-11 rounded-lg bg-zinc-100 flex-shrink-0 flex items-center justify-center"><svg class="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5H3.75a1.5 1.5 0 00-1.5 1.5v14.25a1.5 1.5 0 001.5 1.5z"/></svg></div>';
-                var stock = p.in_stock
-                    ? '<span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-medium"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>В наличии</span>'
-                    : '<span class="inline-flex items-center gap-0.5 text-[10px] text-zinc-400"><span class="w-1 h-1 rounded-full bg-zinc-300"></span>Под заказ</span>';
-                var cat = p.cat ? '<span class="text-[10px] text-zinc-400">' + p.cat.replace(/</g,'&lt;') + '</span>' : '';
-                html +=
-                    '<a href="' + p.url + '" class="flex items-center gap-3 px-4 py-2.5 hover:bg-red-50/60 transition-all duration-150 group border-b border-zinc-50 last:border-0 search-item" style="animation: searchFadeIn ' + (0.03 * (i + 1)) + 's ease both">' +
-                        img +
-                        '<div class="flex-1 min-w-0">' +
-                            '<div class="text-[13px] text-zinc-800 truncate group-hover:text-red-700 transition-colors leading-snug">' + highlight(p.nameOrig.replace(/</g,'&lt;'), q) + '</div>' +
-                            '<div class="flex items-center gap-2 mt-0.5">' +
-                                '<span class="text-sm font-bold text-zinc-900">' + p.price + ' ₽</span>' +
-                                '<span class="text-[10px] text-zinc-400">/ ' + p.unit + '</span>' +
-                                stock +
-                            '</div>' +
-                            cat +
-                        '</div>' +
-                        '<svg class="w-4 h-4 text-zinc-300 group-hover:text-red-400 transition-colors flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>' +
-                    '</a>';
-            });
-            html += '</div>';
-            html += '<a href="/market?search=' + encodeURIComponent(q) + '" class="flex items-center justify-center gap-2 text-xs text-red-600 hover:text-red-700 font-medium py-2.5 border-t border-zinc-100 hover:bg-red-50/50 transition-colors">' +
-                '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6V5.25A2.25 2.25 0 0011.25 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 005.25 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>' +
-                'Показать все результаты' +
-            '</a>';
-            dropdown.innerHTML = html;
-            showDD();
-        }
-
-        function showDD() {
-            dropdown.classList.remove('hidden');
-            dropdown.style.maxHeight = '0';
-            dropdown.style.opacity = '0';
-            requestAnimationFrame(function() {
-                dropdown.style.transition = 'max-height 0.25s ease, opacity 0.2s ease';
-                dropdown.style.maxHeight = '420px';
-                dropdown.style.opacity = '1';
-            });
-        }
-
-        function hideDD() {
-            dropdown.style.transition = 'max-height 0.15s ease, opacity 0.1s ease';
-            dropdown.style.maxHeight = '0';
-            dropdown.style.opacity = '0';
-            setTimeout(function() { dropdown.classList.add('hidden'); }, 160);
-        }
-
-        input.addEventListener('input', function() {
-            var q = this.value.trim();
-            clearTimeout(timer);
-            if (q.length < 2) { hideDD(); lastQuery = ''; return; }
-            if (q === lastQuery) return;
-            lastQuery = q;
-            if (abortCtrl) abortCtrl.abort();
-            abortCtrl = new AbortController();
-            showLoading(q);
-            timer = setTimeout(function() {
-                fetch('/api/search?q=' + encodeURIComponent(q) + '&limit=8', { signal: abortCtrl.signal })
-                    .then(function(r) { return r.json(); })
-                    .then(function(items) { renderResults(items, q); })
-                    .catch(function(e) { if (e.name !== 'AbortError') hideDD(); });
-            }, 180);
-        });
-
-        input.addEventListener('focus', function() { if (dropdown.innerHTML && dropdown.classList.contains('hidden')) showDD(); });
-        document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) hideDD(); });
-        input.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') { hideDD(); input.blur(); }
-            if (e.key === 'ArrowDown') { var first = dropdown.querySelector('a[href]'); if (first) { e.preventDefault(); first.focus(); } }
-        });
-    })();
-
-    /* ===== FAVORITES (localStorage) ===== */
-    (function() {
-        var STORAGE_KEY = 'kavstal_favorites';
-        function getFavs() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { return []; } }
-        function saveFavs(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
-        function isFav(pid) { return getFavs().indexOf(pid) !== -1; }
-
-        var favSVG = '<svg width="13" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
-        var favSVGFilled = '<svg width="13" height="11" viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
-
-        function updateCardBtn(btn) {
-            var pid = btn.getAttribute('data-pid');
-            if (!pid) return;
-            btn.innerHTML = isFav(pid) ? favSVGFilled : favSVG;
-            if (isFav(pid)) { btn.classList.add('border-red-300', 'bg-red-50'); btn.classList.remove('border-zinc-200'); }
-            else { btn.classList.remove('border-red-300', 'bg-red-50'); btn.classList.add('border-zinc-200'); }
-        }
-
-        document.querySelectorAll('.add-to-fav-btn').forEach(function(btn) {
-            updateCardBtn(btn);
-            btn.addEventListener('click', function() {
-                var pid = this.getAttribute('data-pid'); if (!pid) return;
-                var favs = getFavs(), idx = favs.indexOf(pid);
-                if (idx === -1) favs.push(pid); else favs.splice(idx, 1);
-                saveFavs(favs);
-                updateCardBtn(this);
-                updateHeaderFavCount();
-            });
-        });
-
-        function updateHeaderFavCount() {
-            var badge = document.getElementById('favCountBadge');
-            if (!badge) return;
-            var count = getFavs().length;
-            badge.textContent = count > 99 ? '99+' : count;
-            badge.style.display = count > 0 ? 'flex' : 'none';
-        }
-        updateHeaderFavCount();
-    })();
     </script>
-    <style>
-        @keyframes searchFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .animate-spin { animation: spin 0.8s linear infinite; }
-        * { font-family: "Geist", sans-serif; }
-        #searchDropdown { will-change: max-height, opacity; }
-    </style>
 </body>
 </html>

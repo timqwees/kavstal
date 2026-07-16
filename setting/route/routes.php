@@ -43,38 +43,13 @@ Routes::get('/contacts', function ($path = '/contacts.php') {
 });
 //==================================================================================================//PAGE KATEGORI
 Routes::get('/market/katalog/{katalog}', function ($katalog) {
-    $targetPath = dirname(__DIR__, 2) . "/public/market/katalog/$katalog/index.php";
-
-    // Авто-генерация если страницы нет
-    if (!file_exists($targetPath)) {
-        Setting\route\function\Functions::autoGeneratePage($targetPath, ['katalog' => $katalog]);
-    }
-
-    Routes::auto_element($targetPath, get_defined_vars());
+    $templatePath = dirname(__DIR__, 2) . "/public/market/katalog/.template/_template_category/index.php";
+    Routes::auto_element($templatePath, get_defined_vars());
 });
-//==================================================================================================//PAGE KATEGORI S SUBKATEGORIEY
-Routes::get('/market/katalog/{katalog}/{name}', function ($katalog, $name) {
-    $targetPath = dirname(__DIR__, 2) . "/public/market/katalog/$katalog/$name/index.php";
-
-    // Авто-генерация если страницы нет
-    if (!file_exists($targetPath)) {
-        Setting\route\function\Functions::autoGeneratePage($targetPath, ['katalog' => $katalog, 'name' => $name]);
-    }
-
-    // Передаём переменные на страницу (включая $tableName для CSV)
-    $tableName = $name; // <-- имя таблицы CSV = имя роута
-    Routes::auto_element($targetPath, get_defined_vars());
-});
-//==================================================================================================//PAGE KATEGORI S SUBKATEGORIEY I TOVAROM
+//==================================================================================================//PAGE TOVARA
 Routes::get('/market/katalog/{katalog}/{subcategory}/{name}', function ($katalog, $subcategory, $name) {
-    $targetPath = dirname(__DIR__, 2) . "/public/market/katalog/$katalog/$subcategory/$name/index.php";
-
-    // Авто-генерация если страницы нет
-    if (!file_exists($targetPath)) {
-        Setting\route\function\Functions::autoGeneratePage($targetPath, ['katalog' => $katalog, 'subcategory' => $subcategory, 'name' => $name]);
-    }
-
-    Routes::auto_element($targetPath, get_defined_vars());
+    $templatePath = dirname(__DIR__, 2) . "/public/market/katalog/.template/_product.php";
+    Routes::auto_element($templatePath, get_defined_vars());
 });
 //==================================================================================================//API
 Routes::get('/api/market/products/list', function () {

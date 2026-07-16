@@ -64,18 +64,24 @@ class RssFeed
     public static function output(): void
     {
         $filePath = './file/rss.xml';
+
+        // Проверяем кэш (1 час)
         if (file_exists($filePath)) {
-            $etag = md5_file($filePath);
-            if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-                http_response_code(304);
+            $fileAge = time() - filemtime($filePath);
+            if ($fileAge < 3600) {
+                $etag = md5_file($filePath);
+                if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+                    http_response_code(304);
+                    return;
+                }
+                header('Content-Type: application/rss+xml; charset=utf-8');
+                header('ETag: ' . $etag);
+                header('Cache-Control: public, max-age=3600');
+                readfile($filePath);
                 return;
             }
-            header('Content-Type: application/rss+xml; charset=utf-8');
-            header('ETag: ' . $etag);
-            header('Cache-Control: public, max-age=3600');
-            readfile($filePath);
-            return;
         }
+
         $xml = self::generate();
         $dir = dirname($filePath);
         if (!is_dir($dir)) {

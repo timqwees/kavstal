@@ -1,46 +1,33 @@
 <?php
-$categoryID = $katalog ?? basename(dirname(__FILE__));
 $allProducts = Setting\route\function\Functions::listProducts();
-$category = null;
-$productsInCategory = [];
+$site = Setting\route\function\Functions::site();
 
-foreach ($allProducts as $product) {
-    if ($product['id'] === $categoryID) {
-        $category = $product;
-    }
-    $productCategoryId = $product['categories']['id'] ?? null;
-    if ($productCategoryId === $categoryID) {
-        $productsInCategory[] = $product;
-    }
-    if (($product['categories']['parent_id'] ?? null) === $categoryID && ($product['badge'] ?? '') === 'Подкатегория') {
-        $productsInCategory[] = $product;
+$categoryID = $katalog ?? '';
+
+$categoryInfo = null;
+foreach ($allProducts as $p) {
+    if (($p['badge'] ?? '') === 'Категория' && ($p['id'] ?? '') === $categoryID) {
+        $categoryInfo = $p;
+        break;
     }
 }
 
-shuffle($productsInCategory);
+$allCategoryProducts = array_filter($allProducts, function ($p) use ($categoryID) {
+    $parentId = $p['categories']['parent_id'] ?? '';
+    return $parentId === $categoryID && empty($p['badge']);
+});
+$allCategoryProducts = array_values($allCategoryProducts);
 
-$site = Setting\route\function\Functions::site();
-
-// Extract unique specs for filters
 $allDiameters = [];
 $allBrands = [];
 $allGosts = [];
-foreach ($productsInCategory as $item) {
-    if (($item['badge'] ?? '') === 'Подкатегория') continue;
-    $specs = $item['specs'] ?? [];
-    if (!empty($specs['диаметр'])) {
-        $allDiameters[] = $specs['диаметр'];
-    }
-    if (!empty($specs['Марка'])) {
-        $allBrands[] = $specs['Марка'];
-    } elseif (!empty($specs['марка'])) {
-        $allBrands[] = $specs['марка'];
-    }
-    if (!empty($specs['ГОСТ'])) {
-        $allGosts[] = $specs['ГОСТ'];
-    } elseif (!empty($specs['гост'])) {
-        $allGosts[] = $specs['гост'];
-    }
+foreach ($allCategoryProducts as $p) {
+    $specs = $p['specs'] ?? [];
+    if (!empty($specs['диаметр'])) $allDiameters[] = $specs['диаметр'];
+    $brand = $specs['Марка'] ?? $specs['марка'] ?? '';
+    if (!empty($brand)) $allBrands[] = $brand;
+    $gost = $specs['ГОСТ'] ?? $specs['гост'] ?? '';
+    if (!empty($gost)) $allGosts[] = $gost;
 }
 $allDiameters = array_values(array_unique(array_filter($allDiameters)));
 $allBrands = array_values(array_unique(array_filter($allBrands)));
@@ -49,349 +36,160 @@ sort($allDiameters, SORT_NATURAL);
 sort($allBrands, SORT_STRING);
 sort($allGosts, SORT_NATURAL);
 
-// Separate subcategories and products
-$subcategories = array_filter($productsInCategory, function ($item) {
-    return ($item['badge'] ?? '') === 'Подкатегория';
-});
-$products = array_filter($productsInCategory, function ($item) {
-    return ($item['badge'] ?? '') !== 'Подкатегория';
-});
-
-// Build category tree for sidebar
 $categoryTree = [];
 foreach ($allProducts as $p) {
-    if (($p['badge'] ?? '') === 'Категория' || ($p['badge'] ?? '') === 'Подкатегория') {
+    if (($p['badge'] ?? '') === 'Категория') {
         $categoryTree[] = $p;
     }
 }
+
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$itemsPerPage = 24;
+$totalItems = count($allCategoryProducts);
+$totalPages = max(1, (int)ceil($totalItems / $itemsPerPage));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $itemsPerPage;
+$pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($category['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ</title>
-    <meta name="description"
-        content="<?= htmlspecialchars($category['description'] ?? $category['title'] . ' - купить в Москве по выгодной цене. Поставка металлопроката от КАВ СТАЛЬ.') ?>">
-    <meta name="keywords"
-        content="<?= htmlspecialchars($category['title']) ?>, <?= htmlspecialchars($category['name'] ?? $category['title']) ?>, купить <?= htmlspecialchars($category['title']) ?> в Москве, <?= htmlspecialchars($category['title']) ?> цена за тонну, металлопрокат москва, сортовой прокат, доставка металлопроката">
-    <link rel="canonical"
-        href="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($category['seo']['canonicalUrl'] ?? '/market') ?>">
+    <title><?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ</title>
+    <meta name="description" content="<?= htmlspecialchars($categoryInfo['description'] ?? ($categoryInfo['title'] ?? 'Категория') . ' - купить в Москве по выгодной цене. Поставка металлопроката от КАВ СТАЛЬ.') ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?>, металлопрокат, купить <?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> в Москве, цена, доставка">
+    <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? '/market') ?>">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="<?= htmlspecialchars($category['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ">
-    <meta property="og:description" content="<?= htmlspecialchars($category['description'] ?? $category['title']) ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены | КАВ СТАЛЬ">
+    <meta property="og:description" content="<?= htmlspecialchars($categoryInfo['description'] ?? $categoryInfo['title'] ?? 'Категория') ?>">
     <meta property="og:type" content="website">
-    <meta property="og:url"
-        content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($category['seo']['canonicalUrl'] ?? '/market') ?>">
+    <meta property="og:url" content="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? '/market') ?>">
     <meta property="og:site_name" content="<?= htmlspecialchars($site['company']) ?>">
     <meta property="og:locale" content="ru_RU">
-    <meta property="og:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/market.png">
+    <meta property="og:image" content="<?= $site['baseUrl'] ?>/public/assets/images/bgpage/market.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-
-    <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="<?= htmlspecialchars($category['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ">
-    <meta name="twitter:description" content="<?= htmlspecialchars($category['description'] ?? $category['title']) ?>">
-    <meta name="twitter:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/market.png">
-
-    <!-- Additional SEO Meta Tags -->
+    <meta name="twitter:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – КАВ СТАЛЬ">
+    <meta name="twitter:description" content="<?= htmlspecialchars($categoryInfo['description'] ?? $categoryInfo['title'] ?? 'Категория') ?>">
+    <meta name="twitter:image" content="<?= $site['baseUrl'] ?>/public/assets/images/bgpage/market.png">
     <meta name="robots" content="index, follow">
     <meta name="author" content="<?= htmlspecialchars($site['company']) ?>">
 
-    <!-- Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="preconnect" href="<?php echo $site['baseUrl']; ?>" crossorigin>
+    <link rel="preconnect" href="<?= $site['baseUrl'] ?>" crossorigin>
 
-    <!-- favicon -->
-    <link rel="icon" type="image/png"
-        href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml"
-        href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon.svg" />
-    <link rel="shortcut icon" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Металл" />
-    <link rel="manifest" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/site.webmanifest" />
+    <link rel="icon" type="image/png" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/svg+xml" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.svg">
+    <link rel="shortcut icon" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-title" content="Металл">
+    <link rel="manifest" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/site.webmanifest">
+    <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ" href="<?= $site['baseUrl'] ?>/rss.xml">
 
-    <!-- Structured Data JSON-LD -->
     <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "CollectionPage",
-            "name": "<?= htmlspecialchars($category['title'] ?? 'Категория') ?>",
-            "description": "<?= htmlspecialchars($category['description'] ?? $category['title']) ?>",
-            "url": <?= json_encode($site['baseUrl'] . ($category['seo']['canonicalUrl'] ?? '/market'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
-        }
+    {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": <?= json_encode($categoryInfo['title'] ?? 'Категория', JSON_UNESCAPED_UNICODE); ?>,
+        "description": <?= json_encode($categoryInfo['description'] ?? $categoryInfo['title'] ?? '', JSON_UNESCAPED_UNICODE); ?>,
+        "url": <?= json_encode($site['baseUrl'] . ($categoryInfo['seo']['canonicalUrl'] ?? '/market'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
+    }
     </script>
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+    <script src="/public/assets/scripts/components/search.min.js" defer></script>
+    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
 
-    <!-- Local Styles -->
-    <link rel="preload" href="/public/assets/styles/catalog.css" as="style"
-        onload="this.onload=null;this.rel='stylesheet'">
-    <noscript>
-        <link rel="stylesheet" href="/public/assets/styles/main.css">
-    </noscript>
+    <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
 
-    <!-- Swiper CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-    <style>
-        .mobile-menu {
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-        }
-        .mobile-menu.active {
-            transform: translateX(0);
-        }
-        .mobile-menu-overlay {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-        }
-        .mobile-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .mobile-menu-toggle span:nth-child(1) {
-            transform-origin: top left;
-        }
-        .mobile-menu-toggle span:nth-child(3) {
-            transform-origin: bottom left;
-        }
-        .mobile-menu.active .mobile-menu-toggle span:nth-child(1) {
-            transform: rotate(45deg) translate(3px, -3px);
-        }
-        .mobile-menu.active .mobile-menu-toggle span:nth-child(3) {
-            transform: rotate(-45deg) translate(3px, 3px);
-        }
-        .product-card:hover .product-card-image img {
-            transform: scale(1.05);
-        }
-        .product-card-image img {
-            transition: transform 0.3s ease;
-        }
-        .sidebar-link.active {
-            background-color: #fef2f2;
-            color: #dc2626;
-            font-weight: 600;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
 </head>
 
-<body class="bg-gray-50">
+<body class="bg-zinc-50">
 
-    <!-- Top Bar -->
-    <div class="bg-gray-900 text-gray-300 text-xs hidden lg:block">
-        <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-9">
-            <div class="flex items-center space-x-4">
-                <span><i class="far fa-clock mr-1"></i>Работаем с 9:00 до 18:00</span>
-                <span><i class="fas fa-truck mr-1"></i>Доставка по Москве и МО</span>
-            </div>
-            <div class="flex items-center space-x-6">
-                <a href="/delivery" class="hover:text-white transition">Доставка и оплата</a>
-                <a href="/guarantees" class="hover:text-white transition">Гарантии</a>
-                <a href="/contacts" class="hover:text-white transition">Контакты</a>
-            </div>
-        </div>
-    </div>
+    <?php include_once './public/components/header-shared.php'; ?>
 
-    <!-- Header -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-        <nav class="max-w-7xl mx-auto px-4">
-            <div class="flex items-center justify-between h-16 lg:h-20">
-                <!-- Logo -->
-                <a href="/" class="flex items-center flex-shrink-0">
-                    <img loading="lazy" class="h-10 lg:h-12"
-                        src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg"
-                        alt="<?= htmlspecialchars($site['company']) ?>">
-                </a>
+    <main class="max-w-7xl mx-auto px-4 pt-4 pb-12 lg:pt-6">
 
-                <!-- Desktop Navigation -->
-                <div class="hidden lg:flex items-center space-x-1">
-                    <a href="/market" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Каталог</a>
-                    <a href="/#services" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Услуги</a>
-                    <a href="/#about" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">О компании</a>
-                    <a href="/delivery" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Доставка и оплата</a>
-                    <a href="/guarantees" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Гарантии</a>
-                    <a href="/contacts" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-red-600 hover:bg-red-50 rounded-lg transition">Контакты</a>
-                </div>
+        <!-- Breadcrumb -->
+        <nav class="flex items-center space-x-1.5 text-sm mb-6" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+            <a href="/" class="inline-flex items-center text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/">
+                <svg class="me-1.5 h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/></svg>
+                <span itemprop="name">Главная</span>
+            </a>
+            <meta itemprop="position" content="1">
+            <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
 
-                <!-- Phone & CTA -->
-                <div class="hidden lg:flex items-center space-x-4">
-                    <a href="/cart" class="relative p-2 text-gray-700 hover:text-red-600 transition">
-                        <i class="fas fa-shopping-cart text-xl"></i>
-                        <span class="cart-count-badge absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">0</span>
-                    </a>
-                    <div class="text-right">
-                        <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
-                            class="text-lg font-bold text-gray-900 hover:text-red-600 transition whitespace-nowrap">
-                            <?= htmlspecialchars($site['phone']) ?>
-                        </a>
-                        <p class="text-xs text-gray-500"><?= htmlspecialchars($site['workingHours']) ?></p>
-                    </div>
-                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
-                        class="bg-red-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 transition flex items-center gap-2">
-                        <i class="fas fa-phone-alt"></i>
-                        <span class="hidden xl:inline">Заказать звонок</span>
-                    </a>
-                </div>
+            <a href="/market" class="text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market">
+                <span itemprop="name">Каталог</span>
+            </a>
+            <meta itemprop="position" content="2">
+            <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
 
-                <!-- Mobile Menu Toggle -->
-                <div class="lg:hidden flex items-center gap-3">
-                    <a href="/cart" class="relative text-gray-700 p-2">
-                        <i class="fas fa-shopping-cart text-lg"></i>
-                        <span class="cart-count-badge absolute -top-0.5 -right-0.5 bg-red-600 text-white text-[10px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center px-0.5">0</span>
-                    </a>
-                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
-                        class="text-gray-700 p-2">
-                        <i class="fas fa-phone-alt text-lg"></i>
-                    </a>
-                    <button class="mobile-menu-toggle p-2" aria-label="Открыть меню">
-                        <div class="relative w-6 h-5">
-                            <span class="absolute top-0 left-0 w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
-                            <span class="absolute top-2 left-0 w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
-                            <span class="absolute top-4 left-0 w-full h-0.5 bg-gray-800 transition-all duration-300"></span>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            <?php
+            $parentTitle = $categoryInfo['categories']['title'] ?? null;
+            if ($parentTitle):
+            ?>
+            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>" class="text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>">
+                <span itemprop="name"><?= htmlspecialchars($parentTitle) ?></span>
+            </a>
+            <meta itemprop="position" content="3">
+            <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+            <?php endif; ?>
+
+            <span class="text-zinc-900 font-medium" itemprop="name"><?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?></span>
+            <meta itemprop="position" content="<?= $parentTitle ? '4' : '3' ?>">
         </nav>
-    </header>
 
-    <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay fixed inset-0 bg-black/50 z-40 lg:hidden"></div>
-    <div class="mobile-menu fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 lg:hidden overflow-y-auto">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-8">
-                <a href="/" class="flex items-center">
-                    <img loading="lazy" class="h-10"
-                        src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg"
-                        alt="<?= htmlspecialchars($site['company']) ?>">
-                </a>
-                <button class="mobile-menu-close p-2" aria-label="Закрыть меню">
-                    <i class="fas fa-times text-2xl text-gray-800"></i>
-                </button>
-            </div>
-            <nav class="space-y-1 mb-8">
-                <a href="/market" class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-                    Каталог <i class="fa fa-arrow-right text-sm"></i>
-                </a>
-                <a href="/#services" class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-                    Услуги <i class="fa fa-arrow-right text-sm"></i>
-                </a>
-                <a href="/#about" class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-                    О компании <i class="fa fa-arrow-right text-sm"></i>
-                </a>
-                <a href="/delivery" class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-                    Доставка и оплата <i class="fa fa-arrow-right text-sm"></i>
-                </a>
-                <a href="/guarantees" class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-                    Гарантии <i class="fa fa-arrow-right text-sm"></i>
-                </a>
-                <a href="/contacts" class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">
-                    Контакты <i class="fa fa-arrow-right text-sm"></i>
-                </a>
-            </nav>
-            <div class="border-t pt-6">
-                <div class="text-center mb-4">
-                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
-                        class="text-xl font-bold text-gray-800 block mb-1">
-                        <?= htmlspecialchars($site['phone']) ?>
-                    </a>
-                    <p class="text-sm text-gray-500"><?= htmlspecialchars($site['workingHours']) ?></p>
-                </div>
-                <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
-                    class="block text-center bg-red-600 text-white px-5 py-3 rounded-lg text-sm font-medium hover:bg-red-700 transition">
-                    <i class="fas fa-phone-alt mr-2"></i>Заказать звонок
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Breadcrumbs -->
-    <div class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 py-3">
-            <nav class="flex items-center space-x-2 text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
-                <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/" class="text-gray-500 hover:text-red-600 transition-colors" itemprop="item" itemscope
-                        itemtype="https://schema.org/Thing" itemid="<?php echo $site['baseUrl']; ?>/">
-                        <i class="fas fa-home"></i> <span itemprop="name">Главная</span>
-                    </a>
-                    <meta itemprop="position" content="1">
-                </span>
-                <span class="text-gray-300">/</span>
-                <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/market" class="text-gray-500 hover:text-red-600 transition-colors" itemprop="item"
-                        itemscope itemtype="https://schema.org/Thing"
-                        itemid="<?php echo $site['baseUrl']; ?>/market">
-                        <span itemprop="name">Каталог</span>
-                    </a>
-                    <meta itemprop="position" content="2">
-                </span>
-                <span class="text-gray-300">/</span>
-                <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <span itemprop="name"
-                        class="text-gray-900 font-medium"><?= htmlspecialchars($category['title'] ?? 'Категория') ?></span>
-                    <meta itemprop="position" content="3">
-                </span>
-            </nav>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 py-6 lg:py-8">
+        <!-- Two-Column Layout -->
         <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
             <!-- Left Sidebar -->
-            <aside class="w-full lg:w-64 flex-shrink-0">
-                <div class="lg:sticky lg:top-24 space-y-6">
+            <aside class="w-full lg:w-64 shrink-0">
+                <div class="lg:sticky lg:top-24 space-y-5">
 
-                    <!-- Category Navigation -->
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Категории</h3>
+                    <!-- Categories (unified list) -->
+                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+                        <div class="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
+                            <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Категории</h3>
                         </div>
-                        <nav class="p-2 space-y-0.5">
-                            <?php foreach ($categoryTree as $cat): ?>
-                                <?php
-                                $isActive = ($cat['id'] === $categoryID) || ($cat['categories']['id'] ?? '') === $categoryID;
+                        <nav class="p-2 space-y-0.5 max-h-64 overflow-y-auto">
+                            <?php foreach ($categoryTree as $cat):
+                                $isActive = ($cat['id'] === $categoryID);
                                 $catUrl = $cat['seo']['canonicalUrl'] ?? '#';
-                                $indent = ($cat['badge'] ?? '') === 'Подкатегория' ? 'ml-3' : '';
-                                ?>
-                                <a href="<?= htmlspecialchars($catUrl) ?>"
-                                    class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition <?= $isActive ? 'sidebar-link active bg-red-50 text-red-600 font-semibold' : 'text-gray-600 hover:text-red-600 hover:bg-gray-50' ?> <?= $indent ?>">
-                                    <?php if (($cat['badge'] ?? '') !== 'Подкатегория'): ?>
-                                        <i class="fas fa-folder-open text-gray-400 text-xs w-4"></i>
-                                    <?php else: ?>
-                                        <i class="fas fa-chevron-right text-gray-300 text-xs w-4"></i>
-                                    <?php endif; ?>
-                                    <span><?= htmlspecialchars($cat['title']) ?></span>
-                                </a>
+                            ?>
+                            <a href="<?= htmlspecialchars($catUrl) ?>"
+                                class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition <?= $isActive ? 'bg-red-50 text-red-600 font-semibold' : 'text-zinc-600 hover:text-red-600 hover:bg-zinc-50' ?>">
+                                <i class="fas fa-folder-open text-xs w-4 <?= $isActive ? 'text-red-400' : 'text-zinc-300' ?>"></i>
+                                <span class="truncate"><?= htmlspecialchars($cat['title']) ?></span>
+                            </a>
                             <?php endforeach; ?>
                         </nav>
                     </div>
 
                     <!-- Filter: Diameter -->
                     <?php if (!empty($allDiameters)): ?>
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Диаметр</h3>
+                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+                        <div class="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
+                            <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Диаметр</h3>
                         </div>
-                        <div class="p-3 max-h-60 overflow-y-auto space-y-1.5">
+                        <div class="p-3 max-h-52 overflow-y-auto space-y-1">
                             <?php foreach ($allDiameters as $d): ?>
-                            <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="checkbox" class="filter-checkbox rounded border-gray-300 text-red-600 focus:ring-red-500" data-filter="diameter" value="<?= htmlspecialchars($d) ?>">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900 transition"><?= htmlspecialchars($d) ?></span>
+                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-1 rounded-md hover:bg-zinc-50 transition">
+                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-600 focus:ring-red-500 w-4 h-4" data-filter="diameter" value="<?= htmlspecialchars($d) ?>">
+                                <span class="text-sm text-zinc-600 group-hover:text-zinc-900 transition"><?= htmlspecialchars($d) ?></span>
                             </label>
                             <?php endforeach; ?>
                         </div>
@@ -400,15 +198,15 @@ foreach ($allProducts as $p) {
 
                     <!-- Filter: Brand -->
                     <?php if (!empty($allBrands)): ?>
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Марка стали</h3>
+                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+                        <div class="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
+                            <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Марка стали</h3>
                         </div>
-                        <div class="p-3 max-h-60 overflow-y-auto space-y-1.5">
+                        <div class="p-3 max-h-52 overflow-y-auto space-y-1">
                             <?php foreach ($allBrands as $b): ?>
-                            <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="checkbox" class="filter-checkbox rounded border-gray-300 text-red-600 focus:ring-red-500" data-filter="brand" value="<?= htmlspecialchars($b) ?>">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900 transition"><?= htmlspecialchars($b) ?></span>
+                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-1 rounded-md hover:bg-zinc-50 transition">
+                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-600 focus:ring-red-500 w-4 h-4" data-filter="brand" value="<?= htmlspecialchars($b) ?>">
+                                <span class="text-sm text-zinc-600 group-hover:text-zinc-900 transition"><?= htmlspecialchars($b) ?></span>
                             </label>
                             <?php endforeach; ?>
                         </div>
@@ -417,15 +215,15 @@ foreach ($allProducts as $p) {
 
                     <!-- Filter: GOST -->
                     <?php if (!empty($allGosts)): ?>
-                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                            <h3 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">ГОСТ</h3>
+                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+                        <div class="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
+                            <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">ГОСТ</h3>
                         </div>
-                        <div class="p-3 max-h-60 overflow-y-auto space-y-1.5">
+                        <div class="p-3 max-h-52 overflow-y-auto space-y-1">
                             <?php foreach ($allGosts as $g): ?>
-                            <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="checkbox" class="filter-checkbox rounded border-gray-300 text-red-600 focus:ring-red-500" data-filter="gost" value="<?= htmlspecialchars($g) ?>">
-                                <span class="text-sm text-gray-600 group-hover:text-gray-900 transition"><?= htmlspecialchars($g) ?></span>
+                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-1 rounded-md hover:bg-zinc-50 transition">
+                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-600 focus:ring-red-500 w-4 h-4" data-filter="gost" value="<?= htmlspecialchars($g) ?>">
+                                <span class="text-sm text-zinc-600 group-hover:text-zinc-900 transition"><?= htmlspecialchars($g) ?></span>
                             </label>
                             <?php endforeach; ?>
                         </div>
@@ -438,148 +236,156 @@ foreach ($allProducts as $p) {
             <!-- Content Area -->
             <div class="flex-1 min-w-0">
 
-                <!-- Category Header -->
-                <div class="mb-6">
-                    <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-                        <?= htmlspecialchars($category['title'] ?? 'Категория') ?> – купить в Москве
+                <!-- Header -->
+                <div class="mb-5">
+                    <h1 class="text-2xl lg:text-3xl font-bold text-zinc-900 mb-2">
+                        <?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – купить в Москве
                     </h1>
-                    <?php if (!empty($category['description'])): ?>
-                        <p class="text-gray-500 text-sm leading-relaxed"><?= htmlspecialchars($category['description']) ?></p>
+                    <?php if (!empty($categoryInfo['description'])): ?>
+                    <p class="text-zinc-500 text-sm leading-relaxed max-w-2xl"><?= htmlspecialchars($categoryInfo['description']) ?></p>
                     <?php endif; ?>
-                    <p class="text-sm text-gray-400 mt-2">
-                        Найдено: <span class="font-medium text-gray-700"><?= count($products) ?></span> товаров
-                    </p>
                 </div>
 
-                <!-- Subcategory Cards -->
-                <?php if (!empty($subcategories)): ?>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                    <?php foreach ($subcategories as $sub): ?>
-                    <a href="<?= htmlspecialchars($sub['seo']['canonicalUrl'] ?? '#') ?>"
-                        class="group bg-white rounded-xl border border-gray-200 p-4 hover:shadow-md hover:border-red-200 transition-all">
-                        <?php if (!empty($sub['images'])): ?>
-                        <div class="aspect-[4/3] rounded-lg overflow-hidden mb-3 bg-gray-100">
-                            <img loading="lazy" src="<?= htmlspecialchars($sub['images'][0]) ?>"
-                                alt="<?= htmlspecialchars($sub['title']) ?>"
-                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                        </div>
-                        <?php endif; ?>
-                        <h3 class="text-sm font-semibold text-gray-900 group-hover:text-red-600 transition"><?= htmlspecialchars($sub['title']) ?></h3>
-                        <p class="text-xs text-gray-400 mt-1">Перейти к подкатегории <i class="fas fa-arrow-right ml-1"></i></p>
-                    </a>
-                    <?php endforeach; ?>
+                <!-- Toolbar -->
+                <div class="flex items-center justify-between gap-3 mb-5 bg-white rounded-xl border border-zinc-200 px-4 py-3">
+                    <p class="text-sm text-zinc-500">
+                        Найдено: <span class="font-semibold text-zinc-800" id="visibleCount"><?= count($pageProducts) ?></span> товаров
+                    </p>
+                    <div class="flex items-center gap-1 bg-zinc-100 rounded-lg p-0.5">
+                        <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-600 p-2 shadow-sm transition-colors" title="Сетка">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4Zm-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857Z"/></svg>
+                        </button>
+                        <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-2 text-zinc-600 hover:text-red-600 transition-colors" title="Список">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/></svg>
+                        </button>
+                    </div>
                 </div>
-                <?php endif; ?>
 
                 <!-- Product Grid -->
-                <?php if (!empty($products)): ?>
-                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-5" id="product-grid">
-                    <?php foreach ($products as $item): ?>
-                    <?php
-                    $productImages = $item['images'] ?? [];
-                    if (empty($productImages)) {
-                        $productImages = [$site['baseUrl'] . "/public/assets/images/unknown/unknown.png"];
-                    }
-                    $specs = $item['specs'] ?? [];
-                    $units = $item['units'] ?? [];
+                <?php if (!empty($pageProducts)): ?>
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+                    <?php foreach ($pageProducts as $item):
+                        $productImages = $item['images'] ?? [];
+                        if (empty($productImages)) $productImages = [$site['baseUrl'] . '/public/assets/images/unknown/unknown.png'];
+                        $specs = $item['specs'] ?? [];
+                        $units = $item['units'] ?? [];
+                        $inStock = $item['in_stock'] ?? false;
+                        $canonicalUrl = $item['seo']['canonicalUrl'] ?? '#';
+                        $productUrl = htmlspecialchars($canonicalUrl);
+                        $productName = htmlspecialchars($item['name'] ?? $item['title'] ?? 'Товар');
+                        $firstUnit = !empty($units) ? array_key_first($units) : '';
+                        $firstPrice = !empty($units) ? $units[$firstUnit] : 0;
+
+                        $diameter = $specs['диаметр'] ?? '';
+                        $brand = $specs['Марка'] ?? $specs['марка'] ?? '';
+                        $gost = $specs['ГОСТ'] ?? $specs['гост'] ?? '';
+                        $razmer = $specs['Размер'] ?? '';
                     ?>
-                    <div class="product-card bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col">
+                    <div class="product-card bg-white rounded-xl border border-zinc-200 overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col"
+                         data-diameter="<?= htmlspecialchars($diameter) ?>"
+                         data-brand="<?= htmlspecialchars($brand) ?>"
+                         data-gost="<?= htmlspecialchars($gost) ?>">
+
                         <!-- Image -->
-                        <a href="<?= htmlspecialchars($item['seo']['canonicalUrl'] ?? '#') ?>" class="product-card-image block aspect-square bg-gray-100 relative overflow-hidden">
+                        <a href="<?= $productUrl ?>" class="product-card-image block aspect-square bg-zinc-100 relative overflow-hidden group">
                             <?php if (count($productImages) > 1): ?>
-                            <div class="swiper product-swiper w-full h-full"
-                                data-product-id="<?= htmlspecialchars($item['id'] ?? '') ?>">
+                            <div class="swiper product-swiper w-full h-full" data-product-id="<?= htmlspecialchars($item['id'] ?? '') ?>">
                                 <div class="swiper-wrapper">
-                                    <?php foreach ($productImages as $imgIndex => $imgUrl): ?>
-                                    <div class="swiper-slide flex justify-center items-center bg-gray-100">
-                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>"
-                                            alt="<?= htmlspecialchars($item['title']) ?> - фото <?= $imgIndex + 1 ?>"
-                                            class="w-full h-full object-contain p-4">
+                                    <?php foreach ($productImages as $imgIdx => $imgUrl): ?>
+                                    <div class="swiper-slide flex justify-center items-center bg-zinc-100">
+                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" class="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300">
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
                                 <div class="swiper-pagination"></div>
                             </div>
                             <?php else: ?>
-                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>"
-                                alt="<?= htmlspecialchars($item['title']) ?>"
-                                class="w-full h-full object-contain p-4">
+                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" class="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300">
                             <?php endif; ?>
 
                             <!-- Availability Badge -->
-                            <?php if ($item['in_stock'] ?? false): ?>
-                            <span class="absolute top-2 left-2 bg-green-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <?php if ($inStock): ?>
+                            <span class="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                                 <i class="fas fa-check-circle text-[8px]"></i> В наличии
                             </span>
                             <?php else: ?>
-                            <span class="absolute top-2 left-2 bg-red-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                            <span class="absolute top-2 left-2 bg-zinc-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
                                 <i class="fas fa-clock text-[8px]"></i> Под заказ
                             </span>
                             <?php endif; ?>
+
+                            <!-- Favorites -->
+                            <button type="button" class="add-to-fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-zinc-200 flex items-center justify-center shadow-sm hover:border-zinc-400 hover:bg-white transition-all" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>" title="В избранное">
+                                <svg width="14" height="12" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z" stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
                         </a>
 
                         <!-- Info -->
                         <div class="p-4 flex flex-col flex-1">
-                            <a href="<?= htmlspecialchars($item['seo']['canonicalUrl'] ?? '#') ?>">
-                                <h3 class="text-sm font-semibold text-gray-900 hover:text-red-600 transition leading-snug mb-2 line-clamp-2">
-                                    <?= htmlspecialchars($item['title']) ?>
-                                </h3>
+                            <a href="<?= $productUrl ?>">
+                                <h3 class="text-sm font-semibold text-zinc-900 hover:text-red-600 transition leading-snug mb-2 line-clamp-2 min-h-[36px]"><?= $productName ?></h3>
                             </a>
 
                             <!-- Specs Tags -->
                             <div class="flex flex-wrap gap-1.5 mb-3">
-                                <?php
-                                $specLabels = ['Марка', 'Размер', 'ГОСТ'];
-                                foreach ($specLabels as $label):
-                                    $value = $specs[$label] ?? $specs[mb_strtolower($label)] ?? '';
-                                    if (!empty($value)):
-                                ?>
-                                <span class="inline-flex items-center gap-1 bg-gray-100 text-gray-600 text-[10px] px-2 py-0.5 rounded-full">
-                                    <?= htmlspecialchars($label) ?>: <?= htmlspecialchars($value) ?>
-                                </span>
-                                <?php
-                                    endif;
-                                endforeach;
-                                ?>
+                                <?php if ($brand): ?>
+                                <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] px-2 py-0.5 rounded-full font-medium"><?= htmlspecialchars($brand) ?></span>
+                                <?php endif; ?>
+                                <?php if ($razmer): ?>
+                                <span class="inline-flex items-center gap-1 bg-zinc-100 text-zinc-600 text-[10px] px-2 py-0.5 rounded-full font-medium"><?= htmlspecialchars($razmer) ?></span>
+                                <?php endif; ?>
+                                <?php if ($gost): ?>
+                                <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] px-2 py-0.5 rounded-full font-medium"><?= htmlspecialchars($gost) ?></span>
+                                <?php endif; ?>
+                                <?php if ($diameter): ?>
+                                <span class="inline-flex items-center gap-1 bg-zinc-100 text-zinc-600 text-[10px] px-2 py-0.5 rounded-full font-medium">Ø <?= htmlspecialchars($diameter) ?></span>
+                                <?php endif; ?>
                             </div>
 
-                            <!-- Spacer -->
                             <div class="flex-1"></div>
 
                             <!-- Price -->
                             <?php if (!empty($units)): ?>
-                            <div class="space-y-1 mb-3">
-                                <?php foreach ($units as $unit => $price): ?>
-                                <div class="flex items-baseline gap-1">
-                                    <span class="text-lg font-bold text-gray-900"><?= number_format($price, 0, '', ' ') ?></span>
-                                    <span class="text-sm font-bold text-gray-900">₽</span>
-                                    <span class="text-xs text-gray-400">/ <?= htmlspecialchars($unit) ?></span>
+                            <div class="mb-3" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
+                                <meta itemprop="priceCurrency" content="RUB">
+                                <meta itemprop="availability" content="<?= $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' ?>">
+                                <div itemprop="price" content="<?= number_format($firstPrice, 0, '', '') ?>" class="price-display text-xl font-bold text-zinc-900 leading-tight">
+                                    <?= number_format($firstPrice, 0, '', ' ') ?> <span class="text-sm font-normal text-zinc-500">₽</span>
                                 </div>
-                                <?php endforeach; ?>
+                                <div class="flex gap-0.5 mt-1.5">
+                                    <?php foreach ($units as $unit => $price): ?>
+                                    <button type="button"
+                                        class="unit-btn text-[10px] px-2 py-0.5 rounded-md font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-800' : 'bg-zinc-100 text-zinc-500 hover:bg-red-50 hover:text-red-700' ?>"
+                                        data-unit="<?= htmlspecialchars($unit) ?>" data-price="<?= htmlspecialchars($price) ?>">
+                                        <?= htmlspecialchars($unit) ?>
+                                    </button>
+                                    <?php endforeach; ?>
+                                </div>
                             </div>
+                            <?php else: ?>
+                            <div class="text-sm text-zinc-400 mb-3">Цена по запросу</div>
                             <?php endif; ?>
 
                             <!-- Add to Cart -->
                             <div class="flex items-center gap-2" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                <?php $firstU = !empty($units) ? array_key_first($units) : ''; ?>
                                 <input type="number" value="1" min="1"
-                                    class="cart-qty w-14 h-9 text-center border border-gray-200 rounded-lg text-sm focus:outline-none"
+                                    class="cart-qty w-14 h-9 text-center border border-zinc-200 rounded-lg text-sm focus:outline-none focus:border-red-400"
                                     data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
                                 <?php if (count($units) > 1): ?>
-                                <select class="cart-unit h-9 px-2 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
+                                <select class="cart-unit h-9 px-2 border border-zinc-200 rounded-lg text-xs bg-white focus:outline-none focus:border-red-400"
                                     data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
                                     <?php foreach ($units as $u => $p): ?>
-                                    <option value="<?= htmlspecialchars($u) ?>" <?= $u === $firstU ? 'selected' : '' ?>><?= htmlspecialchars($u) ?></option>
+                                    <option value="<?= htmlspecialchars($u) ?>" <?= $u === $firstUnit ? 'selected' : '' ?>><?= htmlspecialchars($u) ?></option>
                                     <?php endforeach; ?>
                                 </select>
                                 <?php else: ?>
-                                <span class="text-xs text-gray-400 w-9"><?= htmlspecialchars($firstU) ?></span>
+                                <span class="text-xs text-zinc-400 w-9 shrink-0"><?= htmlspecialchars($firstUnit) ?></span>
                                 <?php endif; ?>
                                 <button type="button"
-                                    class="add-to-cart-btn flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1"
+                                    class="add-to-cart-btn flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5"
                                     data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>"
-                                    data-unit="<?= htmlspecialchars($firstU) ?>">
-                                    <i class="fas fa-shopping-cart"></i> В корзину
+                                    data-unit="<?= htmlspecialchars($firstUnit) ?>">
+                                    <i class="fas fa-shopping-cart text-[10px]"></i> В корзину
                                 </button>
                             </div>
                         </div>
@@ -587,129 +393,64 @@ foreach ($allProducts as $p) {
                     <?php endforeach; ?>
                 </div>
 
-                <!-- Pagination (simple) -->
-                <?php if (count($products) > 24): ?>
+                <!-- Pagination -->
+                <?php if ($totalPages > 1): ?>
                 <div class="mt-8 flex justify-center">
-                    <nav class="flex items-center gap-2">
-                        <button class="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-500" disabled>
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg font-medium">1</button>
-                        <button class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">2</button>
-                        <button class="px-4 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">3</button>
-                        <button class="px-3 py-2 text-sm border border-gray-200 rounded-lg hover:bg-gray-50 text-gray-600">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
+                    <nav class="inline-flex items-center gap-1" aria-label="Pagination">
+                        <?php if ($page > 1): ?>
+                        <a href="?page=<?= $page - 1 ?>" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
+                        </a>
+                        <?php endif; ?>
+                        <?php
+                        $range = 2;
+                        $showPages = [1];
+                        for ($i = max(2, $page - $range); $i <= min($totalPages - 1, $page + $range); $i++) $showPages[] = $i;
+                        if ($totalPages > 1) $showPages[] = $totalPages;
+                        $showPages = array_unique($showPages);
+                        sort($showPages);
+                        $prevPage = 0;
+                        foreach ($showPages as $i):
+                            if ($prevPage > 0 && $i > $prevPage + 1):
+                        ?>
+                        <span class="px-1.5 text-sm text-zinc-400">...</span>
+                        <?php endif; $prevPage = $i; $active = $i === $page; ?>
+                        <a href="?page=<?= $i ?>" class="<?= $active ? 'bg-red-600 text-white border-red-600 shadow-sm' : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' ?> inline-flex items-center justify-center rounded-lg min-w-[36px] h-9 px-2 text-sm font-medium transition-colors"><?= $i ?></a>
+                        <?php endforeach; ?>
+                        <?php if ($page < $totalPages): ?>
+                        <a href="?page=<?= $page + 1 ?>" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+                        </a>
+                        <?php endif; ?>
                     </nav>
                 </div>
                 <?php endif; ?>
 
                 <?php else: ?>
-                <div class="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                    <i class="fas fa-box-open text-4xl text-gray-300 mb-4"></i>
-                    <p class="text-gray-500 text-lg">В этой категории пока нет товаров.</p>
-                    <p class="text-gray-400 text-sm mt-2">Пожалуйста, загляните позже или <a href="/contacts" class="text-red-600 hover:underline">свяжитесь с нами</a>.</p>
+                <div class="bg-white rounded-xl border border-zinc-200 p-16 text-center">
+                    <svg class="w-16 h-16 text-zinc-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+                    <p class="text-zinc-500 text-lg font-medium">В этой категории пока нет товаров.</p>
+                    <p class="text-zinc-400 text-sm mt-1">Попробуйте выбрать другую категорию.</p>
+                    <a href="/market" class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors">
+                        <i class="fas fa-arrow-left text-xs"></i> Вернуться в каталог
+                    </a>
                 </div>
                 <?php endif; ?>
+
             </div>
         </div>
     </main>
 
     <?php include_once './public/components/footer.php'; ?>
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-    <!-- Header JS -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Mobile menu toggle
-            const toggle = document.querySelector('.mobile-menu-toggle');
-            const menu = document.querySelector('.mobile-menu');
-            const overlay = document.querySelector('.mobile-menu-overlay');
-            const closeBtn = document.querySelector('.mobile-menu-close');
-
-            function openMenu() {
-                menu.classList.add('active');
-                overlay.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeMenu() {
-                menu.classList.remove('active');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-
-            if (toggle) toggle.addEventListener('click', openMenu);
-            if (closeBtn) closeBtn.addEventListener('click', closeMenu);
-            if (overlay) overlay.addEventListener('click', closeMenu);
-
-            // Product Swiper init
-            document.querySelectorAll('.product-swiper').forEach(function (swiperEl) {
-                new Swiper(swiperEl, {
-                    loop: false,
-                    pagination: {
-                        el: swiperEl.querySelector('.swiper-pagination'),
-                        clickable: true
-                    },
-                    autoplay: false
-                });
-            });
-
-            // Filter checkboxes
-            document.querySelectorAll('.filter-checkbox').forEach(function (cb) {
-                cb.addEventListener('change', function () {
-                    const filterType = this.dataset.filter;
-                    const value = this.value;
-                    const checked = this.checked;
-                    const cards = document.querySelectorAll('#product-grid .product-card');
-
-                    cards.forEach(function (card) {
-                        const cardData = card.dataset;
-                        let match = true;
-
-                        document.querySelectorAll('.filter-checkbox:checked').forEach(function (checkedCb) {
-                            const type = checkedCb.dataset.filter;
-                            const val = checkedCb.value;
-                            if (type === 'diameter') {
-                                if (!cardData.diameter || !cardData.diameter.includes(val)) match = false;
-                            }
-                            if (type === 'brand') {
-                                if (!cardData.brand || !cardData.brand.includes(val)) match = false;
-                            }
-                            if (type === 'gost') {
-                                if (!cardData.gost || !cardData.gost.includes(val)) match = false;
-                            }
-                        });
-
-                        card.style.display = match ? '' : 'none';
-                    });
-                });
-            });
-
-            // Set data attributes on product cards for filtering
-            <?php foreach ($products as $item): ?>
-            <?php
-            $cardSpecs = $item['specs'] ?? [];
-            $diameter = $cardSpecs['диаметр'] ?? '';
-            $brand = $cardSpecs['Марка'] ?? $cardSpecs['марка'] ?? '';
-            $gost = $cardSpecs['ГОСТ'] ?? $cardSpecs['гост'] ?? '';
-            ?>
-            var card = document.querySelector('#product-grid .product-card:nth-child(<?= array_search($item, array_values($products)) + 1 ?>)');
-            if (card) {
-                card.dataset.diameter = '<?= htmlspecialchars($diameter) ?>';
-                card.dataset.brand = '<?= htmlspecialchars($brand) ?>';
-                card.dataset.gost = '<?= htmlspecialchars($gost) ?>';
-            }
-            <?php endforeach; ?>
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
+    <script src="/public/assets/scripts/components/search.min.js" defer></script>
+    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
 
     <script>
     function updateCartCount() {
-        fetch('/api/cart/count').then(r => r.json()).then(d => {
-            document.querySelectorAll('.cart-count-badge').forEach(el => {
+        fetch('/api/cart/count').then(function(r) { return r.json(); }).then(function(d) {
+            document.querySelectorAll('.cart-count-badge').forEach(function(el) {
                 el.textContent = d.count > 99 ? '99+' : d.count;
                 el.style.display = d.count > 0 ? 'flex' : 'none';
             });
@@ -717,69 +458,192 @@ foreach ($allProducts as $p) {
     }
 
     function addToCart(pid, qty, unit) {
-        const fd = new URLSearchParams();
+        var fd = new URLSearchParams();
         fd.append('product_id', pid);
         fd.append('quantity', qty);
         fd.append('unit', unit);
-        return fetch('/api/cart/add', { method: 'POST', body: fd }).then(r => r.json());
+        return fetch('/api/cart/add', { method: 'POST', body: fd }).then(function(r) { return r.json(); });
     }
 
-    updateCartCount();
-    fetch('/api/cart/products').then(r => r.json()).then(d => {
-        var ids = d.products || [];
-        if (!ids.length) return;
-        document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
-            var pid = btn.getAttribute('data-pid');
-            if (ids.indexOf(pid) !== -1) {
-                btn.innerHTML = '<i class="fas fa-plus"></i>';
-                btn.classList.add('bg-green-600', 'in-cart');
-            }
-        });
-    });
-
     document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+        updateCartCount();
+
+        fetch('/api/cart/products').then(function(r) { return r.json(); }).then(function(d) {
+            var ids = d.products || [];
+            if (!ids.length) return;
+            document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
+                var pid = btn.getAttribute('data-pid');
+                if (ids.indexOf(pid) !== -1) {
+                    btn.innerHTML = '<i class="fas fa-plus"></i>';
+                    btn.classList.add('bg-green-600', 'in-cart');
+                }
+            });
+        });
+
+        fetch('/api/favorites/products').then(function(r) { return r.json(); }).then(function(d) {
+            var ids = d.products || [];
+            if (!ids.length) return;
+            document.querySelectorAll('.add-to-fav-btn').forEach(function(btn) {
+                var pid = btn.getAttribute('data-pid');
+                if (ids.indexOf(pid) !== -1) {
+                    btn.querySelector('svg path').setAttribute('fill', '#dc2626');
+                    btn.querySelector('svg path').setAttribute('stroke', '#dc2626');
+                    btn.classList.add('in-fav');
+                }
+            });
+        });
+
+        // Cart buttons
+        document.querySelectorAll('.add-to-cart-btn').forEach(function(btn) {
             btn.addEventListener('click', function() {
-                const card = this.closest('[data-pid]');
-                const pid = this.dataset.pid;
-                const qtyInput = card.querySelector('.cart-qty');
-                const unitSelect = card.querySelector('.cart-unit');
-                const qty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
-                const unit = unitSelect ? unitSelect.value : this.dataset.unit;
-                const wasInCart = this.classList.contains('in-cart');
-                const originalCart = '<i class="fas fa-shopping-cart"></i> В корзину';
-                const originalInCart = '<i class="fas fa-plus"></i>';
+                var card = this.closest('[data-pid]');
+                var pid = this.dataset.pid;
+                var qtyInput = card ? card.querySelector('.cart-qty') : null;
+                var unitSelect = card ? card.querySelector('.cart-unit') : null;
+                var qty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
+                var unit = unitSelect ? unitSelect.value : this.dataset.unit;
+                var wasInCart = this.classList.contains('in-cart');
+                var originalCart = '<i class="fas fa-shopping-cart text-[10px]"></i> В корзину';
+                var originalInCart = '<i class="fas fa-plus"></i>';
 
                 this.disabled = true;
                 this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-                addToCart(pid, qty, unit).then(r => {
+                addToCart(pid, qty, unit).then(function(r) {
                     if (r.success) {
-                        this.innerHTML = '<i class="fas fa-plus"></i>';
-                        this.classList.add('bg-green-600', 'in-cart');
-                        setTimeout(() => {
-                            this.disabled = false;
-                            this.innerHTML = originalInCart;
-                        }, 1500);
+                        btn.innerHTML = '<i class="fas fa-plus"></i>';
+                        btn.classList.add('bg-green-600', 'in-cart');
+                        setTimeout(function() { btn.disabled = false; btn.innerHTML = originalInCart; }, 1500);
                         updateCartCount();
                     } else {
-                        this.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                        setTimeout(() => {
-                            this.disabled = false;
-                            this.innerHTML = wasInCart ? originalInCart : originalCart;
-                        }, 2000);
+                        btn.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                        setTimeout(function() { btn.disabled = false; btn.innerHTML = wasInCart ? originalInCart : originalCart; }, 2000);
                     }
-                }).catch(() => {
-                    this.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                    setTimeout(() => {
-                        this.disabled = false;
-                        this.innerHTML = wasInCart ? originalInCart : originalCart;
-                    }, 2000);
+                }).catch(function() {
+                    btn.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
+                    setTimeout(function() { btn.disabled = false; btn.innerHTML = wasInCart ? originalInCart : originalCart; }, 2000);
                 });
+            });
+        });
+
+        // Favorites buttons
+        document.querySelectorAll('.add-to-fav-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var pid = this.dataset.pid;
+                var self = this;
+                var path = self.querySelector('svg path');
+                var wasFav = self.classList.contains('in-fav');
+                var fd = new URLSearchParams();
+                fd.append('product_id', pid);
+
+                fetch('/api/favorites/toggle', { method: 'POST', body: fd })
+                    .then(function(r) { return r.json(); })
+                    .then(function(r) {
+                        if (r.success) {
+                            if (wasFav) {
+                                self.classList.remove('in-fav');
+                                path.setAttribute('fill', 'none');
+                                path.setAttribute('stroke', '#a1a1aa');
+                            } else {
+                                self.classList.add('in-fav');
+                                path.setAttribute('fill', '#dc2626');
+                                path.setAttribute('stroke', '#dc2626');
+                            }
+                            if (typeof r.count !== 'undefined') {
+                                var badge = document.getElementById('favCountBadge');
+                                if (badge) {
+                                    badge.textContent = r.count;
+                                    badge.style.display = r.count > 0 ? 'flex' : 'none';
+                                }
+                            }
+                        }
+                    });
+            });
+        });
+
+        // Unit switching
+        document.querySelectorAll('.unit-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var parent = this.parentElement;
+                parent.querySelectorAll('.unit-btn').forEach(function(b) {
+                    b.classList.remove('bg-red-100', 'text-red-800');
+                    b.classList.add('bg-zinc-100', 'text-zinc-500');
+                });
+                this.classList.remove('bg-zinc-100', 'text-zinc-500');
+                this.classList.add('bg-red-100', 'text-red-800');
+
+                var card = this.closest('.product-card');
+                if (card) {
+                    var pd = card.querySelector('.price-display');
+                    if (pd) pd.innerHTML = Math.round(parseFloat(this.dataset.price)).toLocaleString('ru-RU') + ' <span class="text-sm font-normal text-zinc-500">₽</span>';
+                }
+
+                var cardOuter = this.closest('[data-pid]');
+                if (cardOuter) {
+                    var unitSelect = cardOuter.querySelector('.cart-unit');
+                    if (unitSelect) unitSelect.value = this.dataset.unit;
+                    var cartBtn = cardOuter.querySelector('.add-to-cart-btn');
+                    if (cartBtn) cartBtn.dataset.unit = this.dataset.unit;
+                }
+            });
+        });
+
+        // Grid / List view toggle
+        var gv = document.getElementById('grid-view');
+        var lv = document.getElementById('list-view');
+        var pg = document.getElementById('product-grid');
+        if (gv && lv && pg) {
+            function setActive(btn, other) {
+                btn.classList.add('bg-white', 'text-red-600', 'shadow-sm');
+                btn.classList.remove('border', 'border-zinc-200', 'text-zinc-600');
+                other.classList.remove('bg-white', 'text-red-600', 'shadow-sm');
+                other.classList.add('border', 'border-zinc-200', 'text-zinc-600');
+            }
+            gv.addEventListener('click', function() {
+                pg.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5';
+                setActive(gv, lv);
+            });
+            lv.addEventListener('click', function() {
+                pg.className = 'flex flex-col gap-3';
+                pg.querySelectorAll('.product-card').forEach(function(c) { c.classList.add('flex-row'); });
+                setActive(lv, gv);
+            });
+        }
+
+        // Product Swiper init
+        document.querySelectorAll('.product-swiper').forEach(function(swiperEl) {
+            new Swiper(swiperEl, {
+                loop: false,
+                pagination: { el: swiperEl.querySelector('.swiper-pagination'), clickable: true },
+                autoplay: false
+            });
+        });
+
+        // Filter checkboxes
+        document.querySelectorAll('.filter-checkbox').forEach(function(cb) {
+            cb.addEventListener('change', function() {
+                var cards = document.querySelectorAll('#product-grid .product-card');
+                var visible = 0;
+
+                cards.forEach(function(card) {
+                    var match = true;
+                    document.querySelectorAll('.filter-checkbox:checked').forEach(function(checkedCb) {
+                        var type = checkedCb.dataset.filter;
+                        var val = checkedCb.value;
+                        var cardVal = card.dataset[type] || '';
+                        if (cardVal.indexOf(val) === -1) match = false;
+                    });
+                    card.style.display = match ? '' : 'none';
+                    if (match) visible++;
+                });
+
+                var counter = document.getElementById('visibleCount');
+                if (counter) counter.textContent = visible;
             });
         });
     });
     </script>
 </body>
-
 </html>

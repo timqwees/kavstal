@@ -1,46 +1,3 @@
-<!-- Mobile Menu Styles -->
-<style>
-    .mobile-menu {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease-in-out;
-    }
-
-    .mobile-menu.active {
-        transform: translateX(0);
-    }
-
-    .mobile-menu-overlay {
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-    }
-
-    .mobile-menu-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .mobile-menu-toggle span:nth-child(1) {
-        transform-origin: top left;
-    }
-
-    .mobile-menu-toggle span:nth-child(3) {
-        transform-origin: bottom left;
-    }
-
-    .mobile-menu.active .mobile-menu-toggle span:nth-child(1) {
-        transform: rotate(45deg) translate(3px, -3px);
-    }
-
-    .mobile-menu.active .mobile-menu-toggle span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .mobile-menu.active .mobile-menu-toggle span:nth-child(3) {
-        transform: rotate(-45deg) translate(3px, 3px);
-    }
-</style>
-
 <!-- Header -->
 <header class="bg-white border-b-[1px] border-[#bab9bb80] fixed w-full top-0 z-50">
     <nav class="mx-auto px-6 py-4 lg:py-0">
@@ -153,4 +110,4 @@
         </div>
     </div>
 </div>
-<script src="/public/assets/scripts/main/header.js" defer></script>
+<script src="/public/assets/scripts/main/header.min.js" defer></script>
