@@ -28,12 +28,14 @@
       var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
       g.src = BASE_URL + "/packs/js/sdk.js";
       g.async = true;
+      var done = false;
+      var timer = setTimeout(function () { if (!done) { done = true; if (g.parentNode) g.parentNode.removeChild(g); } }, 6000);
+      g.onerror = function () { if (!done) { done = true; clearTimeout(timer); if (g.parentNode) g.parentNode.removeChild(g); } };
       s.parentNode.insertBefore(g, s);
       g.onload = function () {
-        window.chatwootSDK.run({
-          websiteToken: 'Z16V1t3ANHodWwXFQanStee2',
-          baseUrl: BASE_URL
-        });
+        if (done) return;
+        done = true; clearTimeout(timer);
+        try { window.chatwootSDK.run({ websiteToken: 'Z16V1t3ANHodWwXFQanStee2', baseUrl: BASE_URL }); } catch (e) {}
       };
     })(document, "script");
   })();
