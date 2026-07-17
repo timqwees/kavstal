@@ -169,6 +169,13 @@ Routes::get('/ysitemap.xml', function () {
 Routes::get('/sitemap.xml', function () {
     Sitemap::outputCompressed('google', true);
 });
+//==================================================================================================//BLOG
+Routes::get('/blog', function ($path = '/blog/index.php') {
+    Routes::auto_element(dirname(__DIR__, 2) . '/public' . $path, get_defined_vars());
+});
+Routes::get('/blog/{slug}', function ($slug, $path = '/blog/article.php') {
+    Routes::auto_element(dirname(__DIR__, 2) . '/public' . $path, get_defined_vars());
+});
 //==================================================================================================//PRODUCT FEED (Товарный фид YML)
 Routes::get('/feed.yml', function () {
     ProductFeed::outputCompressed(true);

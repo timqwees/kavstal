@@ -132,6 +132,27 @@ class Sitemap
             ];
         }
 
+        // Блог: список и статьи
+        $blogFile = __DIR__ . '/../../../public/blog/data/articles.json';
+        if (file_exists($blogFile)) {
+            $blogArticles = json_decode(file_get_contents($blogFile), true) ?? [];
+            $urls[] = [
+                'loc' => '/blog',
+                'priority' => '0.6',
+                'changefreq' => 'weekly'
+            ];
+            foreach ($blogArticles as $article) {
+                if (!empty($article['slug'])) {
+                    $urls[] = [
+                        'loc' => '/blog/' . $article['slug'],
+                        'priority' => '0.5',
+                        'changefreq' => 'monthly',
+                        'lastmod' => $article['updated_at'] ?? $article['created_at'] ?? null
+                    ];
+                }
+            }
+        }
+
         // Получаем все продукты/категории/подкатегории
         $products = Functions::listProducts();
 
@@ -190,7 +211,7 @@ class Sitemap
     private function buildUrlEntry(array $url, string $format = 'yandex'): string
     {
         $fullUrl = \Setting\route\function\Functions::site()['baseUrl'] . $url['loc'];
-        $lastmod = date('Y-m-d');
+        $lastmod = !empty($url['lastmod']) ? date('Y-m-d', strtotime($url['lastmod'])) : date('Y-m-d');
 
         $xml = "  <url>\n";
         $xml .= "    <loc>" . htmlspecialchars($fullUrl, ENT_XML1, 'UTF-8') . "</loc>\n";

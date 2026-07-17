@@ -70,16 +70,27 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
         </ul>
       </div>
 
-      <!-- Services -->
-      <div>
-        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Контакты</h4>
-        <ul class="space-y-2">
-          <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Связаться с нами</a></li>
-          <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Написать отзыв</a></li>
-          <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Заказать звонок</a></li>
-          <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Реквизиты</a></li>
-        </ul>
-      </div>
+       <!-- Services -->
+       <div>
+         <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Контакты</h4>
+         <ul class="space-y-2">
+           <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Связаться с нами</a></li>
+           <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Написать отзыв</a></li>
+           <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Заказать звонок</a></li>
+           <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Реквизиты</a></li>
+         </ul>
+       </div>
+
+       <!-- Blog -->
+       <div>
+         <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Полезное</h4>
+         <ul class="space-y-2">
+           <li><a href="/blog" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Блог о металлопрокате</a></li>
+           <li><a href="/blog/armatura-vidy-gost-kak-vybrat" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Виды арматуры</a></li>
+           <li><a href="/blog/ves-metalloprokata-tablica" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Вес металлопроката</a></li>
+           <li><a href="/blog/gost-na-metalloprokat-spisok" class="text-sm text-gray-600 hover:text-red-600 transition-colors">ГОСТ на металл</a></li>
+         </ul>
+       </div>
 
       <!-- Contacts -->
       <div>
