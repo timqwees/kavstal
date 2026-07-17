@@ -372,6 +372,179 @@ class Functions
     }
 
     /**
+     * Лёгкие карточки каталога для главной страницы (без полной нормализации 16K товаров).
+     * Парсит CSV один раз, собирает категории/подкатегории + по товару-представителю с ценой и фото.
+     * Результат кэшируется в файл (компактный, ~сотни КБ) — не съедает 128MB, как listProducts().
+     * @return array
+     */
+    public static function getCatalogCards(): array
+    {
+        $cached = self::cacheGet('catalog_cards', self::$_cacheTtl);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $csvDir = self::getCsvDir();
+        $cards = [];
+        if (!is_dir($csvDir)) {
+            return $cards;
+        }
+
+        $tables = self::listCsvTables($csvDir);
+        $cats = ['Сортовой прокат', 'Трубы', 'Листовой прокат', 'Нержавеющая сталь', 'Цветные металлы', 'Метизы', 'Качественные стали', 'Инженерные системы'];
+
+        foreach ($tables as $tableName) {
+            $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
+            if (empty($rows)) {
+                continue;
+            }
+            $hdr = array_keys($rows[0]);
+            if (!in_array('категория', $hdr, true)) {
+                continue;
+            }
+            for ($i = 0; $i < count($rows); $i++) {
+                $row = $rows[$i];
+                $catTitle = trim((string)($row['категория'] ?? ''));
+                if (!in_array($catTitle, $cats, true)) {
+                    continue;
+                }
+                $subTitle = trim((string)($row['подкатегория'] ?? ''));
+                $photo = trim((string)($row['фото'] ?? ''));
+                if (preg_match('#^https?://[^/]+(/.*)$#u', $photo, $m)) {
+                    $photo = $m[1];
+                }
+                if ($photo === '' || strpos($photo, 'unknown.png') !== false) {
+                    continue;
+                }
+                // только первый товар-представитель каждой подкатегории
+                if (isset($cards[$catTitle][$subTitle])) {
+                    continue;
+                }
+                $priceRaw = trim((string)($row['цена'] ?? ''));
+                $unitRaw = trim((string)($row['единица'] ?? ''));
+                $prices = array_map('trim', explode(';', $priceRaw));
+                $unitsList = array_map('trim', explode(';', $unitRaw));
+                $units = [];
+                foreach ($unitsList as $ui => $u) {
+                    if ($u !== '' && isset($prices[$ui]) && $prices[$ui] !== '') {
+                        $units[$u] = (float) str_replace(' ', '', $prices[$ui]);
+                    }
+                }
+                if (empty($units)) {
+                    continue;
+                }
+                $firstUnit = array_key_first($units);
+                $name = trim((string)($row['название'] ?? ''));
+                $inStock = (trim((string)($row['в_наличии'] ?? '0')) === '1');
+                $slug = self::slugify($subTitle);
+                $catSlug = self::slugify($catTitle);
+                $cards[$catTitle][$subTitle] = [
+                    'id' => $catSlug . '-' . $slug,
+                    'name' => $name,
+                    'title' => $subTitle,
+                    'url' => '/market/katalog/' . $catSlug . '/' . $catSlug . '-' . $slug,
+                    'badge' => 'Подкатегория',
+                    'image' => $photo,
+                    'specs' => [],
+                    'units' => $units,
+                    'firstUnit' => $firstUnit,
+                    'firstPrice' => number_format($units[$firstUnit], 0, '', ' '),
+                    'inStock' => $inStock,
+                    'cat' => $catTitle,
+                ];
+            }
+        }
+
+        $all = [];
+        foreach ($cats as $c) {
+            if (!empty($cards[$c])) {
+                $all = array_merge($all, array_values($cards[$c]));
+            }
+        }
+
+        $result = ['list' => $cats, 'all' => $all];
+        self::cacheSet('catalog_cards', $result);
+        return $result;
+    }
+
+    /**
+     * Дерево каталога (категории + подкатегории) для мега-меню в шапке.
+     * Лёгкий аналог listProducts() — парсит CSV, НЕ грузит 16K товаров целиком.
+     * Кэшируется в файл (~десятки КБ). Возвращает:
+     *   ['categories' => [['id'=>slug,'name'=>title,'badge'=>'Категория','categories'=>[],'images'=>[...]]],
+     *    'subcategories' => [catSlug => [['id'=>uniqueSlug,'name'=>...,'categories'=>['id'=>uniqueSlug,'parent_id'=>catSlug],'images'=>[...]]]]]
+     * @return array
+     */
+    public static function getCatalogTree(): array
+    {
+        $cached = self::cacheGet('catalog_tree', self::$_cacheTtl);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $csvDir = self::getCsvDir();
+        $categories = [];
+        $subcategories = [];
+        $catSlugs = [];
+        $baseUrl = self::site()['baseUrl'];
+
+        if (is_dir($csvDir)) {
+            $tables = self::listCsvTables($csvDir);
+            foreach ($tables as $tableName) {
+                $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
+                if (empty($rows)) {
+                    continue;
+                }
+                foreach ($rows as $row) {
+                    $catTitle = trim((string)($row['категория'] ?? ''));
+                    $subTitle = trim((string)($row['подкатегория'] ?? ''));
+                    if ($catTitle === '' || $subTitle === '') {
+                        continue;
+                    }
+                    if (!isset($catSlugs[$catTitle])) {
+                        $catSlugs[$catTitle] = self::slugify($catTitle);
+                        $categories[] = [
+                            'id' => $catSlugs[$catTitle],
+                            'name' => $catTitle,
+                            'badge' => 'Категория',
+                            'categories' => [],
+                            'images' => [],
+                        ];
+                    }
+                    $catSlug = $catSlugs[$catTitle];
+                    $subSlug = $catSlug . '-' . self::slugify($subTitle);
+                    if (isset($subcategories[$catSlug][$subSlug])) {
+                        continue;
+                    }
+                    $photo = trim((string)($row['фото'] ?? ''));
+                    if (preg_match('#^https?://[^/]+(/.*)$#u', $photo, $m)) {
+                        $photo = $m[1];
+                    }
+                    $img = ($photo !== '' && strpos($photo, 'unknown.png') === false)
+                        ? $photo
+                        : $baseUrl . '/public/assets/images/unknown/unknown.png';
+                    $subcategories[$catSlug][$subSlug] = [
+                        'id' => $subSlug,
+                        'name' => $subTitle,
+                        'badge' => 'Подкатегория',
+                        'categories' => ['id' => $subSlug, 'parent_id' => $catSlug],
+                        'images' => [$img],
+                    ];
+                }
+            }
+        }
+
+        $subFlat = [];
+        foreach ($subcategories as $catSlug => $subs) {
+            $subFlat[$catSlug] = array_values($subs);
+        }
+
+        $result = ['categories' => $categories, 'subcategories' => $subFlat];
+        self::cacheSet('catalog_tree', $result);
+        return $result;
+    }
+
+    /**
      * Получить все товары из конкретной таблицы (подкатегории)
      * @param string $tableName Имя таблицы (например 'armatura')
      * @return array

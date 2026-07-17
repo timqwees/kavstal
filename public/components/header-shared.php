@@ -4,18 +4,9 @@ $cartCount = isset($cartCount) ? $cartCount : \App\Models\Cart\Cart::getCount();
 $phone_clean = $site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone']);
 
 // Load catalog data for mega-menu
-$allProducts = \Setting\route\function\Functions::listProducts();
-$catalogCategories = [];
-$catalogSubcategories = [];
-foreach ($allProducts as $p) {
-    if (($p['badge'] ?? '') === 'Категория') {
-        $catalogCategories[] = $p;
-    }
-    if (($p['badge'] ?? '') === 'Подкатегория') {
-        $parentId = $p['categories']['parent_id'] ?? '';
-        $catalogSubcategories[$parentId][] = $p;
-    }
-}
+$tree = \Setting\route\function\Functions::getCatalogTree();
+$catalogCategories = $tree['categories'];
+$catalogSubcategories = $tree['subcategories'];
 ?>
 <link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
 <!-- Top Bar -->

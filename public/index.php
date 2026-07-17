@@ -137,33 +137,9 @@
 
     <!-- Catalog -->
     <?php
-    $cachedProducts = Setting\route\function\Functions::listProducts();
-    $allProducts = [];
-    $cats = ['Сортовой прокат','Трубы','Листовой прокат','Нержавеющая сталь','Цветные металлы','Метизы','Качественные стали','Инженерные системы'];
-    foreach ($cachedProducts as $p) {
-      if (!isset($p['units']) || empty($p['units'])) continue;
-      $b = $p['badge'] ?? '';
-      if ($b === 'Категория' || $b === 'Подкатегория') continue;
-      $firstUnit = array_key_first($p['units']);
-      $allProducts[] = [
-        'id' => $p['id'] ?? '',
-        'name' => $p['name'] ?? $p['title'] ?? 'Товар',
-        'title' => $p['title'] ?? '',
-        'url' => $p['url'] ?? '/market',
-        'badge' => $p['badge'] ?? 'Новинка',
-        'image' => !empty($p['images']) ? $p['images'][0] : '/public/assets/images/unknown/unknown.png',
-        'specs' => $p['specs'] ?? [],
-        'units' => $p['units'],
-        'firstUnit' => $firstUnit,
-        'firstPrice' => number_format($p['units'][$firstUnit], 0, '', ' '),
-        'inStock' => $p['in_stock'] ?? false,
-        'cat' => $p['categories']['title'] ?? '',
-      ];
-    }
-    $catsData = [
-      'list' => $cats,
-      'all' => $allProducts,
-    ];
+    $catsData = Setting\route\function\Functions::getCatalogCards();
+    $cats = $catsData['list'];
+    $allProducts = $catsData['all'];
     // Для главной страницы отдаём сбалансированную выборку (по категориям),
     // а не весь каталог — это сокращает HTML с ~9 МБ до десятков КБ.
     $homeProducts = [];
@@ -340,11 +316,11 @@
         </div>
         <?php
         $calcProducts = []; $seen = [];
-        foreach ($cachedProducts as $p) {
+        foreach ($allProducts as $p) {
           if (!isset($p['units']) || empty($p['units'])) continue;
           $b = $p['badge'] ?? '';
           if ($b === 'Категория' || $b === 'Подкатегория') continue;
-          $sk = $p['categories']['id'] ?? 'other';
+          $sk = $p['cat'] ?? 'other';
           if (!isset($seen[$sk])) { $seen[$sk] = true; $calcProducts[] = $p; }
           if (count($calcProducts) >= 100) break;
         }
