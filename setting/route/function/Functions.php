@@ -806,13 +806,16 @@ class Functions
         }
         // Fallback: если локальный файл изображения отсутствует — подставляем заглушку
         $root = dirname(__DIR__, 3);
-        $unknownImg = self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png';
+        $baseUrl = self::site()['baseUrl'];
+        $unknownImg = $baseUrl . '/public/assets/images/unknown/unknown.png';
         foreach ($images as &$img) {
             $local = $img;
-            // нормализуем полный URL к локальному пути от корня сайта
+            // нормализуем к локальному пути от корня сайта (срезаем любой домен)
             if (preg_match('#^https?://[^/]+(/.*)$#u', $local, $m)) {
                 $local = $m[1];
             }
+            // подставляем актуальный BASE_URL (без хардкода домена из CSV)
+            $img = $baseUrl . $local;
             if ($local !== '' && $local[0] === '/' && !file_exists($root . $local)) {
                 $img = $unknownImg;
             }

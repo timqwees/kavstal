@@ -95,7 +95,7 @@
             ]
         },
         "telephone": "+7 (495) 989-24-20",
-        "email": "zakaz@kavstal.ru"
+        "email": "<?= $site['email'] ?>"
     }
     </script>
   <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
@@ -309,7 +309,7 @@
                     class="bg-white text-red-500 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">
                     <i class="fas fa-phone mr-2"></i>+7 (495) 989-24-20
                 </a>
-                <a href="mailto:zakaz@kavstal.ru"
+                <a href="mailto:<?= $site['email'] ?>"
                     class="bg-red-500 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-500 transition">
                     <i class="fas fa-envelope mr-2"></i>Написать нам
                 </a>

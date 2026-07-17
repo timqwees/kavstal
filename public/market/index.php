@@ -32,7 +32,7 @@ $products = Setting\route\function\Functions::listProducts();
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="preconnect" href="https://www.kavstal.ru">
+    <link rel="preconnect" href="<?php echo $site['baseUrl']; ?>">
     <link rel="preconnect" href="<?php echo $site['baseUrl']; ?>" crossorigin>
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ" href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
     <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ — Металлопрокат в Москве" href="<?php echo $site['baseUrl']; ?>/rss.xml" />
@@ -49,7 +49,7 @@ $products = Setting\route\function\Functions::listProducts();
             {
                 "@type": "LocalBusiness", "@id": <?= json_encode($site['baseUrl'] . '#business', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
                 "name": "КАВ СТАЛЬ", "url": <?= json_encode($site['baseUrl'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-                "telephone": "+7-495-989-24-20", "email": "zakaz@kavstal.ru",
+                "telephone": "+7-495-989-24-20", "email": "<?= $site['email'] ?>",
                 "address": { "@type": "PostalAddress", "streetAddress": "Семёновская площадь, 7", "addressLocality": "Москва", "addressRegion": "Московская область", "postalCode": "107023", "addressCountry": "RU" },
                 "openingHours": "Mo-Su 09:00-18:00", "priceRange": "$$"
             },
@@ -57,7 +57,7 @@ $products = Setting\route\function\Functions::listProducts();
                 "@type": "Store", "@id": <?= json_encode($site['baseUrl'] . '/market', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
                 "name": "КАВ СТАЛЬ - Металлобаза", "description": "Интернет-магазин металлопроката",
                 "url": <?= json_encode($site['baseUrl'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-                "telephone": "+7-495-989-24-20", "email": "zakaz@kavstal.ru",
+                "telephone": "+7-495-989-24-20", "email": "<?= $site['email'] ?>",
                 "currenciesAccepted": "RUB", "priceRange": "₽₽"
             },
             {

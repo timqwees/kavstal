@@ -92,9 +92,9 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
             </a>
           </li>
           <li>
-            <a href="mailto:<?= htmlspecialchars($siteInfo['email'] ?? 'zakaz@kavstal.ru') ?>" class="text-sm text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2">
+            <a href="mailto:<?= htmlspecialchars($siteInfo['email'] ?? '') ?>" class="text-sm text-gray-600 hover:text-red-600 transition-colors flex items-center gap-2">
               <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
-              <?= htmlspecialchars($siteInfo['email'] ?? 'zakaz@kavstal.ru') ?>
+              <?= htmlspecialchars($siteInfo['email'] ?? '') ?>
             </a>
           </li>
           <li>

@@ -77,7 +77,7 @@
                 "closes": "18:00"
             }
         },
-        "email": "zakaz@kavstal.ru",
+        "email": "<?= $site['email'] ?>",
         "telephone": "+7 (495) 989-24-20",
         "sameAs": [],
         "areaServed": {

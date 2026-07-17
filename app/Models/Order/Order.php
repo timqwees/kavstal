@@ -472,7 +472,7 @@ class Order
                 </td>
                 <td style="width:20%;">
                     <div class="footer-title">Сайт</div>
-                    <div class="footer-value">' . htmlspecialchars($site['baseUrl'] ?? 'www.kavstal.ru') . '</div>
+                    <div class="footer-value">' . htmlspecialchars($site['baseUrl'] ?? 'https://www.kavstal.ru') . '</div>
                 </td>
             </tr>
         </table>

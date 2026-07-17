@@ -352,8 +352,8 @@ $services = [
                                         <a href="tel:+74959892420" class="w-full bg-red-500 text-white py-2.5 rounded-lg font-semibold hover:bg-red-500 transition text-sm text-center flex items-center justify-center gap-2">
                                             <i class="fas fa-phone"></i> Заказать
                                         </a>
-                                        <a href="mailto:zakaz@kavstal.ru?subject=Услуга: <?= urlencode($svc['title']) ?>" class="w-full text-gray-500 border border-gray-200 py-2 rounded-lg hover:bg-gray-50 transition text-xs text-center">
-                                            <i class="fas fa-envelope mr-1"></i> zakaz@kavstal.ru
+                                        <a href="mailto:<?= $site['email'] ?>?subject=Услуга: <?= urlencode($svc['title']) ?>" class="w-full text-gray-500 border border-gray-200 py-2 rounded-lg hover:bg-gray-50 transition text-xs text-center">
+                                            <i class="fas fa-envelope mr-1"></i> <?= $site['email'] ?>
                                         </a>
                                         <?php if ($svc['price_note']): ?>
                                         <span class="text-[11px] text-gray-400 text-center"><?= $svc['price_note'] ?></span>
@@ -374,7 +374,7 @@ $services = [
                         <a href="tel:+74959892420" class="bg-white text-red-500 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2">
                             <i class="fas fa-phone"></i> Позвонить
                         </a>
-                        <a href="mailto:zakaz@kavstal.ru" class="bg-red-500 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-900 transition flex items-center justify-center gap-2">
+                        <a href="mailto:<?= $site['email'] ?>" class="bg-red-500 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-900 transition flex items-center justify-center gap-2">
                             <i class="fas fa-envelope"></i> Оставить запрос
                         </a>
                         <a href="https://t.me/<?= htmlspecialchars(ltrim($site['telegram'] ?? 'kavstal_bot', '@')) ?>" target="_blank" rel="noopener" class="bg-sky-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-sky-600 transition flex items-center justify-center gap-2">
@@ -430,7 +430,7 @@ $services = [
                             ['q' => 'Есть ли доставка за МКАД?', 'a' => 'Да, доставляем по Московской области и в регионы РФ. Стоимость рассчитывается индивидуально. От 1 500 ₽ по Москве.'],
                             ['q' => 'Работаете с НДС?', 'a' => 'Да, мы работаем с НДС и без НДС. Предоставляем все закрывающие документы: счёт, договор, УПД, счёт-фактуру.'],
                             ['q' => 'Даёте гарантию на услуги?', 'a' => 'На порошковую покраску — 5 лет. На сварочные работы — от 1 года. На резку и гибку — гарантия соответствия размерам ±0.5 мм.'],
-                            ['q' => 'Можно ли заказать услугу онлайн?', 'a' => 'Да, отправьте заявку на email zakaz@kavstal.ru или позвоните +7 (495) 989-24-20. Мы рассчитаем стоимость за 15 минут.'],
+                            ['q' => 'Можно ли заказать услугу онлайн?', 'a' => 'Да, отправьте заявку на email ' . ($site['email'] ?? 'zakaz@kavstal.ru') . ' или позвоните +7 (495) 989-24-20. Мы рассчитаем стоимость за 15 минут.'],
                         ];
                         foreach ($faqs as $i => $faq):
                         ?>
