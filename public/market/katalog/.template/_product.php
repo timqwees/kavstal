@@ -192,8 +192,8 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             "description": "<?= htmlspecialchars($product['description']) ?>",
             "image": <?= json_encode($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/bgpage/product.png', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
             "url": <?= json_encode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-            "sku": "<?= htmlspecialchars($productID) ?>",
-            "mpn": "<?= htmlspecialchars($productID) ?>",
+            "sku": "<?= htmlspecialchars($product['id'] ?? $productID) ?>",
+            "mpn": "<?= htmlspecialchars($product['id'] ?? $productID) ?>",
             "brand": {
                 "@type": "Brand",
                 "name": "<?= htmlspecialchars($site['company']) ?>"
@@ -253,6 +253,15 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         "@type": "DefinedRegion",
                         "addressCountry": "RU"
                     }
+                },
+                "hasMerchantReturnPolicy": {
+                    "@type": "MerchantReturnPolicy",
+                    "applicableCountry": "RU",
+                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    "merchantReturnDays": "14",
+                    "returnMethod": "https://schema.org/ReturnByMail",
+                    "returnFees": "https://schema.org/FreeReturn",
+                    "refundType": "https://schema.org/FullRefund"
                 }
             }<?php if ($reviewCount > 0 && (float) $averageRating > 0): ?>,
             "review": <?= json_encode($structuredReviews, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>
