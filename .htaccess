@@ -1,6 +1,14 @@
 RewriteEngine On
 RewriteBase /
 
+# Принудительный HTTPS + www (канонический домен)
+# Учитываем X-Forwarded-Proto/Host для работы за Nginx-прокси (без петель редиректа)
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_X_FORWARDED_PROTO} !https
+RewriteCond %{HTTP_HOST} !^www\.kavstal\.ru$ [NC]
+RewriteCond %{HTTP_HOST} ^(?:www\.)?kavstal\.ru$ [NC]
+RewriteRule ^ https://www.kavstal.ru%{REQUEST_URI} [R=301,L]
+
 # Кеш для статических ассетов (1 год, immutable)
 <IfModule mod_expires.c>
   ExpiresActive On

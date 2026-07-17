@@ -70,7 +70,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> купить в Москве — цена за тонну, сортамент, ГОСТ | КАВ СТАЛЬ</title>
     <meta name="description" content="<?= htmlspecialchars(($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' — купить в Москве по выгодной цене за тонну и за метр. ' . ($categoryInfo['description'] ?: 'Широкий сортамент металлопроката по ГОСТ, резка в размер, доставка по Москве и МО от КАВ СТАЛЬ.')) ?>">
     <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, купить <?= htmlspecialchars(mb_strtolower($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория')) ?> в Москве, металлопрокат, цена за тонну, сортамент, ГОСТ, доставка, резка">
-    <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? '/market') ?>">
+    <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? parse_url($_SERVER['REQUEST_URI'] ?? '/market', PHP_URL_PATH)) ?>">
 
     <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены | КАВ СТАЛЬ">
     <meta property="og:description" content="<?= htmlspecialchars($categoryInfo['description'] ?? $categoryInfo['title'] ?? 'Категория') ?>">

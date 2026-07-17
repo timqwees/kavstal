@@ -182,8 +182,15 @@ class Functions
             return $cached;
         }
 
-        $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https://' : 'http://';
-        $host = $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on')
+            ? 'https://' : 'http://';
+        $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
+        $host = preg_replace('/^https?:\/\//i', '', $host);
+        if (stripos($host, 'www.') !== 0) {
+            $host = 'www.' . $host;
+        }
         $baseUrl = $protocol . $host;
         $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
         $canonical = $baseUrl . $requestUri;
@@ -616,6 +623,23 @@ class Functions
         $images = [];
         if ($фото !== '') {
             $images = array_values(array_filter(array_map('trim', explode(';', (string) $фото))));
+        }
+        // Fallback: если локальный файл изображения отсутствует — подставляем заглушку
+        $root = dirname(__DIR__, 3);
+        $unknownImg = self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png';
+        foreach ($images as &$img) {
+            $local = $img;
+            // нормализуем полный URL к локальному пути от корня сайта
+            if (preg_match('#^https?://[^/]+(/.*)$#u', $local, $m)) {
+                $local = $m[1];
+            }
+            if ($local !== '' && $local[0] === '/' && !file_exists($root . $local)) {
+                $img = $unknownImg;
+            }
+        }
+        unset($img);
+        if (empty($images)) {
+            $images = [$unknownImg];
         }
 
         // Авто-keywords
