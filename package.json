@@ -25,6 +25,7 @@
         "run": "app/Config/CLI/run"
     },
     "scripts": {
+        "clean": "rm -rf app/Storage/cache/*.json file/sitemap_*.xml file/rss.xml file/feed.yml public/file/cache/*.cache 2>/dev/null; echo '✅ Cache cleared (app/Storage/cache, file/sitemap_*.xml, file/rss.xml, file/feed.yml, public/file/cache)'",
         "zip": "zip -rqq qweescore.zip . -x '*.zip' -x '*.DS_Store'",
         "qwees:start": "php -S localhost:8000",
         "build:css": "node -e 'const fs=require(\"fs\");let css=fs.readFileSync(\"public/assets/styles/catalog.css\",\"utf8\");css=css.replace(/\\/\\*[\\s\\S]*?\\*\\//g,\"\").replace(/\\s+/g,\" \").replace(/\\s*([{}:;,])\\s*/g,\"$1\").replace(/;}/g,\"}\");fs.writeFileSync(\"public/assets/styles/catalog.min.css\",css);'",
