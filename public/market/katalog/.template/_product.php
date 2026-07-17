@@ -1011,7 +1011,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <div class="swiper-wrapper">
                         <?php foreach ($similarProducts as $item):
                             $itemUnit = array_key_first($item['units'] ?? []);
-                            $itemPrice = is_numeric($item['units'][$itemUnit] ?? null) ? (float) $item['units'][$itemUnit] : 0;
+                            $itemPrice = ($itemUnit !== null && is_numeric($item['units'][$itemUnit] ?? null)) ? (float) $item['units'][$itemUnit] : 0;
                             $itemSpecs = [];
                             if (!empty($item['specs']) && is_array($item['specs'])) {
                                 $specCount = 0;
