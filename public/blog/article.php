@@ -16,12 +16,13 @@ if (!$article) {
     exit;
 }
 
-$pageUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($article['slug']);
-$pageTitle = $article['title'] . ' | Блог КАВ СТАЛЬ';
-$pageDescription = $article['metaDescription'] ?? $article['excerpt'] ?? '';
 $img = $article['image'] ?? '/public/assets/images/bgpage/product.png';
-$datePublished = $article['created_at'] ?? '';
-$dateModified = $article['updated_at'] ?? $datePublished;
+    $ogImg = (str_starts_with($img, 'http')) ? $img : $site['baseUrl'] . $img;
+    $pageUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($article['slug']);
+    $pageTitle = $article['title'] . ' | Блог КАВ СТАЛЬ';
+    $pageDescription = $article['metaDescription'] ?? $article['excerpt'] ?? '';
+    $datePublished = $article['created_at'] ?? '';
+    $dateModified = $article['updated_at'] ?? $datePublished;
 
 // Простой рендер контента (markdown-lite)
 function renderContent(string $text): string
@@ -92,11 +93,11 @@ if (count($related) < 3) {
     <meta property="og:url" content="<?= htmlspecialchars($pageUrl) ?>">
     <meta property="og:site_name" content="<?= htmlspecialchars($site['company']) ?>">
     <meta property="og:locale" content="ru_RU">
-    <meta property="og:image" content="<?= htmlspecialchars($site['baseUrl'] . $img) ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($ogImg) ?>">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= htmlspecialchars($article['title']) ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($pageDescription) ?>">
-    <meta name="twitter:image" content="<?= htmlspecialchars($site['baseUrl'] . $img) ?>">
+    <meta name="twitter:image" content="<?= htmlspecialchars($ogImg) ?>">
     <meta name="robots" content="index, follow">
     <meta name="author" content="<?= htmlspecialchars($article['author'] ?? $site['company']) ?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -138,7 +139,7 @@ if (count($related) < 3) {
         <h1 class="text-3xl font-bold text-zinc-900 mb-4" itemprop="headline"><?= htmlspecialchars($article['title']) ?></h1>
         <meta itemprop="author" content="<?= htmlspecialchars($article['author'] ?? $site['company']) ?>">
         <meta itemprop="publisher" content="<?= htmlspecialchars($site['company']) ?>">
-        <img src="<?= htmlspecialchars($site['baseUrl'] . $img) ?>" alt="<?= htmlspecialchars($article['title']) ?>" width="800" height="450" itemprop="image" class="w-full rounded-xl mb-6 object-cover">
+        <img src="<?= htmlspecialchars($ogImg) ?>" alt="<?= htmlspecialchars($article['title']) ?>" width="800" height="450" itemprop="image" class="w-full rounded-xl mb-6 object-cover">
         <div itemprop="articleBody">
             <?= $contentHtml ?>
         </div>
@@ -178,7 +179,7 @@ if (count($related) < 3) {
         "name": <?= json_encode($site['company'], JSON_UNESCAPED_UNICODE); ?>,
         "logo": { "@type": "ImageObject", "url": <?= json_encode($site['baseUrl'] . '/public/assets/images/icons/favicon/favicon.svg', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?> }
     },
-    "image": <?= json_encode($site['baseUrl'] . $img, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+    "image": <?= json_encode($ogImg, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
     "description": <?= json_encode($pageDescription, JSON_UNESCAPED_UNICODE); ?>,
     "mainEntityOfPage": { "@type": "WebPage", "@id": <?= json_encode($pageUrl, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?> }
 }

@@ -23,6 +23,7 @@ $pageUrl = $site['baseUrl'] . '/blog';
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta name="keywords" content="металлопрокат, блог, арматура, балка, труба, ГОСТ, вес металла, статьи">
     <link rel="canonical" href="<?= htmlspecialchars($pageUrl) ?>">
+    <link rel="alternate" type="application/rss+xml" title="Блог КАВ СТАЛЬ — RSS" href="<?= htmlspecialchars($site['baseUrl'] . '/blog/rss.xml') ?>">
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta property="og:type" content="website">
@@ -67,7 +68,9 @@ $pageUrl = $site['baseUrl'] . '/blog';
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($articles as $article):
             $url = $site['baseUrl'] . '/blog/' . htmlspecialchars($article['slug']);
-            $img = $article['image'] ?? '/public/assets/images/bgpage/product.png';
+            $rawImg = $article['image'] ?? '/public/assets/images/bgpage/product.png';
+            // если это внешний URL (http/https) — используем как есть, иначе префикс baseUrl
+            $img = (str_starts_with($rawImg, 'http://') || str_starts_with($rawImg, 'https://')) ? $rawImg : $site['baseUrl'] . $rawImg;
             $date = date('d.m.Y', strtotime($article['created_at'] ?? 'now'));
         ?>
         <article class="bg-white rounded-xl overflow-hidden shadow-sm border border-zinc-100 hover:shadow-md transition-shadow" itemscope itemtype="https://schema.org/BlogPosting">

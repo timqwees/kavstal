@@ -173,8 +173,15 @@ Routes::get('/sitemap.xml', function () {
 Routes::get('/blog', function ($path = '/blog/index.php') {
     Routes::auto_element(dirname(__DIR__, 2) . '/public' . $path, get_defined_vars());
 });
+Routes::get('/blog/rss.xml', function () {
+    \Setting\route\function\BlogRssFeed::output();
+});
 Routes::get('/blog/{slug}', function ($slug, $path = '/blog/article.php') {
     Routes::auto_element(dirname(__DIR__, 2) . '/public' . $path, get_defined_vars());
+});
+//==================================================================================================//BLOG RSS FEED
+Routes::get('/blog/rss.xml', function () {
+    \Setting\route\function\BlogRssFeed::output();
 });
 //==================================================================================================//PRODUCT FEED (Товарный фид YML)
 Routes::get('/feed.yml', function () {
