@@ -192,7 +192,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             "description": "<?= htmlspecialchars($product['description']) ?>",
             "image": <?= json_encode($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/bgpage/product.png', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
             "url": <?= json_encode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-            "sku": "<?= htmlspecialchars($product['id'] ?? $productID) ?>",
+            "sku": "<?= htmlspecialchars(mb_strlen($product['id'] ?? $productID) > 50 ? md5($product['id'] ?? $productID) : ($product['id'] ?? $productID)) ?>",
             "mpn": "<?= htmlspecialchars($product['id'] ?? $productID) ?>",
             "brand": {
                 "@type": "Brand",
