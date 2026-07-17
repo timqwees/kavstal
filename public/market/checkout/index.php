@@ -51,6 +51,7 @@ $paymentMethods = [
         .section-body { overflow: hidden; transition: max-height 0.3s ease; }
         .section-body.collapsed { max-height: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; margin-top: 0 !important; }
     </style>
+  <?php include_once __DIR__ . "/../components/seo-head.php"; ?>
 </head>
 <body class="bg-gray-50">
 

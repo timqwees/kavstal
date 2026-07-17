@@ -169,6 +169,10 @@ Routes::get('/sitemap.xml', function () {
 Routes::get('/feed.yml', function () {
     ProductFeed::outputCompressed(true);
 });
+//==================================================================================================//PRODUCT FEED XML ALIAS
+Routes::get('/feed.xml', function () {
+    ProductFeed::outputCompressed(true);
+});
 //==================================================================================================//RSS FEED (Новости и товары)
 Routes::get('/rss.xml', function () {
     RssFeed::output();
@@ -198,6 +202,28 @@ Routes::get('/opensearch.xml', function () {
     echo '  <Url type="text/html" method="get" template="' . $baseUrl . '/market?search={searchTerms}"/>' . "\n";
     echo '  <moz:SearchForm>' . $baseUrl . '/market</moz:SearchForm>' . "\n";
     echo '</OpenSearchDescription>' . "\n";
+});
+//==================================================================================================//PWA MANIFEST
+Routes::get('/manifest.json', function () {
+    $path = dirname(__DIR__, 2) . '/public/manifest.json';
+    if (file_exists($path)) {
+        header('Content-Type: application/manifest+json; charset=utf-8');
+        header('Cache-Control: public, max-age=86400');
+        readfile($path);
+    } else {
+        Routes::error_404('Manifest not found');
+    }
+});
+//==================================================================================================//BROWSERCONFIG (MS Tile)
+Routes::get('/browserconfig.xml', function () {
+    $path = dirname(__DIR__, 2) . '/public/browserconfig.xml';
+    if (file_exists($path)) {
+        header('Content-Type: application/xml; charset=utf-8');
+        header('Cache-Control: public, max-age=86400');
+        readfile($path);
+    } else {
+        Routes::error_404('Browserconfig not found');
+    }
 });
 //==================================================================================================//LLMS.TXT
 Routes::get('/llms.txt', function () {

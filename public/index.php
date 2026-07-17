@@ -4,8 +4,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Купить Металлопрокат / Металлобаза в Москве по выгодным ценам</title>
-  <meta name="description" content="КАВ СТАЛЬ - металлобаза в Москве. Продажа арматуры А500С, балки, труб, листового проката. Низкие цены за тонну. Доставка по Москве и области. Резка в размер. Сертификаты ГОСТ. Звоните: +7 (495) 989-24-20">
+  <title>Купить металлопрокат в Москве — арматура, трубы, лист, балка цена за тонну | КАВ СТАЛЬ</title>
+  <meta name="description" content="КАВ СТАЛЬ — металлобаза в Москве. Купить металлопрокат по выгодной цене за тонну: арматуру А500С, балку, трубы, листовой прокат, уголок, швеллер, круг, полосу, катанку, проволоку, профнастил, сваи, сетку, метизы. Доставка по Москве и МО, резка в размер, сертификаты ГОСТ. ☎ +7 (495) 989-24-20">
 
   <meta property="og:title" content="Купить металлопрокат в Москве | КАВ СТАЛЬ - Арматура с Доставкой">
   <meta property="og:description" content="Металлобаза КАВ СТАЛЬ в Москве. Продажа арматуры, балки, труб, листового проката по низким ценам. Доставка по Москве и области. Резка в размер. ГОСТ. ☎ +7 (495) 989-24-20">
@@ -29,6 +29,7 @@
 
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="preconnect" href="https://www.kavstal.ru">
   <link rel="dns-prefetch" href="https://yandex.ru">
 
   <link rel="icon" type="image/png" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96">
@@ -42,16 +43,7 @@
   <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ" href="<?php echo $site['baseUrl']; ?>/opensearch.xml">
   <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ — Металлопрокат в Москве" href="<?php echo $site['baseUrl']; ?>/rss.xml">
 
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-KPHKLMXW');</script>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KPHKLMXW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-B3941GLKHC"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-B3941GLKHC');</script>
-
-  <!-- Yandex.Metrika -->
-  <script>(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');ym(103554843,'init',{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});</script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/103554843" style="position:absolute;left:-9999px" alt=""></div></noscript>
+  <?php include_once './public/components/seo-head.php'; ?>
 
   <!-- Structured Data -->
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"<?= $site['baseUrl'] ?>#contact","name":"КАВ СТАЛЬ","url":"<?= $site['baseUrl'] ?>","telephone":"+7-495-989-24-20","email":"zakaz@kavstal.ru","address":{"@type":"PostalAddress","streetAddress":"Семёновская площадь, 7","addressLocality":"Москва","addressRegion":"Московская область","postalCode":"115035","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-18:00"},{"@type":"Store","@id":"<?= $site['baseUrl'] ?>/market","name":"КАВ СТАЛЬ","url":"<?= $site['baseUrl'] ?>","telephone":"+7-495-989-24-20","email":"zakaz@kavstal.ru","address":{"@type":"PostalAddress","streetAddress":"Семёновская площадь, 7","addressLocality":"Москва","postalCode":"107023","addressCountry":"RU"}},{"@type":"WebSite","@id":"<?= $site['baseUrl'] ?>#website","url":"<?= $site['baseUrl'] ?>","name":"КАВ СТАЛЬ","potentialAction":{"@type":"SearchAction","target":"<?= $site['baseUrl'] ?>/search?q={search_term_string}","query":"required name=search_term_string"}}]}</script>
@@ -166,6 +158,17 @@
       'list' => $cats,
       'all' => $allProducts,
     ];
+    // Для главной страницы отдаём сбалансированную выборку (по категориям),
+    // а не весь каталог — это сокращает HTML с ~9 МБ до десятков КБ.
+    $homeProducts = [];
+    $perCat = 6;
+    foreach ($cats as $c) {
+      $subset = array_filter($allProducts, function($p) use ($c) { return ($p['cat'] ?? '') === $c; });
+      $homeProducts = array_merge($homeProducts, array_slice($subset, 0, $perCat));
+    }
+    if (count($homeProducts) < 8) {
+      $homeProducts = array_merge($homeProducts, array_slice($allProducts, 0, 8 - count($homeProducts)));
+    }
     ?>
     <section class="py-12 lg:py-16" itemscope itemtype="https://schema.org/CollectionPage">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
@@ -190,7 +193,7 @@
       </div>
     </section>
 
-    <script>window.__products=<?= json_encode($allProducts, JSON_UNESCAPED_UNICODE) ?>;</script>
+    <script>window.__products=<?= json_encode($homeProducts, JSON_UNESCAPED_UNICODE) ?>;</script>
 
     <!-- CTA Banner -->
     <div class="max-w-7xl mx-auto px-4 lg:px-8">
@@ -440,6 +443,39 @@
     </div>
 
     </main>
+
+  <!-- SEO-описание — охват запросов по металлопрокату -->
+  <section class="bg-white border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
+      <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Металлопрокат в Москве оптом и в розницу</h2>
+      <div class="text-sm text-gray-600 leading-relaxed space-y-3">
+        <p>
+          «КАВ СТАЛЬ» — металлобаза в Москве, где можно купить металлопрокат любого вида: сортовой прокат
+          (арматура А500С, балка, двутавр, круг, квадрат, полоса, уголок, швеллер, катанка), трубы (профильные,
+          электросварные, ВГП, бесшовные, водогазопроводные), листовой прокат (горячекатаный, холоднокатаный,
+          рифлёный, оцинкованный), нержавеющую сталь, цветные металлы (медь, латунь, алюминий, бронза),
+          метизы (болты, гайки, шайбы, саморезы, проволока), а также инженерные системы. Весь сортамент — по ГОСТ и ТУ.
+        </p>
+        <p>
+          Цена металлопроката за тонну и за метр зависит от марки стали (Ст3, 09Г2С, 12Х18Н10Т, А500С и др.),
+          размера и объёма заказа. При заказе от 10 тонн действуют оптовые скидки. Мы выполняем резку в размер,
+          доставку по Москве и Московской области в день оплаты и самовывоз со склада. На всю продукцию —
+          сертификаты качества и паспорта.
+        </p>
+        <p class="text-gray-500">
+          Популярные категории:
+          <a href="/market/katalog/sortovoy-prokat" class="text-red-500 hover:underline">сортовой прокат</a>,
+          <a href="/market/katalog/truby" class="text-red-500 hover:underline">трубы</a>,
+          <a href="/market/katalog/listovoy-prokat" class="text-red-500 hover:underline">листовой прокат</a>,
+          <a href="/market/katalog/nerzhaveyushchaya-stal" class="text-red-500 hover:underline">нержавеющая сталь</a>,
+          <a href="/market/katalog/cvetnye-metally" class="text-red-500 hover:underline">цветные металлы</a>,
+          <a href="/market/katalog/metizy" class="text-red-500 hover:underline">метизы</a>,
+          <a href="/market/katalog/kachestvennye-stali" class="text-red-500 hover:underline">качественные стали</a>,
+          <a href="/market/katalog/inzhenernye-sistemy" class="text-red-500 hover:underline">инженерные системы</a>.
+        </p>
+      </div>
+    </div>
+  </section>
 
   <?php include_once './public/components/footer.php'; ?>
 

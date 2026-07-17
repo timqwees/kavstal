@@ -21,6 +21,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
         .status-completed { background: #d1fae5; color: #065f46; }
         .status-cancelled { background: #fee2e2; color: #991b1b; }
     </style>
+  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 <body class="bg-gray-50">
     <?php include_once __DIR__ . '/../../components/header-shared.php'; ?>

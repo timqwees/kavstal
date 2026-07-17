@@ -178,6 +178,7 @@ $services = [
         .spec-value { font-weight: 500; color: #374151; }
         html { scroll-behavior: smooth; }
     </style>
+  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-gray-50">

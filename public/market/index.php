@@ -32,6 +32,7 @@ $products = Setting\route\function\Functions::listProducts();
     <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://www.kavstal.ru">
     <link rel="preconnect" href="<?php echo $site['baseUrl']; ?>" crossorigin>
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ" href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
     <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ — Металлопрокат в Москве" href="<?php echo $site['baseUrl']; ?>/rss.xml" />
@@ -77,6 +78,7 @@ $products = Setting\route\function\Functions::listProducts();
     <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <?php include_once __DIR__ . "/../components/seo-head.php"; ?>
 </head>
 <body class="pb-20 lg:pb-0">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
@@ -430,9 +432,10 @@ $products = Setting\route\function\Functions::listProducts();
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js" defer></script>
-    <script src="/public/assets/scripts/components/catalog.min.js"></script>
+    <script src="/public/assets/scripts/components/catalog.min.js" defer></script>
     <script>
-    $(document).ready(function () { if (typeof window.catalogAPI !== 'undefined') { window.catalogAPI.init(); } });
+    function __initCatalog(){ if (typeof window.catalogAPI !== 'undefined') { window.catalogAPI.init(); } }
+    if (window.jQuery) { jQuery(__initCatalog); } else { document.addEventListener('DOMContentLoaded', __initCatalog); }
     </script>
     <script>
     window.switchUnit = function(button) {

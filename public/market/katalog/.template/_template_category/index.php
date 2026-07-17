@@ -67,9 +67,9 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ</title>
-    <meta name="description" content="<?= htmlspecialchars($categoryInfo['description'] ?? ($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' - купить в Москве по выгодной цене. Поставка металлопроката от КАВ СТАЛЬ.') ?>">
-    <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, металлопрокат, купить <?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> в Москве, цена, доставка">
+    <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> купить в Москве — цена за тонну, сортамент, ГОСТ | КАВ СТАЛЬ</title>
+    <meta name="description" content="<?= htmlspecialchars(($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' — купить в Москве по выгодной цене за тонну и за метр. ' . ($categoryInfo['description'] ?: 'Широкий сортамент металлопроката по ГОСТ, резка в размер, доставка по Москве и МО от КАВ СТАЛЬ.')) ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, купить <?= htmlspecialchars(mb_strtolower($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория')) ?> в Москве, металлопрокат, цена за тонну, сортамент, ГОСТ, доставка, резка">
     <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? '/market') ?>">
 
     <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены | КАВ СТАЛЬ">
@@ -126,6 +126,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+  <?php include_once __DIR__ . "/../../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-zinc-50">
@@ -451,6 +452,56 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
             </div>
         </div>
     </main>
+
+    <!-- SEO-описание категории (для охвата поисковых запросов по металлопрокату) -->
+    <section class="max-w-7xl mx-auto px-4 lg:px-8 py-10" aria-label="Описание раздела">
+      <?php
+      $seoTitle = $subcategoryInfo['name'] ?? ($categoryInfo['title'] ?? 'Металлопрокат');
+      $seoParent = $categoryInfo['title'] ?? '';
+      $seoDesc = !empty($categoryInfo['description']) ? $categoryInfo['description'] : '';
+      ?>
+      <h2 class="text-lg lg:text-xl font-bold text-zinc-900 mb-3">
+        <?= htmlspecialchars($seoTitle) ?> — купить в Москве с доставкой по выгодной цене
+      </h2>
+      <div class="text-sm text-zinc-600 leading-relaxed space-y-3">
+        <p>
+          <?= htmlspecialchars($seoTitle) ?><?= $seoParent && $seoParent !== $seoTitle ? ' (раздел «' . htmlspecialchars($seoParent) . '»)' : '' ?> —
+          это широкий сортамент металлопроката от «КАВ СТАЛЬ». В нашем каталоге представлены
+          <?= htmlspecialchars(mb_strtolower($seoTitle)) ?> по ГОСТ и ТУ с сертификатами качества, в наличии и под заказ.
+          Мы осуществляем продажу металлопроката оптом и в розницу с резкой в размер и доставкой по Москве и Московской области.
+        </p>
+        <?php if ($seoDesc): ?>
+        <p><?= htmlspecialchars($seoDesc) ?></p>
+        <?php endif; ?>
+        <p>
+          Цена на <?= htmlspecialchars(mb_strtolower($seoTitle)) ?> за тонну и за метр зависит от марки стали, размера и объёма заказа.
+          Чтобы узнать актуальную стоимость, выберите позицию в таблице выше или оставьте заявку —
+          менеджер рассчитает цену с учётом скидок при заказе от 10 тонн. Доставка металлобазы —
+          в день оплаты, самовывоз со склада в Москве.
+        </p>
+        <p class="text-zinc-500">
+          Похожие разделы:
+          <?php
+          $relCats = [
+            'Сортовой прокат' => 'sortovoy-prokat',
+            'Трубы' => 'truby',
+            'Листовой прокат' => 'listovoy-prokat',
+            'Нержавеющая сталь' => 'nerzhaveyushchaya-stal',
+            'Цветные металлы' => 'cvetnye-metally',
+            'Метизы' => 'metizy',
+            'Качественные стали' => 'kachestvennye-stali',
+            'Инженерные системы' => 'inzhenernye-sistemy',
+          ];
+          $relLinks = [];
+          foreach ($relCats as $rt => $rslug) {
+            if ($rslug === ($katalog ?? '')) continue;
+            $relLinks[] = '<a href="/market/katalog/' . htmlspecialchars($rslug) . '" class="text-red-500 hover:underline">' . htmlspecialchars(mb_strtolower($rt)) . '</a>';
+          }
+          echo implode(', ', $relLinks);
+          ?>
+        </p>
+      </div>
+    </section>
 
     <?php include_once './public/components/footer.php'; ?>
 

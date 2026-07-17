@@ -15,6 +15,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 <body class="bg-gray-50">
     <?php include_once __DIR__ . '/../../components/header-shared.php'; ?>

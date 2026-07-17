@@ -48,8 +48,8 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($product['seo']['metaTitle'] ?? ($product['name'] . ' | Купить в Москве | КАВ СТАЛЬ')) ?></title>
-    <meta name="description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? '') ?>">
+    <title><?= htmlspecialchars($product['seo']['metaTitle'] ?? ($product['name'] . ' купить в Москве — цена за тонну, характеристики, ГОСТ | КАВ СТАЛЬ')) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? ($product['name'] . ' — купить в Москве по выгодной цене за тонну и за метр. Характеристики, марка стали, ГОСТ, резка в размер и доставка по Москве и МО от КАВ СТАЛЬ.')) ?>">
     <meta name="keywords"
         content="<?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?>, <?= htmlspecialchars($product['title'] ?? '') ?>, купить <?= htmlspecialchars($product['categories']['title'] ?? 'металлопрокат') ?>, <?= htmlspecialchars($product['categories']['title'] ?? '') ?> цена за тонну, <?= htmlspecialchars($product['categories']['subcategory_title'] ?? '') ?>, металлопрокат москва, сортовой прокат, купить арматуру, доставка металлопроката">
     <link rel="canonical" href="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
@@ -382,6 +382,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         .iti__selected-dial-code { color: #000; }
         .iti { width: 100%; }
     </style>
+  <?php include_once __DIR__ . "/../../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-zinc-50">

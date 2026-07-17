@@ -75,6 +75,7 @@
         "telephone": "<?= htmlspecialchars($site['phone']) ?>"
     }
     </script>
+  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-gray-50">
