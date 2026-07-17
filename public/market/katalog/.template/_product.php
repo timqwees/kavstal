@@ -59,7 +59,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     <meta property="og:description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? '') ?>">
     <meta property="og:type" content="product">
     <meta property="og:url" content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
-    <meta property="og:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/product.png">
+    <meta property="og:image" content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['images'][0] ?? '/public/assets/images/bgpage/product.png') ?>">
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="600">
     <meta property="og:site_name" content="<?= htmlspecialchars($site['company'] ?? 'КАВ СТАЛЬ') ?>">
@@ -69,7 +69,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="<?= htmlspecialchars($product['seo']['metaTitle'] ?? ($product['name'] . ' | Купить в Москве | КАВ СТАЛЬ')) ?>">
     <meta name="twitter:description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? '') ?>">
-    <meta name="twitter:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/product.png">
+    <meta name="twitter:image" content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['images'][0] ?? '/public/assets/images/bgpage/product.png') ?>">
 
     <!-- Additional SEO Meta Tags -->
     <meta name="robots" content="index, follow">
@@ -1069,6 +1069,55 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             <?php endif; ?>
 
         </div>
+
+        <!-- FAQ: типовые вопросы по металлопрокату -->
+        <section class="max-w-7xl mx-auto px-4 py-10" aria-labelledby="faq-title">
+            <h2 id="faq-title" class="text-2xl font-bold text-zinc-900 mb-6">Частые вопросы</h2>
+            <div class="space-y-4" itemscope itemtype="https://schema.org/FAQPage">
+                <?php
+                $faqItems = [
+                    'Какой ГОСТ распространяется на ' . ($product['name'] ?? 'данную продукцию') . '?' =>
+                        'Продукция реализуется в соответствии с действующими ГОСТ и ТУ. Конкретный стандарт указан в карточке товара (характеристика «ГОСТ») или уточняется у менеджера при заказе.',
+                    'Осуществляете ли вы резку металлопроката в размер?' =>
+                        'Да, КАВ СТАЛЬ выполняет резку металлопроката в размер по требованию заказчика. Детали и стоимость согласовываются с менеджером.',
+                    'Какие условия доставки металлопроката по Москве и МО?' =>
+                        'Доставка осуществляется по Москве и Московской области. Срок отгрузки — от 0 до 1 рабочего дня, срок транспортировки — до 3 дней. Подробности на странице доставки.',
+                    'Какая форма оплаты доступна при заказе?' =>
+                        'Оплата производится по безналичному расчёту для юридических и физических лиц. Возможна оплата по счёту с НДС. Детали уточняйте у менеджера.',
+                    'Есть ли гарантия на металлопрокат?' =>
+                        'На всю продукцию предоставляется гарантия соответствия заявленным характеристикам и ГОСТ. Условия возврата — в течение 14 дней при сохранении товарного вида.'
+                ];
+                foreach ($faqItems as $q => $a):
+                ?>
+                <div class="border border-zinc-200 rounded-lg p-4" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+                    <h3 class="font-semibold text-zinc-900" itemprop="name"><?= htmlspecialchars($q) ?></h3>
+                    <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                        <p class="mt-2 text-zinc-600" itemprop="text"><?= htmlspecialchars($a) ?></p>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": [
+                <?php
+                $faqJson = [];
+                foreach ($faqItems as $q => $a) {
+                    $faqJson[] = [
+                        '@type' => 'Question',
+                        'name' => $q,
+                        'acceptedAnswer' => ['@type' => 'Answer', 'text' => $a]
+                    ];
+                }
+                echo json_encode($faqJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+                ?>
+            ]
+        }
+        </script>
     </main>
 
     <?php include_once './public/components/footer.php'; ?>

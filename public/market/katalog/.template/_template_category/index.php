@@ -15,8 +15,9 @@ foreach ($allProducts as $p) {
 
 $subcategoryInfo = null;
 if (!empty($subcategoryID)) {
+    $subCatFullId = $categoryID . '-' . $subcategoryID;
     foreach ($allProducts as $p) {
-        if (($p['badge'] ?? '') === 'Подкатегория' && ($p['categories']['id'] ?? '') === $subcategoryID) {
+        if (($p['badge'] ?? '') === 'Подкатегория' && (($p['categories']['id'] ?? '') === $subcategoryID || ($p['categories']['id'] ?? '') === $subCatFullId)) {
             $subcategoryInfo = $p;
             break;
         }
@@ -55,6 +56,8 @@ foreach ($allProducts as $p) {
 }
 
 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$hasFilters = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']);
+$noindexPage = ($page > 1) || $hasFilters;
 $itemsPerPage = 24;
 $totalItems = count($allCategoryProducts);
 $totalPages = max(1, (int)ceil($totalItems / $itemsPerPage));
@@ -70,12 +73,12 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> купить в Москве — цена за тонну, сортамент, ГОСТ | КАВ СТАЛЬ</title>
     <meta name="description" content="<?= htmlspecialchars(($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' — купить в Москве по выгодной цене за тонну и за метр. ' . ($categoryInfo['description'] ?: 'Широкий сортамент металлопроката по ГОСТ, резка в размер, доставка по Москве и МО от КАВ СТАЛЬ.')) ?>">
     <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, купить <?= htmlspecialchars(mb_strtolower($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория')) ?> в Москве, металлопрокат, цена за тонну, сортамент, ГОСТ, доставка, резка">
-    <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? parse_url($_SERVER['REQUEST_URI'] ?? '/market', PHP_URL_PATH)) ?>">
+    <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars(($subcategoryInfo['seo']['canonicalUrl'] ?? $categoryInfo['seo']['canonicalUrl'] ?? parse_url($_SERVER['REQUEST_URI'] ?? '/market', PHP_URL_PATH))) ?>">
 
     <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены | КАВ СТАЛЬ">
     <meta property="og:description" content="<?= htmlspecialchars($categoryInfo['description'] ?? $categoryInfo['title'] ?? 'Категория') ?>">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? '/market') ?>">
+    <meta property="og:url" content="<?= $site['baseUrl'] ?><?= htmlspecialchars(($subcategoryInfo['seo']['canonicalUrl'] ?? $categoryInfo['seo']['canonicalUrl'] ?? '/market')) ?>">
     <meta property="og:site_name" content="<?= htmlspecialchars($site['company']) ?>">
     <meta property="og:locale" content="ru_RU">
     <meta property="og:image" content="<?= $site['baseUrl'] ?>/public/assets/images/bgpage/market.png">
@@ -85,7 +88,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <meta name="twitter:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – КАВ СТАЛЬ">
     <meta name="twitter:description" content="<?= htmlspecialchars($categoryInfo['description'] ?? $categoryInfo['title'] ?? 'Категория') ?>">
     <meta name="twitter:image" content="<?= $site['baseUrl'] ?>/public/assets/images/bgpage/market.png">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="<?= $noindexPage ? 'noindex, follow' : 'index, follow' ?>">
     <meta name="author" content="<?= htmlspecialchars($site['company']) ?>">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">

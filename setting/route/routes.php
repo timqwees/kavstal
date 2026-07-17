@@ -140,6 +140,13 @@ Routes::get('/robots.txt', function () {
     $content .= "Disallow: /send/\n";
     $content .= "Disallow: /*?route=*\n";
     $content .= "Disallow: /*?search=*\n";
+    $content .= "Disallow: /*?category=*\n";
+    $content .= "Disallow: /*?marka=*\n";
+    $content .= "Disallow: /*?gost=*\n";
+    $content .= "Disallow: /*?size=*\n";
+    $content .= "Disallow: /*?price_from=*\n";
+    $content .= "Disallow: /*?price_to=*\n";
+    $content .= "Disallow: /*?page=*\n";
     $content .= "Allow: /\n";
     $content .= "\n";
     $content .= "Clean-param: route\n";

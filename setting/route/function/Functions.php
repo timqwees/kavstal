@@ -362,9 +362,9 @@ class Functions
                     'specs' => [],
                     'seo' => [
                         'metaTitle' => $subData['title'] . ' | Купить в Москве | КАВ СТАЛЬ',
-                        'metaDescription' => $subData['title'] . ' - купить в Москве по выгодной цене.',
+                        'metaDescription' => $subData['title'] . ' - купить в Москве по выгодной цену.',
                         'keywords' => [],
-                        'canonicalUrl' => '/market/katalog/' . $parentSlug . '/' . $uniqueSlug,
+                        'canonicalUrl' => '/market/katalog/' . $parentSlug . '/' . $subData['slug'],
                     ],
                     'categories' => [
                         'id' => $uniqueSlug,
@@ -390,7 +390,8 @@ class Functions
                     $prod['id'] = $origId;
                 }
                 // Синхронизируем canonicalUrl с уникальным id (последний сегмент)
-                if (!empty($prod['seo']['canonicalUrl'])) {
+                // только для реальных товаров, чтобы не ломать URL подкатегорий
+                if (($prod['badge'] ?? '') !== 'Категория' && ($prod['badge'] ?? '') !== 'Подкатегория' && !empty($prod['seo']['canonicalUrl'])) {
                     $parts = explode('/', $prod['seo']['canonicalUrl']);
                     $parts[count($parts) - 1] = $prod['id'];
                     $prod['seo']['canonicalUrl'] = implode('/', $parts);

@@ -1,6 +1,9 @@
 <?php
 $site = Setting\route\function\Functions::site();
 $products = Setting\route\function\Functions::getMarketProducts();
+$hasFilters = !empty($_GET['search']) || !empty($_GET['category']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']);
+$marketPage = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$noindexMarket = $hasFilters || $marketPage > 1;
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -22,7 +25,7 @@ $products = Setting\route\function\Functions::getMarketProducts();
     <meta name="twitter:title" content="КАВ СТАЛЬ | Металлобаза - поставки металлопроката">
     <meta name="twitter:description" content="Поставки металлопроката по Москве и МО.">
     <meta name="twitter:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/market.png">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="<?= $noindexMarket ? 'noindex, follow' : 'index, follow' ?>">
     <meta name="author" content="ООО 'КАВ Сталь'">
     <meta name="keywords" content="металлобаза, металлопрокат, арматура, балка, круг, лист, труба, Москва, МО, ГОСТ, КАВ СТАЛЬ">
     <link rel="canonical" href="<?php echo $site['baseUrl']; ?>/market">
@@ -64,7 +67,7 @@ $products = Setting\route\function\Functions::getMarketProducts();
                 "@type": "WebSite", "@id": <?= json_encode($site['baseUrl'] . '#website', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
                 "url": <?= json_encode($site['baseUrl'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
                 "name": "КАВ СТАЛЬ",
-                "potentialAction": { "@type": "SearchAction", "target": <?= json_encode($site['baseUrl'] . '/search?q={search_term_string}', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>, "query": "required name=search_term_string" }
+                "potentialAction": { "@type": "SearchAction", "target": <?= json_encode($site['baseUrl'] . '/market?search={search_term_string}', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>, "query": "required name=search_term_string" }
             }
         ]
     }
@@ -114,7 +117,7 @@ $products = Setting\route\function\Functions::getMarketProducts();
                                 </li>
                             </ol>
                         </nav>
-                        <h2 class="mt-3 text-xl font-bold text-zinc-900 sm:text-2xl">Металлопрокат</h2>
+                        <h1 class="mt-3 text-xl font-bold text-zinc-900 sm:text-2xl">Металлопрокат</h1>
                     </div>
                     <div class="flex items-center gap-1 bg-zinc-100 rounded-lg p-0.5">
                             <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-500 p-2 shadow-sm transition-colors" title="Сетка">
