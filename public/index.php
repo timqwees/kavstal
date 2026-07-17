@@ -56,7 +56,7 @@
 
   <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-  <link rel="preload" href="/public/assets/styles/main.css" as="stylesheet" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="/public/assets/styles/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="/public/assets/styles/main.css"></noscript>
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css"></noscript>
