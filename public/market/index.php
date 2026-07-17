@@ -1,6 +1,6 @@
 <?php
 $site = Setting\route\function\Functions::site();
-$products = Setting\route\function\Functions::listProducts();
+$products = Setting\route\function\Functions::getMarketProducts();
 ?>
 <!DOCTYPE html>
 <html lang="ru">
