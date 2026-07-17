@@ -57,6 +57,7 @@ $catalogSubcategories = $tree['subcategories'];
                 <a href="/delivery" class="ozon-nav-link">Доставка</a>
                 <a href="/contacts" class="ozon-nav-link">Контакты</a>
                 <a href="/about" class="ozon-nav-link">О компании</a>
+                <a href="/blog" class="ozon-nav-link">Блог</a>
             </div>
             <div class="ozon-header-nav-right">
                 <span class="ozon-nav-text"><?= htmlspecialchars($site['workingHours'] ?? 'Пн-Пт 9:00–18:00') ?></span>

@@ -23,6 +23,7 @@ $catalogSubcategories = $tree['subcategories'];
       </span>
     </div>
     <div class="flex items-center gap-5">
+      <a href="/blog" class="hover:text-red-500 transition-colors">Блоги</a>
       <a href="/delivery" class="hover:text-red-500 transition-colors">Доставка и оплата</a>
       <a href="/guarantees" class="hover:text-red-500 transition-colors">Гарантии</a>
       <a href="/contacts" class="hover:text-red-500 transition-colors">Контакты</a>
@@ -109,6 +110,7 @@ $catalogSubcategories = $tree['subcategories'];
         </button>
         <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50">
           <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[200px]">
+            <a href="/blog" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Блог</a>
             <a href="/contacts" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Контакты</a>
             <a href="/delivery" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Доставка и оплата</a>
             <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">О компании</a>
