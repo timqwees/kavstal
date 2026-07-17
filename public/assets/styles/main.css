@@ -1,7 +1,7 @@
 /* Swiper */
 .swiper { width: 100%; }
-.swiper-button-next, .swiper-button-prev { color: #dc2626; }
-.swiper-pagination-bullet-active { background: #dc2626; }
+.swiper-button-next, .swiper-button-prev { color: #ef4444; }
+.swiper-pagination-bullet-active { background: #ef4444; }
 
 /* Reveal */
 .reveal { opacity: 0; transform: translateY(20px); transition: opacity .6s ease-out, transform .6s ease-out; }

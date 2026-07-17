@@ -27,15 +27,11 @@
     "scripts": {
         "zip": "zip -rqq qweescore.zip . -x '*.zip' -x '*.DS_Store'",
         "qwees:start": "php -S localhost:8000",
-        "build:css": "npx tailwindcss -i ./public/assets/styles/tailwind.css -o ./public/assets/styles/tailwind.min.css --minify && node -e \"const fs=require('fs');let css=fs.readFileSync('public/assets/styles/catalog.css','utf8');css=css.replace(/\\/\\*[\\s\\S]*?\\*\\//g,'').replace(/\\s+/g,' ').replace(/\\s*([{}:;,])\\s*/g,'$1').replace(/;}/g,'}');fs.writeFileSync('public/assets/styles/catalog.min.css',css);\"",
-        "build:js": "node build-js.js",
+        "build:css": "node -e 'const fs=require(\"fs\");let css=fs.readFileSync(\"public/assets/styles/catalog.css\",\"utf8\");css=css.replace(/\\/\\*[\\s\\S]*?\\*\\//g,\"\").replace(/\\s+/g,\" \").replace(/\\s*([{}:;,])\\s*/g,\"$1\").replace(/;}/g,\"}\");fs.writeFileSync(\"public/assets/styles/catalog.min.css\",css);'",
+        "build:js": "node public/build-js.js",
         "build": "npm run build:css && npm run build:js"
     },
-    "devDependencies": {
-        "autoprefixer": "^10.4.0",
-        "cssnano": "^7.1.9",
-        "postcss": "^8.4.0",
-        "tailwindcss": "^3.4.0",
-        "terser": "^5.49.0"
-    }
+"devDependencies": {
+    "terser": "^5.49.0"
+  }
 }

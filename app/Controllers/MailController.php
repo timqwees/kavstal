@@ -73,7 +73,7 @@ class MailController
    * );
    * ```
    */
-  public function sendMail(string $to_mail, string $subject, string $body)
+  public function onMail(string $to_mail, string $subject, string $body, ?string $attachmentPath = null)
   {
     if (empty($to_mail)) {
       message::set('error', "Пустой email получателя!");
@@ -90,6 +90,7 @@ class MailController
       "to_email" => $to_mail,//Получатель
       "subject" => $subject,//заголовок
       "body" => $body,//сообщение
+      "attachment_path" => $attachmentPath,
     ];
 
     try {

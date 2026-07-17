@@ -436,9 +436,13 @@ class Network extends Session
     {
         spl_autoload_register(function ($className) {
 
+            if (strpos($className, 'App\Models\\') !== 0) {
+                return;
+            }
+
             $filePath = dirname(__DIR__) . '/' . str_replace(['\\', 'App\Models'], ['/', ''], $className) . '.php';
 
-            if (file_exists($filePath)) {//have't file
+            if (file_exists($filePath)) {
                 require_once $filePath;
             } else {
                 Message::set('error', "Ошибка загрузки класса '$className'. Файл не существует по пути: $filePath");
@@ -475,42 +479,43 @@ class Network extends Session
      * @param array $data ассоциативный массив с параметрами письма
      * @return bool true, если письмо отправлено успешно, иначе false
      */
-    public function onPHPMailer(array $data)
-    {
+  public function onPHPMailer(array $data)
+  {
 
-        try {
-            $mail = new PHPMailer();
-            $mail->CharSet = 'UTF-8';
+    try {
+      $mail = new PHPMailer();
+      $mail->CharSet = 'UTF-8';
 
-            $mail->isSMTP();
-            $mail->SMTPAuth = true;
-            $mail->SMTPDebug = 0;
+      $mail->isSMTP();
+      $mail->SMTPAuth = true;
+      $mail->SMTPDebug = 0;
 
-            $mail->Host = 'smtp.gmail.com';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //TLS
+      $mail->Host = 'smtp.gmail.com';
+      $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; //TLS
 
-            $mail->Port = $_ENV['EMAIL_PORT'] ?: '';
-            $mail->Username = $_ENV['EMAIL'] ?: '';
-            $mail->Password = $_ENV['EMAIL_PASSWORD'] ?: '';
-            $mail->setFrom($_ENV['EMAIL'] ?: '', $_ENV['EMAIL_NICKNAME'] ?: '');
-            $mail->addAddress($data['to_email']);
-            $mail->Subject = $data['subject'];
+      $mail->Port = $_ENV['EMAIL_PORT'] ?: '';
+      $mail->Username = $_ENV['EMAIL'] ?: '';
+      $mail->Password = $_ENV['EMAIL_PASSWORD'] ?: '';
+      $mail->setFrom($_ENV['EMAIL'] ?: '', $_ENV['EMAIL_NICKNAME'] ?: '');
+      $mail->addAddress($data['to_email']);
+      $mail->Subject = $data['subject'];
 
-            $mail->msgHTML($data['body']);
+      $mail->msgHTML($data['body']);
 
-            // Прикрепить файл
-            //$mail->addAttachment('path_to_file.jpg');
+      if (!empty($data['attachment_path']) && file_exists($data['attachment_path'])) {
+          $mail->addAttachment($data['attachment_path']);
+      }
 
-            //Отправка
-            $mail->send();
-            $mail->clearAddresses();
+      //Отправка
+      $mail->send();
+      $mail->clearAddresses();
 
-            return true;
-        } catch (\Exception $e) {
-            Message::set('error', 'Ошибка при отправке письма: ' . $e->getMessage());
-            return false;
-        }
+      return true;
+    } catch (\Exception $e) {
+      Message::set('error', 'Ошибка при отправке письма: ' . $e->getMessage());
+      return false;
     }
+  }
 
     /**
      * <b>Обработка некорректных callback-ов для маршрутов</b>
@@ -546,7 +551,7 @@ class Network extends Session
             <meta charset='UTF-8'>
             <meta name='viewport' content='width=device-width, initial-scale=1.0'>
             <title>Call to unknown method: <?= htmlspecialchars($callbackName) ?></title>
-            <link rel='stylesheet' href='/public/assets/styles/tailwind.min.css'>
+            <script src="https://cdn.tailwindcss.com"></script>
         </head>
 
         <body class='flex items-center justify-center h-[100dvh]'>

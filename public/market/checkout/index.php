@@ -7,6 +7,17 @@ if (empty($cartItems)) {
     header('Location: /cart');
     exit;
 }
+$deliveryMethods = [
+    'pickup' => ['label' => 'Самовывоз', 'desc' => 'г. Москва, ул. Семёновская площадь, д. 7', 'price' => 0],
+    'moscow' => ['label' => 'Доставка по Москве', 'desc' => 'В пределах МКАД', 'price' => 'от 2 000 ₽'],
+    'oblast' => ['label' => 'Доставка по области', 'desc' => 'Московская область, до 50 км от МКАД', 'price' => 'от 3 500 ₽'],
+    'russia' => ['label' => 'Доставка по России', 'desc' => 'Транспортными компаниями', 'price' => 'рассчитывается'],
+];
+$paymentMethods = [
+    'cash' => ['label' => 'Наличные', 'desc' => 'Оплата при получении наличными', 'icon' => 'fa-money-bill-wave'],
+    'card' => ['label' => 'Картой при получении', 'desc' => 'Терминал у водителя / в офисе', 'icon' => 'fa-credit-card'],
+    'transfer' => ['label' => 'Безналичный расчёт', 'desc' => 'Счёт с НДС для юр. лиц и ИП', 'icon' => 'fa-building-columns'],
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -21,87 +32,167 @@ if (empty($cartItems)) {
     <link rel="icon" type="image/svg+xml" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.svg" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css">
+    <style>
+        .iti__selected-dial-code { color: #000; }
+        .iti { width: 100%; }
+        .option-card { cursor: pointer; transition: all 0.2s; border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px 16px; }
+        .option-card:hover { border-color: #fecaca; }
+        .option-card.selected { border-color: #ef4444; background: #ffffff; }
+        .option-card input { display: none; }
+        .option-card .check { display: none; }
+        .option-card.selected .check { display: inline-flex; }
+        .section-toggle { cursor: pointer; user-select: none; }
+        .section-toggle .arrow { transition: transform 0.2s; }
+        .section-toggle.collapsed .arrow { transform: rotate(-90deg); }
+        .section-body { overflow: hidden; transition: max-height 0.3s ease; }
+        .section-body.collapsed { max-height: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; margin-top: 0 !important; }
+    </style>
 </head>
 <body class="bg-gray-50">
 
     <?php include_once __DIR__ . '/../../components/header-shared.php'; ?>
 
-    <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Оформление заказа</h1>
+        <div class="flex items-center gap-3 mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Оформление заказа</h1>
+            <span class="text-sm text-gray-400 bg-gray-100 px-3 py-1 rounded-full"><?= $cartCount ?> <?= $cartCount === 1 ? 'товар' : ($cartCount > 1 && $cartCount < 5 ? 'товара' : 'товаров') ?></span>
+        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <!-- Order Form -->
-            <div class="lg:col-span-3">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-                    <h2 class="text-lg font-bold text-gray-900 mb-6">Контактные данные</h2>
-                    <form id="checkout-form" class="space-y-5">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">ФИО *</label>
-                            <input type="text" name="name" required
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-                                placeholder="Иванов Иван Иванович">
+            <div class="lg:col-span-3 space-y-6">
+                <form id="checkout-form" action="/checkout" method="POST" class="flex flex-col gap-6">
+                    <!-- Контактные данные -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="section-toggle flex items-center justify-between p-5" onclick="toggleSection(this)">
+                            <h2 class="text-lg font-bold text-gray-900"><i class="fas fa-user text-red-500 mr-2"></i>Контактные данные</h2>
+                            <i class="fas fa-chevron-down text-gray-400 arrow"></i>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Телефон *</label>
-                            <input type="tel" name="phone" required
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-                                placeholder="+7 (999) 123-45-67">
-                            <p class="text-xs text-gray-400 mt-1">Мы перезвоним для подтверждения заказа</p>
+                        <div class="section-body px-5 pb-5 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ФИО *</label>
+                                    <input type="text" name="name" required
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                        placeholder="Иванов Иван Иванович">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Телефон *</label>
+                                    <input type="tel" name="phone" data-type-phone required
+                                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                        placeholder="(999) 123-45-67">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" name="email"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                    placeholder="email@example.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Комментарий</label>
+                                <textarea name="comment" rows="2"
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm resize-none"
+                                    placeholder="Адрес доставки, время отгрузки, пожелания…"></textarea>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                            <input type="email" name="email"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-                                placeholder="email@example.com">
+                    </div>
+
+                    <!-- Способ доставки -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="section-toggle flex items-center justify-between p-5" onclick="toggleSection(this)">
+                            <h2 class="text-lg font-bold text-gray-900"><i class="fas fa-truck text-red-500 mr-2"></i>Способ доставки</h2>
+                            <i class="fas fa-chevron-down text-gray-400 arrow"></i>
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Комментарий к заказу</label>
-                            <textarea name="comment" rows="3"
-                                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
-                                placeholder="Уточните способ доставки, время отгрузки или другие пожелания"></textarea>
+                        <div class="section-body px-5 pb-5 space-y-3">
+                            <?php foreach ($deliveryMethods as $key => $dm): ?>
+                            <label class="option-card flex items-center gap-4 <?= $key === 'pickup' ? 'selected' : '' ?>">
+                                <input type="radio" name="delivery" value="<?= $key ?>" <?= $key === 'pickup' ? 'checked' : '' ?>>
+                                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 <?= $key === 'pickup' ? 'border-red-500' : 'border-gray-300' ?>">
+                                    <div class="w-2.5 h-2.5 rounded-full <?= $key === 'pickup' ? 'bg-red-500' : '' ?>"></div>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-sm text-gray-900"><?= $dm['label'] ?></div>
+                                    <div class="text-xs text-gray-500"><?= $dm['desc'] ?></div>
+                                </div>
+                                <div class="text-sm font-semibold whitespace-nowrap <?= $dm['price'] === 0 ? 'text-green-600' : 'text-gray-900' ?>">
+                                    <?= $dm['price'] === 0 ? 'Бесплатно' : $dm['price'] ?>
+                                </div>
+                            </label>
+                            <?php endforeach; ?>
                         </div>
-                        <div class="bg-gray-50 rounded-lg p-4 text-sm text-gray-600">
-                            <p><i class="fas fa-info-circle text-red-600 mr-2"></i>Нажимая «Оформить заказ», вы соглашаетесь на обработку персональных данных.</p>
-                            <p class="mt-2 text-gray-400 text-xs"><i class="fas fa-file-invoice mr-1"></i>После оформления вы сможете скачать PDF-счёт для оплаты.</p>
+                    </div>
+
+                    <!-- Способ оплаты -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                        <div class="section-toggle flex items-center justify-between p-5" onclick="toggleSection(this)">
+                            <h2 class="text-lg font-bold text-gray-900"><i class="fas fa-wallet text-red-500 mr-2"></i>Способ оплаты</h2>
+                            <i class="fas fa-chevron-down text-gray-400 arrow"></i>
                         </div>
-                        <button type="submit" id="submit-order"
-                            class="w-full bg-red-600 text-white py-3.5 rounded-lg font-medium hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
-                            <i class="fas fa-check-circle"></i> Оформить заказ
-                        </button>
-                    </form>
-                </div>
+                        <div class="section-body px-5 pb-5 space-y-3">
+                            <?php foreach ($paymentMethods as $key => $pm): ?>
+                            <label class="option-card flex items-center gap-4 <?= $key === 'transfer' ? 'selected' : '' ?>">
+                                <input type="radio" name="payment" value="<?= $key ?>" <?= $key === 'transfer' ? 'checked' : '' ?>>
+                                <div class="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 <?= $key === 'transfer' ? 'border-red-500' : 'border-gray-300' ?>">
+                                    <div class="w-2.5 h-2.5 rounded-full <?= $key === 'transfer' ? 'bg-red-500' : '' ?>"></div>
+                                </div>
+                                <div class="w-9 h-9 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                    <i class="fas <?= $pm['icon'] ?> text-red-500"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-medium text-sm text-gray-900"><?= $pm['label'] ?></div>
+                                    <div class="text-xs text-gray-500"><?= $pm['desc'] ?></div>
+                                </div>
+                            </label>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 border border-gray-100">
+                        <p><i class="fas fa-info-circle text-red-500 mr-2"></i>Нажимая «Оформить заказ», вы соглашаетесь на <a href="#" class="text-red-500 underline">обработку персональных данных</a>.</p>
+                    </div>
+
+                    <button type="submit" id="submit-order"
+                        class="w-full bg-gradient-to-r from-red-500 to-red-500 text-white py-4 rounded-xl font-bold text-base hover:from-red-500 hover:to-red-500 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 shadow-lg shadow-red-200">
+                        <i class="fas fa-check-circle text-lg"></i> Оформить заказ
+                    </button>
+                </form>
             </div>
 
             <!-- Order Summary -->
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-28">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">Состав заказа</h2>
-                    <div class="space-y-3 max-h-[400px] overflow-y-auto">
+                    <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                         <?php foreach ($cartItems as $item): ?>
                         <div class="flex items-start gap-3 pb-3 border-b border-gray-100 last:border-0">
-                            <div class="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-cube text-gray-300"></i>
+                            <div class="w-10 h-10 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-cube text-gray-300 text-sm"></i>
                             </div>
                             <div class="flex-1 min-w-0">
                                 <p class="text-sm font-medium text-gray-900 truncate"><?= htmlspecialchars($item['product_name']) ?></p>
-                                <p class="text-xs text-gray-500">
-                                    <?= number_format($item['quantity'], 2, ',', ' ') ?> <?= htmlspecialchars($item['unit']) ?> × <?= number_format($item['price'], 2, ',', ' ') ?> ₽
-                                </p>
+                                <p class="text-xs text-gray-500"><?= number_format($item['quantity'], 2, ',', ' ') ?> <?= htmlspecialchars($item['unit']) ?></p>
                             </div>
                             <div class="text-sm font-semibold text-gray-900 whitespace-nowrap"><?= number_format($item['subtotal'], 2, ',', ' ') ?> ₽</div>
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="border-t border-gray-200 pt-4 mt-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-base font-bold text-gray-900">Итого:</span>
-                            <span class="text-2xl font-bold text-red-600"><?= number_format($cartTotal, 2, ',', ' ') ?> ₽</span>
+                    <div class="border-t border-gray-200 pt-4 mt-3 space-y-1">
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>Сумма</span>
+                            <span><?= number_format($cartTotal, 2, ',', ' ') ?> ₽</span>
                         </div>
-                        <p class="text-xs text-gray-400 mt-1 text-right">Без учёта стоимости доставки</p>
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>Доставка</span>
+                            <span class="text-green-600 font-medium">Бесплатно</span>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-200 mt-2">
+                            <span class="text-base font-bold text-gray-900">Итого</span>
+                            <span class="text-2xl font-bold text-red-500"><?= number_format($cartTotal, 2, ',', ' ') ?> ₽</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,5 +202,95 @@ if (empty($cartItems)) {
     <?php include_once './public/components/footer.php'; ?>
 
     <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/js/intlTelInputWithUtils.min.js" defer></script>
+    <script>
+    function toggleSection(header) {
+        const body = header.nextElementSibling;
+        header.classList.toggle('collapsed');
+        body.classList.toggle('collapsed');
+    }
+
+    document.querySelectorAll('.option-card').forEach(function(card) {
+        card.addEventListener('click', function() {
+            const group = this.closest('.space-y-3') || this.parentElement;
+            group.querySelectorAll('.option-card').forEach(function(c) {
+                c.classList.remove('selected');
+                c.querySelector('input').checked = false;
+                const dot = c.querySelector('.w-2\\.5');
+                if (dot) dot.classList.remove('bg-red-500');
+                const border = c.querySelector('.w-5');
+                if (border) border.classList.remove('border-red-500');
+                if (border) border.classList.add('border-gray-300');
+            });
+            this.classList.add('selected');
+            this.querySelector('input').checked = true;
+            const dot = this.querySelector('.w-2\\.5');
+            if (dot) dot.classList.add('bg-red-500');
+            const border = this.querySelector('.w-5');
+            if (border) border.classList.remove('border-gray-300');
+            if (border) border.classList.add('border-red-500');
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const phoneInputs = document.querySelectorAll("[data-type-phone]");
+        phoneInputs.forEach(function(input) {
+            if (typeof intlTelInput !== 'undefined') {
+                window.intlTelInput(input, { initialCountry: "ru", separateDialCode: true });
+            }
+            input.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.startsWith('7') || value.startsWith('8')) value = value.substring(1);
+                value = value.substring(0, 10);
+                if (value.length > 0) {
+                    let formatted = '';
+                    if (value.length >= 1) formatted += '(' + value.substring(0, 3);
+                    if (value.length >= 4) formatted += ') ' + value.substring(3, 6);
+                    if (value.length >= 7) formatted += '-' + value.substring(6, 8);
+                    if (value.length >= 9) formatted += '-' + value.substring(8, 10);
+                    e.target.value = formatted;
+                }
+                e.target.setCustomValidity('');
+            });
+            input.addEventListener('blur', function () {
+                const digits = this.value.replace(/\D/g, '');
+                this.setCustomValidity(digits.length !== 10 ? 'Введите полный номер телефона' : '');
+            });
+        });
+
+        document.getElementById('checkout-form').addEventListener('submit', function(e){
+            e.preventDefault();
+            const phone = this.querySelector('[data-type-phone]');
+            if (phone) {
+                const digits = phone.value.replace(/\D/g, '');
+                if (digits.length !== 10) {
+                    phone.setCustomValidity('Введите полный корректный номер телефона');
+                    phone.reportValidity();
+                    phone.focus();
+                    return;
+                }
+            }
+            const btn = this.querySelector('#submit-order');
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Оформляем...';
+            fetch(this.action, { method: 'POST', body: new URLSearchParams(new FormData(this)) })
+                .then(function(r){ return r.json(); })
+                .then(function(d){
+                    if (d.success) {
+                        window.location.href = '/order/' + d.order_id + '/success';
+                    } else {
+                        alert(d.error || 'Ошибка оформления заказа');
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-check-circle"></i> Оформить заказ';
+                    }
+                })
+                .catch(function(){
+                    alert('Ошибка отправки. Попробуйте ещё раз.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check-circle"></i> Оформить заказ';
+                });
+        });
+    });
+    </script>
 </body>
 </html>

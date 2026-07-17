@@ -46,6 +46,11 @@ Routes::get('/market/katalog/{katalog}', function ($katalog) {
     $templatePath = dirname(__DIR__, 2) . "/public/market/katalog/.template/_template_category/index.php";
     Routes::auto_element($templatePath, get_defined_vars());
 });
+//==================================================================================================//PAGE PODKATEGORI
+Routes::get('/market/katalog/{katalog}/{subcategory}', function ($katalog, $subcategory) {
+    $templatePath = dirname(__DIR__, 2) . "/public/market/katalog/.template/_template_category/index.php";
+    Routes::auto_element($templatePath, get_defined_vars());
+});
 //==================================================================================================//PAGE TOVARA
 Routes::get('/market/katalog/{katalog}/{subcategory}/{name}', function ($katalog, $subcategory, $name) {
     $templatePath = dirname(__DIR__, 2) . "/public/market/katalog/.template/_product.php";
@@ -196,7 +201,7 @@ Routes::get('/opensearch.xml', function () {
 });
 //==================================================================================================//LLMS.TXT
 Routes::get('/llms.txt', function () {
-    $filePath = dirname(__DIR__, 2) . '/llms.txt';
+    $filePath = dirname(__DIR__, 2) . '/public/llms.txt';
     if (file_exists($filePath)) {
         header('Content-Type: text/plain; charset=utf-8');
         header('Cache-Control: public, max-age=86400');
@@ -205,7 +210,7 @@ Routes::get('/llms.txt', function () {
 });
 //==================================================================================================//LLMS-FULL.TXT
 Routes::get('/llms-full.txt', function () {
-    $filePath = dirname(__DIR__, 2) . '/llms-full.txt';
+    $filePath = dirname(__DIR__, 2) . '/public/llms-full.txt';
     if (file_exists($filePath)) {
         header('Content-Type: text/plain; charset=utf-8');
         header('Cache-Control: public, max-age=86400');
@@ -294,13 +299,20 @@ Routes::post('/api/orders/quick', function () {
         print json_encode(['success' => false, 'error' => 'Укажите имя и телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
-    $sessionId = \App\Config\Session::init('cart_token') ?? bin2hex(random_bytes(16));
-    \App\Models\Network\Database::send(
-        "INSERT INTO orders (session_id, customer_name, customer_phone, comment, total) VALUES (?, ?, ?, ?, ?)",
-        [$sessionId, $name, $phone, 'Быстрый заказ: ' . $productId, 0]
-    );
-    $orderId = \App\Models\Network\Database::getConnection()->lastInsertId();
-    print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
+    try {
+        $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
+        $data = (object)[
+            'name' => $name,
+            'phone' => $phone,
+            'product_id' => $productId,
+            'both' => true,
+        ];
+        \Setting\route\function\Functions::sendMail($data);
+        print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
+    } catch (\Exception $e) {
+        error_log('Quick order error: ' . $e->getMessage());
+        print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
+    }
 });
 //==================================================================================================//FAVORITES PAGE
 Routes::get('/favorites', function () {
@@ -353,10 +365,30 @@ Routes::get('/order/{id}/pdf', function ($id) {
     }
     Routes::error_404('Счёт не найден');
 });
+//==================================================================================================//CALLBACK
+Routes::post('/api/callback', function () {
+    $name = trim($_POST['name'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    header('Content-Type: application/json; charset=utf-8');
+    if (empty($name) || empty($phone)) {
+        print json_encode(['success' => false, 'error' => 'Заполните все поля'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    try {
+        \Setting\route\function\Functions::sendMail((object)[
+            'имя' => $name,
+            'телефон' => $phone,
+            'both' => true,
+        ]);
+        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    } catch (\Throwable $e) {
+        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
+    }
+    exit;
+});
 //==================================================================================================//SEND EMAIL
 Routes::post('/send/email', [Functions::class, 'sendMail']);
 //==================================================================================================//Отправка телеграм
-Routes::post('/send/telegram', [Functions::class, 'sendTelegram']);
 //==================================================================================================//Отправка обоих
 Routes::post('/send/both', [Functions::class, 'sendBoth']);
 //==================================================================================================//Отправка обоих

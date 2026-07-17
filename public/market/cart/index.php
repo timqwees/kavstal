@@ -18,7 +18,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ" href="<?= $site['baseUrl'] ?>/opensearch.xml" />
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 </head>
@@ -29,7 +29,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center space-x-2 text-sm">
-                <a href="/" class="text-gray-600 hover:text-red-600"><i class="fas fa-home"></i></a>
+                <a href="/" class="text-gray-600 hover:text-red-500"><i class="fas fa-home"></i></a>
                 <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
                 <span class="text-gray-900 font-medium">Корзина</span>
             </nav>
@@ -47,7 +47,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
             </div>
             <h2 class="text-2xl font-bold text-gray-900 mb-3">Корзина пуста</h2>
             <p class="text-gray-500 mb-8">Добавьте товары из каталога, чтобы оформить заказ</p>
-            <a href="/market" class="inline-flex items-center px-6 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition">
+            <a href="/market" class="inline-flex items-center px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-500 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Перейти в каталог
             </a>
         </div>
@@ -65,7 +65,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                             <?php endif; ?>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <a href="<?= htmlspecialchars($item['product_url']) ?>" class="text-sm font-medium text-gray-900 hover:text-red-600 transition line-clamp-2"><?= htmlspecialchars($item['product_name']) ?></a>
+                            <a href="<?= htmlspecialchars($item['product_url']) ?>" class="text-sm font-medium text-gray-900 hover:text-red-500 transition line-clamp-2"><?= htmlspecialchars($item['product_name']) ?></a>
                             <div class="flex flex-wrap gap-2 mt-1">
                                 <?php foreach ($item['specs'] as $specName => $specValue): ?>
                                 <span class="text-xs text-gray-500 bg-gray-50 px-2 py-0.5 rounded"><?= htmlspecialchars($specName) ?>: <?= htmlspecialchars($specValue) ?></span>
@@ -88,7 +88,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                         </div>
                         <div class="flex items-center gap-4">
                             <span class="text-base font-bold text-gray-900 item-subtotal"><?= number_format($item['subtotal'], 2, ',', ' ') ?> ₽</span>
-                            <button class="remove-item text-gray-400 hover:text-red-600 transition p-1" data-product-id="<?= htmlspecialchars($item['product_id']) ?>" data-unit="<?= htmlspecialchars($item['unit']) ?>">
+                            <button class="remove-item text-gray-400 hover:text-red-500 transition p-1" data-product-id="<?= htmlspecialchars($item['product_id']) ?>" data-unit="<?= htmlspecialchars($item['unit']) ?>">
                                 <i class="fas fa-trash-alt text-sm"></i>
                             </button>
                         </div>
@@ -112,13 +112,13 @@ $cartCount = App\Models\Cart\Cart::getCount();
                     <div class="border-t border-gray-200 pt-4 mb-6">
                         <div class="flex justify-between items-center">
                             <span class="text-base font-bold text-gray-900">Итого:</span>
-                            <span class="text-2xl font-bold text-red-600 cart-total"><?= number_format($cartTotal, 2, ',', ' ') ?> ₽</span>
+                            <span class="text-2xl font-bold text-red-500 cart-total"><?= number_format($cartTotal, 2, ',', ' ') ?> ₽</span>
                         </div>
                     </div>
-                    <a href="/checkout" class="block w-full bg-red-600 text-white text-center py-3 rounded-lg font-medium hover:bg-red-700 transition">
+                    <a href="/checkout" class="block w-full bg-red-500 text-white text-center py-3 rounded-lg font-medium hover:bg-red-500 transition">
                         <i class="fas fa-arrow-right mr-2"></i> Оформить заказ
                     </a>
-                    <a href="/market" class="block w-full text-center py-3 mt-2 text-sm text-gray-600 hover:text-red-600 transition">
+                    <a href="/market" class="block w-full text-center py-3 mt-2 text-sm text-gray-600 hover:text-red-500 transition">
                         <i class="fas fa-arrow-left mr-1"></i> Продолжить покупки
                     </a>
                 </div>

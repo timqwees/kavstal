@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+.env
+file/rss.xml
+file/sitemap_google.xml
+public/file/cache/
+*.min.css
+*.min.js

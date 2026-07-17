@@ -12,7 +12,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
     <link rel="canonical" href="<?= $site['baseUrl'] ?>/favorites">
     <link rel="icon" type="image/png" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.svg" />
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 </head>
@@ -22,7 +22,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
     <!-- Breadcrumbs -->
     <div class="max-w-7xl mx-auto px-4 py-3">
         <nav class="flex items-center text-xs text-gray-400">
-            <a href="/" class="hover:text-red-600 transition">Главная</a>
+            <a href="/" class="hover:text-red-500 transition">Главная</a>
             <span class="mx-2">/</span>
             <span class="text-gray-700">Избранное</span>
         </nav>
@@ -37,7 +37,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
             <i class="far fa-heart text-gray-300 text-6xl mb-4"></i>
             <p class="text-gray-500 text-lg mb-2">Список избранного пуст</p>
             <p class="text-gray-400 text-sm mb-6">Добавляйте товары в избранное, нажимая на сердечко</p>
-            <a href="/market" class="inline-block bg-red-600 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-red-700 transition">Перейти в каталог</a>
+            <a href="/market" class="inline-block bg-red-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-red-500 transition">Перейти в каталог</a>
         </div>
 
         <!-- Products grid -->
@@ -86,7 +86,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                 var firstPrice = p.price;
                 if (p.units) {
                     Object.keys(p.units).forEach(function(u) {
-                        unitsHtml += '<button type="button" class="text-[9px] px-1.5 py-0.5 rounded font-medium transition-all ' + (u === firstUnit ? 'bg-red-100 text-red-800' : 'bg-neutral-100 text-neutral-500 hover:bg-red-50 hover:text-red-700') + '" data-unit="' + u + '" data-price="' + p.units[u] + '" onclick="switchUnit(this)">' + u + '</button>';
+                        unitsHtml += '<button type="button" class="text-[9px] px-1.5 py-0.5 rounded font-medium transition-all ' + (u === firstUnit ? 'bg-red-100 text-red-500' : 'bg-neutral-100 text-neutral-500 hover:bg-red-50 hover:text-red-500') + '" data-unit="' + u + '" data-price="' + p.units[u] + '" onclick="switchUnit(this)">' + u + '</button>';
                     });
                 }
                 var stock = p.in_stock
@@ -106,13 +106,13 @@ $cartCount = App\Models\Cart\Cart::getCount();
                     '<div class="flex items-center justify-between mb-2">' +
                         '<span class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold leading-relaxed">В избранном</span>' +
                         '<button class="remove-fav-btn w-7 h-7 rounded-md border border-red-300 bg-red-50 flex items-center justify-center transition-colors" data-pid="' + p.id + '" title="Убрать из избранного">' +
-                            '<svg width="13" height="11" viewBox="0 0 24 24" fill="#dc2626" stroke="#dc2626" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
+                            '<svg width="13" height="11" viewBox="0 0 24 24" fill="#ef4444" stroke="#ef4444" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
                         '</button>' +
                     '</div>' +
                     '<a href="' + p.url + '" class="h-[120px] mb-3 rounded-lg overflow-hidden bg-zinc-50 flex items-center justify-center">' +
                         (p.image ? '<img src="' + p.image.replace(/"/g, '&quot;') + '" alt="' + p.title.replace(/"/g, '&quot;') + '" class="w-full h-full object-contain" loading="lazy">' : '<i class="fas fa-image text-zinc-300 text-3xl"></i>') +
                     '</a>' +
-                    '<a href="' + p.url + '" class="text-[13px] font-semibold text-neutral-800 hover:text-red-600 line-clamp-2 min-h-[36px] mb-1">' + p.title + '</a>' +
+                    '<a href="' + p.url + '" class="text-[13px] font-semibold text-neutral-800 hover:text-red-500 line-clamp-2 min-h-[36px] mb-1">' + p.title + '</a>' +
                     (specsHtml ? '<div class="flex flex-wrap gap-1 mb-2">' + specsHtml + '</div>' : '') +
                     '<div class="mt-auto">' +
                         '<div class="flex items-center gap-1.5 mb-2">' + stock + '</div>' +
@@ -121,7 +121,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                                 '<div class="price-display text-[15px] font-bold text-neutral-900 leading-tight">' + Math.round(firstPrice).toLocaleString('ru-RU') + ' ₽</div>' +
                                 '<div class="flex gap-0.5 mt-1">' + unitsHtml + '</div>' +
                             '</div>' +
-                            '<button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="' + p.id + '" data-unit="' + firstUnit + '" title="В корзину">' +
+                            '<button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="' + p.id + '" data-unit="' + firstUnit + '" title="В корзину">' +
                                 '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
                             '</button>' +
                         '</div>' +
@@ -160,7 +160,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                     addToCart(pid, qty, unit).then(function(r) {
                         if (r.success) {
                             btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-                            btn.classList.add('bg-red-600', 'in-cart');
+                            btn.classList.add('bg-red-500', 'in-cart');
                             setTimeout(function() { btn.disabled = false; btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'; }, 1500);
                             updateCartCount();
                         } else {
@@ -182,7 +182,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                     var pid = btn.getAttribute('data-pid');
                     if (ids.indexOf(pid) !== -1) {
                         btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-white"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
-                        btn.classList.add('bg-red-600', 'in-cart');
+                        btn.classList.add('bg-red-500', 'in-cart');
                     }
                 });
             });
@@ -192,11 +192,11 @@ $cartCount = App\Models\Cart\Cart::getCount();
     function switchUnit(button) {
         var parent = button.parentElement;
         Array.from(parent.querySelectorAll('button')).forEach(function(b) {
-            b.classList.remove('bg-red-100', 'text-red-800');
+            b.classList.remove('bg-red-100', 'text-red-500');
             b.classList.add('bg-neutral-100', 'text-neutral-500');
         });
         button.classList.remove('bg-neutral-100', 'text-neutral-500');
-        button.classList.add('bg-red-100', 'text-red-800');
+        button.classList.add('bg-red-100', 'text-red-500');
         var card = button.closest('.flex.flex-col');
         if (card) {
             var pd = card.querySelector('.price-display');
@@ -206,5 +206,6 @@ $cartCount = App\Models\Cart\Cart::getCount();
         }
     }
     </script>
+    <?php include_once __DIR__ . '/../../components/widget-chatwoot.php'; ?>
 </body>
 </html>

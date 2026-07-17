@@ -42,7 +42,7 @@
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
@@ -104,7 +104,7 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center space-x-2 text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/" class="text-gray-600 hover:text-red-600" itemprop="item" itemscope
+                    <a href="/" class="text-gray-600 hover:text-red-500" itemprop="item" itemscope
                         itemtype="https://schema.org/Thing" itemid="<?php echo $site['baseUrl']; ?>/"><i
                             class="fas fa-home"></i>
                         <span itemprop="name">Главная</span></a>
@@ -130,7 +130,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-truck text-red-600 text-2xl"></i>
+                        <i class="fas fa-truck text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Доставка в день заказа</h3>
                     <p class="text-gray-600">При заказе до 14:00 доставка выполняется в тот же день по Москве и ближнему
@@ -138,7 +138,7 @@
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-map-marked-alt text-red-600 text-2xl"></i>
+                        <i class="fas fa-map-marked-alt text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">По всей Московской области</h3>
                     <p class="text-gray-600">Доставляем металлопрокат в любую точку Московской области — от 1 часа до 24
@@ -146,7 +146,7 @@
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-weight-hanging text-red-600 text-2xl"></i>
+                        <i class="fas fa-weight-hanging text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Любой объем</h3>
                     <p class="text-gray-600">От нескольких арматурин до 20 тонн — у нас есть техника для любых задач</p>
@@ -161,28 +161,28 @@
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-truck-pickup text-red-600 text-3xl mb-3"></i>
+                            <i class="fas fa-truck-pickup text-red-500 text-3xl mb-3"></i>
                             <h4 class="font-bold text-gray-900 mb-2">Газель</h4>
                             <p class="text-sm text-gray-600 mb-2">До 1.5 тонн, 3-4 м длина</p>
-                            <p class="text-lg font-bold text-red-600">от 1 500 ₽</p>
+                            <p class="text-lg font-bold text-red-500">от 1 500 ₽</p>
                         </div>
                         <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-truck text-red-600 text-3xl mb-3"></i>
+                            <i class="fas fa-truck text-red-500 text-3xl mb-3"></i>
                             <h4 class="font-bold text-gray-900 mb-2">Бортовой</h4>
                             <p class="text-sm text-gray-600 mb-2">До 5 тонн, 6 м длина</p>
-                            <p class="text-lg font-bold text-red-600">от 3 500 ₽</p>
+                            <p class="text-lg font-bold text-red-500">от 3 500 ₽</p>
                         </div>
                         <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-truck-moving text-red-600 text-3xl mb-3"></i>
+                            <i class="fas fa-truck-moving text-red-500 text-3xl mb-3"></i>
                             <h4 class="font-bold text-gray-900 mb-2">Манипулятор</h4>
                             <p class="text-sm text-gray-600 mb-2">До 10 тонн, разгрузка</p>
-                            <p class="text-lg font-bold text-red-600">от 8 000 ₽</p>
+                            <p class="text-lg font-bold text-red-500">от 8 000 ₽</p>
                         </div>
                         <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-shipping-fast text-red-600 text-3xl mb-3"></i>
+                            <i class="fas fa-shipping-fast text-red-500 text-3xl mb-3"></i>
                             <h4 class="font-bold text-gray-900 mb-2">Фура</h4>
                             <p class="text-sm text-gray-600 mb-2">До 20 тонн, 13.6 м</p>
-                            <p class="text-lg font-bold text-red-600">от 15 000 ₽</p>
+                            <p class="text-lg font-bold text-red-500">от 15 000 ₽</p>
                         </div>
                     </div>
                 </div>
@@ -283,7 +283,7 @@
                     </ul>
                 </div>
                 <a href="/contacts"
-                    class="bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition whitespace-nowrap">
+                    class="bg-red-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-500 transition whitespace-nowrap">
                     Схема проезда
                 </a>
             </div>

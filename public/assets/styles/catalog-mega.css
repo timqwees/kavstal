@@ -1,0 +1,174 @@
+:root {
+    --bg-white: #ffffff;
+    --shadow-dropdown: 0 8px 32px rgba(0, 0, 0, 0.12);
+    --radius-xs: 8px;
+    --radius-s: 12px;
+    --border-light: #f0f0f0;
+    --border-default: #e5e7eb;
+    --primary-bg: #fef2f2;
+    --primary: #dc2626;
+    --text-primary: #111111;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --bg-hover: #f0f0f0;
+    --transition-fast: 0.2s ease;
+}
+
+.ozon-mega-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-white);
+    box-shadow: var(--shadow-dropdown);
+    border-radius: 0 0 var(--radius-s) var(--radius-s);
+    z-index: 99;
+    max-height: 70vh;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.ozon-mega-menu.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.ozon-mega-menu-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px;
+    display: flex;
+    gap: 0;
+    max-height: 70vh;
+    overflow: hidden;
+}
+.ozon-mega-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    overflow-y: auto;
+    border-right: 1px solid var(--border-light);
+    padding-right: 16px;
+}
+.ozon-mega-sidebar::-webkit-scrollbar {
+    width: 4px;
+}
+.ozon-mega-sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-default);
+    border-radius: 2px;
+}
+.ozon-mega-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border-radius: var(--radius-xs);
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+}
+.ozon-mega-item:hover,
+.ozon-mega-item.active {
+    background: var(--primary-bg);
+    color: var(--primary);
+}
+.ozon-mega-item svg {
+    width: 16px;
+    height: 16px;
+    opacity: 0.3;
+    flex-shrink: 0;
+}
+.ozon-mega-item:hover svg,
+.ozon-mega-item.active svg {
+    opacity: 1;
+    color: var(--primary);
+}
+.ozon-mega-content {
+    flex: 1;
+    padding-left: 24px;
+    overflow-y: auto;
+}
+.ozon-mega-content::-webkit-scrollbar {
+    width: 4px;
+}
+.ozon-mega-content::-webkit-scrollbar-thumb {
+    background: var(--border-default);
+    border-radius: 2px;
+}
+.ozon-mega-content-panel {
+    display: none;
+}
+.ozon-mega-content-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+.ozon-mega-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+.ozon-mega-subcategory {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border-radius: var(--radius-xs);
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+.ozon-mega-subcategory:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+.ozon-mega-product-link {
+    display: block;
+    padding: 6px 12px 6px 20px;
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    border-radius: var(--radius-xs);
+}
+.ozon-mega-product-link:hover {
+    color: var(--primary);
+    background: var(--primary-bg);
+}
+.ozon-mega-empty {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+    .ozon-mega-menu-inner {
+        flex-direction: column;
+        padding: 16px;
+    }
+    .ozon-mega-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-light);
+        padding-right: 0;
+        padding-bottom: 12px;
+        margin-bottom: 12px;
+        max-height: 200px;
+    }
+    .ozon-mega-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 640px) {
+    .ozon-mega-grid {
+        grid-template-columns: 1fr;
+    }
+}

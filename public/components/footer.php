@@ -1,35 +1,38 @@
 <?php
 $siteInfo = $siteInfo ?? $site ?? [];
 $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteInfo['phone'] ?? '+74959892420');
-$vk_url = $siteInfo['vk'] ? 'https://vk.com/' . $siteInfo['vk'] : '#';
-$tg_url = $siteInfo['telegram'] ? 'https://t.me/' . $siteInfo['telegram'] : '#';
-$wa_url = $siteInfo['whatsapp'] ? 'https://wa.me/' . $siteInfo['whatsapp'] : '#';
 ?>
+<style>
+@media (max-width: 767px) {
+    footer.bg-white { display: none; }
+}
+</style>
 <footer class="bg-white">
   <!-- PIK-style 4-column grid -->
-  <div class="max-w-7xl mx-auto px-4 lg:px-8" style="display:grid; border-top:1px solid rgb(221,220,219); border-bottom:1px solid rgb(221,220,219); grid-template-columns:repeat(4,1fr);">
-    <!-- Column 1: Catalog -->
-    <div style="width:100%; display:flex; justify-content:center; align-items:center; flex-direction:column; padding:28px 16px;">
-      <div style="color:rgb(19,19,19); font-size:14px; font-weight:500; margin-bottom:24px; text-align:center;">Новые поступления</div>
-      <a href="/market" style="display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0px 32px; border-radius:32px; background:rgb(252,76,2); color:white; font-size:16px; font-weight:600; letter-spacing:-0.32px; text-decoration:none; transition:background 0.2s;" onmouseover="this.style.background='rgb(220,60,0)'" onmouseout="this.style.background='rgb(252,76,2)'">Смотреть →</a>
+  <div class="max-w-7xl mx-auto px-4 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0" style="border-top:1px solid rgb(221,220,219); border-bottom:1px solid rgb(221,220,219);">
+    <!-- Column 1 -->
+    <div class="footer-grid-card flex flex-col items-center justify-center py-6 px-4">
+      <div class="text-[rgb(19,19,19)] text-sm font-medium mb-5 text-center">Свяжитесь с нами</div>
+      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full bg-[#ef4444] text-white text-sm md:text-base font-semibold tracking-tight no-underline hover:bg-[#dc2626] transition">Позвонить в компанию</a>
     </div>
 
-    <!-- Column 2: Phone -->
-    <div style="width:100%; display:flex; justify-content:center; align-items:center; flex-direction:column; padding:28px 16px;">
-      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" style="color:rgb(19,19,19); font-size:14px; font-weight:500; margin-bottom:24px; text-decoration:none; text-align:center;"><?= htmlspecialchars($siteInfo['phone'] ?? '+7 (495) 989-24-20') ?></a>
-      <button type="button" onclick="document.getElementById('callbackModal').classList.remove('hidden')" style="display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0px 32px; border-radius:32px; border:1px solid rgb(221,220,219); background:white; color:rgb(19,19,19); font-size:16px; font-weight:500; letter-spacing:-0.32px; cursor:pointer; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgb(171,170,170)'" onmouseout="this.style.borderColor='rgb(221,220,219)'">Перезвоните мне</button>
+    <!-- Column 2 -->
+    <div class="footer-grid-card flex flex-col items-center justify-center py-6 px-4">
+      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class="text-[rgb(19,19,19)] text-sm font-medium mb-1 no-underline text-center leading-tight"><?= htmlspecialchars($siteInfo['phone'] ?? '+7 (495) 989-24-20') ?></a>
+      <div class="text-[rgb(100,100,100)] text-xs text-center mb-5 leading-tight">с 9 до 18</div>
+      <button type="button" onclick="document.getElementById('callbackModal').classList.remove('hidden')" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full border border-[rgb(221,220,219)] bg-white text-[rgb(19,19,19)] text-sm md:text-base font-medium tracking-tight cursor-pointer hover:border-[rgb(171,170,170)] transition">Перезвоните мне</button>
     </div>
 
-    <!-- Column 3: Contact form -->
-    <div style="width:100%; display:flex; justify-content:center; align-items:center; flex-direction:column; padding:28px 16px;">
-      <div style="color:rgb(19,19,19); font-size:14px; font-weight:500; margin-bottom:24px; text-align:center;">Есть вопросы или предложения?</div>
-      <a href="/contacts" style="display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0px 32px; border-radius:32px; border:1px solid rgb(221,220,219); background:white; color:rgb(19,19,19); font-size:16px; font-weight:500; letter-spacing:-0.32px; text-decoration:none; transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgb(171,170,170)'" onmouseout="this.style.borderColor='rgb(221,220,219)'">Написать</a>
+    <!-- Column 3 -->
+    <div class="footer-grid-card flex flex-col items-center justify-center py-6 px-4">
+      <div class="text-[rgb(19,19,19)] text-sm font-medium mb-5 text-center">Есть вопросы или предложения?</div>
+      <a href="https://t.me/kavstal_bot" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full border border-[rgb(221,220,219)] bg-white text-[rgb(19,19,19)] text-sm md:text-base font-medium tracking-tight no-underline hover:border-[rgb(171,170,170)] transition">Написать в Telegram</a>
     </div>
 
-    <!-- Column 4: Quick quote -->
-    <div style="width:100%; display:flex; justify-content:center; align-items:center; flex-direction:column; padding:28px 16px;">
-      <div style="color:rgb(19,19,19); font-size:14px; font-weight:500; margin-bottom:24px; text-align:center;">Подбор металлопроката</div>
-      <a href="/market" style="display:inline-flex; align-items:center; justify-content:center; height:56px; padding:0px 32px; border-radius:32px; background:rgb(252,76,2); color:white; font-size:16px; font-weight:600; letter-spacing:-0.32px; text-decoration:none; transition:background 0.2s;" onmouseover="this.style.background='rgb(220,60,0)'" onmouseout="this.style.background='rgb(252,76,2)'">Подобрать →</a>
+    <!-- Column 4 -->
+    <div class="footer-grid-card flex flex-col items-center justify-center py-6 px-4">
+      <div class="text-[rgb(19,19,19)] text-sm font-medium mb-5 text-center">Подбор металлопроката</div>
+      <a href="/market" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full bg-[#ef4444] text-white text-sm md:text-base font-semibold tracking-tight no-underline hover:bg-[#dc2626] transition">Подобрать →</a>
     </div>
   </div>
 
@@ -45,14 +48,11 @@ $wa_url = $siteInfo['whatsapp'] ? 'https://wa.me/' . $siteInfo['whatsapp'] : '#'
           Поставка металлопроката по Москве и МО. Собственный склад, сертификаты ГОСТ.
         </p>
         <div class="flex gap-2">
-          <a href="<?= $vk_url ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" aria-label="VK">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/><path d="M12.5 16.5h-1s-3.5 0-3.5-3.5c0-3.5 3.5-3.5 3.5-3.5h.5v2h-1s-1 0-1 1.5 1 1.5 1 1.5h1v-3h1.5l.5-1.5H13V7h2.5v2.5H17l-.5 1.5H15.5v1c0 .5.5 1.5 1.5 1.5h1v2h-2s-1 0-1.5-1c0 0-.5-1-.5-2v-.5"/></svg>
+          <a href="https://t.me/kavstal_bot" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" aria-label="Telegram">
+            <i class="fab fa-telegram text-xl"></i>
           </a>
-          <a href="<?= $tg_url ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" aria-label="Telegram">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/><path d="M6.5 12.5l3.5 1.5 1.5 4 5-8-10-3z"/></svg>
-          </a>
-          <a href="<?= $wa_url ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" aria-label="WhatsApp">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"/><path d="M16.5 14.5c-.2.6-.8 1-1.4 1.1-.6.1-1.2.1-1.8-.2-.6-.3-1.5-.9-2.5-1.9s-1.6-1.9-1.9-2.5c-.3-.6-.3-1.2-.2-1.8.1-.6.5-1.2 1.1-1.4.2-.1.4-.1.5 0 .1 0 .2.1.3.3l.6 1.2c.1.2.1.3 0 .5-.1.1-.1.2-.2.3l-.4.5c-.1.1-.1.2-.1.3 0 .1.1.3.2.4.4.7 1 1.3 1.7 1.7.1.1.3.2.4.2.1 0 .2 0 .3-.1l.5-.4c.2-.1.3-.2.5-.2.2 0 .3 0 .5.1l1.2.6c.2.1.3.2.3.3 0 .2 0 .4-.1.5z"/></svg>
+          <a href="https://wa.me/74959892420" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors" aria-label="WhatsApp">
+            <i class="fab fa-whatsapp text-xl"></i>
           </a>
         </div>
       </div>
@@ -106,7 +106,7 @@ $wa_url = $siteInfo['whatsapp'] ? 'https://wa.me/' . $siteInfo['whatsapp'] : '#'
           <li>
             <span class="text-sm text-gray-600 flex items-center gap-2">
               <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              <?= htmlspecialchars($siteInfo['workingHours'] ?? 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00') ?>
+09:00 - 18:00
             </span>
           </li>
         </ul>
@@ -126,3 +126,103 @@ $wa_url = $siteInfo['whatsapp'] ? 'https://wa.me/' . $siteInfo['whatsapp'] : '#'
     </div>
   </div>
 </footer>
+
+<!-- Callback Modal -->
+<div id="callbackModal" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+  <div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 relative">
+    <button type="button" onclick="document.getElementById('callbackModal').classList.add('hidden')" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 transition">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="text-center mb-6">
+      <div class="w-14 h-14 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-phone-alt text-red-600 text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-gray-900">Заказать звонок</h3>
+      <p class="text-sm text-gray-500 mt-1">Оставьте номер — мы перезвоним в течение 15 минут</p>
+    </div>
+    <form id="callbackForm" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label>
+        <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="Иван Иванов">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Телефон *</label>
+        <input type="tel" name="phone" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="+7 (999) 123-45-67">
+      </div>
+      <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3.5 rounded-xl font-bold hover:from-red-700 hover:to-red-800 transition shadow-lg shadow-red-200 flex items-center justify-center gap-2">
+        <i class="fas fa-phone"></i> Перезвоните мне
+      </button>
+    </form>
+    <p class="text-xs text-gray-400 text-center mt-4">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
+  </div>
+</div>
+
+<script>
+document.getElementById('callbackForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const btn = this.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Отправляем...';
+  fetch('/api/callback', { method: 'POST', body: new URLSearchParams(new FormData(this)) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.success) {
+        document.getElementById('callbackModal').innerHTML = '<div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 text-center"><div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check-circle text-green-600 text-2xl"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">Спасибо!</h3><p class="text-gray-500">Мы перезвоним вам в ближайшее время.</p><button type="button" onclick="document.getElementById(\'callbackModal\').classList.add(\'hidden\')" class="mt-6 px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition">Закрыть</button></div>';
+      } else {
+        alert(d.error || 'Ошибка. Попробуйте ещё раз.');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-phone"></i> Перезвоните мне';
+      }
+    })
+    .catch(function() {
+      alert('Ошибка отправки. Попробуйте ещё раз.');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-phone"></i> Перезвоните мне';
+    });
+});
+</script>
+
+<style>
+  @media only screen and (max-width: 767px) {
+    .footer-grid-card { border-bottom: 1px solid rgb(221, 220, 219); }
+    .footer-grid-card:last-child { border-bottom: none; }
+  }
+  @media only screen and (min-width: 768px) and (max-width: 1023px) {
+    .footer-grid-card { border-bottom: 1px solid rgb(221, 220, 219); }
+    .footer-grid-card:nth-child(3),
+    .footer-grid-card:nth-child(4) { border-bottom: none; }
+  }
+</style>
+<script defer>
+  // Виджет Chatwoot в футере активен на десктопе и на главной (мобильной).
+  // На мобильных без футера виджет подключается через components/widget-chatwoot.php.
+  (function () {
+    var p = location.pathname.replace(/\/+$/, '');
+    var isHome = (p === '' || p === '/');
+    var isMobile = window.matchMedia('(max-width: 767px)').matches;
+    if (isMobile && !isHome) return;
+    window.chatwootSettings = { "position": "right", "type": "standard", "launcherTitle": "" };
+    (function (d, t) {
+      var BASE_URL = "https://app.chatwoot.com";
+      var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+      g.src = BASE_URL + "/packs/js/sdk.js";
+      g.async = true;
+      s.parentNode.insertBefore(g, s);
+      g.onload = function () {
+        window.chatwootSDK.run({
+          websiteToken: 'Z16V1t3ANHodWwXFQanStee2',
+          baseUrl: BASE_URL
+        });
+      };
+    })(document, "script");
+  })();
+</script>
+<script>
+  (function(){
+    var p = location.pathname.replace(/\/+$/, '');
+    if (window.matchMedia('(max-width: 767px)').matches && (p === '' || p === '/')) {
+      document.querySelectorAll('footer.bg-white').forEach(function(f){ f.style.display = ''; });
+    }
+  })();
+</script>
+<?php include_once __DIR__ . '/widget-chatwoot.php'; ?>

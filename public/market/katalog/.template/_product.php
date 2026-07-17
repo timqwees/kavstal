@@ -159,8 +159,8 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 $breadcrumbItems[] = [
                     '@type' => 'ListItem',
                     'position' => $position++,
-                    'name' => $subcategory['title'],
-                    'item' => $site['baseUrl'] . '/' . ($subcategory['seo']['canonicalUrl'] ?? '/market')
+                    'name' => $subcategory['name'] ?? $subcategory['title'] ?? $categoryId,
+                    'item' => $site['baseUrl'] . '/market/katalog/' . $parentCategory['id'] . '/' . $categoryId
                 ];
             }
         }
@@ -197,14 +197,15 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             "brand": {
                 "@type": "Brand",
                 "name": "<?= htmlspecialchars($site['company']) ?>"
-            },
+            }<?php if ($reviewCount > 0): ?>,
             "aggregateRating": {
                 "@type": "AggregateRating",
-                "ratingValue": "<?= htmlspecialchars(number_format((float) (empty($averageRating) ? 4.5 : $averageRating), 1, '.', '')) ?>",
-                "reviewCount": "<?= max(1, (int) $reviewCount) ?>",
+                "ratingValue": "<?= htmlspecialchars(number_format((float) $averageRating, 1, '.', '')) ?>",
+                "reviewCount": "<?= (int) $reviewCount ?>",
                 "bestRating": "5",
                 "worstRating": "1"
-            },
+            }
+            <?php endif; ?>,
             "offers": {
                 "@type": "Offer",
                 "url": <?= json_encode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
@@ -267,7 +268,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     </noscript>
 
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
@@ -275,8 +276,8 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     <!-- Swiper Slider CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
-    <!-- Google reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Intl Tel Input CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css">
 
     <!-- Local Styles -->
     <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style"
@@ -287,20 +288,20 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
     <style>
         .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #d1d5db;
             opacity: 0.7;
             transition: all 0.3s ease;
         }
         .swiper-pagination-bullet-active {
-            width: 24px;
-            border-radius: 4px;
-            background: #dc2626;
+            width: 20px;
+            border-radius: 3px;
+            background: #ef4444;
             opacity: 1;
         }
         .thumbnail-btn.active {
-            border-color: #dc2626;
+            border-color: #ef4444;
         }
         .mobile-menu {
             transform: translateX(-100%);
@@ -324,8 +325,8 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
         /* Mobile gallery */
         .product-gallery-mobile .swiper-slide-active > div { box-shadow: none; }
-        .product-gallery-pagination .swiper-pagination-bullet { background: #d1d5db; opacity: 0.7; width: 8px; height: 8px; transition: all 0.3s ease; }
-        .product-gallery-pagination .swiper-pagination-bullet-active { background: #dc2626; opacity: 1; width: 20px; border-radius: 4px; }
+        .product-gallery-pagination .swiper-pagination-bullet { background: #d1d5db; opacity: 0.7; width: 6px; height: 6px; transition: all 0.3s ease; }
+        .product-gallery-pagination .swiper-pagination-bullet-active { background: #ef4444; opacity: 1; width: 20px; border-radius: 3px; }
 
         /* Image skeleton loader */
         .product-gallery-img { background: #f9fafb; }
@@ -333,12 +334,15 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         .product-gallery-img[data-loaded="true"] { opacity: 1; transition: opacity 0.3s ease; }
 
         /* Accordion */
-        .accordion-header { cursor: pointer; user-select: none; }
+        .accordion-header { cursor: pointer; user-select: none; border-radius: 16px 16px 0 0; }
         .accordion-header:hover { background: #fafafa; }
         .accordion-header .accordion-icon { transition: transform 0.25s ease; }
         .accordion-header[aria-expanded="true"] .accordion-icon { transform: rotate(180deg); }
-        .accordion-body { overflow: hidden; max-height: 0; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .accordion-body { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
         .accordion-body.open { max-height: 2000px; }
+
+        /* Accordion first child radius */
+        .accordion-header:first-child { border-radius: 16px 16px 0 0; }
 
         /* Sticky mobile cart */
         @media (max-width: 1023px) {
@@ -351,18 +355,38 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         }
         @media (min-width: 1024px) { .mobile-sticky-cart { display: none; } }
 
-        /* Buy in 1 click modal */
+        /* Modal */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 60; display: flex; align-items: flex-end; justify-content: center; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
         .modal-overlay.active .modal-sheet { transform: translateY(0); }
         .modal-sheet { background: white; border-radius: 16px 16px 0 0; width: 100%; max-width: 480px; max-height: 80vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s ease; padding: 24px; }
+        #buyOneClickModal .modal-sheet { overflow: visible; max-height: none; }
         @media (min-width: 640px) { .modal-sheet { border-radius: 16px; margin: auto; max-height: 70vh; } }
+
+        /* Tabs */
+        .tab-btn { position: relative; }
+        .tab-btn::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+            height: 2px; background: #ef4444; border-radius: 1px 1px 0 0;
+            transform: scaleX(0); transition: transform 0.25s ease;
+        }
+        .tab-btn.text-red-500::after { transform: scaleX(1); }
+
+        /* Similar slider card */
+        .similar-card:hover { transform: translateY(-2px); }
+
+        /* Trust badge */
+        .trust-badge { transition: transform 0.2s ease; }
+        .trust-badge:hover { transform: translateY(-1px); }
+
+        .iti__selected-dial-code { color: #000; }
+        .iti { width: 100%; }
     </style>
 </head>
 
 <body class="bg-zinc-50">
     <a href="#main-content"
-        class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
+        class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">
         Перейти к основному содержанию
     </a>
 
@@ -372,14 +396,14 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
         <!-- Breadcrumb -->
         <nav class="flex items-center space-x-1.5 text-sm mb-6" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-            <a href="/" class="inline-flex items-center text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/">
+            <a href="/" class="inline-flex items-center text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/">
                 <svg class="me-1.5 h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/></svg>
                 <span itemprop="name">Главная</span>
             </a>
             <meta itemprop="position" content="1">
             <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
 
-            <a href="/market" class="text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market">
+            <a href="/market" class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market">
                 <span itemprop="name">Каталог</span>
             </a>
             <meta itemprop="position" content="2">
@@ -388,40 +412,64 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             <?php
             $allProducts = Setting\route\function\Functions::listProducts();
             $parentTitle = 'Каталог';
+            $parentSlug = $katalog;
             foreach ($allProducts as $p) {
                 if (($p['badge'] ?? '') === 'Категория' && ($p['id'] ?? '') === $katalog) {
                     $parentTitle = $p['title'] ?? $katalog;
                     break;
                 }
             }
+
+            $subcategoryTitle = null;
+            $subcategorySlug = $subcategory ?? '';
+            if (!empty($subcategorySlug)) {
+                foreach ($allProducts as $p) {
+                    if (($p['badge'] ?? '') === 'Подкатегория' && ($p['categories']['id'] ?? '') === $subcategorySlug) {
+                        $subcategoryTitle = $p['name'] ?? $p['title'] ?? $subcategorySlug;
+                        break;
+                    }
+                }
+            }
             ?>
-            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>" class="text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>">
+            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>" class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>">
                 <span itemprop="name"><?= htmlspecialchars($parentTitle) ?></span>
             </a>
             <meta itemprop="position" content="3">
             <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+
+            <?php if ($subcategoryTitle): ?>
+            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>/<?= htmlspecialchars($subcategorySlug) ?>" class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>/<?= htmlspecialchars($subcategorySlug) ?>">
+                <span itemprop="name"><?= htmlspecialchars($subcategoryTitle) ?></span>
+            </a>
+            <meta itemprop="position" content="4">
+            <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+            <span class="text-zinc-900 font-medium" itemprop="name"><?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?></span>
+            <meta itemprop="position" content="5">
+            <?php else: ?>
             <span class="text-zinc-900 font-medium" itemprop="name"><?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?></span>
             <meta itemprop="position" content="4">
+            <?php endif; ?>
         </nav>
 
         <!-- Two-Column Product Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
 
             <!-- Left Column: Gallery -->
-            <div class="lg:col-span-5">
-                <!-- Desktop: Static image + thumbnails -->
+            <div class="lg:col-span-5 lg:sticky lg:top-[120px] lg:self-start">
+                <!-- Desktop -->
                 <div class="hidden lg:block">
-                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden mb-4">
-                        <img id="main-image"
-                            src="<?= htmlspecialchars($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
-                            alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
-                            title="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
-                            class="w-full h-auto object-contain"
-                            style="aspect-ratio: 4/3;">
+                    <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden mb-3 shadow-sm">
+                        <div class="flex items-center justify-center p-6" style="aspect-ratio: 1;">
+                            <img id="main-image"
+                                src="<?= htmlspecialchars($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
+                                alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
+                                title="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
+                                class="max-w-full max-h-full object-contain">
+                        </div>
                     </div>
-                    <div class="flex gap-2 overflow-x-auto pb-2" id="thumbnail-list">
+                    <div class="flex gap-2 overflow-x-auto pb-1" id="thumbnail-list">
                         <?php foreach ($product['images'] as $index => $image): ?>
-                        <button class="thumbnail-btn flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 <?= $index === 0 ? 'active border-red-500' : 'border-zinc-200' ?> hover:border-red-300 transition-colors"
+                        <button class="thumbnail-btn flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 <?= $index === 0 ? 'active border-red-500' : 'border-zinc-200' ?> hover:border-red-300 transition-colors"
                             data-src="<?= htmlspecialchars($image) ?>"
                             data-alt="<?= htmlspecialchars($product['name'] ?? $product['title']) . ($index > 0 ? ' - фото ' . ($index + 1) : '') ?>">
                             <img src="<?= htmlspecialchars($image) ?>"
@@ -431,9 +479,10 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         </button>
                         <?php endforeach; ?>
                     </div>
+                    <p class="text-xs text-zinc-400 text-center mt-3">Наведите курсор на изображение для увеличения</p>
                 </div>
 
-                <!-- Mobile: Swiper gallery -->
+                <!-- Mobile -->
                 <div class="lg:hidden">
                     <div class="swiper product-gallery-mobile" style="border-radius: 12px; overflow: hidden;">
                         <div class="swiper-wrapper">
@@ -454,82 +503,127 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             </div>
 
             <!-- Right Column: Product Info -->
-            <div class="lg:col-span-7 space-y-5">
+            <div class="lg:col-span-7 space-y-4">
 
-                <!-- Title + Fav + Share -->
+                <!-- Title + Actions -->
                 <div class="flex items-start justify-between gap-3">
                     <h1 class="text-2xl lg:text-3xl font-bold text-zinc-900 leading-tight flex-1">
                         <?= htmlspecialchars($product['name'] ?? $product['title']) ?>
                     </h1>
-                    <div class="flex items-center gap-2 shrink-0 mt-1">
-                        <button type="button" id="product-fav-btn" class="w-9 h-9 rounded-lg border border-zinc-200 flex items-center justify-center transition-colors hover:border-red-300 hover:bg-red-50" data-pid="<?= htmlspecialchars($productID) ?>" title="В избранное">
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button type="button" id="product-fav-btn" class="w-9 h-9 rounded-xl border border-zinc-200 flex items-center justify-center hover:border-red-300 hover:bg-red-50 transition-colors" data-pid="<?= htmlspecialchars($productID) ?>" title="В избранное">
                             <svg width="16" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                         </button>
-                        <button type="button" id="product-share-btn" class="w-9 h-9 rounded-lg border border-zinc-200 flex items-center justify-center transition-colors hover:border-zinc-300 hover:bg-zinc-50" title="Поделиться">
+                        <button type="button" id="product-share-btn" class="w-9 h-9 rounded-xl border border-zinc-200 flex items-center justify-center hover:border-zinc-300 hover:bg-zinc-50 transition-colors" title="Поделиться">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                         </button>
                     </div>
                 </div>
 
-                <!-- Rating + Availability -->
-                <div class="flex flex-wrap items-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center">
-                            <?php $rating = (float) ($averageRating ?: 4.5); for ($i = 1; $i <= 5; $i++): ?>
-                                <i class="fas fa-star text-sm <?= $i <= floor($rating) ? 'text-yellow-400' : 'text-zinc-200' ?>"></i>
+                <!-- Rating + Stock -->
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex items-center gap-1">
+                        <?php if ($reviewCount > 0): ?>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <i class="fas fa-star text-sm <?= $i <= floor((float) $averageRating) ? 'text-yellow-400' : 'text-zinc-200' ?>"></i>
                             <?php endfor; ?>
-                        </div>
-                        <span class="text-sm font-medium text-zinc-700"><?= number_format($rating, 1) ?></span>
-                        <span class="text-sm text-zinc-400">(<?= $reviewCount ?: 0 ?>)</span>
+                            <span class="text-sm font-medium text-zinc-700 ml-1.5"><?= number_format((float) $averageRating, 1) ?></span>
+                            <span class="text-sm text-zinc-400 ml-1">(<?= $reviewCount ?>)</span>
+                        <?php else: ?>
+                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                <i class="fas fa-star text-sm text-zinc-200"></i>
+                            <?php endfor; ?>
+                            <span class="text-sm text-zinc-400 ml-1.5">Нет отзывов</span>
+                        <?php endif; ?>
                     </div>
+                    <span class="text-zinc-300 mx-1">|</span>
                     <?php if ($product['in_stock']): ?>
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700">
-                            <i class="fas fa-check-circle"></i> В наличии
-                        </span>
+                        <span class="text-green-600 text-sm font-medium">✔ В наличии</span>
                     <?php else: ?>
-                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700">
-                            <i class="fas fa-times-circle"></i> Под заказ
-                        </span>
+                        <span class="text-red-500 text-sm font-medium">Под заказ</span>
                     <?php endif; ?>
                 </div>
 
-                <!-- Trust Badges -->
-                <div class="flex flex-wrap items-center gap-4 text-sm">
-                    <span class="flex items-center gap-1 text-green-600"><i class="fas fa-check-circle"></i> Официальный дилер</span>
-                    <span class="flex items-center gap-1 text-red-600"><i class="fas fa-shield-alt"></i> Гарантия качества</span>
-                    <span class="flex items-center gap-1 text-blue-600"><i class="fas fa-file-invoice"></i> Сертификаты ГОСТ</span>
-                </div>
+                <!-- Price + Cart Card -->
+                <div class="bg-white rounded-2xl border border-zinc-200 p-5 lg:p-6 shadow-sm">
+                    <?php
+                    $firstUnit = array_key_first($product['units'] ?? []);
+                    $firstPrice = is_numeric($product['units'][$firstUnit] ?? null) ? (float) $product['units'][$firstUnit] : 0;
+                    ?>
+                    <div class="flex flex-col lg:flex-row justify-between gap-4">
+                        <div class="min-w-0 lg:translate-y-1/3">
+                            <div class="flex flex-wrap items-baseline gap-2">
+                                <span class="text-3xl lg:text-4xl font-bold text-zinc-900" id="current-price">
+                                    <?= $firstPrice > 0 ? number_format($firstPrice, 0, '', ' ') : 'Цена по запросу' ?>
+                                </span>
+                                <span class="text-lg text-zinc-500" id="current-unit"><?= $firstPrice > 0 ? '₽ / ' . $firstUnit : '' ?></span>
+                            </div>
+                            <div class="flex flex-wrap gap-2 mt-2 text-sm" id="alternative-prices">
+                                <?php foreach (($product['units'] ?? []) as $unit => $price):
+                                    if ($unit !== $firstUnit && is_numeric($price)): ?>
+                                    <span class="bg-zinc-50 px-3 py-1 rounded-lg border border-zinc-200 hover:border-red-200 hover:bg-red-50 transition-colors">
+                                        <strong class="text-red-500"><?= number_format((float) $price, 0, '', ' ') ?> ₽</strong> / <?= htmlspecialchars($unit) ?>
+                                    </span>
+                                <?php endif; endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4 shrink-0">
+                            <div>
+                                <div class="flex items-center gap-1.5 mb-1">
+                                    <span class="text-xs font-medium text-zinc-500">Количество</span>
+                                    <button type="button" class="qty-preset text-[10px] px-1.5 py-0.5 rounded text-zinc-400 hover:text-red-500 hover:bg-red-50 transition font-medium leading-none" data-qty="1">1</button>
+                                    <button type="button" class="qty-preset text-[10px] px-1.5 py-0.5 rounded text-zinc-400 hover:text-red-500 hover:bg-red-50 transition font-medium leading-none" data-qty="5">5</button>
+                                    <button type="button" class="qty-preset text-[10px] px-1.5 py-0.5 rounded text-zinc-400 hover:text-red-500 hover:bg-red-50 transition font-medium leading-none" data-qty="10">10</button>
+                                    <button type="button" class="qty-preset text-[10px] px-1.5 py-0.5 rounded text-zinc-400 hover:text-red-500 hover:bg-red-50 transition font-medium leading-none" data-qty="20">20</button>
+                                </div>
+                                <div class="flex items-center border border-zinc-200 rounded-xl overflow-hidden">
+                                    <button type="button" class="cart-qty-btn cart-qty-minus w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-lg" data-product-id="<?= htmlspecialchars($productID) ?>">−</button>
+                                    <input type="number" id="cart-qty-input" value="1" min="1"
+                                        class="w-24 h-10 text-center border-x border-zinc-200 text-sm font-medium focus:outline-none"
+                                        data-product-id="<?= htmlspecialchars($productID) ?>">
+                                    <button type="button" class="cart-qty-btn cart-qty-plus w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-lg" data-product-id="<?= htmlspecialchars($productID) ?>">+</button>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-zinc-500 mb-1">Единица</label>
+                                <select id="cart-unit-select"
+                                    class="w-full h-10 px-3 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white min-w-[100px]">
+                                    <?php foreach ($product['units'] as $unit => $price): ?>
+                                        <option value="<?= htmlspecialchars($unit) ?>" data-price="<?= (float)$price ?>">
+                                            <?= htmlspecialchars($unit) ?> — <?= number_format((float)$price, 0, '', ' ') ?> ₽
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Price Section -->
-                <div class="bg-white rounded-xl border border-zinc-200 p-5 space-y-4">
-                    <div class="flex flex-wrap items-baseline gap-4">
-                        <?php
-                        $firstUnit = array_key_first($product['units'] ?? []);
-                        $firstPrice = is_numeric($product['units'][$firstUnit] ?? null) ? (float) $product['units'][$firstUnit] : 0;
-                        ?>
-                        <span class="text-3xl font-bold text-zinc-900" id="current-price">
-                            <?= $firstPrice > 0 ? number_format($firstPrice, 0, '', ' ') : 'Цена по запросу' ?>
-                        </span>
-                        <span class="text-lg text-zinc-500" id="current-unit"><?= $firstPrice > 0 ? '₽ / ' . $firstUnit : '' ?></span>
+                    <div class="mt-5 pt-4 border-t border-zinc-100">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            <button type="button" id="add-to-cart-btn"
+                                class="w-full bg-red-500 text-white py-3 px-6 rounded-xl hover:bg-red-500 transition-all font-medium shadow-sm flex items-center justify-center gap-2">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                В корзину
+                            </button>
+                            <button type="button" id="buy-one-click-btn"
+                                class="w-full border-2 border-red-500 text-red-500 py-3 px-6 rounded-xl hover:bg-red-50 transition-all font-medium flex items-center justify-center gap-2">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                                Купить в 1 клик
+                            </button>
+                        </div>
+                        <div id="cart-feedback" class="hidden text-sm font-medium mt-2"></div>
                     </div>
-                    <div class="flex flex-wrap gap-3 text-sm" id="alternative-prices">
-                        <?php foreach (($product['units'] ?? []) as $unit => $price):
-                            if ($unit !== $firstUnit && is_numeric($price)): ?>
-                            <span class="bg-zinc-50 px-3 py-1.5 rounded-lg border border-zinc-100">
-                                <strong class="text-red-600"><?= number_format((float) $price, 0, '', ' ') ?> ₽</strong> / <?= htmlspecialchars($unit) ?>
-                            </span>
-                        <?php endif; endforeach; ?>
+
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="trust-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-green-50 text-green-700 border border-green-100"><i class="fas fa-check-circle text-green-500"></i> Официальный дилер</span>
+                        <span class="trust-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-red-50 text-red-500 border border-red-100"><i class="fas fa-shield-alt text-red-500"></i> Гарантия качества</span>
+                        <span class="trust-badge inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100"><i class="fas fa-file-invoice text-blue-500"></i> Сертификаты</span>
                     </div>
-                    <button type="button" id="buy-one-click-btn"
-                        class="w-full sm:w-auto border-2 border-red-600 text-red-600 py-2.5 px-6 rounded-lg hover:bg-red-50 transition-all font-medium text-sm flex items-center justify-center gap-2">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        Купить в 1 клик
-                    </button>
                 </div>
 
                 <!-- Key Specs -->
                 <?php if (!empty($product['specs']) && is_array($product['specs'])): ?>
-                <div class="bg-white rounded-xl border border-zinc-200 p-5">
+                <div class="bg-white rounded-2xl border border-zinc-200 p-5">
                     <h3 class="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">Характеристики</h3>
                     <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                         <?php $specCount = 0;
@@ -551,78 +645,37 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         <?php endforeach; ?>
                     </div>
                     <?php if (count($specEntries) > 8): ?>
-                    <button onclick="document.querySelector('[data-section=specs]').scrollIntoView({behavior:'smooth'})" class="mt-3 text-sm text-red-600 hover:text-red-700 font-medium">
+                    <button onclick="document.querySelector('[data-section=specs]').scrollIntoView({behavior:'smooth'})" class="mt-3 text-sm text-red-500 hover:text-red-500 font-medium">
                         Все характеристики <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                     <?php endif; ?>
                 </div>
                 <?php endif; ?>
 
-                <!-- Delivery Info -->
-                <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 text-sm">
-                    <div class="flex items-start gap-3">
-                        <i class="fas fa-truck text-blue-600 mt-0.5"></i>
-                        <div>
-                            <p class="font-medium text-blue-900">Доставка по Москве и всей России</p>
-                            <p class="text-blue-700">От 1 дня. Бесплатно от 100 000 ₽. Возможен самовывоз.</p>
+                <!-- Delivery + Contact -->
+                <div class="space-y-3">
+                    <div class="bg-red-50 border border-red-100 rounded-2xl p-4 text-sm">
+                        <div class="flex items-start gap-3">
+                            <svg class="w-5 h-5 text-red-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                            <div>
+                                <p class="font-medium text-red-900">Доставка по Москве и всей России</p>
+                                <p class="text-red-500">От 1 дня. Бесплатно от 100 000 ₽. Возможен самовывоз.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Add to Cart — sticky on desktop -->
-                <div class="space-y-3 lg:sticky lg:top-[120px] lg:z-10" id="add-to-cart-section">
-                    <div class="bg-white rounded-xl border border-zinc-200 p-5 space-y-4 shadow-sm">
-                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-                            <div>
-                                <label class="block text-xs font-medium text-zinc-500 mb-1">Количество</label>
-                                <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden">
-                                    <button type="button" class="cart-qty-btn cart-qty-minus w-9 h-10 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 transition text-lg font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">−</button>
-                                    <input type="number" id="cart-qty-input" value="1" min="1"
-                                        class="w-full h-10 text-center border-x border-zinc-200 text-sm font-medium focus:outline-none"
-                                        data-product-id="<?= htmlspecialchars($productID) ?>">
-                                    <button type="button" class="cart-qty-btn cart-qty-plus w-9 h-10 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 transition text-lg font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">+</button>
-                                </div>
-                                <div class="flex gap-1 mt-1.5">
-                                    <button type="button" class="qty-preset text-[10px] px-2 py-0.5 rounded border border-zinc-200 text-zinc-500 hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition" data-qty="1">1</button>
-                                    <button type="button" class="qty-preset text-[10px] px-2 py-0.5 rounded border border-zinc-200 text-zinc-500 hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition" data-qty="5">5</button>
-                                    <button type="button" class="qty-preset text-[10px] px-2 py-0.5 rounded border border-zinc-200 text-zinc-500 hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition" data-qty="10">10</button>
-                                    <button type="button" class="qty-preset text-[10px] px-2 py-0.5 rounded border border-zinc-200 text-zinc-500 hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition" data-qty="20">20</button>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-zinc-500 mb-1">Единица</label>
-                                <select id="cart-unit-select"
-                                    class="w-full h-10 px-3 border border-zinc-200 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white">
-                                    <?php foreach ($product['units'] as $unit => $price): ?>
-                                        <option value="<?= htmlspecialchars($unit) ?>" data-price="<?= (float)$price ?>">
-                                            <?= htmlspecialchars($unit) ?> — <?= number_format((float)$price, 0, '', ' ') ?> ₽
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="sm:col-span-2 flex items-end">
-                                <button type="button" id="add-to-cart-btn"
-                                    class="w-full bg-red-600 text-white py-2.5 px-6 rounded-lg hover:bg-red-700 transition-all font-medium shadow-sm flex items-center justify-center gap-2">
-                                    <i class="fas fa-shopping-cart"></i> В корзину
-                                </button>
-                            </div>
-                        </div>
-                        <div id="cart-feedback" class="hidden text-sm font-medium"></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                         <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
-                            class="flex items-center justify-center gap-2 border border-zinc-200 text-zinc-700 py-3 px-4 rounded-lg hover:bg-zinc-50 transition font-medium text-sm">
-                            <i class="fas fa-phone-alt text-red-600"></i> Заказать по телефону
+                            class="flex items-center justify-center gap-2 border border-zinc-200 text-zinc-700 py-3 px-4 rounded-xl hover:bg-zinc-50 transition font-medium text-sm">
+                            <i class="fas fa-phone-alt text-red-500"></i> Заказать по звонку
                         </a>
-                        <a href="mailto:<?= htmlspecialchars($site['email']) ?>"
-                            class="flex items-center justify-center gap-2 border border-zinc-200 text-zinc-700 py-3 px-4 rounded-lg hover:bg-zinc-50 transition font-medium text-sm">
-                            <i class="fas fa-envelope text-red-600"></i> Отправить запрос
+                        <a href="mailto:<?= htmlspecialchars($site['email']) ?>?subject=Запрос: <?= rawurlencode($product['name'] ?? $product['title'] ?? 'Товар') ?>&body=Здравствуйте!%0A%0AМеня интересует: <?= rawurlencode($product['name'] ?? $product['title'] ?? 'Товар') ?>%0A%0AСсылка: <?= rawurlencode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/')) ?>%0A%0A---%0AПожалуйста, свяжитесь со мной для уточнения деталей."
+                            class="flex items-center justify-center gap-2 border border-zinc-200 text-zinc-700 py-3 px-4 rounded-xl hover:bg-zinc-50 transition font-medium text-sm">
+                            <i class="fas fa-envelope text-red-500"></i> Отправить запрос
                         </a>
-                        <a href="https://wa.me/<?= preg_replace('/[^0-9]/', '', $site['phone']) ?>"
-                            target="_blank" rel="noopener noreferrer"
-                            class="flex items-center justify-center gap-2 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition font-medium text-sm">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        <a href="https://t.me/kavstal_bot" target="_blank"
+                            class="flex items-center justify-center gap-2 bg-sky-500 text-white py-3 px-4 rounded-xl hover:bg-sky-600 transition font-medium text-sm">
+                            <i class="fab fa-telegram-plane"></i> Telegram
                         </a>
                     </div>
                 </div>
@@ -633,20 +686,20 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         <!-- Below the Fold Sections -->
         <div class="mt-12 space-y-6">
 
-            <!-- Horizontal Tabs: Описание | Характеристики | Доставка и оплата -->
-            <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
-                <div class="border-b border-zinc-200">
+            <!-- Tabs: Описание | Характеристики | Доставка и оплата -->
+            <div class="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
+                <div class="border-b border-zinc-100">
                     <div class="flex overflow-x-auto" role="tablist">
-                        <button class="tab-btn px-6 lg:px-8 py-4 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors text-red-600 border-red-600" data-tab="tab-desc" role="tab" aria-selected="true">Описание</button>
-                        <button class="tab-btn px-6 lg:px-8 py-4 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors text-zinc-500 border-transparent hover:text-zinc-700" data-tab="tab-specs" role="tab" aria-selected="false">Характеристики</button>
-                        <button class="tab-btn px-6 lg:px-8 py-4 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors text-zinc-500 border-transparent hover:text-zinc-700" data-tab="tab-delivery" role="tab" aria-selected="false">Доставка и оплата</button>
+                        <button class="tab-btn px-6 lg:px-8 py-4 text-sm font-medium whitespace-nowrap transition-colors text-red-500" data-tab="tab-desc" role="tab" aria-selected="true">Описание</button>
+                        <button class="tab-btn px-6 lg:px-8 py-4 text-sm font-medium whitespace-nowrap transition-colors text-zinc-500 hover:text-zinc-700" data-tab="tab-specs" role="tab" aria-selected="false">Характеристики</button>
+                        <button class="tab-btn px-6 lg:px-8 py-4 text-sm font-medium whitespace-nowrap transition-colors text-zinc-500 hover:text-zinc-700" data-tab="tab-delivery" role="tab" aria-selected="false">Доставка и оплата</button>
                     </div>
                 </div>
 
                 <!-- Tab: Описание -->
                 <div id="tab-desc" class="tab-content px-6 lg:px-8 py-6 lg:py-8" role="tabpanel">
                     <?php if (!empty($product['description'])): ?>
-                    <div class="prose prose-zinc max-w-none text-zinc-600 leading-relaxed">
+                    <div class="text-zinc-600 leading-relaxed text-sm lg:text-base max-w-3xl">
                         <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
                     </div>
                     <?php else: ?>
@@ -669,7 +722,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         ?>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
                             <?php foreach ($allSpecs as $label => $value): ?>
-                                <div class="flex justify-between py-3 border-b border-zinc-100">
+                                <div class="flex justify-between py-3 border-b border-zinc-50">
                                     <span class="text-zinc-500 text-sm"><?= htmlspecialchars($label) ?></span>
                                     <span class="font-medium text-zinc-900 text-sm text-right ml-2"><?= htmlspecialchars($value) ?></span>
                                 </div>
@@ -682,58 +735,58 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
                 <!-- Tab: Доставка и оплата -->
                 <div id="tab-delivery" class="tab-content px-6 lg:px-8 py-6 lg:py-8 hidden" role="tabpanel">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
-                            <div class="border border-zinc-200 rounded-lg p-4">
+                            <div class="border border-zinc-100 rounded-xl p-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <h4 class="font-medium text-zinc-900">Автотранспорт</h4>
-                                    <span class="text-sm text-zinc-500">1-3 дня</span>
+                                    <span class="text-xs text-zinc-400 bg-zinc-50 px-2 py-0.5 rounded-full">1-3 дня</span>
                                 </div>
                                 <p class="text-zinc-600 text-sm mb-3">Доставка по Москве и Московской области</p>
-                                <ul class="text-sm text-zinc-600 space-y-1">
-                                    <li>• Грузовики 5-20 тонн</li>
-                                    <li>• Разгрузка на объекте</li>
-                                    <li>• Страховка груза</li>
+                                <ul class="text-sm text-zinc-500 space-y-1">
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Грузовики 5-20 тонн</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Разгрузка на объекте</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Страховка груза</li>
                                 </ul>
                             </div>
-                            <div class="border border-zinc-200 rounded-lg p-4">
+                            <div class="border border-zinc-100 rounded-xl p-4">
                                 <div class="flex items-center justify-between mb-2">
                                     <h4 class="font-medium text-zinc-900">Ж/д транспорт</h4>
-                                    <span class="text-sm text-zinc-500">3-7 дней</span>
+                                    <span class="text-xs text-zinc-400 bg-zinc-50 px-2 py-0.5 rounded-full">3-7 дней</span>
                                 </div>
                                 <p class="text-zinc-600 text-sm mb-3">Доставка в регионы России</p>
-                                <ul class="text-sm text-zinc-600 space-y-1">
-                                    <li>• Вагоны и контейнеры</li>
-                                    <li>• До ж/д станции</li>
-                                    <li>• Трекинг груза</li>
+                                <ul class="text-sm text-zinc-500 space-y-1">
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Вагоны и контейнеры</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>До ж/д станции</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Трекинг груза</li>
                                 </ul>
                             </div>
                         </div>
                         <div class="space-y-4">
-                            <div class="border border-zinc-200 rounded-lg p-4">
+                            <div class="border border-zinc-100 rounded-xl p-4">
                                 <h4 class="font-medium text-zinc-900 mb-2">Безналичный расчет</h4>
                                 <p class="text-zinc-600 text-sm mb-3">Для юридических лиц и ИП</p>
-                                <ul class="text-sm text-zinc-600 space-y-1">
-                                    <li>• Счет с НДС</li>
-                                    <li>• Отсрочка платежа</li>
-                                    <li>• Договор поставки</li>
+                                <ul class="text-sm text-zinc-500 space-y-1">
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Счет с НДС</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Отсрочка платежа</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Договор поставки</li>
                                 </ul>
                             </div>
-                            <div class="border border-zinc-200 rounded-lg p-4">
+                            <div class="border border-zinc-100 rounded-xl p-4">
                                 <h4 class="font-medium text-zinc-900 mb-2">Наличный расчет</h4>
                                 <p class="text-zinc-600 text-sm mb-3">Для физических лиц</p>
-                                <ul class="text-sm text-zinc-600 space-y-1">
-                                    <li>• Оплата при получении</li>
-                                    <li>• Кассовые чеки</li>
-                                    <li>• Расписка о получении</li>
+                                <ul class="text-sm text-zinc-500 space-y-1">
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Оплата при получении</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Кассовые чеки</li>
+                                    <li class="flex items-center gap-2"><span class="w-1 h-1 bg-red-400 rounded-full shrink-0"></span>Расписка о получении</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-6 bg-zinc-50 border border-zinc-200 rounded-lg p-4">
+                    <div class="mt-6 bg-zinc-50 border border-zinc-100 rounded-xl p-4">
                         <div class="flex items-start gap-3">
-                            <i class="fas fa-info-circle text-zinc-500 mt-0.5"></i>
-                            <div class="text-sm text-zinc-700 space-y-1">
+                            <i class="fas fa-info-circle text-zinc-400 mt-0.5"></i>
+                            <div class="text-sm text-zinc-600 space-y-1">
                                 <p>• Минимальная сумма заказа — 50 000 ₽</p>
                                 <p>• Бесплатная доставка при заказе от 100 000 ₽ по Москве</p>
                                 <p>• Возможен самовывоз со склада в Москве</p>
@@ -769,34 +822,45 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 <?php if ($errorMessage): ?>
                     <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                         <div class="flex items-center">
-                            <i class="fas fa-exclamation-circle text-red-600 mr-3"></i>
-                            <span class="text-red-800"><?= htmlspecialchars($errorMessage) ?></span>
+                            <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
+                            <span class="text-red-500"><?= htmlspecialchars($errorMessage) ?></span>
                         </div>
                     </div>
                 <?php endif; ?>
 
                 <!-- Reviews Summary -->
-                <div class="bg-zinc-50 border border-zinc-200 rounded-lg p-5 mb-8">
+                <div class="bg-white border border-zinc-200 rounded-2xl p-5 mb-8 shadow-sm">
                     <div class="flex flex-wrap items-center justify-between gap-4">
-                        <div class="flex items-center gap-4">
-                            <div class="flex items-center">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <i class="fas fa-star text-lg <?= $i <= floor($averageRating) ? 'text-yellow-400' : 'text-zinc-200' ?>"></i>
-                                <?php endfor; ?>
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-0.5">
+                                <?php if ($reviewCount > 0): ?>
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <i class="fas fa-star <?= $i <= floor($averageRating) ? 'text-yellow-400' : 'text-zinc-200' ?>"></i>
+                                    <?php endfor; ?>
+                                    <span class="text-xl font-bold text-zinc-900 ml-2"><?= number_format($averageRating, 1) ?></span>
+                                <?php else: ?>
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <i class="fas fa-star text-zinc-200"></i>
+                                    <?php endfor; ?>
+                                <?php endif; ?>
                             </div>
-                            <span class="text-2xl font-bold text-zinc-900"><?= $averageRating > 0 ? number_format($averageRating, 1) : '—' ?></span>
-                            <span class="text-zinc-500"><?php
+                            <span class="text-zinc-300">|</span>
+                            <span class="text-sm text-zinc-500"><?php
                                 $cnt = count($reviews);
-                                $word = 'отзывов';
-                                if ($cnt % 100 < 11 || $cnt % 100 > 14) {
-                                    if ($cnt % 10 == 1) $word = 'отзыв';
-                                    elseif ($cnt % 10 >= 2 && $cnt % 10 <= 4) $word = 'отзыва';
+                                if ($cnt > 0) {
+                                    $word = 'отзывов';
+                                    if ($cnt % 100 < 11 || $cnt % 100 > 14) {
+                                        if ($cnt % 10 == 1) $word = 'отзыв';
+                                        elseif ($cnt % 10 >= 2 && $cnt % 10 <= 4) $word = 'отзыва';
+                                    }
+                                    echo $cnt . ' ' . $word;
+                                } else {
+                                    echo 'Нет отзывов';
                                 }
-                                echo $cnt . ' ' . $word;
                             ?></span>
                         </div>
                         <button onclick="document.getElementById('review-form').scrollIntoView({behavior:'smooth'})"
-                            class="bg-red-600 text-white px-5 py-2.5 rounded-lg hover:bg-red-700 transition font-medium text-sm">
+                            class="bg-red-500 text-white px-5 py-2.5 rounded-xl hover:bg-red-500 transition font-medium text-sm">
                             Написать отзыв
                         </button>
                     </div>
@@ -849,16 +913,16 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 </div>
                 <?php else: ?>
                 <div class="text-center py-12">
-                    <div class="w-14 h-14 bg-zinc-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-star text-xl text-zinc-400"></i>
+                    <div class="w-14 h-14 bg-zinc-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-star text-xl text-zinc-300"></i>
                     </div>
-                    <p class="text-lg font-medium text-zinc-700 mb-1">Пока нет отзывов</p>
-                    <p class="text-sm text-zinc-500">Станьте первым, кто оставит отзыв об этом товаре</p>
+                    <p class="text-base font-medium text-zinc-700 mb-1">Пока нет отзывов</p>
+                    <p class="text-sm text-zinc-400">Станьте первым, кто оставит отзыв об этом товаре</p>
                 </div>
                 <?php endif; ?>
 
                 <!-- Review Form -->
-                <div id="review-form" class="border-t border-zinc-200 pt-8 mt-8">
+                <div id="review-form" class="border-t border-zinc-100 pt-8 mt-8">
                     <h3 class="text-lg font-semibold text-zinc-900 mb-6">Оставить отзыв</h3>
                     <form action="/api/reviews" method="POST" class="space-y-5">
                         <input type="hidden" name="product_id" value="<?= strval($productID) ?>">
@@ -868,13 +932,13 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                             <div>
                                 <label class="block text-sm font-medium text-zinc-700 mb-1">Ваше имя *</label>
                                 <input type="text" name="name" required
-                                    class="w-full px-4 py-2.5 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                    class="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                                     placeholder="Иван Иванов">
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-zinc-700 mb-1">Email (не публикуется)</label>
                                 <input type="email" name="email"
-                                    class="w-full px-4 py-2.5 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                    class="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                                     placeholder="ivan@example.com">
                             </div>
                         </div>
@@ -894,7 +958,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         <div>
                             <label class="block text-sm font-medium text-zinc-700 mb-1">Ваш отзыв *</label>
                             <textarea name="review" rows="4" required
-                                class="w-full px-4 py-2.5 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                class="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                                 placeholder="Расскажите о вашем опыте использования..."></textarea>
                         </div>
 
@@ -905,7 +969,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         <div class="flex items-center justify-between">
                             <p class="text-xs text-zinc-500">* Email не публикуется.</p>
                             <button type="submit"
-                                class="bg-red-600 text-white px-6 py-2.5 rounded-lg hover:bg-red-700 transition font-medium text-sm">
+                                class="bg-red-500 text-white px-6 py-2.5 rounded-xl hover:bg-red-500 transition font-medium text-sm">
                                 Отправить отзыв
                             </button>
                         </div>
@@ -928,41 +992,66 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             }
             ?>
             <?php if (!empty($similarProducts)): ?>
-            <div class="bg-white rounded-xl border border-zinc-200 p-6 lg:p-8">
-                <div class="flex items-center justify-between mb-6">
-                    <h2 class="text-xl font-bold text-zinc-900">Похожие товары</h2>
+            <div class="bg-white rounded-2xl border border-zinc-200 p-5 lg:p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-5">
+                    <h2 class="text-lg font-bold text-zinc-900">Похожие товары</h2>
                     <div class="flex items-center gap-2">
-                        <button class="similar-prev w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 transition">
-                            <i class="fas fa-chevron-left text-xs text-zinc-600"></i>
+                        <button class="similar-prev w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 hover:border-red-200 transition disabled:opacity-30">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
-                        <button class="similar-next w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 transition">
-                            <i class="fas fa-chevron-right text-xs text-zinc-600"></i>
+                        <button class="similar-next w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 hover:border-red-200 transition disabled:opacity-30">
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
                         </button>
                     </div>
                 </div>
-                <div class="swiper similar-slider" style="padding-bottom: 40px;">
+                <div class="swiper similar-slider" style="padding-bottom: 28px;">
                     <div class="swiper-wrapper">
-                        <?php foreach ($similarProducts as $item): ?>
+                        <?php foreach ($similarProducts as $item):
+                            $itemUnit = array_key_first($item['units'] ?? []);
+                            $itemPrice = is_numeric($item['units'][$itemUnit] ?? null) ? (float) $item['units'][$itemUnit] : 0;
+                            $itemSpecs = [];
+                            if (!empty($item['specs']) && is_array($item['specs'])) {
+                                $specCount = 0;
+                                foreach ($item['specs'] as $sk => $sv) {
+                                    if ($specCount >= 2) break;
+                                    $label = is_array($sv) ? ($sv['label'] ?? $sk) : $sk;
+                                    $value = is_array($sv) ? ($sv['value'] ?? $sv) : $sv;
+                                    if (is_string($value) && $value !== '') {
+                                        $itemSpecs[] = htmlspecialchars($value);
+                                        $specCount++;
+                                    }
+                                }
+                            }
+                        ?>
                         <div class="swiper-slide">
                             <a href="<?= htmlspecialchars($item['seo']['canonicalUrl'] ?? '#') ?>"
-                                class="group block border border-zinc-100 rounded-lg p-3 hover:shadow-md transition-shadow h-full">
-                                <div class="aspect-square bg-zinc-100 rounded-lg overflow-hidden mb-3">
+                                class="group block border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-zinc-200 transition-all duration-200 similar-card bg-white">
+                                <div class="bg-zinc-50 overflow-hidden flex items-center justify-center p-4" style="aspect-ratio: 1;">
                                     <img src="<?= htmlspecialchars($item['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
                                         alt="<?= htmlspecialchars($item['name'] ?? '') ?>"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                        class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
                                         loading="lazy">
                                 </div>
-                                <p class="text-sm font-medium text-zinc-900 line-clamp-2 leading-tight"><?= htmlspecialchars($item['name'] ?? '') ?></p>
-                                <?php if (!empty($item['units'])): ?>
-                                <p class="text-sm font-bold text-red-600 mt-1">
-                                    от <?= number_format((float) min($item['units']), 0, '', ' ') ?> ₽
-                                </p>
-                                <?php endif; ?>
+                                <div class="p-3 border-t border-zinc-50">
+                                    <p class="text-sm font-medium text-zinc-900 line-clamp-2 leading-tight min-h-[2.5em]"><?= htmlspecialchars($item['name'] ?? '') ?></p>
+                                    <?php if (!empty($itemSpecs)): ?>
+                                    <div class="flex flex-wrap gap-1 mt-1.5">
+                                        <?php foreach ($itemSpecs as $sv): ?>
+                                        <span class="text-[10px] px-1.5 py-0.5 bg-zinc-100 text-zinc-500 rounded"><?= $sv ?></span>
+                                        <?php endforeach; ?>
+                                    </div>
+                                    <?php endif; ?>
+                                    <?php if ($itemPrice > 0): ?>
+                                    <p class="text-sm font-bold text-red-500 mt-2">
+                                        от <?= number_format($itemPrice, 0, '', ' ') ?> ₽
+                                    </p>
+                                    <?php endif; ?>
+                                </div>
                             </a>
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    <div class="swiper-pagination similar-pagination"></div>
+                    <div class="swiper-pagination similar-pagination" style="bottom: 0;"></div>
                 </div>
             </div>
             <?php endif; ?>
@@ -996,13 +1085,13 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>
-            <div class="flex items-center gap-3 mb-5 p-3 bg-zinc-50 rounded-lg">
+            <div class="flex items-center gap-3 mb-5 p-3 bg-zinc-50 rounded-xl">
                 <img src="<?= htmlspecialchars($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
-                    alt="" class="w-14 h-14 rounded-lg object-contain bg-white border border-zinc-100">
+                    alt="" class="w-14 h-14 rounded-xl object-contain bg-white border border-zinc-100">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-zinc-900 truncate"><?= htmlspecialchars($product['name'] ?? $product['title']) ?></p>
                     <?php if ($firstPrice > 0): ?>
-                    <p class="text-sm font-bold text-red-600 mt-0.5"><?= number_format($firstPrice, 0, '', ' ') ?> ₽ / <?= htmlspecialchars($firstUnit) ?></p>
+                    <p class="text-sm font-bold text-red-500 mt-0.5"><?= number_format($firstPrice, 0, '', ' ') ?> ₽ / <?= htmlspecialchars($firstUnit) ?></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1011,16 +1100,15 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 <input type="hidden" name="redirect_url" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
                 <div>
                     <label class="block text-sm font-medium text-zinc-700 mb-1">Ваше имя *</label>
-                    <input type="text" name="name" required class="w-full px-4 py-2.5 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="Иван Иванов">
+                    <input type="text" name="name" required class="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="Иван Иванов">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-zinc-700 mb-1">Телефон *</label>
-                    <input type="tel" name="phone" required class="w-full px-4 py-2.5 border border-zinc-200 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="+7 (___) ___-__-__">
+                    <input type="tel" name="phone" data-type-phone required class="w-full px-4 py-2.5 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="(___) ___-__-__">
                 </div>
                 <div class="hidden"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
-                <div class="g-recaptcha" data-sitekey="6LeAE6csAAAAAAWm3hHXzuXTbyr-xeAGTvAcd2lB" style="transform:scale(0.85);transform-origin:left;"></div>
-                <button type="submit" class="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-medium text-sm">
-                    Отправить заявку
+                <button type="submit" class="w-full bg-red-500 text-white py-3 rounded-xl hover:bg-red-500 transition font-medium text-sm">
+                    Оставить запрос
                 </button>
                 <p class="text-xs text-zinc-400 text-center">Мы перезвоним в течение 15 минут</p>
             </form>
@@ -1040,15 +1128,15 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <?php endif; ?>
                 </p>
             </div>
-            <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden shrink-0">
-                <button type="button" class="cart-qty-btn cart-qty-minus w-8 h-9 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 transition text-sm font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">−</button>
+            <div class="flex items-center border border-zinc-200 rounded-xl overflow-hidden shrink-0">
+                <button type="button" class="cart-qty-btn cart-qty-minus w-8 h-9 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-sm font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">−</button>
                 <input type="number" id="mobile-qty-input" value="1" min="1"
                     class="w-9 h-9 text-center border-x border-zinc-200 text-xs font-medium focus:outline-none"
                     data-product-id="<?= htmlspecialchars($productID) ?>">
-                <button type="button" class="cart-qty-btn cart-qty-plus w-8 h-9 flex items-center justify-center text-zinc-600 hover:bg-zinc-100 transition text-sm font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">+</button>
+                <button type="button" class="cart-qty-btn cart-qty-plus w-8 h-9 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-sm font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">+</button>
             </div>
             <button type="button" id="mobile-add-to-cart-btn"
-                class="shrink-0 bg-red-600 text-white py-2.5 px-4 rounded-lg hover:bg-red-700 transition font-medium text-xs flex items-center gap-1.5">
+                class="shrink-0 bg-red-500 text-white py-2.5 px-4 rounded-xl hover:bg-red-500 transition font-medium text-xs flex items-center gap-1.5">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                 В корзину
             </button>
@@ -1067,6 +1155,58 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     window.__productImages = <?= json_encode($product['images']) ?>;
     </script>
     <script defer src="/public/assets/scripts/main/product.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/js/intlTelInputWithUtils.min.js" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll("[data-type-phone]").forEach(function(input) {
+            window.intlTelInput(input, {
+                initialCountry: "ru",
+                separateDialCode: true,
+            });
+        });
+        document.querySelectorAll('input[data-type-phone]').forEach(function (input) {
+            input.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.startsWith('7') || value.startsWith('8')) {
+                    value = value.substring(1);
+                }
+                value = value.substring(0, 10);
+                if (value.length > 0) {
+                    let formatted = '';
+                    if (value.length >= 1) formatted += '(' + value.substring(0, 3);
+                    if (value.length >= 4) formatted += ') ' + value.substring(3, 6);
+                    if (value.length >= 7) formatted += '-' + value.substring(6, 8);
+                    if (value.length >= 9) formatted += '-' + value.substring(8, 10);
+                    e.target.value = formatted;
+                } else {
+                    e.target.value = '';
+                }
+                e.target.setCustomValidity('');
+            });
+            input.addEventListener('blur', function () {
+                const digits = this.value.replace(/\D/g, '');
+                if (digits.length !== 10) {
+                    this.setCustomValidity('Введите полный номер телефона');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        });
+        document.getElementById('buyOneClickForm').addEventListener('submit', function(e){
+            const phone = this.querySelector('[data-type-phone]');
+            if (phone) {
+                const digits = phone.value.replace(/\D/g, '');
+                if (digits.length !== 10) {
+                    e.preventDefault();
+                    phone.setCustomValidity('Введите полный номер телефона');
+                    phone.reportValidity();
+                    phone.focus();
+                }
+            }
+        });
+    });
+    </script>
 
 </body>
 

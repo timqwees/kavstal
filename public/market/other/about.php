@@ -42,7 +42,7 @@
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
@@ -97,7 +97,7 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center space-x-2 text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/" class="text-gray-600 hover:text-red-600" itemprop="item" itemscope
+                    <a href="/" class="text-gray-600 hover:text-red-500" itemprop="item" itemscope
                         itemtype="https://schema.org/Thing" itemid="<?php echo $site['baseUrl']; ?>/"><i
                             class="fas fa-home"></i>
                         <span itemprop="name">Главная</span></a>
@@ -126,19 +126,19 @@
         <!-- Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-600 mb-2">7+</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">7+</div>
                 <div class="text-gray-600">лет на рынке</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-600 mb-2">5000+</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">5000+</div>
                 <div class="text-gray-600">довольных клиентов</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-600 mb-2">500+</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">500+</div>
                 <div class="text-gray-600">наименований металла</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-600 mb-2">24ч</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">24ч</div>
                 <div class="text-gray-600">доставка по МО</div>
             </div>
         </div>
@@ -166,7 +166,7 @@
                     </p>
                 </div>
             </div>
-            <div class="bg-gradient-to-br from-red-600 to-red-700 rounded-2xl p-8 text-white">
+            <div class="bg-gradient-to-br from-red-500 to-red-500 rounded-2xl p-8 text-white">
                 <h3 class="text-2xl font-bold mb-6">Наши преимущества</h3>
                 <ul class="space-y-4">
                     <li class="flex items-start">
@@ -253,7 +253,7 @@
             <p class="text-lg mb-8 opacity-90">Индивидуальные условия для постоянных клиентов и строительных организаций
             </p>
             <a href="tel:+74959892420"
-                class="inline-block bg-red-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-700 transition">
+                class="inline-block bg-red-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-500 transition">
                 <i class="fas fa-phone mr-2"></i>Связаться с нами
             </a>
         </div>

@@ -42,7 +42,7 @@
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
@@ -109,7 +109,7 @@
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center space-x-2 text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/" class="text-gray-600 hover:text-red-600" itemprop="item" itemscope
+                    <a href="/" class="text-gray-600 hover:text-red-500" itemprop="item" itemscope
                         itemtype="https://schema.org/Thing" itemid="<?php echo $site['baseUrl']; ?>/"><i
                             class="fas fa-home"></i>
                         <span itemprop="name">Главная</span></a>
@@ -135,28 +135,28 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-certificate text-red-600 text-3xl"></i>
+                    <i class="fas fa-certificate text-red-500 text-3xl"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Сертификаты ГОСТ</h3>
                 <p class="text-gray-600 text-sm">На всю продукцию предоставляем сертификаты качества и паспорта</p>
             </div>
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-undo text-red-600 text-3xl"></i>
+                    <i class="fas fa-undo text-red-500 text-3xl"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Возврат брака</h3>
                 <p class="text-gray-600 text-sm">Обмен или возврат некачественного товара в течение 14 дней</p>
             </div>
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-balance-scale text-red-600 text-3xl"></i>
+                    <i class="fas fa-balance-scale text-red-500 text-3xl"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Точный вес</h3>
                 <p class="text-gray-600 text-sm">Весы калибруются ежегодно. Вес соответствует документам</p>
             </div>
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-handshake text-red-600 text-3xl"></i>
+                    <i class="fas fa-handshake text-red-500 text-3xl"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Фиксация цен</h3>
                 <p class="text-gray-600 text-sm">Цены фиксируются на момент заказа, не меняем после отгрузки</p>
@@ -200,7 +200,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
             <div class="bg-white rounded-xl shadow-md p-8">
                 <h3 class="text-2xl font-bold text-gray-900 mb-6">
-                    <i class="fas fa-file-alt text-red-600 mr-3"></i>Документы на продукцию
+                    <i class="fas fa-file-alt text-red-500 mr-3"></i>Документы на продукцию
                 </h3>
                 <ul class="space-y-4">
                     <li class="flex items-start">
@@ -228,7 +228,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="bg-gradient-to-br from-red-600 to-red-700 rounded-xl p-8 text-white">
+            <div class="bg-gradient-to-br from-red-500 to-red-500 rounded-xl p-8 text-white">
                 <h3 class="text-2xl font-bold mb-6">
                     <i class="fas fa-shield-alt mr-3"></i>Гарантийные обязательства
                 </h3>
@@ -275,22 +275,22 @@
                     <ol class="space-y-3 text-gray-700">
                         <li class="flex items-start">
                             <span
-                                class="bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">1</span>
+                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">1</span>
                             <span>Свяжитесь с менеджером по телефону или почте</span>
                         </li>
                         <li class="flex items-start">
                             <span
-                                class="bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">2</span>
+                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">2</span>
                             <span>Предоставьте фото/видео подтверждающие дефект</span>
                         </li>
                         <li class="flex items-start">
                             <span
-                                class="bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">3</span>
+                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">3</span>
                             <span>Рассмотрение заявки в течение 3 дней</span>
                         </li>
                         <li class="flex items-start">
                             <span
-                                class="bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">4</span>
+                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">4</span>
                             <span>Замена товара или возврат денег</span>
                         </li>
                     </ol>
@@ -299,17 +299,17 @@
         </div>
 
         <!-- CTA -->
-        <div class="text-center bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-8 md:p-12 text-white">
+        <div class="text-center bg-gradient-to-r from-red-500 to-red-500 rounded-2xl p-8 md:p-12 text-white">
             <h2 class="text-3xl font-bold mb-4">Остались вопросы?</h2>
             <p class="text-lg mb-8 opacity-90">Наши специалисты ответят на все вопросы о качестве продукции и гарантиях
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <a href="tel:+74959892420"
-                    class="bg-white text-red-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">
+                    class="bg-white text-red-500 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition">
                     <i class="fas fa-phone mr-2"></i>+7 (495) 989-24-20
                 </a>
                 <a href="mailto:zakaz@kavstal.ru"
-                    class="bg-red-700 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-800 transition">
+                    class="bg-red-500 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-500 transition">
                     <i class="fas fa-envelope mr-2"></i>Написать нам
                 </a>
             </div>

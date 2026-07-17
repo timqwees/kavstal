@@ -3,6 +3,7 @@ $allProducts = Setting\route\function\Functions::listProducts();
 $site = Setting\route\function\Functions::site();
 
 $categoryID = $katalog ?? '';
+$subcategoryID = $subcategory ?? '';
 
 $categoryInfo = null;
 foreach ($allProducts as $p) {
@@ -12,29 +13,39 @@ foreach ($allProducts as $p) {
     }
 }
 
-$allCategoryProducts = array_filter($allProducts, function ($p) use ($categoryID) {
+$subcategoryInfo = null;
+if (!empty($subcategoryID)) {
+    foreach ($allProducts as $p) {
+        if (($p['badge'] ?? '') === 'Подкатегория' && ($p['categories']['id'] ?? '') === $subcategoryID) {
+            $subcategoryInfo = $p;
+            break;
+        }
+    }
+}
+
+$allCategoryProducts = array_filter($allProducts, function ($p) use ($categoryID, $subcategoryID) {
     $parentId = $p['categories']['parent_id'] ?? '';
-    return $parentId === $categoryID && empty($p['badge']);
+    if ($parentId !== $categoryID) return false;
+    if (!empty($subcategoryID)) {
+        $subId = $p['categories']['id'] ?? '';
+        if ($subId !== $subcategoryID) return false;
+    }
+    return empty($p['badge']);
 });
 $allCategoryProducts = array_values($allCategoryProducts);
 
 $allDiameters = [];
 $allBrands = [];
-$allGosts = [];
 foreach ($allCategoryProducts as $p) {
     $specs = $p['specs'] ?? [];
     if (!empty($specs['диаметр'])) $allDiameters[] = $specs['диаметр'];
     $brand = $specs['Марка'] ?? $specs['марка'] ?? '';
     if (!empty($brand)) $allBrands[] = $brand;
-    $gost = $specs['ГОСТ'] ?? $specs['гост'] ?? '';
-    if (!empty($gost)) $allGosts[] = $gost;
 }
 $allDiameters = array_values(array_unique(array_filter($allDiameters)));
 $allBrands = array_values(array_unique(array_filter($allBrands)));
-$allGosts = array_values(array_unique(array_filter($allGosts)));
 sort($allDiameters, SORT_NATURAL);
 sort($allBrands, SORT_STRING);
-sort($allGosts, SORT_NATURAL);
 
 $categoryTree = [];
 foreach ($allProducts as $p) {
@@ -56,9 +67,9 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ</title>
-    <meta name="description" content="<?= htmlspecialchars($categoryInfo['description'] ?? ($categoryInfo['title'] ?? 'Категория') . ' - купить в Москве по выгодной цене. Поставка металлопроката от КАВ СТАЛЬ.') ?>">
-    <meta name="keywords" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?>, металлопрокат, купить <?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> в Москве, цена, доставка">
+    <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> – цены, сортамент, характеристики | КАВ СТАЛЬ</title>
+    <meta name="description" content="<?= htmlspecialchars($categoryInfo['description'] ?? ($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' - купить в Москве по выгодной цене. Поставка металлопроката от КАВ СТАЛЬ.') ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, металлопрокат, купить <?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> в Москве, цена, доставка">
     <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars($categoryInfo['seo']['canonicalUrl'] ?? '/market') ?>">
 
     <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены | КАВ СТАЛЬ">
@@ -106,7 +117,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
@@ -125,14 +136,14 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 
         <!-- Breadcrumb -->
         <nav class="flex items-center space-x-1.5 text-sm mb-6" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
-            <a href="/" class="inline-flex items-center text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/">
+            <a href="/" class="inline-flex items-center text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/">
                 <svg class="me-1.5 h-3.5 w-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/></svg>
                 <span itemprop="name">Главная</span>
             </a>
             <meta itemprop="position" content="1">
             <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
 
-            <a href="/market" class="text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market">
+            <a href="/market" class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market">
                 <span itemprop="name">Каталог</span>
             </a>
             <meta itemprop="position" content="2">
@@ -142,15 +153,27 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
             $parentTitle = $categoryInfo['categories']['title'] ?? null;
             if ($parentTitle):
             ?>
-            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>" class="text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>">
+            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>" class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>">
                 <span itemprop="name"><?= htmlspecialchars($parentTitle) ?></span>
             </a>
-            <meta itemprop="position" content="3">
+            <meta itemprop="position" content="<?= $subcategoryID ? '3' : '3' ?>">
+            <?php if (!$subcategoryID): ?>
             <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
             <?php endif; ?>
+            <?php endif; ?>
 
-            <span class="text-zinc-900 font-medium" itemprop="name"><?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?></span>
+            <?php if ($subcategoryID): ?>
+            <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>" class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>">
+                <span itemprop="name"><?= htmlspecialchars($categoryInfo['title'] ?? $katalog) ?></span>
+            </a>
             <meta itemprop="position" content="<?= $parentTitle ? '4' : '3' ?>">
+            <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
+            <span class="text-zinc-900 font-medium" itemprop="name"><?= htmlspecialchars($subcategoryInfo['name'] ?? $subcategoryID) ?></span>
+            <meta itemprop="position" content="<?= $parentTitle ? '5' : '4' ?>">
+            <?php else: ?>
+            <span class="text-zinc-900 font-medium" itemprop="name"><?= htmlspecialchars($categoryInfo['title'] ?? $katalog) ?></span>
+            <meta itemprop="position" content="<?= $parentTitle ? '4' : '3' ?>">
+            <?php endif; ?>
         </nav>
 
         <!-- Two-Column Layout -->
@@ -171,7 +194,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                                 $catUrl = $cat['seo']['canonicalUrl'] ?? '#';
                             ?>
                             <a href="<?= htmlspecialchars($catUrl) ?>"
-                                class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition <?= $isActive ? 'bg-red-50 text-red-600 font-semibold' : 'text-zinc-600 hover:text-red-600 hover:bg-zinc-50' ?>">
+                                class="flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition <?= $isActive ? 'bg-red-50 text-red-500 font-semibold' : 'text-zinc-600 hover:text-red-500 hover:bg-zinc-50' ?>">
                                 <i class="fas fa-folder-open text-xs w-4 <?= $isActive ? 'text-red-400' : 'text-zinc-300' ?>"></i>
                                 <span class="truncate"><?= htmlspecialchars($cat['title']) ?></span>
                             </a>
@@ -188,7 +211,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                         <div class="p-3 max-h-52 overflow-y-auto space-y-1">
                             <?php foreach ($allDiameters as $d): ?>
                             <label class="flex items-center gap-2 cursor-pointer group px-2 py-1 rounded-md hover:bg-zinc-50 transition">
-                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-600 focus:ring-red-500 w-4 h-4" data-filter="diameter" value="<?= htmlspecialchars($d) ?>">
+                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-500 focus:ring-red-500 w-4 h-4" data-filter="diameter" value="<?= htmlspecialchars($d) ?>">
                                 <span class="text-sm text-zinc-600 group-hover:text-zinc-900 transition"><?= htmlspecialchars($d) ?></span>
                             </label>
                             <?php endforeach; ?>
@@ -197,6 +220,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                     <?php endif; ?>
 
                     <!-- Filter: Brand -->
+<!-- Filter: Brand -->
                     <?php if (!empty($allBrands)): ?>
                     <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
                         <div class="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
@@ -205,25 +229,8 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                         <div class="p-3 max-h-52 overflow-y-auto space-y-1">
                             <?php foreach ($allBrands as $b): ?>
                             <label class="flex items-center gap-2 cursor-pointer group px-2 py-1 rounded-md hover:bg-zinc-50 transition">
-                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-600 focus:ring-red-500 w-4 h-4" data-filter="brand" value="<?= htmlspecialchars($b) ?>">
+                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-500 focus:ring-red-500 w-4 h-4" data-filter="brand" value="<?= htmlspecialchars($b) ?>">
                                 <span class="text-sm text-zinc-600 group-hover:text-zinc-900 transition"><?= htmlspecialchars($b) ?></span>
-                            </label>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <!-- Filter: GOST -->
-                    <?php if (!empty($allGosts)): ?>
-                    <div class="bg-white rounded-xl border border-zinc-200 overflow-hidden">
-                        <div class="px-4 py-3 bg-zinc-50 border-b border-zinc-200">
-                            <h3 class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">ГОСТ</h3>
-                        </div>
-                        <div class="p-3 max-h-52 overflow-y-auto space-y-1">
-                            <?php foreach ($allGosts as $g): ?>
-                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-1 rounded-md hover:bg-zinc-50 transition">
-                                <input type="checkbox" class="filter-checkbox rounded border-zinc-300 text-red-600 focus:ring-red-500 w-4 h-4" data-filter="gost" value="<?= htmlspecialchars($g) ?>">
-                                <span class="text-sm text-zinc-600 group-hover:text-zinc-900 transition"><?= htmlspecialchars($g) ?></span>
                             </label>
                             <?php endforeach; ?>
                         </div>
@@ -239,9 +246,9 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                 <!-- Header -->
                 <div class="mb-5">
                     <h1 class="text-2xl lg:text-3xl font-bold text-zinc-900 mb-2">
-                        <?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – купить в Москве
+                        <?= htmlspecialchars($subcategoryInfo['name'] ?? ($categoryInfo['title'] ?? 'Категория')) ?><?= $subcategoryInfo ? '' : ' – купить в Москве' ?>
                     </h1>
-                    <?php if (!empty($categoryInfo['description'])): ?>
+                    <?php if (!empty($categoryInfo['description']) && empty($subcategoryID)): ?>
                     <p class="text-zinc-500 text-sm leading-relaxed max-w-2xl"><?= htmlspecialchars($categoryInfo['description']) ?></p>
                     <?php endif; ?>
                 </div>
@@ -252,10 +259,10 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                         Найдено: <span class="font-semibold text-zinc-800" id="visibleCount"><?= count($pageProducts) ?></span> товаров
                     </p>
                     <div class="flex items-center gap-1 bg-zinc-100 rounded-lg p-0.5">
-                        <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-600 p-2 shadow-sm transition-colors" title="Сетка">
+                        <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-500 p-2 shadow-sm transition-colors" title="Сетка">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4Zm-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857Z"/></svg>
                         </button>
-                        <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-2 text-zinc-600 hover:text-red-600 transition-colors" title="Список">
+                        <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-2 text-zinc-600 hover:text-red-500 transition-colors" title="Список">
                             <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4"/></svg>
                         </button>
                     </div>
@@ -263,7 +270,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 
                 <!-- Product Grid -->
                 <?php if (!empty($pageProducts)): ?>
-                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5">
+                <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
                     <?php foreach ($pageProducts as $item):
                         $productImages = $item['images'] ?? [];
                         if (empty($productImages)) $productImages = [$site['baseUrl'] . '/public/assets/images/unknown/unknown.png'];
@@ -281,112 +288,116 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                         $gost = $specs['ГОСТ'] ?? $specs['гост'] ?? '';
                         $razmer = $specs['Размер'] ?? '';
                     ?>
-                    <div class="product-card bg-white rounded-xl border border-zinc-200 overflow-hidden hover:shadow-lg transition-all duration-200 flex flex-col"
+                    <div class="product-card bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 transition-all duration-200 flex flex-col w-full"
                          data-diameter="<?= htmlspecialchars($diameter) ?>"
                          data-brand="<?= htmlspecialchars($brand) ?>"
                          data-gost="<?= htmlspecialchars($gost) ?>">
 
+                        <!-- Header: Badge + Fav -->
+                        <div class="flex items-start justify-between gap-2 p-3 pb-0">
+                            <span class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold leading-relaxed">
+                                <?= $inStock ? 'В наличии' : 'Под заказ' ?>
+                            </span>
+                            <button type="button" class="add-to-fav-btn w-7 h-7 rounded-md border border-zinc-200 flex items-center justify-center shrink-0 hover:border-zinc-400 hover:bg-zinc-50 transition-colors" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>" title="В избранное">
+                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z" stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </button>
+                        </div>
+
                         <!-- Image -->
-                        <a href="<?= $productUrl ?>" class="product-card-image block aspect-square bg-zinc-100 relative overflow-hidden group">
+                        <a href="<?= $productUrl ?>" class="product-card-image flex items-center justify-center h-[140px] mx-3 mt-3 mb-2 rounded-lg overflow-hidden bg-zinc-50">
                             <?php if (count($productImages) > 1): ?>
                             <div class="swiper product-swiper w-full h-full" data-product-id="<?= htmlspecialchars($item['id'] ?? '') ?>">
                                 <div class="swiper-wrapper">
                                     <?php foreach ($productImages as $imgIdx => $imgUrl): ?>
-                                    <div class="swiper-slide flex justify-center items-center bg-zinc-100">
-                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" class="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300">
+                                    <div class="swiper-slide flex justify-center items-center">
+                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
-                                <div class="swiper-pagination"></div>
                             </div>
                             <?php else: ?>
-                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" class="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300">
+                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
                             <?php endif; ?>
-
-                            <!-- Availability Badge -->
-                            <?php if ($inStock): ?>
-                            <span class="absolute top-2 left-2 bg-emerald-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                                <i class="fas fa-check-circle text-[8px]"></i> В наличии
-                            </span>
-                            <?php else: ?>
-                            <span class="absolute top-2 left-2 bg-zinc-500 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
-                                <i class="fas fa-clock text-[8px]"></i> Под заказ
-                            </span>
-                            <?php endif; ?>
-
-                            <!-- Favorites -->
-                            <button type="button" class="add-to-fav-btn absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm border border-zinc-200 flex items-center justify-center shadow-sm hover:border-zinc-400 hover:bg-white transition-all" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>" title="В избранное">
-                                <svg width="14" height="12" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z" stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                            </button>
                         </a>
 
                         <!-- Info -->
-                        <div class="p-4 flex flex-col flex-1">
+                        <div class="card-body flex-1 flex flex-col min-w-0 px-3 pb-3">
                             <a href="<?= $productUrl ?>">
-                                <h3 class="text-sm font-semibold text-zinc-900 hover:text-red-600 transition leading-snug mb-2 line-clamp-2 min-h-[36px]"><?= $productName ?></h3>
+                                <h3 class="text-[13px] font-semibold text-zinc-800 hover:text-red-500 transition-colors line-clamp-2 leading-snug mb-2 block min-h-[36px]"><?= $productName ?></h3>
                             </a>
 
-                            <!-- Specs Tags -->
-                            <div class="flex flex-wrap gap-1.5 mb-3">
+                            <!-- Specs -->
+                            <div class="flex flex-wrap gap-1 mb-2">
                                 <?php if ($brand): ?>
-                                <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 border border-blue-200 text-[10px] px-2 py-0.5 rounded-full font-medium"><?= htmlspecialchars($brand) ?></span>
+                                <span class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">Марка: <strong class="text-zinc-700"><?= htmlspecialchars($brand) ?></strong></span>
                                 <?php endif; ?>
                                 <?php if ($razmer): ?>
-                                <span class="inline-flex items-center gap-1 bg-zinc-100 text-zinc-600 text-[10px] px-2 py-0.5 rounded-full font-medium"><?= htmlspecialchars($razmer) ?></span>
+                                <span class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">Размер: <strong class="text-zinc-700"><?= htmlspecialchars($razmer) ?></strong></span>
                                 <?php endif; ?>
                                 <?php if ($gost): ?>
-                                <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] px-2 py-0.5 rounded-full font-medium"><?= htmlspecialchars($gost) ?></span>
+                                <span class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">ГОСТ: <strong class="text-zinc-700"><?= htmlspecialchars($gost) ?></strong></span>
                                 <?php endif; ?>
                                 <?php if ($diameter): ?>
-                                <span class="inline-flex items-center gap-1 bg-zinc-100 text-zinc-600 text-[10px] px-2 py-0.5 rounded-full font-medium">Ø <?= htmlspecialchars($diameter) ?></span>
+                                <span class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">Ø: <strong class="text-zinc-700"><?= htmlspecialchars($diameter) ?></strong></span>
                                 <?php endif; ?>
                             </div>
 
-                            <div class="flex-1"></div>
-
-                            <!-- Price -->
-                            <?php if (!empty($units)): ?>
-                            <div class="mb-3" itemprop="offers" itemscope itemtype="https://schema.org/Offer">
-                                <meta itemprop="priceCurrency" content="RUB">
-                                <meta itemprop="availability" content="<?= $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' ?>">
-                                <div itemprop="price" content="<?= number_format($firstPrice, 0, '', '') ?>" class="price-display text-xl font-bold text-zinc-900 leading-tight">
-                                    <?= number_format($firstPrice, 0, '', ' ') ?> <span class="text-sm font-normal text-zinc-500">₽</span>
+                            <!-- Price & Cart -->
+                            <div class="mt-auto">
+                                <?php if (!empty($units)): ?>
+                                <div itemprop="offers" itemscope itemtype="https://schema.org/Offer" class="mb-2">
+                                    <meta itemprop="priceCurrency" content="RUB">
+                                    <meta itemprop="availability" content="<?= $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' ?>">
+                                    <div class="flex items-baseline gap-2">
+                                        <div itemprop="price" content="<?= number_format($firstPrice, 0, '', '') ?>" class="price-display text-[15px] font-bold text-zinc-900 leading-tight">
+                                            <?= number_format($firstPrice, 0, '', ' ') ?> <span class="text-[11px] font-normal text-zinc-400">₽</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-0.5 mt-1">
+                                        <?php foreach ($units as $unit => $price): ?>
+                                        <button type="button"
+                                            class="unit-btn text-[9px] px-1.5 py-0.5 rounded font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-500' : 'bg-zinc-100 text-zinc-500 hover:bg-red-50 hover:text-red-500' ?>"
+                                            data-unit="<?= htmlspecialchars($unit) ?>" data-price="<?= htmlspecialchars($price) ?>">
+                                            <?= htmlspecialchars($unit) ?>
+                                        </button>
+                                        <?php endforeach; ?>
+                                    </div>
                                 </div>
-                                <div class="flex gap-0.5 mt-1.5">
-                                    <?php foreach ($units as $unit => $price): ?>
-                                    <button type="button"
-                                        class="unit-btn text-[10px] px-2 py-0.5 rounded-md font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-800' : 'bg-zinc-100 text-zinc-500 hover:bg-red-50 hover:text-red-700' ?>"
-                                        data-unit="<?= htmlspecialchars($unit) ?>" data-price="<?= htmlspecialchars($price) ?>">
-                                        <?= htmlspecialchars($unit) ?>
-                                    </button>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                            <?php else: ?>
-                            <div class="text-sm text-zinc-400 mb-3">Цена по запросу</div>
-                            <?php endif; ?>
-
-                            <!-- Add to Cart -->
-                            <div class="flex items-center gap-2" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                <input type="number" value="1" min="1"
-                                    class="cart-qty w-14 h-9 text-center border border-zinc-200 rounded-lg text-sm focus:outline-none focus:border-red-400"
-                                    data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                <?php if (count($units) > 1): ?>
-                                <select class="cart-unit h-9 px-2 border border-zinc-200 rounded-lg text-xs bg-white focus:outline-none focus:border-red-400"
-                                    data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                    <?php foreach ($units as $u => $p): ?>
-                                    <option value="<?= htmlspecialchars($u) ?>" <?= $u === $firstUnit ? 'selected' : '' ?>><?= htmlspecialchars($u) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
                                 <?php else: ?>
-                                <span class="text-xs text-zinc-400 w-9 shrink-0"><?= htmlspecialchars($firstUnit) ?></span>
+                                <div class="text-[13px] text-zinc-400 mb-2">Цена по запросу</div>
                                 <?php endif; ?>
-                                <button type="button"
-                                    class="add-to-cart-btn flex-1 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold py-2 px-3 rounded-lg transition flex items-center justify-center gap-1.5"
-                                    data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>"
-                                    data-unit="<?= htmlspecialchars($firstUnit) ?>">
-                                    <i class="fas fa-shopping-cart text-[10px]"></i> В корзину
-                                </button>
+
+                                <!-- Add to Cart -->
+                                <div class="flex items-center gap-2" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
+                                    <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden">
+                                        <button type="button" class="qty-btn w-6 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 transition border-r border-zinc-200 bg-transparent cursor-pointer" data-dir="minus">
+                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        </button>
+                                        <input type="number" value="1" min="1"
+                                            class="cart-qty w-9 h-7 text-center text-[11px] border-0 focus:outline-none focus:ring-0"
+                                            data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
+                                        <button type="button" class="qty-btn w-6 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 transition border-l border-zinc-200 bg-transparent cursor-pointer" data-dir="plus">
+                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                                        </button>
+                                    </div>
+                                    <?php if (count($units) > 1): ?>
+                                    <select class="cart-unit h-7 px-1.5 border border-zinc-200 rounded-lg text-[10px] bg-white focus:outline-none focus:border-red-400"
+                                        data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
+                                        <?php foreach ($units as $u => $p): ?>
+                                        <option value="<?= htmlspecialchars($u) ?>" <?= $u === $firstUnit ? 'selected' : '' ?>><?= htmlspecialchars($u) ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <?php else: ?>
+                                    <span class="text-[10px] text-zinc-400 w-7 shrink-0 text-center"><?= htmlspecialchars($firstUnit) ?></span>
+                                    <?php endif; ?>
+                                    <button type="button"
+                                        class="add-to-cart-btn w-8 h-7 rounded-lg bg-red-500 hover:bg-red-500 active:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors"
+                                        data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>"
+                                        data-unit="<?= htmlspecialchars($firstUnit) ?>"
+                                        title="В корзину">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -415,7 +426,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                         ?>
                         <span class="px-1.5 text-sm text-zinc-400">...</span>
                         <?php endif; $prevPage = $i; $active = $i === $page; ?>
-                        <a href="?page=<?= $i ?>" class="<?= $active ? 'bg-red-600 text-white border-red-600 shadow-sm' : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' ?> inline-flex items-center justify-center rounded-lg min-w-[36px] h-9 px-2 text-sm font-medium transition-colors"><?= $i ?></a>
+                        <a href="?page=<?= $i ?>" class="<?= $active ? 'bg-red-500 text-white border-red-500 shadow-sm' : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' ?> inline-flex items-center justify-center rounded-lg min-w-[36px] h-9 px-2 text-sm font-medium transition-colors"><?= $i ?></a>
                         <?php endforeach; ?>
                         <?php if ($page < $totalPages): ?>
                         <a href="?page=<?= $page + 1 ?>" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
@@ -431,7 +442,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                     <svg class="w-16 h-16 text-zinc-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                     <p class="text-zinc-500 text-lg font-medium">В этой категории пока нет товаров.</p>
                     <p class="text-zinc-400 text-sm mt-1">Попробуйте выбрать другую категорию.</p>
-                    <a href="/market" class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-red-600 hover:text-red-700 transition-colors">
+                    <a href="/market" class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-red-500 hover:text-red-500 transition-colors">
                         <i class="fas fa-arrow-left text-xs"></i> Вернуться в каталог
                     </a>
                 </div>
@@ -486,8 +497,8 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
             document.querySelectorAll('.add-to-fav-btn').forEach(function(btn) {
                 var pid = btn.getAttribute('data-pid');
                 if (ids.indexOf(pid) !== -1) {
-                    btn.querySelector('svg path').setAttribute('fill', '#dc2626');
-                    btn.querySelector('svg path').setAttribute('stroke', '#dc2626');
+                    btn.querySelector('svg path').setAttribute('fill', '#ef4444');
+                    btn.querySelector('svg path').setAttribute('stroke', '#ef4444');
                     btn.classList.add('in-fav');
                 }
             });
@@ -548,8 +559,8 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                                 path.setAttribute('stroke', '#a1a1aa');
                             } else {
                                 self.classList.add('in-fav');
-                                path.setAttribute('fill', '#dc2626');
-                                path.setAttribute('stroke', '#dc2626');
+                                path.setAttribute('fill', '#ef4444');
+                                path.setAttribute('stroke', '#ef4444');
                             }
                             if (typeof r.count !== 'undefined') {
                                 var badge = document.getElementById('favCountBadge');
@@ -568,11 +579,11 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
             btn.addEventListener('click', function() {
                 var parent = this.parentElement;
                 parent.querySelectorAll('.unit-btn').forEach(function(b) {
-                    b.classList.remove('bg-red-100', 'text-red-800');
+                    b.classList.remove('bg-red-100', 'text-red-500');
                     b.classList.add('bg-zinc-100', 'text-zinc-500');
                 });
                 this.classList.remove('bg-zinc-100', 'text-zinc-500');
-                this.classList.add('bg-red-100', 'text-red-800');
+                this.classList.add('bg-red-100', 'text-red-500');
 
                 var card = this.closest('.product-card');
                 if (card) {
@@ -596,21 +607,50 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
         var pg = document.getElementById('product-grid');
         if (gv && lv && pg) {
             function setActive(btn, other) {
-                btn.classList.add('bg-white', 'text-red-600', 'shadow-sm');
+                btn.classList.add('bg-white', 'text-red-500', 'shadow-sm');
                 btn.classList.remove('border', 'border-zinc-200', 'text-zinc-600');
-                other.classList.remove('bg-white', 'text-red-600', 'shadow-sm');
+                other.classList.remove('bg-white', 'text-red-500', 'shadow-sm');
                 other.classList.add('border', 'border-zinc-200', 'text-zinc-600');
             }
             gv.addEventListener('click', function() {
-                pg.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-5';
+                pg.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5';
+                pg.querySelectorAll('.product-card').forEach(function(c) {
+                    c.classList.remove('flex-row');
+                    var img = c.querySelector('.product-card-image');
+                    img.classList.remove('w-36', 'shrink-0', 'm-3', 'mb-2');
+                    img.classList.add('h-[140px]', 'mx-3', 'mt-3', 'mb-2');
+                    var header = c.querySelector('.flex.items-start');
+                    if (header) header.classList.remove('hidden');
+                });
                 setActive(gv, lv);
             });
             lv.addEventListener('click', function() {
                 pg.className = 'flex flex-col gap-3';
-                pg.querySelectorAll('.product-card').forEach(function(c) { c.classList.add('flex-row'); });
+                pg.querySelectorAll('.product-card').forEach(function(c) {
+                    c.classList.add('flex-row');
+                    var img = c.querySelector('.product-card-image');
+                    img.classList.remove('h-[140px]', 'mx-3', 'mt-3', 'mb-2');
+                    img.classList.add('w-36', 'shrink-0', 'm-3');
+                    var header = c.querySelector('.flex.items-start');
+                    if (header) header.classList.add('hidden');
+                });
                 setActive(lv, gv);
             });
         }
+
+        // Qty buttons
+        document.querySelectorAll('.qty-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var input = this.parentElement.querySelector('.cart-qty');
+                if (!input) return;
+                var val = parseFloat(input.value) || 1;
+                if (this.dataset.dir === 'minus' && val > 1) {
+                    input.value = val - 1;
+                } else if (this.dataset.dir === 'plus') {
+                    input.value = val + 1;
+                }
+            });
+        });
 
         // Product Swiper init
         document.querySelectorAll('.product-swiper').forEach(function(swiperEl) {

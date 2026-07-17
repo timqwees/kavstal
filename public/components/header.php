@@ -10,12 +10,12 @@
 
             <!-- Desktop Navigation -->
             <div class="hidden lg:flex items-center space-x-8">
-                <a href="/#catalog" class="py-6 text-gray-600 hover:text-red-600 transition">Каталог</a>
-                <a href="/market" class="py-6 text-gray-600 hover:text-red-600 transition">Купить металл</a>
-                <a href="/#calculator" class="py-6 text-gray-600 hover:text-red-600 transition">Калькулятор</a>
-                <a href="/#prices" class="py-6 text-gray-600 hover:text-red-600 transition">Цены</a>
-                <a href="/#about" class="py-6 text-gray-600 hover:text-red-600 transition">О компании</a>
-                <a href="/#contacts" class="py-6 text-gray-600 hover:text-red-600 transition">Контакты</a>
+                <a href="/#catalog" class="py-6 text-gray-600 hover:text-red-500 transition">Каталог</a>
+                <a href="/market" class="py-6 text-gray-600 hover:text-red-500 transition">Купить металл</a>
+                <a href="/#calculator" class="py-6 text-gray-600 hover:text-red-500 transition">Калькулятор</a>
+                <a href="/#prices" class="py-6 text-gray-600 hover:text-red-500 transition">Цены</a>
+                <a href="/#about" class="py-6 text-gray-600 hover:text-red-500 transition">О компании</a>
+                <a href="/#contacts" class="py-6 text-gray-600 hover:text-red-500 transition">Контакты</a>
             </div>
 
             <!-- Desktop Contact -->
@@ -27,7 +27,7 @@
                         <?= htmlspecialchars($site['workingHours']) ?>
                     </p>
                 </div>
-                <button class="bg-red-600 hidden md:block text-white px-6 rounded-lg hover:bg-red-700 transition py-2"
+                <button class="bg-red-500 hidden md:block text-white px-6 rounded-lg hover:bg-red-500 transition py-2"
                     aria-label="Заказать обратный звонок">
                     Заказать звонок
                 </button>
@@ -35,7 +35,7 @@
 
             <div class="lg:hidden flex justify-between items-center gap-4">
                 <button
-                    class="hidden md:block lg:hidden text-sm bg-red-600 text-white p-2 rounded-lg hover:bg-red-700 transition"
+                    class="hidden md:block lg:hidden text-sm bg-red-500 text-white p-2 rounded-lg hover:bg-red-500 transition"
                     aria-label="Заказать звонок">
                     Заказать звонок
                 </button>
@@ -70,29 +70,29 @@
 
         <nav class="space-y-4 mb-8">
             <a href="/#catalog"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">Каталог
+                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Каталог
                 <i class="fa fa-arrow-right"></i>
             </a>
             <a href="/market"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">Купить
+                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Купить
                 металл
                 <i class="fa fa-arrow-right"></i>
             </a>
             <a href="/#calculator"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">Калькулятор
+                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Калькулятор
                 <i class="fa fa-arrow-right"></i>
             </a>
             <a href="/#prices"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">Цены
+                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Цены
                 <i class="fa fa-arrow-right"></i>
             </a>
             <a href="/#about"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">О
+                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">О
                 компании
                 <i class="fa fa-arrow-right"></i>
             </a>
             <a href="/#contacts"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg transition">Контакты
+                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Контакты
                 <i class="fa fa-arrow-right"></i>
             </a>
         </nav>

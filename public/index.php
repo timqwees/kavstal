@@ -37,7 +37,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="Металл">
   <link rel="manifest" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/site.webmanifest">
-  <meta name="theme-color" content="#ea580c">
+  <meta name="theme-color" content="#ef4444">
 
   <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ" href="<?php echo $site['baseUrl']; ?>/opensearch.xml">
   <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ — Металлопрокат в Москве" href="<?php echo $site['baseUrl']; ?>/rss.xml">
@@ -62,14 +62,19 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
-  <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
   <link rel="preload" href="/public/assets/styles/main.css" as="stylesheet" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="/public/assets/styles/main.css"></noscript>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css">
+  <style>
+    .iti__selected-dial-code { color: #000; }
+    .iti { width: 100%; }
+  </style>
 </head>
 <body>
 
-  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
+  <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
 
   <?php include_once './public/components/header-shared.php'; ?>
 
@@ -78,7 +83,7 @@
     <!-- Breadcrumb -->
     <nav class="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
       <div class="max-w-7xl mx-auto px-4 lg:px-8 py-2 flex items-center text-sm text-gray-500">
-        <a href="/" class="hover:text-red-600 transition-colors"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></a>
+        <a href="/" class="hover:text-red-500 transition-colors"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></a>
         <svg class="w-3 h-3 mx-2 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
         <span class="text-gray-900 font-medium">Металлобаза КАВ СТАЛЬ</span>
       </div>
@@ -166,7 +171,7 @@
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
         <div class="flex items-center justify-between mb-5">
           <h2 class="text-xl md:text-2xl font-bold text-gray-900" itemprop="name">Каталог металлопроката</h2>
-          <a href="/market" class="text-sm font-medium text-red-600 hover:underline">Смотреть все →</a>
+          <a href="/market" class="text-sm font-medium text-red-500 hover:underline">Смотреть все →</a>
         </div>
 
         <div class="flex items-center gap-2 flex-wrap mb-6" id="catalog-filters">
@@ -177,10 +182,10 @@
           <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-900"><?= count($allProducts) ?> товаров</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="catalog-grid"></div>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4" id="catalog-grid"></div>
 
         <div class="text-center mt-6">
-          <a href="/market" class="inline-flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors">Смотреть весь ассортимент →</a>
+          <a href="/market" class="inline-flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-red-500 transition-colors">Смотреть весь ассортимент →</a>
         </div>
       </div>
     </section>
@@ -191,12 +196,12 @@
     <div class="max-w-7xl mx-auto px-4 lg:px-8">
       <div class="rounded-2xl px-8 py-10 md:px-12 md:py-12 text-center text-gray-900 relative overflow-hidden bg-white border border-gray-200">
         <div class="absolute top-0 right-0 w-96 h-96 rounded-full bg-red-400 opacity-5 blur-3xl animate-pulse"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-orange-400 opacity-5 blur-3xl animate-pulse" style="animation-delay:1s;"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-red-500 opacity-5 blur-3xl animate-pulse" style="animation-delay:1s;"></div>
         <div class="absolute top-1/2 left-1/3 w-32 h-32 rounded-full bg-red-300 opacity-5 blur-3xl animate-pulse" style="animation-delay:2s;"></div>
         <div class="relative">
           <h3 class="text-xl md:text-2xl font-bold mb-2">Нужна консультация?</h3>
           <p class="text-sm text-gray-500 mb-5">Поможем подобрать металлопрокат, рассчитать стоимость и организовать доставку</p>
-          <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="inline-flex items-center gap-3 bg-red-500 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-red-600 transition-all duration-300 shadow-lg shadow-red-500/20 hover:shadow-red-500/30">
+          <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="inline-flex items-center gap-3 bg-red-500 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-red-500 transition-all duration-300 shadow-lg shadow-red-500/20 hover:shadow-red-500/30">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
             <?= htmlspecialchars($site['phone']) ?>
           </a>
@@ -261,7 +266,7 @@
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
           <div>
-            <span class="inline-block bg-red-50 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-3">О компании</span>
+            <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">О компании</span>
             <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Металлобаза «КАВ Сталь» в Москве</h2>
             <div class="space-y-3 text-sm text-gray-600 leading-relaxed mb-6">
               <p>ООО «КАВ Сталь» (ИНН 9719080724) — поставщик металлопроката по Москве и МО. Работаем напрямую с заводами, предоставляем сертификаты ГОСТ на всю продукцию.</p>
@@ -275,7 +280,7 @@
                 ['value' => '7 лет', 'label' => 'на рынке'],
               ]; foreach ($stats as $s): ?>
               <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                <div class="text-lg font-bold text-red-600"><?= $s['value'] ?></div>
+                <div class="text-lg font-bold text-red-500"><?= $s['value'] ?></div>
                 <div class="text-xs text-gray-500"><?= $s['label'] ?></div>
               </div>
               <?php endforeach; ?>
@@ -315,13 +320,13 @@
     </section>
 
     <!-- Calculator -->
-    <section id="calculator" class="py-14 lg:py-20 bg-gradient-to-b from-gray-50 to-white reveal relative overflow-hidden">
+    <section id="calculator" class="py-14 lg:py-20 bg-gradient-to-b from-gray-50 to-white reveal relative">
       <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-red-400 opacity-5 blur-3xl animate-pulse"></div>
-      <div class="absolute bottom-20 right-20 w-40 h-40 rounded-full bg-orange-400 opacity-5 blur-3xl animate-pulse" style="animation-delay:1s;"></div>
+      <div class="absolute bottom-20 right-20 w-40 h-40 rounded-full bg-red-500 opacity-5 blur-3xl animate-pulse" style="animation-delay:1s;"></div>
       <div class="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-red-300 opacity-5 blur-3xl animate-pulse" style="animation-delay:2s;"></div>
       <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
         <div class="text-center max-w-xl mx-auto mb-8">
-          <span class="inline-block bg-red-50 text-red-600 text-xs font-semibold px-3 py-1 rounded-full mb-3">Калькулятор</span>
+          <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">Калькулятор</span>
           <h2 class="text-xl md:text-2xl font-bold text-gray-900">Рассчитайте стоимость онлайн</h2>
         </div>
         <?php
@@ -379,7 +384,7 @@
                 </div>
                 <div>
                   <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>Ваш телефон</label>
-                  <input type="tel" name="телефон" placeholder="+7 (___) ___-__-__" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
+                   <input type="tel" name="телефон" data-type-phone placeholder="(___) ___-__-__" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
                 </div>
               </div>
               <div class="absolute opacity-0 pointer-events-none" aria-hidden="true">
@@ -388,9 +393,9 @@
               <div class="bg-gradient-to-r from-red-50 to-white rounded-xl p-5 border border-red-100 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                 <div><p class="text-xs text-gray-500 mb-0.5">Стоимость металла</p><p class="text-xl font-bold text-gray-900" id="metalCost">0 ₽</p></div>
                 <div><p class="text-xs text-gray-500 mb-0.5">Доставка</p><p class="text-xl font-bold text-gray-900" id="deliveryCost">0 ₽</p></div>
-                <div><p class="text-xs text-gray-500 mb-0.5">Итого</p><p class="text-2xl font-bold text-red-600" id="totalCost">0 ₽</p></div>
+                <div><p class="text-xs text-gray-500 mb-0.5">Итого</p><p class="text-2xl font-bold text-red-500" id="totalCost">0 ₽</p></div>
               </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md shadow-red-600/20">Отправить заявку →</button>
+              <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-500 hover:from-red-500 hover:to-red-500 text-white py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md shadow-red-500/20">Оставить запрос →</button>
             </form>
           </div>
         </div>
@@ -451,5 +456,45 @@
   window.__storiesData = <?php echo json_encode($stories ?? []); ?>;
   </script>
   <script defer src="/public/assets/scripts/main/stories.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/js/intlTelInputWithUtils.min.js" defer></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll("[data-type-phone]").forEach(function(input) {
+      window.intlTelInput(input, {
+        initialCountry: "ru",
+        separateDialCode: true,
+      });
+    });
+    document.querySelectorAll('input[data-type-phone]').forEach(function (input) {
+      input.addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.startsWith('7') || value.startsWith('8')) {
+          value = value.substring(1);
+        }
+        value = value.substring(0, 10);
+        if (value.length > 0) {
+          let formatted = '';
+          if (value.length >= 1) formatted += '(' + value.substring(0, 3);
+          if (value.length >= 4) formatted += ') ' + value.substring(3, 6);
+          if (value.length >= 7) formatted += '-' + value.substring(6, 8);
+          if (value.length >= 9) formatted += '-' + value.substring(8, 10);
+          e.target.value = formatted;
+        } else {
+          e.target.value = '';
+        }
+        e.target.setCustomValidity('');
+      });
+      input.addEventListener('blur', function () {
+        const digits = this.value.replace(/\D/g, '');
+        if (digits.length !== 10) {
+          this.setCustomValidity('Введите полный номер телефона');
+        } else {
+          this.setCustomValidity('');
+        }
+      });
+    });
+  });
+  </script>
 </body>
 </html>

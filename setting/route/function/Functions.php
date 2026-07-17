@@ -4,7 +4,7 @@ namespace Setting\route\function;
 
 use App\Models\Router\Routes;
 use App\Models\Network\Network;
-use App\Controllers\{MailController, TelegramController};
+use App\Controllers\MailController;
 
 class Functions
 {
@@ -200,8 +200,8 @@ class Functions
             'kartaAdress' => 'г. Москва, ул. Семёновская площадь, дом 7',
             'workingHours' => 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00',
             'deliveryAreas' => ['Москва', 'Московская область', 'Россия'],
-            'whatsapp' => '74959892420',
-            'telegram' => 'kavstal_bot',
+            'whatsapp' => '+74959892420',
+            'telegram' => '@kavstal_bot',
             'vk' => 'kavstal',
             'instagram' => '',
             'max' => ''
@@ -386,42 +386,99 @@ class Functions
      * @param object $data Данные письма
      * @return void
      */
-    public static function sendMail(object $data): void
+    public static function sendMail(object $data, ?string $attachmentPath = null): void
     {
-        $message = "Информация:\n";
+        // Серверная валидация телефона
+        $phone = $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? '';
+        $phone = trim(preg_replace('/[^0-9+]/', '', $phone));
+        if ($phone === '') {
+            Network::onRedirect('/');
+            return;
+        }
+
+        $message = "<strong>Информация:</strong>";
         foreach ($data as $key => $value) {
-            $message .= ucfirst($key) . ': ' . $value . "\n";
+            $val = is_array($value) ? implode(', ', $value) : (string) $value;
+            $message .= "<hr>" . ucfirst($key) . ': ' . $val;
         }
         try {
-            (new MailController())->sendMail('zakaz@kavstal.ru', 'Заявление с сайта', $message);
-        } catch (\Exception $e) {
+            (new MailController())->onMail($_ENV['EMAIL_TO'] ?? 'zakaz@kavstal.ru', 'Заявление с сайта', $message, $attachmentPath);
+        } catch (\Throwable $e) {
             error_log('Mail Error: ' . $e->getMessage());
         }
-        if (!isset($data->both))
+
+        self::sendToBitrix24($data, $attachmentPath);
+
+        if (!isset($data->both)) {
             Network::onRedirect('/');
+        }
     }
 
     /**
-     * @param object $data Данные телеграм
-     * @return void
+     * Отправка сделки в Bitrix24 через CRM REST API
      */
-    public static function sendTelegram(object $data): void
+    private static function sendToBitrix24(object $data): void
     {
-        $message = strval("Информация:\n");
+        $name = $data->имя ?? $data->name ?? '';
+        $phone = $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? '';
+        $email = $data->почта ?? $data->email ?? '';
+        $comment = $data->сообщение ?? $data->message ?? '';
+
+        $info = "Имя: {$name}\nТелефон: {$phone}";
+        if ($email) $info .= "\nEmail: {$email}";
+
+        $extra = [];
         foreach ($data as $key => $value) {
-            $message .= ucfirst($key) . ': ' . $value . "\n";
-        }
-        try {
-            $token = $_ENV['TELEGRAM_BOT_TOKEN'] ?? getenv('TELEGRAM_BOT_TOKEN') ?: '';
-            $chatId = $_ENV['TELEGRAM_CHAT_ID'] ?? getenv('TELEGRAM_CHAT_ID') ?: '';
-            if ($token && $chatId) {
-                (new TelegramController())->sendMessage($token, [$chatId], $message);
+            if (!in_array($key, ['имя', 'name', 'телефн', 'телефон', 'phone', 'почта', 'email', 'сообщение', 'message', 'both'])) {
+                if (is_string($value) && $value !== '') {
+                    $extra[] = "{$key}: {$value}";
+                }
             }
-        } catch (\Exception $e) {
-            error_log('Telegram API Error: ' . $e->getMessage());
         }
-        if (!isset($data->both))
-            Network::onRedirect('/');
+        if ($extra) $info .= "\n\n" . implode("\n", $extra);
+        if ($comment) $info .= "\n\n{$comment}";
+
+        $webhookUrl = 'https://b24-rpu7xy.bitrix24.ru/rest/1/q9npq8wqxwhwlhi0/crm.deal.add.json';
+
+        if (!function_exists('curl_init')) {
+            error_log('Bitrix24: curl extension not available');
+            return;
+        }
+
+        $postData = http_build_query(['fields' => [
+            'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
+            'CATEGORY_ID' => 1,
+            'STAGE_ID' => 0,
+            'COMMENTS' => $info,
+        ]]);
+
+        try {
+            $ch = curl_init($webhookUrl);
+            curl_setopt_array($ch, [
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => $postData,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_TIMEOUT => 15,
+                CURLOPT_CONNECTTIMEOUT => 5,
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($curlError) {
+                error_log("Bitrix24 curl error: {$curlError}");
+            } elseif ($httpCode !== 200) {
+                error_log("Bitrix24 HTTP {$httpCode}: " . mb_substr($response, 0, 500));
+            } else {
+                $result = json_decode($response, true);
+                if (!empty($result['error'])) {
+                    error_log("Bitrix24 API error: {$result['error']} — {$result['error_description']}");
+                }
+            }
+        } catch (\Throwable $e) {
+            error_log('Bitrix24 exception: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -434,7 +491,6 @@ class Functions
         $data['both'] = true;
         try {
             self::sendMail((object) $data);
-            self::sendTelegram((object) $data);
         } catch (\Exception $e) {
             error_log('ошибка' . $e->getMessage());
         }

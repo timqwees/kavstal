@@ -25,6 +25,8 @@ class Order
             customer_phone TEXT NOT NULL,
             customer_email TEXT NOT NULL DEFAULT '',
             comment TEXT NOT NULL DEFAULT '',
+            delivery_method TEXT NOT NULL DEFAULT '',
+            payment_method TEXT NOT NULL DEFAULT '',
             total REAL NOT NULL DEFAULT 0,
             status TEXT NOT NULL DEFAULT 'new',
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
@@ -42,6 +44,13 @@ class Order
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
         )");
+
+        try {
+            Database::send("ALTER TABLE orders ADD COLUMN delivery_method TEXT NOT NULL DEFAULT ''");
+        } catch (\Throwable $e) {}
+        try {
+            Database::send("ALTER TABLE orders ADD COLUMN payment_method TEXT NOT NULL DEFAULT ''");
+        } catch (\Throwable $e) {}
     }
 
     public static function create(array $data): array
@@ -60,13 +69,15 @@ class Order
         $phone = trim($data['phone'] ?? '');
         $email = trim($data['email'] ?? '');
         $comment = trim($data['comment'] ?? '');
+        $delivery = trim($data['delivery'] ?? '');
+        $payment = trim($data['payment'] ?? '');
 
         if (empty($name)) return ['success' => false, 'error' => 'Укажите имя'];
         if (empty($phone)) return ['success' => false, 'error' => 'Укажите телефон'];
 
         Database::send(
-            "INSERT INTO orders (session_id, customer_name, customer_phone, customer_email, comment, total) VALUES (?, ?, ?, ?, ?, ?)",
-            [$sessionId, $name, $phone, $email, $comment, $total]
+            "INSERT INTO orders (session_id, customer_name, customer_phone, customer_email, comment, delivery_method, payment_method, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [$sessionId, $name, $phone, $email, $comment, $delivery, $payment, $total]
         );
 
         $orderId = Database::getConnection()->lastInsertId();
@@ -80,7 +91,52 @@ class Order
 
         Cart::clear();
 
+        try {
+            $pdfContent = self::generatePdf((int)$orderId);
+            $pdfPath = self::savePdf((int)$orderId, $pdfContent);
+
+            $order = self::getById((int)$orderId);
+            $data = (object)[
+                'имя' => $order['customer_name'],
+                'телефон' => $order['customer_phone'],
+                'email' => $order['customer_email'] ?: '—',
+                'комментарий' => $order['comment'] ?: '—',
+                'сумма' => number_format((float)$order['total'], 2, ',', ' ') . ' ₽',
+                'доставка' => self::deliveryLabel($order['delivery_method'] ?? ''),
+                'оплата' => self::paymentLabel($order['payment_method'] ?? ''),
+                'Чек (PDF)' => 'прикреплён к письму',
+                'both' => true,
+            ];
+            Functions::sendMail($data, $pdfPath);
+            @unlink($pdfPath);
+        } catch (\Exception $e) {
+            error_log('Order email error: ' . $e->getMessage());
+        }
+
         return ['success' => true, 'order_id' => (int)$orderId];
+    }
+
+    private static array $deliveryLabels = [
+        'pickup' => 'Самовывоз',
+        'moscow' => 'Доставка по Москве',
+        'oblast' => 'Доставка по области',
+        'russia' => 'Доставка по России',
+    ];
+
+    private static array $paymentLabels = [
+        'cash' => 'Наличные',
+        'card' => 'Картой при получении',
+        'transfer' => 'Безналичный расчёт',
+    ];
+
+    public static function deliveryLabel(?string $key): string
+    {
+        return self::$deliveryLabels[$key] ?? ($key ?: '—');
+    }
+
+    public static function paymentLabel(?string $key): string
+    {
+        return self::$paymentLabels[$key] ?? ($key ?: '—');
     }
 
     public static function getById(int $orderId): ?array
@@ -106,6 +162,17 @@ class Order
         return is_array($result) ? $result : [];
     }
 
+    public static function quickCreate(string $name, string $phone, string $productId): int
+    {
+        self::initTables();
+        $sessionId = Session::init('cart_token') ?? bin2hex(random_bytes(16));
+        Database::send(
+            "INSERT INTO orders (session_id, customer_name, customer_phone, comment, total) VALUES (?, ?, ?, ?, ?)",
+            [$sessionId, $name, $phone, 'Быстрый заказ: ' . $productId, 0]
+        );
+        return (int)Database::getConnection()->lastInsertId();
+    }
+
     public static function generatePdf(int $orderId): string
     {
         $order = self::getById($orderId);
@@ -115,88 +182,306 @@ class Order
         $items = self::getItems($orderId);
         $site = Functions::site();
 
+        $rows = '';
+        foreach ($items as $item) {
+            $rows .= '
+                <tr>
+                    <td>' . htmlspecialchars($item['product_name']) . '</td>
+                    <td>' . htmlspecialchars($item['unit']) . '</td>
+                    <td class="amount">' . number_format((float)$item['price'], 2, ',', ' ') . ' ₽</td>
+                    <td class="amount">' . number_format((float)$item['quantity'], 2, ',', ' ') . '</td>
+                    <td class="amount">' . number_format((float)$item['subtotal'], 2, ',', ' ') . ' ₽</td>
+                </tr>';
+        }
+
         $html = '
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <style>
-    @page { margin: 20mm 15mm; }
-    body { font-family: DejaVu Sans, sans-serif; font-size: 12px; color: #333; }
-    .header { text-align: center; border-bottom: 2px solid #1a56db; padding-bottom: 15px; margin-bottom: 20px; }
-    .header h1 { font-size: 22px; color: #1a56db; margin: 0 0 5px; }
-    .header p { margin: 2px 0; color: #555; font-size: 11px; }
-    .order-info { margin-bottom: 20px; }
-    .order-info table { width: 100%; border-collapse: collapse; }
-    .order-info td { padding: 3px 8px; }
-    .order-info td:first-child { font-weight: bold; width: 150px; color: #555; }
-    .customer { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 15px; margin-bottom: 20px; }
-    .customer h3 { margin: 0 0 8px; font-size: 14px; color: #1a56db; }
-    .customer p { margin: 3px 0; font-size: 11px; }
-    table.items { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-    table.items th { background: #1a56db; color: #fff; padding: 8px 10px; text-align: left; font-size: 11px; }
-    table.items th:nth-child(4),
-    table.items th:nth-child(5) { text-align: right; }
-    table.items td { padding: 7px 10px; border-bottom: 1px solid #e2e8f0; font-size: 11px; }
-    table.items td:nth-child(4),
-    table.items td:nth-child(5) { text-align: right; }
-    table.items tr:nth-child(even) { background: #f8fafc; }
-    .total { text-align: right; font-size: 16px; font-weight: bold; padding: 10px 0; border-top: 2px solid #1a56db; }
-    .footer { margin-top: 30px; text-align: center; font-size: 10px; color: #888; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+    @page { margin: 0; }
+    body {
+        font-family: "DejaVu Sans", sans-serif;
+        font-size: 10px;
+        color: #111111;
+        background: #f5f5f5;
+        margin: 0;
+        padding: 0;
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+    }
+    .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        background: #ffffff;
+        position: relative;
+    }
+    .top-strip { height: 4px; background: #dc2626; }
+    .header {
+        padding: 20px 30px 16px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    .header-inner { width: 100%; }
+    .header-left { float: left; }
+    .header-right { float: right; text-align: right; }
+    .company-name {
+        font-size: 22px;
+        font-weight: 800;
+        color: #dc2626;
+        letter-spacing: 1px;
+        margin: 0 0 2px;
+    }
+    .company-tagline {
+        font-size: 9px;
+        color: #6b7280;
+        margin: 0;
+    }
+    .order-badge {
+        display: inline-block;
+        background: #dc2626;
+        color: #ffffff;
+        font-size: 10px;
+        font-weight: 700;
+        padding: 4px 14px;
+        border-radius: 4px;
+        margin-bottom: 4px;
+    }
+    .order-number {
+        font-size: 16px;
+        font-weight: 700;
+        color: #111111;
+        margin: 2px 0;
+    }
+    .order-date {
+        font-size: 9px;
+        color: #6b7280;
+        margin: 0;
+    }
+    .content { padding: 20px 30px; }
+    .section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #111111;
+        margin: 0 0 10px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid #dc2626;
+    }
+    .info-grid { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+    .info-grid td {
+        padding: 4px 8px;
+        font-size: 10px;
+        vertical-align: top;
+    }
+    .info-grid td.label {
+        font-weight: 600;
+        color: #6b7280;
+        width: 100px;
+    }
+    .info-grid td.value { color: #111111; }
+    .customer-card {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 14px 16px;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    .customer-card td { padding: 3px 8px; font-size: 10px; }
+    .customer-card td.label { font-weight: 600; color: #6b7280; width: 90px; }
+    .customer-card td.value { color: #111111; }
+    .items-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
+    .items-table th {
+        background: #dc2626;
+        color: #ffffff;
+        font-size: 9px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 8px 10px;
+        text-align: left;
+    }
+    .items-table th.amount { text-align: right; }
+    .items-table td {
+        padding: 7px 10px;
+        font-size: 9px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #111111;
+    }
+    .items-table td.amount { text-align: right; }
+    .items-table tr:nth-child(even) td { background: #f9fafb; }
+    .items-table tr:last-child td { border-bottom: none; }
+    .total-section {
+        text-align: right;
+        padding: 12px 0 4px;
+        border-top: 2px solid #dc2626;
+        margin-bottom: 20px;
+    }
+    .total-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #6b7280;
+        margin-right: 12px;
+    }
+    .total-amount {
+        font-size: 18px;
+        font-weight: 800;
+        color: #dc2626;
+    }
+    .delivery-info {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+    }
+    .delivery-info td { padding: 3px 8px; font-size: 10px; }
+    .delivery-info td.label { font-weight: 600; color: #6b7280; width: 90px; }
+    .delivery-info td.value { color: #111111; }
+    .footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #111111;
+        color: #9ca3af;
+        padding: 16px 30px;
+        font-size: 8px;
+    }
+    .footer table { width: 100%; }
+    .footer td { padding: 2px 10px; vertical-align: top; }
+    .footer .footer-title {
+        font-size: 9px;
+        font-weight: 700;
+        color: #ffffff;
+        margin: 0 0 4px;
+    }
+    .footer .footer-label { color: #6b7280; }
+    .footer .footer-value { color: #d1d5db; }
+    .watermark {
+        position: fixed;
+        bottom: 60px;
+        right: 30px;
+        font-size: 48px;
+        font-weight: 900;
+        color: #fef2f2;
+        letter-spacing: 4px;
+        z-index: -1;
+    }
+    .clearfix::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
 </style>
 </head>
 <body>
-<div class="header">
-    <h1>' . htmlspecialchars($site['company'] ?? '') . '</h1>
-    <p>' . htmlspecialchars($site['address'] ?? '') . '</p>
-    <p>Тел: ' . htmlspecialchars($site['phone'] ?? '') . ' | Email: ' . htmlspecialchars($site['email'] ?? '') . '</p>
-</div>
-<div class="order-info">
-    <table>
-        <tr><td>Номер заказа:</td><td>#' . $orderId . '</td></tr>
-        <tr><td>Дата:</td><td>' . date('d.m.Y H:i', strtotime($order['created_at'])) . '</td></tr>
-        <tr><td>Статус:</td><td>Новый</td></tr>
-    </table>
-</div>
-<div class="customer">
-    <h3>Данные покупателя</h3>
-    <p><strong>ФИО:</strong> ' . htmlspecialchars($order['customer_name']) . '</p>
-    <p><strong>Телефон:</strong> ' . htmlspecialchars($order['customer_phone']) . '</p>
-    <p><strong>Email:</strong> ' . htmlspecialchars($order['customer_email'] ?: '—') . '</p>
-    <p><strong>Комментарий:</strong> ' . htmlspecialchars($order['comment'] ?: '—') . '</p>
-</div>
-<table class="items">
-    <thead>
-        <tr>
-            <th>Товар</th>
-            <th>Ед.</th>
-            <th>Цена</th>
-            <th>Кол-во</th>
-            <th>Сумма</th>
-        </tr>
-    </thead>
-    <tbody>';
+<div class="page">
+    <div class="top-strip"></div>
 
-        foreach ($items as $item) {
-            $html .= '
-        <tr>
-            <td>' . htmlspecialchars($item['product_name']) . '</td>
-            <td>' . htmlspecialchars($item['unit']) . '</td>
-            <td>' . number_format((float)$item['price'], 2, ',', ' ') . ' ₽</td>
-            <td>' . number_format((float)$item['quantity'], 2, ',', ' ') . '</td>
-            <td>' . number_format((float)$item['subtotal'], 2, ',', ' ') . ' ₽</td>
-        </tr>';
-        }
+    <div class="header">
+        <div class="header-inner clearfix">
+            <div class="header-left">
+                <div class="company-name">' . htmlspecialchars($site['company'] ?? 'КАВ СТАЛЬ') . '</div>
+                <div class="company-tagline">Металлопрокат • Доставка по России</div>
+            </div>
+            <div class="header-right">
+                <div class="order-badge">ЗАКАЗ</div>
+                <div class="order-number">№' . $orderId . '</div>
+                <div class="order-date">от ' . date('d.m.Y', strtotime($order['created_at'])) . ' · ' . date('H:i', strtotime($order['created_at'])) . '</div>
+            </div>
+        </div>
+    </div>
 
-        $html .= '
-    </tbody>
-</table>
-<div class="total">
-    Итого: ' . number_format((float)$order['total'], 2, ',', ' ') . ' ₽
-</div>
-<div class="footer">
-    <p>Спасибо за заказ! Для получения дополнительной информации свяжитесь с нами.</p>
-    <p>' . htmlspecialchars($site['baseUrl'] ?? '') . '</p>
+    <div class="content">
+        <table class="info-grid">
+            <tr>
+                <td class="label">Статус:</td>
+                <td class="value"><strong>Новый</strong></td>
+                <td class="label">Оплата:</td>
+                <td class="value">' . htmlspecialchars(self::paymentLabel($order['payment_method'] ?? '')) . '</td>
+            </tr>
+            <tr>
+                <td class="label">Доставка:</td>
+                <td class="value">' . htmlspecialchars(self::deliveryLabel($order['delivery_method'] ?? '')) . '</td>
+                <td class="label">Менеджер:</td>
+                <td class="value">—</td>
+            </tr>
+        </table>
+
+        <div class="section-title">ДАННЫЕ ПОКУПАТЕЛЯ</div>
+        <table class="customer-card">
+            <tr>
+                <td class="label">ФИО:</td>
+                <td class="value">' . htmlspecialchars($order['customer_name']) . '</td>
+                <td class="label">Email:</td>
+                <td class="value">' . htmlspecialchars($order['customer_email'] ?: '—') . '</td>
+            </tr>
+            <tr>
+                <td class="label">Телефон:</td>
+                <td class="value">' . htmlspecialchars($order['customer_phone']) . '</td>
+                <td class="label">Комментарий:</td>
+                <td class="value">' . htmlspecialchars($order['comment'] ?: '—') . '</td>
+            </tr>
+        </table>
+
+        <div class="section-title">СОСТАВ ЗАКАЗА</div>
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th style="width:50%;">Наименование</th>
+                    <th style="width:12%;">Ед.</th>
+                    <th class="amount" style="width:14%;">Цена</th>
+                    <th class="amount" style="width:12%;">Кол-во</th>
+                    <th class="amount" style="width:12%;">Сумма</th>
+                </tr>
+            </thead>
+            <tbody>' . $rows . '
+            </tbody>
+        </table>
+
+        <div class="total-section">
+            <span class="total-label">Итого к оплате:</span>
+            <span class="total-amount">' . number_format((float)$order['total'], 2, ',', ' ') . ' ₽</span>
+        </div>
+
+        <p style="font-size:8px;color:#9ca3af;margin:8px 0 0;line-height:1.4;">
+            Спасибо за заказ! Наш менеджер свяжется с вами в ближайшее время для подтверждения.<br>
+            Все цены указаны с НДС. Точная стоимость доставки рассчитывается индивидуально.
+        </p>
+    </div>
+
+    <div class="footer">
+        <table>
+            <tr>
+                <td style="width:30%;">
+                    <div class="footer-title">' . htmlspecialchars($site['company'] ?? 'КАВ СТАЛЬ') . '</div>
+                    <div>' . htmlspecialchars($site['address'] ?? '') . '</div>
+                </td>
+                <td style="width:25%;">
+                    <div class="footer-title">Контакты</div>
+                    <div class="footer-label">Тел:</div>
+                    <div class="footer-value">' . htmlspecialchars($site['phone'] ?? '') . '</div>
+                    <div class="footer-label">Email:</div>
+                    <div class="footer-value">' . htmlspecialchars($site['email'] ?? '') . '</div>
+                </td>
+                <td style="width:25%;">
+                    <div class="footer-title">График работы</div>
+                    <div class="footer-value">' . htmlspecialchars($site['workingHours'] ?? 'Пн-Пт: 9:00-18:00') . '</div>
+                </td>
+                <td style="width:20%;">
+                    <div class="footer-title">Сайт</div>
+                    <div class="footer-value">' . htmlspecialchars($site['baseUrl'] ?? 'www.kavstal.ru') . '</div>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align:center;margin-top:8px;font-size:7px;color:#6b7280;">
+            © ' . date('Y') . ' ' . htmlspecialchars($site['company'] ?? 'КАВ СТАЛЬ') . ' · Все права защищены
+        </div>
+    </div>
+
+    <div class="watermark">PDF</div>
 </div>
 </body>
 </html>';

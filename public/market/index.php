@@ -70,7 +70,7 @@ $products = Setting\route\function\Functions::listProducts();
     </script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
@@ -78,49 +78,10 @@ $products = Setting\route\function\Functions::listProducts();
     <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
-<body>
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-600 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
+<body class="pb-20 lg:pb-0">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
 
     <?php include './public/components/header-ozon.php'; ?>
-
-    <!-- ===================== MOBILE MENU ===================== -->
-    <div class="mobile-menu-overlay fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden opacity-0 invisible transition-all duration-300"></div>
-    <div class="mobile-menu fixed left-0 top-0 h-full w-80 bg-white shadow-xl z-50 lg:hidden transform -translate-x-full transition-transform duration-300">
-        <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
-                <a href="/"><img loading="lazy" class="h-10" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg" alt="<?= htmlspecialchars($site['company']) ?>"></a>
-                <button class="mobile-menu-close p-2" aria-label="Закрыть меню"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-            </div>
-            <nav class="space-y-1 mb-6">
-                <?php
-                $mCatList = []; $mSubList = [];
-                foreach ($products as $p) { $b = $p['badge'] ?? ''; if ($b === 'Категория') { $mCatList[$p['id']] = $p; } elseif ($b === 'Подкатегория') { $pid = $p['categories']['parent_id'] ?? null; if ($pid) $mSubList[$pid][] = $p; } }
-                foreach ($mCatList as $cid => $cat): $hasSub = !empty($mSubList[$cid]);
-                ?>
-                <div>
-                    <a href="<?= htmlspecialchars($cat['seo']['canonicalUrl'] ?? '#') ?>" class="mobile-nav-link"><?= htmlspecialchars($cat['title']) ?><?php if ($hasSub): ?><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><?php endif; ?></a>
-                    <?php if ($hasSub): ?>
-                    <div class="ml-3 pl-3 border-l-2 border-red-100 space-y-0.5">
-                        <?php foreach ($mSubList[$cid] as $sub): ?>
-                        <a href="<?= htmlspecialchars($sub['seo']['canonicalUrl'] ?? '#') ?>" class="mobile-sub-link"><?= htmlspecialchars($sub['title']) ?></a>
-                        <?php endforeach; ?>
-                    </div>
-                    <?php endif; ?>
-                </div>
-                <?php endforeach; ?>
-                <div class="border-t border-gray-100 pt-3 mt-3 space-y-1">
-                    <a href="/contacts" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg> Контакты</a>
-                    <a href="/about" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> О компании</a>
-                    <a href="/delivery" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> Доставка и оплата</a>
-                    <a href="/contacts" class="mobile-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> Контакты</a>
-                </div>
-            </nav>
-            <div class="border-t pt-4 text-center">
-                <a href="tel:+74959892420" class="text-xl font-bold text-gray-800 block mb-1">+7 (495) 989-24-20</a>
-                <p class="text-sm text-gray-500">Ежедневно 9:00–18:00</p>
-            </div>
-        </div>
-    </div>
 
     <!-- ===================== MAIN CONTENT ===================== -->
     <main>
@@ -133,7 +94,7 @@ $products = Setting\route\function\Functions::listProducts();
                         <nav class="flex" aria-label="Breadcrumb">
                             <ol class="inline-flex items-center space-x-1 md:space-x-2" itemscope itemtype="https://schema.org/BreadcrumbList">
                                 <li class="inline-flex items-center" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                                    <a href="/" class="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-red-600 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?php echo $site['baseUrl']; ?>/">
+                                    <a href="/" class="inline-flex items-center text-sm font-medium text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope itemtype="https://schema.org/Thing" itemid="<?php echo $site['baseUrl']; ?>/">
                                         <svg class="me-2 h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
                                         </svg>
@@ -154,12 +115,12 @@ $products = Setting\route\function\Functions::listProducts();
                         <h2 class="mt-3 text-xl font-bold text-zinc-900 sm:text-2xl">Металлопрокат</h2>
                     </div>
                     <div class="flex items-center gap-1 bg-zinc-100 rounded-lg p-0.5">
-                            <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-600 p-2 shadow-sm transition-colors" title="Сетка">
+                            <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-500 p-2 shadow-sm transition-colors" title="Сетка">
                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4Zm-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857Z" />
                                 </svg>
                             </button>
-                            <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-2 text-zinc-600 hover:text-red-600 transition-colors" title="Список">
+                            <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-2 text-zinc-600 hover:text-red-500 transition-colors" title="Список">
                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
                                 </svg>
@@ -275,7 +236,7 @@ $products = Setting\route\function\Functions::listProducts();
                                         $url = '/market?' . http_build_query($params);
                                         $isActive = $activeCategory === $catSlug;
                                     ?>
-                                    <a href="<?= htmlspecialchars($url) ?>" class="flex items-center justify-between px-2 py-1.5 rounded-lg text-[13px] transition-colors <?= $isActive ? 'bg-red-50 text-red-700 font-semibold' : 'text-zinc-700 hover:bg-zinc-50' ?>">
+                                    <a href="<?= htmlspecialchars($url) ?>" class="flex items-center justify-between px-2 py-1.5 rounded-lg text-[13px] transition-colors <?= $isActive ? 'bg-red-50 text-red-500 font-semibold' : 'text-zinc-700 hover:bg-zinc-50' ?>">
                                         <span class="truncate"><?= htmlspecialchars($catInfo['title']) ?></span>
                                         <span class="text-zinc-400 text-[10px] ml-1 flex-shrink-0"><?= $catInfo['count'] ?></span>
                                     </a>
@@ -296,7 +257,7 @@ $products = Setting\route\function\Functions::listProducts();
                                         <span class="text-zinc-300 text-xs">—</span>
                                         <input type="number" name="price_to" value="<?= htmlspecialchars($activePriceTo) ?>" placeholder="<?= $maxSitePrice ?>" min="0" class="w-full text-xs border border-zinc-200 rounded-lg px-2 py-1.5 focus:outline-none focus:border-red-400 placeholder:text-zinc-300">
                                     </div>
-                                    <button type="submit" class="mt-2 w-full text-[11px] font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg py-1.5 transition-colors">Применить</button>
+                                    <button type="submit" class="mt-2 w-full text-[11px] font-medium text-white bg-red-500 hover:bg-red-500 rounded-lg py-1.5 transition-colors">Применить</button>
                                 </form>
                             </div>
 
@@ -315,7 +276,7 @@ $products = Setting\route\function\Functions::listProducts();
                                         $url = '/market?' . http_build_query($params);
                                         $isActive = $activeMarka === $val;
                                     ?>
-                                    <a href="<?= htmlspecialchars($url) ?>" class="filter-item flex items-center justify-between px-2 py-1 rounded-lg text-xs transition-colors <?= $isActive ? 'bg-red-50 text-red-700 font-semibold' : 'text-zinc-600 hover:bg-zinc-50' ?>" data-text="<?= strtolower(htmlspecialchars($val)) ?>">
+                                    <a href="<?= htmlspecialchars($url) ?>" class="filter-item flex items-center justify-between px-2 py-1 rounded-lg text-xs transition-colors <?= $isActive ? 'bg-red-50 text-red-500 font-semibold' : 'text-zinc-600 hover:bg-zinc-50' ?>" data-text="<?= strtolower(htmlspecialchars($val)) ?>">
                                         <span class="truncate"><?= htmlspecialchars($val) ?></span>
                                         <span class="text-zinc-400 text-[10px] ml-1 flex-shrink-0"><?= $count ?></span>
                                     </a>
@@ -339,7 +300,7 @@ $products = Setting\route\function\Functions::listProducts();
                                         $url = '/market?' . http_build_query($params);
                                         $isActive = $activeSize === $val;
                                     ?>
-                                    <a href="<?= htmlspecialchars($url) ?>" class="filter-item flex items-center justify-between px-2 py-1 rounded-lg text-xs transition-colors <?= $isActive ? 'bg-red-50 text-red-700 font-semibold' : 'text-zinc-600 hover:bg-zinc-50' ?>" data-text="<?= strtolower(htmlspecialchars($val)) ?>">
+                                    <a href="<?= htmlspecialchars($url) ?>" class="filter-item flex items-center justify-between px-2 py-1 rounded-lg text-xs transition-colors <?= $isActive ? 'bg-red-50 text-red-500 font-semibold' : 'text-zinc-600 hover:bg-zinc-50' ?>" data-text="<?= strtolower(htmlspecialchars($val)) ?>">
                                         <span><?= htmlspecialchars($val) ?></span>
                                         <span class="text-zinc-400 text-[10px] ml-1 flex-shrink-0"><?= $count ?></span>
                                     </a>
@@ -352,7 +313,7 @@ $products = Setting\route\function\Functions::listProducts();
 
                             <!-- Сбросить -->
                             <?php if ($activeCategory || $activeMarka || $activeSize || $activePriceFrom !== '' || $activePriceTo !== '' || $searchTerm): ?>
-                            <a href="/market" class="block text-center text-xs text-red-600 hover:text-red-700 font-medium py-1.5 rounded-lg hover:bg-red-50 transition-colors border border-red-100">Сбросить все фильтры</a>
+                            <a href="/market" class="block text-center text-xs text-red-500 hover:text-red-500 font-medium py-1.5 rounded-lg hover:bg-red-50 transition-colors border border-red-100">Сбросить все фильтры</a>
                             <?php endif; ?>
                         </div>
                     </aside>
@@ -360,7 +321,7 @@ $products = Setting\route\function\Functions::listProducts();
                     <!-- Products Area -->
                     <div class="flex-1 min-w-0">
                     <!-- Products Grid -->
-                    <div id="products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" itemscope itemtype="https://schema.org/ItemList">
+                    <div id="products-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" itemscope itemtype="https://schema.org/ItemList">
                     <?php if (!empty($pageProducts)): ?>
                         <?php foreach ($pageProducts as $product):
                             $canonicalUrl = $product['seo']['canonicalUrl'] ?? '#';
@@ -387,7 +348,7 @@ $products = Setting\route\function\Functions::listProducts();
                                 <img src="<?php echo htmlspecialchars($productImages[0]); ?>" alt="<?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?>" class="max-h-full max-w-full object-contain" loading="lazy" />
                             </a>
                             <div class="card-body flex-1 flex flex-col min-w-0">
-                                <a href="<?php echo htmlspecialchars($canonicalUrl); ?>" class="text-[13px] font-semibold text-neutral-800 hover:text-red-600 transition-colors line-clamp-2 leading-snug mb-2 block min-h-[36px]"><?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?></a>
+                                <a href="<?php echo htmlspecialchars($canonicalUrl); ?>" class="text-[13px] font-semibold text-neutral-800 hover:text-red-500 transition-colors line-clamp-2 leading-snug mb-2 block min-h-[36px]"><?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?></a>
                                 <?php if (!empty($product['specs']) && is_array($product['specs'])): ?>
                                 <div class="flex flex-wrap gap-1 mb-2">
                                     <?php foreach ($specLabels as $label): $val = $product['specs'][$label] ?? null; if ($val && $val !== ''): ?>
@@ -407,11 +368,11 @@ $products = Setting\route\function\Functions::listProducts();
                                             <div itemprop="price" content="<?php echo $firstPrice; ?>" class="price-display text-[15px] font-bold text-neutral-900 leading-tight"><?php echo $firstPrice; ?> ₽</div>
                                             <div class="flex gap-0.5 mt-1">
                                                 <?php foreach ($units as $unit => $price): ?>
-                                                <button type="button" class="text-[9px] px-1.5 py-0.5 rounded font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-800' : 'bg-neutral-100 text-neutral-500 hover:bg-red-50 hover:text-red-700' ?>" data-unit="<?php echo htmlspecialchars($unit); ?>" data-price="<?php echo htmlspecialchars($price); ?>" onclick="switchUnit(this)"><?php echo htmlspecialchars($unit); ?></button>
+                                                <button type="button" class="text-[9px] px-1.5 py-0.5 rounded font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-500' : 'bg-neutral-100 text-neutral-500 hover:bg-red-50 hover:text-red-500' ?>" data-unit="<?php echo htmlspecialchars($unit); ?>" data-price="<?php echo htmlspecialchars($price); ?>" onclick="switchUnit(this)"><?php echo htmlspecialchars($unit); ?></button>
                                                 <?php endforeach; ?>
                                             </div>
                                         </div>
-                                        <button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="<?= htmlspecialchars($product['id'] ?? '') ?>" data-unit="<?= htmlspecialchars($firstUnit ?? '') ?>" title="В корзину">
+                                        <button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="<?= htmlspecialchars($product['id'] ?? '') ?>" data-unit="<?= htmlspecialchars($firstUnit ?? '') ?>" title="В корзину">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                                         </button>
                                     </div>
@@ -427,7 +388,7 @@ $products = Setting\route\function\Functions::listProducts();
                             <h3 class="text-sm font-semibold text-neutral-800">Товары не найдены</h3>
                             <p class="mt-1 text-xs text-neutral-500 max-w-xs"><?php if ($searchTerm): ?>По запросу &laquo;<?php echo htmlspecialchars($searchTerm); ?>?&raquo; ничего не найдено.<?php else: ?>К сожалению, товаров нет.<?php endif; ?></p>
                             <?php if ($searchTerm): ?>
-                            <a href="/market" class="mt-3 inline-flex items-center text-xs font-medium text-red-600 hover:text-red-700">
+                            <a href="/market" class="mt-3 inline-flex items-center text-xs font-medium text-red-500 hover:text-red-500">
                                 <svg class="mr-1 h-3.5 w-3.5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9h13M10 6l3 3-3 3"/></svg>
                                 Сбросить поиск
                             </a>
@@ -449,7 +410,7 @@ $products = Setting\route\function\Functions::listProducts();
                         <?php endif; $range = 2; $showPages = []; $showPages[] = 1; for ($i = max(2, $page - $range); $i <= min($totalPages - 1, $page + $range); $i++) { $showPages[] = $i; } if ($totalPages > 1) $showPages[] = $totalPages; $showPages = array_unique($showPages); sort($showPages); $prevPage = 0; foreach ($showPages as $i): if ($prevPage > 0 && $i > $prevPage + 1): ?>
                         <span class="px-1.5 text-sm text-zinc-400">...</span>
                         <?php endif; $prevPage = $i; $queryParams['page'] = $i; $pageUrl = '/market?' . http_build_query($queryParams); $active = $i === $page; ?>
-                        <a href="<?php echo htmlspecialchars($pageUrl); ?>" class="<?= $active ? 'bg-red-600 text-white border-red-600 shadow-sm' : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' ?> inline-flex items-center justify-center rounded-lg min-w-[36px] h-9 px-2 text-sm font-medium transition-colors"><?php echo $i; ?></a>
+                        <a href="<?php echo htmlspecialchars($pageUrl); ?>" class="<?= $active ? 'bg-red-500 text-white border-red-500 shadow-sm' : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' ?> inline-flex items-center justify-center rounded-lg min-w-[36px] h-9 px-2 text-sm font-medium transition-colors"><?php echo $i; ?></a>
                         <?php endforeach; if ($page < $totalPages): $queryParams['page'] = $page + 1; $nextUrl = '/market?' . http_build_query($queryParams); ?>
                         <a href="<?php echo htmlspecialchars($nextUrl); ?>" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-2.5 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
@@ -477,47 +438,27 @@ $products = Setting\route\function\Functions::listProducts();
     window.switchUnit = function(button) {
         var parent = button.parentElement;
         Array.from(parent.querySelectorAll('button')).forEach(function(b) {
-            b.classList.remove('bg-red-100', 'text-red-800');
+            b.classList.remove('bg-red-100', 'text-red-500');
             b.classList.add('bg-neutral-100', 'text-neutral-500');
         });
         button.classList.remove('bg-neutral-100', 'text-neutral-500');
-        button.classList.add('bg-red-100', 'text-red-800');
+        button.classList.add('bg-red-100', 'text-red-500');
         var card = button.closest('[itemscope]');
         if (card) { var pd = card.querySelector('.price-display'); if (pd) pd.textContent = Math.round(parseFloat(button.getAttribute('data-price'))).toLocaleString('ru-RU') + ' ₽'; }
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-        var toggle = document.getElementById('ozonCatalogToggle');
-        var menu = document.getElementById('ozonMegaMenu');
-        var sidebar = document.getElementById('ozonMegaSidebar');
-        var panels = document.querySelectorAll('.ozon-mega-content-panel');
-        if (toggle && menu) {
-            var isOpen = false;
-            toggle.addEventListener('click', function(e) { e.stopPropagation(); isOpen = !isOpen; menu.style.display = isOpen ? 'block' : 'none'; });
-            document.addEventListener('click', function(e) { if (!menu.contains(e.target) && e.target !== toggle && !toggle.contains(e.target)) { menu.style.display = 'none'; isOpen = false; } });
-        }
-        if (sidebar) {
-            sidebar.querySelectorAll('.ozon-mega-item').forEach(function(item) {
-                item.addEventListener('mouseenter', function() {
-                    sidebar.querySelectorAll('.ozon-mega-item').forEach(function(i) { i.classList.remove('active'); });
-                    this.classList.add('active');
-                    var catId = this.getAttribute('data-category-id');
-                    panels.forEach(function(p) { p.style.display = p.getAttribute('data-category-id') === catId ? 'block' : 'none'; });
-                });
-            });
-        }
-
         var gv = document.getElementById('grid-view'), lv = document.getElementById('list-view'), pc = document.getElementById('products-container');
         if (gv && lv && pc) {
             function setActive(btn, other) {
-                btn.classList.add('bg-red-600', 'text-white', 'border-red-600', 'shadow-sm');
+                btn.classList.add('bg-red-500', 'text-white', 'border-red-500', 'shadow-sm');
                 btn.classList.remove('border', 'border-zinc-200', 'bg-white', 'text-zinc-600');
-                other.classList.remove('bg-red-600', 'text-white', 'border-red-600', 'shadow-sm');
+                other.classList.remove('bg-red-500', 'text-white', 'border-red-500', 'shadow-sm');
                 other.classList.add('border', 'border-zinc-200', 'bg-white', 'text-zinc-600');
             }
             gv.addEventListener('click', function() {
                 pc.classList.remove('list-view');
-                pc.className = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5';
+                pc.className = 'grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5';
                 setActive(gv, lv);
             });
             lv.addEventListener('click', function() {
@@ -539,12 +480,6 @@ $products = Setting\route\function\Functions::listProducts();
                 });
             });
         });
-
-        var mt = document.querySelector('.mobile-menu-toggle'), mc = document.querySelector('.mobile-menu-close'), mm = document.querySelector('.mobile-menu'), mo = document.querySelector('.mobile-menu-overlay');
-        function openM() { if (mm) mm.classList.remove('-translate-x-full'); if (mo) { mo.classList.remove('opacity-0', 'invisible'); mo.classList.add('opacity-100', 'visible'); } document.body.style.overflow = 'hidden'; }
-        function closeM() { if (mm) mm.classList.add('-translate-x-full'); if (mo) { mo.classList.add('opacity-0', 'invisible'); mo.classList.remove('opacity-100', 'visible'); } document.body.style.overflow = ''; }
-        if (mt) mt.addEventListener('click', openM); if (mc) mc.addEventListener('click', closeM); if (mo) mo.addEventListener('click', closeM);
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeM(); });
     });
     </script>
 </body>

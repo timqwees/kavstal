@@ -149,7 +149,7 @@ $services = [
 
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ" href="/opensearch.xml" />
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
@@ -171,7 +171,7 @@ $services = [
     </script>
     <style>
         .services-swiper .swiper-slide { height: auto; }
-        .price-tag { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+        .price-tag { background: linear-gradient(135deg, #ef4444, #dc2626); }
         .spec-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6; font-size: 13px; }
         .spec-row:last-child { border-bottom: none; }
         .spec-label { color: #6b7280; }
@@ -189,7 +189,7 @@ $services = [
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center space-x-2 text-sm" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-                    <a href="/" class="text-gray-600 hover:text-red-600" itemprop="item" itemid="<?= $site['baseUrl']; ?>/">
+                    <a href="/" class="text-gray-600 hover:text-red-500" itemprop="item" itemid="<?= $site['baseUrl']; ?>/">
                         <i class="fas fa-home"></i> <span itemprop="name">Главная</span>
                     </a>
                     <meta itemprop="position" content="1">
@@ -219,7 +219,7 @@ $services = [
                         ?>
                         <div>
                             <a href="<?= htmlspecialchars($catUrl) ?>"
-                                class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:text-red-600 hover:bg-red-50 transition-colors group">
+                                class="flex items-center justify-between px-4 py-2.5 text-sm text-gray-700 hover:text-red-500 hover:bg-red-50 transition-colors group">
                                 <span class="font-medium"><?= htmlspecialchars($cat['title']) ?></span>
                                 <svg class="w-4 h-4 text-gray-300 group-hover:text-red-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -229,7 +229,7 @@ $services = [
                             <div class="ml-4 border-l border-gray-100">
                                 <?php foreach ($subList[$catId] as $sub): ?>
                                 <a href="<?= htmlspecialchars($sub['seo']['canonicalUrl'] ?? '#') ?>"
-                                    class="block px-4 py-1.5 text-xs text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors">
+                                    class="block px-4 py-1.5 text-xs text-gray-500 hover:text-red-500 hover:bg-red-50 transition-colors">
                                     <?= htmlspecialchars($sub['title']) ?>
                                 </a>
                                 <?php endforeach; ?>
@@ -238,7 +238,7 @@ $services = [
                         </div>
                         <?php endforeach; ?>
                         <div class="border-t border-gray-100 mt-2 pt-2">
-                            <span class="flex items-center justify-between px-4 py-2.5 text-sm text-red-600 bg-red-50 font-medium rounded-none">
+                            <span class="flex items-center justify-between px-4 py-2.5 text-sm text-red-500 bg-red-50 font-medium rounded-none">
                                 <span>Услуги</span>
                                 <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -260,7 +260,7 @@ $services = [
                             <h1 class="text-3xl md:text-4xl font-bold mt-2 mb-4">Услуги металлообработки<br><span class="text-red-400">с гарантией качества</span></h1>
                             <p class="text-gray-300 text-lg mb-6">Резка, гибка, сварка, покраска и доставка металлопроката. Работаем с физическими и юридическими лицами.</p>
                             <div class="flex flex-wrap gap-4">
-                                <a href="#services" class="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition flex items-center gap-2">
+                                <a href="#services" class="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-500 transition flex items-center gap-2">
                                     <i class="fas fa-arrow-down"></i> Смотреть услуги
                                 </a>
                                 <a href="tel:+74959892420" class="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-900 transition flex items-center gap-2">
@@ -268,7 +268,7 @@ $services = [
                                 </a>
                             </div>
                         </div>
-                        <div class="hidden md:flex items-center justify-center w-48 h-48 bg-red-600 rounded-full opacity-20 absolute right-12"></div>
+                        <div class="hidden md:flex items-center justify-center w-48 h-48 bg-red-500 rounded-full opacity-20 absolute right-12"></div>
                         <div class="hidden md:flex items-center justify-center w-32 h-32 bg-red-500 rounded-full opacity-10 absolute right-32 bottom-8"></div>
                     </div>
                 </div>
@@ -276,19 +276,19 @@ $services = [
                 <!-- Quick stats -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                        <div class="text-2xl font-bold text-red-600">6+</div>
+                        <div class="text-2xl font-bold text-red-500">6+</div>
                         <div class="text-xs text-gray-500 mt-1">Видов услуг</div>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                        <div class="text-2xl font-bold text-red-600">14 000+</div>
+                        <div class="text-2xl font-bold text-red-500">14 000+</div>
                         <div class="text-xs text-gray-500 mt-1">Товаров на складе</div>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                        <div class="text-2xl font-bold text-red-600">24/7</div>
+                        <div class="text-2xl font-bold text-red-500">24/7</div>
                         <div class="text-xs text-gray-500 mt-1">Приём заказов</div>
                     </div>
                     <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                        <div class="text-2xl font-bold text-red-600">5 лет</div>
+                        <div class="text-2xl font-bold text-red-500">5 лет</div>
                         <div class="text-xs text-gray-500 mt-1">Гарантия на работы</div>
                     </div>
                 </div>
@@ -302,7 +302,7 @@ $services = [
 
                     <?php foreach ($services as $key => $svc):
                         $colorMap = [
-                            'red' => ['bg' => 'from-red-500 to-red-700', 'badge' => 'bg-red-100 text-red-700'],
+                            'red' => ['bg' => 'from-red-500 to-red-500', 'badge' => 'bg-red-100 text-red-500'],
                             'blue' => ['bg' => 'from-blue-500 to-blue-700', 'badge' => 'bg-blue-100 text-blue-700'],
                             'green' => ['bg' => 'from-green-500 to-green-700', 'badge' => 'bg-green-100 text-green-700'],
                             'orange' => ['bg' => 'from-orange-500 to-orange-700', 'badge' => 'bg-orange-100 text-orange-700'],
@@ -348,7 +348,7 @@ $services = [
                                             <div class="text-xs opacity-80">Цена</div>
                                             <div class="text-xl font-bold"><?= $svc['price_from'] ?></div>
                                         </div>
-                                        <a href="tel:+74959892420" class="w-full bg-red-600 text-white py-2.5 rounded-lg font-semibold hover:bg-red-700 transition text-sm text-center flex items-center justify-center gap-2">
+                                        <a href="tel:+74959892420" class="w-full bg-red-500 text-white py-2.5 rounded-lg font-semibold hover:bg-red-500 transition text-sm text-center flex items-center justify-center gap-2">
                                             <i class="fas fa-phone"></i> Заказать
                                         </a>
                                         <a href="mailto:zakaz@kavstal.ru?subject=Услуга: <?= urlencode($svc['title']) ?>" class="w-full text-gray-500 border border-gray-200 py-2 rounded-lg hover:bg-gray-50 transition text-xs text-center">
@@ -366,18 +366,18 @@ $services = [
                 </div>
 
                 <!-- Calc CTA -->
-                <div class="bg-gradient-to-r from-red-600 to-red-700 rounded-2xl p-8 md:p-10 mb-8 text-white text-center">
+                <div class="bg-gradient-to-r from-red-500 to-red-500 rounded-2xl p-8 md:p-10 mb-8 text-white text-center">
                     <h2 class="text-2xl md:text-3xl font-bold mb-3">Нужен точный расчёт стоимости?</h2>
                     <p class="text-lg opacity-90 mb-6">Пришлите спецификацию — мы рассчитаем за 15 минут</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-xl mx-auto">
-                        <a href="tel:+74959892420" class="bg-white text-red-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2">
+                        <a href="tel:+74959892420" class="bg-white text-red-500 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center gap-2">
                             <i class="fas fa-phone"></i> Позвонить
                         </a>
-                        <a href="mailto:zakaz@kavstal.ru" class="bg-red-800 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-900 transition flex items-center justify-center gap-2">
-                            <i class="fas fa-envelope"></i> Отправить заявку
+                        <a href="mailto:zakaz@kavstal.ru" class="bg-red-500 text-white border-2 border-white px-8 py-3 rounded-lg font-bold hover:bg-red-900 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-envelope"></i> Оставить запрос
                         </a>
-                        <a href="https://wa.me/74959892420" target="_blank" rel="noopener" class="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition flex items-center justify-center gap-2">
-                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        <a href="https://t.me/<?= htmlspecialchars(ltrim($site['telegram'] ?? 'kavstal_bot', '@')) ?>" target="_blank" rel="noopener" class="bg-sky-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-sky-600 transition flex items-center justify-center gap-2">
+                            <i class="fab fa-telegram-plane"></i> Telegram
                         </a>
                     </div>
                     <p class="text-sm opacity-75 mt-4">Принимаем заказы 7 дней в неделю с 9:00 до 18:00</p>
@@ -389,28 +389,28 @@ $services = [
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="text-center">
                             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <span class="text-red-600 font-bold text-lg">1</span>
+                                <span class="text-red-500 font-bold text-lg">1</span>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Выбираете услугу</h4>
                             <p class="text-sm text-gray-500">Ознакомьтесь с услугами и ценами выше</p>
                         </div>
                         <div class="text-center">
                             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <span class="text-red-600 font-bold text-lg">2</span>
+                                <span class="text-red-500 font-bold text-lg">2</span>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Связываетесь с нами</h4>
-                            <p class="text-sm text-gray-500">По телефону, email или WhatsApp</p>
+                            <p class="text-sm text-gray-500">По телефону, email или Telegram</p>
                         </div>
                         <div class="text-center">
                             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <span class="text-red-600 font-bold text-lg">3</span>
+                                <span class="text-red-500 font-bold text-lg">3</span>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Согласовываете детали</h4>
                             <p class="text-sm text-gray-500">Сроки, объём, способ оплаты</p>
                         </div>
                         <div class="text-center">
                             <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <span class="text-red-600 font-bold text-lg">4</span>
+                                <span class="text-red-500 font-bold text-lg">4</span>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Получаете результат</h4>
                             <p class="text-sm text-gray-500">Готовые изделия с гарантией качества</p>
