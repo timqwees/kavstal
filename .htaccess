@@ -1,6 +1,12 @@
 RewriteEngine On
 RewriteBase /
 
+# Увеличиваем лимит памяти: кэш products_full (~23MB) и market_products (~14MB)
+# требуют >= 256MB при декоде JSON на страницах товара и маркета.
+<IfModule mod_php.c>
+  php_value memory_limit 256M
+</IfModule>
+
 # Принудительный HTTPS + www (канонический домен)
 # Учитываем X-Forwarded-Proto/Host для работы за Nginx-прокси (без петель редиректа)
 RewriteCond %{HTTPS} off

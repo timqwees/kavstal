@@ -104,8 +104,8 @@ class Functions
      */
     public static function showProduct(string $productID, ?string $table = null): array
     {
-        // Используем кэш списка продуктов для быстрого поиска
-        $allProducts = self::listProducts();
+        // Используем файловый кэш полного списка продуктов для быстрого поиска
+        $allProducts = self::getProductsFull();
         foreach ($allProducts as $product) {
             if (($product['id'] ?? '') === $productID) {
                 return $product;
@@ -242,6 +242,25 @@ class Functions
 
         self::cacheSet('site_data', $data);
         return $data;
+    }
+
+    /**
+     * Полная версия всех товаров с файловым кэшем (JSON ~43MB).
+     * Используется для страницы товара (showProduct) и других мест,
+     * где нужно полное описание товара. Декод ~0.14с вместо парсинга CSV 0.68с.
+     * Требует memory_limit >= 256MB на бою.
+     * @return array
+     */
+    public static function getProductsFull(): array
+    {
+        $cached = self::cacheGet('products_full', self::$_cacheTtl);
+        if ($cached !== null) {
+            return $cached;
+        }
+
+        $full = self::listProducts();
+        self::cacheSet('products_full', $full);
+        return $full;
     }
 
     public static function listProducts(?string $table = null): array
