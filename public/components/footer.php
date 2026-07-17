@@ -42,7 +42,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
       <!-- Company -->
       <div class="col-span-2 md:col-span-1">
         <a href="/" class="inline-block mb-4">
-          <img loading="lazy" class="h-8 block" src="<?= ($siteInfo['baseUrl'] ?? '') ?>/public/assets/images/icons/logo/logo.svg" alt="<?= htmlspecialchars($siteInfo['company'] ?? 'КАВ СТАЛЬ') ?>">
+          <img loading="lazy" class="h-8 block" src="<?= ($siteInfo['baseUrl'] ?? '') ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($siteInfo['company'] ?? 'КАВ СТАЛЬ') ?>">
         </a>
         <p class="text-sm text-gray-500 leading-relaxed mb-4 max-w-[260px]">
           Поставка металлопроката по Москве и МО. Собственный склад, сертификаты ГОСТ.

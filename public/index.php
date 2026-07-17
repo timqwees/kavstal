@@ -54,11 +54,12 @@
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
   <link rel="preload" href="/public/assets/styles/main.css" as="stylesheet" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="/public/assets/styles/main.css"></noscript>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css"></noscript>
   <style>
     .iti__selected-dial-code { color: #000; }
     .iti { width: 100%; }
@@ -87,14 +88,17 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <?php
           $heroCards = [
-            ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/services/products/АРМАТУРА.jpg'],
-            ['label' => 'Хит продаж', 'title' => 'Труба профильная', 'subtitle' => 'от 58 000 ₽/т. Резка в размер бесплатно', 'url' => '/market/katalog/truby', 'img' => '/public/assets/images/services/products/ТРУБА.jpg'],
-            ['label' => 'Акция', 'title' => 'Лист горячекатаный', 'subtitle' => 'от 51 000 ₽/т. Доставка в день оплаты', 'url' => '/market/katalog/listovoy-prokat', 'img' => '/public/assets/images/services/products/ЛИСТ.jpg'],
+            ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/services/products/АРМАТУРА.webp'],
+            ['label' => 'Хит продаж', 'title' => 'Труба профильная', 'subtitle' => 'от 58 000 ₽/т. Резка в размер бесплатно', 'url' => '/market/katalog/truby', 'img' => '/public/assets/images/services/products/ТРУБА.webp'],
+            ['label' => 'Акция', 'title' => 'Лист горячекатаный', 'subtitle' => 'от 51 000 ₽/т. Доставка в день оплаты', 'url' => '/market/katalog/listovoy-prokat', 'img' => '/public/assets/images/services/products/ЛИСТ.webp'],
           ];
-          foreach ($heroCards as $c):
+          foreach ($heroCards as $i => $c):
+            $hd = @getimagesize(__DIR__ . $c['img']);
+            $hw = $hd[0] ?? 800; $hh = $hd[1] ?? 533;
           ?>
           <a href="<?= $c['url'] ?>" class="relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:shadow-lg transition-shadow block group">
-            <div class="h-40 bg-cover bg-center relative" style="background-image:url('<?= $site['baseUrl'] ?><?= $c['img'] ?>')">
+            <div class="h-40 relative overflow-hidden">
+              <img src="<?= $c['img'] ?>" alt="" width="<?= $hw ?>" height="<?= $hh ?>" <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> decoding="async" class="absolute inset-0 w-full h-full object-cover">
               <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
               <div class="absolute bottom-0 left-0 right-0 p-4 text-white z-10">
                 <span class="inline-block bg-red-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded-md mb-1.5"><?= $c['label'] ?></span>
@@ -115,11 +119,13 @@
         <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-stretch">
           <?php
           $infoDir = __DIR__ . '/assets/images/info';
-          $images = array_values(array_filter(scandir($infoDir), fn($f) => preg_match('/\.(png|jpg|jpeg|webp|gif)$/i', $f)));
+          $images = array_values(array_filter(scandir($infoDir), fn($f) => preg_match('/\.webp$/i', $f)));
           foreach ($images as $img):
+            $dims = @getimagesize($infoDir . '/' . $img);
+            $w = $dims[0] ?? 450; $h = $dims[1] ?? 600;
           ?>
           <div class="flex-shrink-0 h-44 rounded-xl overflow-hidden">
-            <img src="/public/assets/images/info/<?= $img ?>" alt="" class="h-full w-auto max-w-none" loading="lazy">
+            <img src="/public/assets/images/info/<?= htmlspecialchars($img) ?>" alt="" width="<?= $w ?>" height="<?= $h ?>" class="h-full w-auto max-w-none" loading="lazy" decoding="async">
           </div>
           <?php endforeach; ?>
         </div>
@@ -225,25 +231,25 @@
         <?php $img = '/public/assets/images/services/products/';
         $vid = '/public/assets/images/services/vides/';
         $stories = [
-          ['title' => 'Лазерная резка', 'slides' => [['title' => 'Лазерная резка металла', 'desc' => 'Высокоточная резка до 25 мм', 'video' => $vid.'lazer.MP4', 'bg' => $img.'ЛИСТ.jpg']]],
-          ['title' => 'Гибка металла', 'slides' => [['title' => 'Гибка металла', 'desc' => 'Точная гибка листового металла', 'video' => $vid.'gibkametalla.MP4', 'bg' => $img.'ПРОФНАСТИЛ.jpg']]],
-          ['title' => 'Плазменная резка', 'slides' => [['title' => 'Плазменная резка', 'desc' => 'Резка толстого металла до 150 мм', 'video' => $vid.'plazma.MP4', 'bg' => $img.'БАЛКА.jpg']]],
-          ['title' => 'Доставка по Москве', 'slides' => [['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid.'dostavka.MP4', 'bg' => $img.'ШВЕЛЛЕР.jpg']]],
-          ['title' => 'Горячее цинкование', 'slides' => [['title' => 'Горячее цинкование', 'desc' => 'Защита от коррозии на 50+ лет', 'video' => $vid.'gorachiethinkirovanie.MP4', 'bg' => $img.'УГОЛОК.jpg']]],
-          ['title' => 'Ленточнопильная резка', 'slides' => [['title' => 'Ленточнопильная резка', 'desc' => 'Точная резка балок и труб', 'video' => $vid.'lentochnopilnik.MP4', 'bg' => $img.'БАЛКА.jpg']]],
-          ['title' => 'Ручная резка', 'slides' => [['title' => 'Ручная резка металла', 'desc' => 'Индивидуальная резка по размерам', 'video' => $vid.'ruchnairezka.MP4', 'bg' => $img.'ПОЛОСА.jpg']]],
-          ['title' => 'Изоляция труб', 'slides' => [['title' => 'Изоляция трубопроводов', 'desc' => 'Тепло- и звукоизоляция', 'video' => $vid.'izolatiatrub.MP4', 'bg' => $img.'ТРУБА.jpg']]],
-          ['title' => 'Доставка КД', 'slides' => [['title' => 'Доставка КД', 'desc' => 'Комплексная доставка на объект', 'video' => $vid.'dostavkaKD.MP4', 'bg' => $img.'СВАИ.jpg']]],
-          ['title' => 'Арматура А500С', 'slides' => [['title' => 'Арматура А500С', 'desc' => 'Свежая партия от ММК. Диаметр 10-40 мм', 'bg' => $img.'АРМАТУРА.jpg']]],
-          ['title' => 'Листовой прокат', 'slides' => [['title' => 'Листовой прокат', 'desc' => 'Сталь листовая ГК от 2 до 60 мм', 'bg' => $img.'ЛИСТ.jpg']]],
-          ['title' => 'Трубы стальные', 'slides' => [['title' => 'Трубы стальные', 'desc' => 'Водогазопроводные и профильные трубы', 'bg' => $img.'ТРУБА.jpg']]],
-          ['title' => 'Балка двутавровая', 'slides' => [['title' => 'Балка двутавровая', 'desc' => 'Балки №10-№40 ГОСТ 8239-89', 'bg' => $img.'БАЛКА.jpg']]],
-          ['title' => 'Швеллер', 'slides' => [['title' => 'Швеллер', 'desc' => 'Профильный прокат от 5 до 40', 'bg' => $img.'ШВЕЛЛЕР.jpg']]],
-          ['title' => 'Уголок стальной', 'slides' => [['title' => 'Уголок стальной', 'desc' => 'Равнополочный уголок 25-200 мм', 'bg' => $img.'УГОЛОК.jpg']]],
+          ['title' => 'Лазерная резка', 'slides' => [['title' => 'Лазерная резка металла', 'desc' => 'Высокоточная резка до 25 мм', 'video' => $vid.'lazer.MP4', 'bg' => $img.'ЛИСТ.webp']]],
+          ['title' => 'Гибка металла', 'slides' => [['title' => 'Гибка металла', 'desc' => 'Точная гибка листового металла', 'video' => $vid.'gibkametalla.MP4', 'bg' => $img.'ПРОФНАСТИЛ.webp']]],
+          ['title' => 'Плазменная резка', 'slides' => [['title' => 'Плазменная резка', 'desc' => 'Резка толстого металла до 150 мм', 'video' => $vid.'plazma.MP4', 'bg' => $img.'БАЛКА.webp']]],
+          ['title' => 'Доставка по Москве', 'slides' => [['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid.'dostavka.MP4', 'bg' => $img.'ШВЕЛЛЕР.webp']]],
+          ['title' => 'Горячее цинкование', 'slides' => [['title' => 'Горячее цинкование', 'desc' => 'Защита от коррозии на 50+ лет', 'video' => $vid.'gorachiethinkirovanie.MP4', 'bg' => $img.'УГОЛОК.webp']]],
+          ['title' => 'Ленточнопильная резка', 'slides' => [['title' => 'Ленточнопильная резка', 'desc' => 'Точная резка балок и труб', 'video' => $vid.'lentochnopilnik.MP4', 'bg' => $img.'БАЛКА.webp']]],
+          ['title' => 'Ручная резка', 'slides' => [['title' => 'Ручная резка металла', 'desc' => 'Индивидуальная резка по размерам', 'video' => $vid.'ruchnairezka.MP4', 'bg' => $img.'ПОЛОСА.webp']]],
+          ['title' => 'Изоляция труб', 'slides' => [['title' => 'Изоляция трубопроводов', 'desc' => 'Тепло- и звукоизоляция', 'video' => $vid.'izolatiatrub.MP4', 'bg' => $img.'ТРУБА.webp']]],
+          ['title' => 'Доставка КД', 'slides' => [['title' => 'Доставка КД', 'desc' => 'Комплексная доставка на объект', 'video' => $vid.'dostavkaKD.MP4', 'bg' => $img.'СВАИ.webp']]],
+          ['title' => 'Арматура А500С', 'slides' => [['title' => 'Арматура А500С', 'desc' => 'Свежая партия от ММК. Диаметр 10-40 мм', 'bg' => $img.'АРМАТУРА.webp']]],
+          ['title' => 'Листовой прокат', 'slides' => [['title' => 'Листовой прокат', 'desc' => 'Сталь листовая ГК от 2 до 60 мм', 'bg' => $img.'ЛИСТ.webp']]],
+          ['title' => 'Трубы стальные', 'slides' => [['title' => 'Трубы стальные', 'desc' => 'Водогазопроводные и профильные трубы', 'bg' => $img.'ТРУБА.webp']]],
+          ['title' => 'Балка двутавровая', 'slides' => [['title' => 'Балка двутавровая', 'desc' => 'Балки №10-№40 ГОСТ 8239-89', 'bg' => $img.'БАЛКА.webp']]],
+          ['title' => 'Швеллер', 'slides' => [['title' => 'Швеллер', 'desc' => 'Профильный прокат от 5 до 40', 'bg' => $img.'ШВЕЛЛЕР.webp']]],
+          ['title' => 'Уголок стальной', 'slides' => [['title' => 'Уголок стальной', 'desc' => 'Равнополочный уголок 25-200 мм', 'bg' => $img.'УГОЛОК.webp']]],
           ['title' => 'Нержавеющая сталь', 'slides' => [['title' => 'Нержавеющая сталь', 'desc' => 'AISI 304, 201, 430 — большой ассортимент', 'bg' => $img.'НЕРЖАВЕЮЩИЙМЕТАЛЛ.webp']]],
-          ['title' => 'Цветные металлы', 'slides' => [['title' => 'Цветные металлы', 'desc' => 'Медь, латунь, алюминий — листы и проволока', 'bg' => $img.'ЦВЕТМЕТАЛЛ.jpg']]],
+          ['title' => 'Цветные металлы', 'slides' => [['title' => 'Цветные металлы', 'desc' => 'Медь, латунь, алюминий — листы и проволока', 'bg' => $img.'ЦВЕТМЕТАЛЛ.webp']]],
           ['title' => 'Сетка стальная', 'slides' => [['title' => 'Сетка стальная', 'desc' => 'Сварная и плетёная сетка в наличии', 'bg' => $img.'СЕТКА.png']]],
-          ['title' => 'Сваи забивные', 'slides' => [['title' => 'Сваи забивные', 'desc' => 'ЖБ сваи для фундаментов', 'bg' => $img.'СВАИ.jpg']]],
+          ['title' => 'Сваи забивные', 'slides' => [['title' => 'Сваи забивные', 'desc' => 'ЖБ сваи для фундаментов', 'bg' => $img.'СВАИ.webp']]],
         ]; ?>
         <div class="swiper newsSwiper pb-4">
           <div class="swiper-wrapper">
@@ -348,7 +354,7 @@
             <form method="POST" action="/send/both" class="space-y-5">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>Тип металлопроката</label>
+                  <label for="metalType" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>Тип металлопроката</label>
                   <select name="тип_металлопроката" id="metalType" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="updateCalculatorUnits()">
                     <option value="">Выберите тип</option>
                     <?php foreach ($calcProducts as $product): ?>
@@ -357,7 +363,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"/></svg>Единица измерения</label>
+                  <label for="unitSelect" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"/></svg>Единица измерения</label>
                   <select id="unitSelect" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="calculateMetal()">
                     <option value="">Сначала выберите тип</option>
                   </select>
@@ -367,7 +373,7 @@
                   <input type="number" id="quantity" min="0.1" step="0.1" placeholder="Укажите количество" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" oninput="calculateMetal()">
                 </div>
                 <div>
-                  <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>Доставка</label>
+                  <label for="delivery" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>Доставка</label>
                   <select id="delivery" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="calculateMetal()">
                     <option value="0">Самовывоз</option>
                     <option value="5000">По Москве (в пределах МКАД)</option>
@@ -376,7 +382,7 @@
                   </select>
                 </div>
                 <div>
-                  <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Скидка (опт)</label>
+                  <label for="discount" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Скидка (опт)</label>
                   <select id="discount" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="calculateMetal()">
                     <option value="0">Нет скидки</option>
                     <option value="3">От 10 тонн (3%)</option>

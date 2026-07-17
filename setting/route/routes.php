@@ -150,9 +150,6 @@ Routes::get('/robots.txt', function () {
     $content .= "Sitemap: " . $baseUrl . "/sitemap-index.xml\n";
     $content .= "\n";
     $content .= "Host: " . $baseUrl . "\n";
-    $content .= "\n";
-    $content .= "# RSS\n";
-    $content .= "Feed: " . $baseUrl . "/rss.xml\n";
 
     header('Content-Type: text/plain; charset=utf-8');
     echo $content;

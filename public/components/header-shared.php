@@ -43,7 +43,7 @@ foreach ($allProducts as $p) {
 <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
   <div class="max-w-7xl mx-auto px-4 lg:px-8 flex items-center h-16 lg:h-16">
     <a href="/" class="flex-shrink-0 mr-6 lg:mr-8">
-      <img class="h-9 lg:h-10 block" src="<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.svg" alt="<?= htmlspecialchars($site['company']) ?>">
+      <img class="h-9 lg:h-10 block" src="<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($site['company']) ?>">
     </a>
 
     <!-- Search (like market) -->

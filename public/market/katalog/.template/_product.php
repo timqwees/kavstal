@@ -268,7 +268,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     </noscript>
 
     <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
@@ -465,6 +465,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                                 src="<?= htmlspecialchars($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
                                 alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
                                 title="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
+                                width="800" height="800" fetchpriority="high" decoding="async"
                                 class="max-w-full max-h-full object-contain">
                         </div>
                     </div>
@@ -578,15 +579,16 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                                     <button type="button" class="qty-preset text-[10px] px-1.5 py-0.5 rounded text-zinc-400 hover:text-red-500 hover:bg-red-50 transition font-medium leading-none" data-qty="20">20</button>
                                 </div>
                                 <div class="flex items-center border border-zinc-200 rounded-xl overflow-hidden">
-                                    <button type="button" class="cart-qty-btn cart-qty-minus w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-lg" data-product-id="<?= htmlspecialchars($productID) ?>">−</button>
+                                    <button type="button" class="cart-qty-btn cart-qty-minus w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-lg" data-product-id="<?= htmlspecialchars($productID) ?>" aria-label="Уменьшить количество">−</button>
                                     <input type="number" id="cart-qty-input" value="1" min="1"
+                                        aria-label="Количество" inputmode="numeric"
                                         class="w-24 h-10 text-center border-x border-zinc-200 text-sm font-medium focus:outline-none"
                                         data-product-id="<?= htmlspecialchars($productID) ?>">
-                                    <button type="button" class="cart-qty-btn cart-qty-plus w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-lg" data-product-id="<?= htmlspecialchars($productID) ?>">+</button>
+                                    <button type="button" class="cart-qty-btn cart-qty-plus w-10 h-10 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-lg" data-product-id="<?= htmlspecialchars($productID) ?>" aria-label="Увеличить количество">+</button>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-zinc-500 mb-1">Единица</label>
+                                <label for="cart-unit-select" class="block text-xs font-medium text-zinc-500 mb-1">Единица</label>
                                 <select id="cart-unit-select"
                                     class="w-full h-10 px-3 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white min-w-[100px]">
                                     <?php foreach ($product['units'] as $unit => $price): ?>
@@ -949,8 +951,8 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                             <div class="flex items-center gap-3">
                                 <?php for ($i = 1; $i <= 5; $i++): ?>
                                     <label class="cursor-pointer">
-                                        <input type="radio" name="rating" value="<?= $i ?>" class="sr-only" required <?= $i === 5 ? 'checked' : '' ?>>
-                                        <i class="far fa-star text-2xl text-zinc-300 hover:text-yellow-400 transition-colors"></i>
+                                        <input type="radio" name="rating" value="<?= $i ?>" class="sr-only" required aria-label="Оценка <?= $i ?>" <?= $i === 5 ? 'checked' : '' ?>>
+                                        <i class="far fa-star text-2xl text-zinc-300 hover:text-yellow-400 transition-colors" aria-hidden="true"></i>
                                     </label>
                                 <?php endfor; ?>
                             </div>
@@ -1131,7 +1133,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             </div>
             <div class="flex items-center border border-zinc-200 rounded-xl overflow-hidden shrink-0">
                 <button type="button" class="cart-qty-btn cart-qty-minus w-8 h-9 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-sm font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">−</button>
-                <input type="number" id="mobile-qty-input" value="1" min="1"
+                <input type="number" id="mobile-qty-input" value="1" min="1" aria-label="Количество"
                     class="w-9 h-9 text-center border-x border-zinc-200 text-xs font-medium focus:outline-none"
                     data-product-id="<?= htmlspecialchars($productID) ?>">
                 <button type="button" class="cart-qty-btn cart-qty-plus w-8 h-9 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-50 transition text-sm font-medium" data-product-id="<?= htmlspecialchars($productID) ?>">+</button>

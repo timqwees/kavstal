@@ -37,7 +37,7 @@
     <link rel="search" type="application/opensearchdescription+xml" title="<?= htmlspecialchars($site['company']) ?>"
         href="<?= $site['baseUrl'] ?>/opensearch.xml" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
@@ -47,7 +47,7 @@
         "@type": "Organization",
         "name": "<?= htmlspecialchars($site['company']) ?>",
         "url": "<?= $site['baseUrl'] ?>",
-        "logo": "<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.svg",
+        "logo": "<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.webp",
         "description": "Металлобаза <?= htmlspecialchars($site['company']) ?> — поставщик металлопроката в Москве и Московской области",
         "address": {
             "@type": "PostalAddress",

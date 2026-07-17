@@ -4,7 +4,7 @@
         <div class="flex justify-between items-center">
             <a href="/" class="relative flex items-center">
                 <img loading="lazy" class="h-12 translate-y-1"
-                    src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg"
+                    src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp"
                     alt="<?= htmlspecialchars($site['company']) ?>">
             </a>
 
@@ -59,7 +59,7 @@
             <div class="flex items-center space-x-2">
                 <a href="/" class="relative flex items-center">
                     <img loading="lazy" class="h-12 translate-y-1"
-                        src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg"
+                        src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp"
                         alt="<?= htmlspecialchars($site['company']) ?>">
                 </a>
             </div>

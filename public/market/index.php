@@ -71,7 +71,7 @@ $products = Setting\route\function\Functions::listProducts();
     </script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
@@ -217,7 +217,10 @@ $products = Setting\route\function\Functions::listProducts();
                     $units = $p['units'] ?? [];
                     if (!empty($units)) $allPrices[] = min($units);
                 }
-                ksort($filterCategories, SORT_NATURAL | SORT_FLAG_CASE); asort($filterMarkas); asort($filterGosts); ksort($filterSizes, SORT_NATURAL);
+                ksort($filterCategories, SORT_NATURAL | SORT_FLAG_CASE);
+                arsort($filterMarkas);  $filterMarkas  = array_slice($filterMarkas, 0, 60, true);
+                arsort($filterGosts);   $filterGosts   = array_slice($filterGosts, 0, 60, true);
+                arsort($filterSizes);   $filterSizes   = array_slice($filterSizes, 0, 60, true);
                 $minSitePrice = !empty($allPrices) ? (int)min($allPrices) : 0;
                 $maxSitePrice = !empty($allPrices) ? (int)max($allPrices) : 0;
                 ?>
@@ -406,7 +409,7 @@ $products = Setting\route\function\Functions::listProducts();
                     <?php if ($totalPages > 1): ?>
                     <nav class="inline-flex items-center gap-1" aria-label="Pagination">
                         <?php $queryParams = $_GET; if ($page > 1): $queryParams['page'] = $page - 1; $prevUrl = '/market?' . http_build_query($queryParams); ?>
-                        <a href="<?php echo htmlspecialchars($prevUrl); ?>" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-2.5 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
+                        <a href="<?php echo htmlspecialchars($prevUrl); ?>" aria-label="Предыдущая страница" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-2.5 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m15 19-7-7 7-7"/></svg>
                         </a>
                         <?php endif; $range = 2; $showPages = []; $showPages[] = 1; for ($i = max(2, $page - $range); $i <= min($totalPages - 1, $page + $range); $i++) { $showPages[] = $i; } if ($totalPages > 1) $showPages[] = $totalPages; $showPages = array_unique($showPages); sort($showPages); $prevPage = 0; foreach ($showPages as $i): if ($prevPage > 0 && $i > $prevPage + 1): ?>
@@ -414,7 +417,7 @@ $products = Setting\route\function\Functions::listProducts();
                         <?php endif; $prevPage = $i; $queryParams['page'] = $i; $pageUrl = '/market?' . http_build_query($queryParams); $active = $i === $page; ?>
                         <a href="<?php echo htmlspecialchars($pageUrl); ?>" class="<?= $active ? 'bg-red-500 text-white border-red-500 shadow-sm' : 'border border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900' ?> inline-flex items-center justify-center rounded-lg min-w-[36px] h-9 px-2 text-sm font-medium transition-colors"><?php echo $i; ?></a>
                         <?php endforeach; if ($page < $totalPages): $queryParams['page'] = $page + 1; $nextUrl = '/market?' . http_build_query($queryParams); ?>
-                        <a href="<?php echo htmlspecialchars($nextUrl); ?>" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-2.5 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
+                        <a href="<?php echo htmlspecialchars($nextUrl); ?>" aria-label="Следующая страница" class="inline-flex items-center justify-center rounded-lg border border-zinc-200 bg-white px-2.5 py-2 text-sm font-medium text-zinc-500 hover:bg-zinc-50 hover:text-zinc-700 transition-colors">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7"/></svg>
                         </a>
                         <?php endif; ?>

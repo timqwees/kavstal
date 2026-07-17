@@ -23,7 +23,7 @@ foreach ($allProducts as $p) {
     <div class="ozon-header-main">
         <div class="ozon-header-inner">
             <a href="/" class="ozon-logo">
-                <img loading="lazy" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg" alt="<?= htmlspecialchars($site['company']) ?>">
+                <img loading="lazy" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($site['company']) ?>">
             </a>
             <div class="ozon-search" id="searchWrap">
                 <form method="GET" action="/market" id="searchForm">
@@ -34,7 +34,7 @@ foreach ($allProducts as $p) {
                 </form>
                 <div id="searchDropdown" class="absolute left-0 right-0 top-full mt-1 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 hidden overflow-hidden"></div>
             </div>
-            <button id="ozonCatalogToggle" class="ozon-catalog-btn">
+            <button id="ozonCatalogToggle" class="ozon-catalog-btn" aria-label="Открыть каталог" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 7.556C4 4.628 4.628 4 7.556 4s3.555.628 3.555 3.556-.627 3.555-3.555 3.555S4 10.484 4 7.556m0 8.888c0-2.928.628-3.555 3.556-3.555s3.555.627 3.555 3.555S10.484 20 7.556 20 4 19.372 4 16.444M16.444 4c-2.928 0-3.555.628-3.555 3.556s.627 3.555 3.555 3.555S20 10.484 20 7.556 19.372 4 16.444 4m-3.555 12.444c0-2.928.627-3.555 3.555-3.555S20 13.516 20 16.444 19.372 20 16.444 20s-3.555-.628-3.555-3.556"/></svg>
                 <span>Каталог</span>
             </button>

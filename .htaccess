@@ -1,6 +1,28 @@
 RewriteEngine On
 RewriteBase /
 
+# Кеш для статических ассетов (1 год, immutable)
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(webp|png|jpe?g|svg|css|js|woff2?|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# Сжатие
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/css application/javascript application/json image/svg+xml
+</IfModule>
+
 # Если файл или директория существуют, используем их напрямую
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

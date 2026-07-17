@@ -42,7 +42,7 @@
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
@@ -54,7 +54,7 @@
         "name": "КАВ СТАЛЬ",
         "legalName": "ООО «КАВ Сталь»",
         "url": "<?php echo $site['baseUrl']; ?>/about",
-        "logo": "<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.svg",
+        "logo": "<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp",
         "description": "ООО КАВ СТАЛЬ — надежный поставщик металлопроката в Москве и Московской области с 2018 года",
         "foundingDate": "2018",
         "address": {

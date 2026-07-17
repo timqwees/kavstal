@@ -117,7 +117,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
@@ -126,7 +126,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-  <?php include_once __DIR__ . "/../../../components/seo-head.php"; ?>
+  <?php include_once __DIR__ . "/../../../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-zinc-50">
