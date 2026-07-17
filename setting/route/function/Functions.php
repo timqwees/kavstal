@@ -178,31 +178,29 @@ class Functions
     public static function site(): array
     {
         $cached = self::cacheGet('site_data', self::$_cacheTtl);
+        // baseUrl/canonical зависят от окружения (Host) — не берём из кэша, чтобы при смене
+        // хоста (прокси/кэш от другого окружения) не отдавать неверный домен.
+        $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
+        $host = preg_replace('/^https?:\/\//i', '', $host);
+        $isDev = preg_match('/^(localhost|127\.0\.0\.1)(:|$)/i', $host) || preg_match('/\.local$/i', $host);
+        // Локальная разработка — оставляем как есть (http://localhost:8000)
+        if ($isDev) {
+            $baseUrl = 'http://' . $host;
+        } else {
+            // Прод/прокси: всегда https + www.kavstal.ru (игнорируем неверный backend-хост www.localhost:8000)
+            $baseUrl = 'https://www.kavstal.ru';
+        }
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+        $canonical = $baseUrl . $requestUri;
+
         if ($cached !== null) {
+            // Остальные данные из кэша, но baseUrl/logo/canonical — свежие
+            $cached['baseUrl'] = $baseUrl;
+            $cached['canonical'] = $canonical;
+            $cached['logo'] = $baseUrl . '/public/assets/images/icons/logo/favicon.svg';
             return $cached;
         }
 
-        $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
-        $host = preg_replace('/^https?:\/\//i', '', $host);
-        $isLocal = preg_match('/localhost|127\.0\.0\.1|\.local$/i', $host);
-        // Нормализуем к единому каноническому домену (всегда https + www) — кроме локальной разработки
-        if (!$isLocal && !preg_match('/kavstal\.ru$/i', $host)) {
-            $host = 'www.kavstal.ru';
-        }
-        if (!$isLocal && stripos($host, 'www.') !== 0) {
-            $host = 'www.' . $host;
-        }
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
-            || (!empty($_SERVER['HTTP_X_FORWARDED_SSL']) && strtolower($_SERVER['HTTP_X_FORWARDED_SSL']) === 'on')
-            ? 'https://' : 'http://';
-        // Принудительно https для публичного домена (mixed content fix)
-        if (!$isLocal && preg_match('/kavstal\.ru$/i', $host)) {
-            $protocol = 'https://';
-        }
-        $baseUrl = $protocol . $host;
-        $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
-        $canonical = $baseUrl . $requestUri;
 
         $data = [
             'canonical' => $canonical,
