@@ -263,8 +263,8 @@ class Functions
 
             foreach ($tables as $tableName) {
                 $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
-                foreach ($rows as $row) {
-                    $product = self::normalizeProductRow($row);
+                foreach ($rows as $rowIdx => $row) {
+                    $product = self::normalizeProductRow($row, $tableName, $rowIdx + 1);
                     $product['_table'] = $tableName;
                     $products[] = $product;
 
@@ -354,6 +354,30 @@ class Functions
                     '_table' => $subData['table'],
                 ]);
             }
+
+            // Гарантируем уникальность id (товары с одинаковым названием иначе
+            // конфликтуют в корзине и поиске по прямой ссылке). Добавляем счётчик к дублям.
+            $seenIds = [];
+            foreach ($products as &$prod) {
+                $origId = $prod['id'] ?? '';
+                if ($origId === '') {
+                    $origId = self::slugify($prod['name'] ?? $prod['title'] ?? 'item');
+                }
+                if (isset($seenIds[$origId])) {
+                    $seenIds[$origId]++;
+                    $prod['id'] = $origId . '-' . $seenIds[$origId];
+                } else {
+                    $seenIds[$origId] = 1;
+                    $prod['id'] = $origId;
+                }
+                // Синхронизируем canonicalUrl с уникальным id (последний сегмент)
+                if (!empty($prod['seo']['canonicalUrl'])) {
+                    $parts = explode('/', $prod['seo']['canonicalUrl']);
+                    $parts[count($parts) - 1] = $prod['id'];
+                    $prod['seo']['canonicalUrl'] = implode('/', $parts);
+                }
+            }
+            unset($prod);
 
             // Сохраняем в кэш если нет фильтра
             if ($table === null) {
@@ -764,7 +788,7 @@ class Functions
         return $rows;
     }
 
-    public static function normalizeProductRow(array $row): array
+    public static function normalizeProductRow(array $row, string $table = '', int $index = 0): array
     {
         // Маппинг русских колонок → внутренние ключи
         $марка = $row['марка'] ?? $row['title'] ?? '';  // Марка стали (ст3, С255, А500С)
@@ -782,7 +806,8 @@ class Functions
         $подкатегория = $row['подкатегория'] ?? '';
 
         // Авто-ID из названия (slugify)
-        $id = $row['id'] ?? self::slugify($название);
+        $baseId = $row['id'] ?? self::slugify($название);
+        $id = $baseId;
 
         // Авто-units из цена + единица (поддержка множественных через ;)
         $units = [];
