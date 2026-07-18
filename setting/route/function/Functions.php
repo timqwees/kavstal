@@ -161,7 +161,7 @@ class Functions
                 'image' => 'Uknown',
                 'specs' => [],
                 'seo' => [
-                    'metaTitle' => 'Uknown',
+                    'metaTitle' => 'Товар | Купить в Москве | КАВ СТАЛЬ',
                     'metaDescription' => 'Uknown',
                     'keywords' => ['Uknown'],
                     'canonicalUrl' => 'Uknown'
@@ -333,8 +333,8 @@ class Functions
                     'images' => [$categoryImages[$catTitle] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
                     'specs' => [],
                     'seo' => [
-                        'metaTitle' => $catTitle . ' | Купить в Москве | КАВ СТАЛЬ',
-                        'metaDescription' => $catTitle . ' - купить в Москве по выгодной цене.',
+                        'metaTitle' => ($catTitle && !in_array($catTitle, ['Категория', 'Подкатегория', 'Товар']) ? $catTitle : $catSlug) . ' | Купить в Москве | КАВ СТАЛЬ',
+                        'metaDescription' => ($catTitle && !in_array($catTitle, ['Категория', 'Подкатегория', 'Товар']) ? $catTitle : $catSlug) . ' - купить в Москве по выгодной цене.',
                         'keywords' => [],
                         'canonicalUrl' => '/market/katalog/' . $catSlug,
                     ],
@@ -361,8 +361,8 @@ class Functions
                     'images' => [$subcategoryImages[$subKey] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
                     'specs' => [],
                     'seo' => [
-                        'metaTitle' => $subData['title'] . ' | Купить в Москве | КАВ СТАЛЬ',
-                        'metaDescription' => $subData['title'] . ' - купить в Москве по выгодной цену.',
+                        'metaTitle' => ($subData['title'] && !in_array($subData['title'], ['Категория', 'Подкатегория', 'Товар']) ? $subData['title'] : $subData['slug']) . ' в ' . $subData['parent_title'] . ' | Купить в Москве | КАВ СТАЛЬ',
+                        'metaDescription' => ($subData['title'] && !in_array($subData['title'], ['Категория', 'Подкатегория', 'Товар']) ? $subData['title'] : $subData['slug']) . ' - купить в Москве по выгодной цене.',
                         'keywords' => [],
                         'canonicalUrl' => '/market/katalog/' . $parentSlug . '/' . $subData['slug'],
                     ],
@@ -974,7 +974,7 @@ class Functions
             $metaDesc = $название . $specsPart . ' – продажа с доставкой по Москве и МО. Цена от ' . ($цена ?: 'уточняйте') . ' ₽/тн, наличие на складе.';
         }
         $seo = [
-            'metaTitle' => $название . $specsPart . ' – цена за тонну, характеристики, купить в Москве | КАВ СТАЛЬ',
+            'metaTitle' => ($название ?: $id) . $specsPart . ' – цена за тонну, характеристики, купить в Москве | КАВ СТАЛЬ',
             'metaDescription' => $metaDesc,
             'keywords' => $keywords,
             'canonicalUrl' => '',

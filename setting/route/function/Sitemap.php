@@ -116,13 +116,13 @@ class Sitemap
             'changefreq' => 'daily'
         ];
 
-        // Страницы раздела other
+        // Статические страницы
         $otherPages = [
-            '/market/other/about',
-            '/market/other/contacts',
-            '/market/other/delivery',
-            '/market/other/guarantees',
-            '/market/other/services'
+            '/about',
+            '/contacts',
+            '/delivery',
+            '/guarantees',
+            '/services'
         ];
         foreach ($otherPages as $page) {
             $urls[] = [
@@ -133,7 +133,7 @@ class Sitemap
         }
 
         // Блог: список и статьи
-        $blogFile = __DIR__ . '/../../../public/blog/data/articles.json';
+        $blogFile = __DIR__ . '/../../public/blog/data/articles.json';
         if (file_exists($blogFile)) {
             $blogArticles = json_decode(file_get_contents($blogFile), true) ?? [];
             $urls[] = [
@@ -145,8 +145,8 @@ class Sitemap
                 if (!empty($article['slug'])) {
                     $urls[] = [
                         'loc' => '/blog/' . $article['slug'],
-                        'priority' => '0.5',
-                        'changefreq' => 'monthly',
+                        'priority' => '0.8',
+                        'changefreq' => 'weekly',
                         'lastmod' => $article['updated_at'] ?? $article['created_at'] ?? null
                     ];
                 }

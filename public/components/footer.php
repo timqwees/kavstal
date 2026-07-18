@@ -132,7 +132,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
         <a href="/guarantees" class="text-gray-400 hover:text-red-600 transition-colors">Гарантии</a>
         <a href="/delivery" class="text-gray-400 hover:text-red-600 transition-colors">Доставка</a>
         <a href="/contacts" class="text-gray-400 hover:text-red-600 transition-colors">Контакты</a>
-        <a href="#" class="text-gray-400 hover:text-red-600 transition-colors">Политика конфиденциальности</a>
+        <a href="/blog" class="text-gray-400 hover:text-red-600 transition-colors">Блог</a>
       </div>
     </div>
   </div>
