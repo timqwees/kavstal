@@ -7,7 +7,6 @@ if (file_exists($articlesFile)) {
 }
 usort($articles, fn($a, $b) => strtotime($b['created_at'] ?? '0') <=> strtotime($a['created_at'] ?? '0'));
 
-// Извлекаем уникальные категории
 $categories = ['Все статьи'];
 foreach ($articles as $a) {
     if (!empty($a['category']) && !in_array($a['category'], $categories)) {
@@ -15,12 +14,21 @@ foreach ($articles as $a) {
     }
 }
 
-$featured = array_shift($articles); // Первая статья — featured
-
 $pageTitle = 'Блог КАВ СТАЛЬ — экспертные статьи о металлопрокате, ГОСТ, расчетах и закупках';
 $pageDescription = 'Полезные статьи для закупщиков и инженеров: виды арматуры, балки, трубы, листовой прокат, таблицы веса, ГОСТ, резка и доставка металла. Советы профи от металлобазы КАВ СТАЛЬ.';
 $pageUrl = $site['baseUrl'] . '/blog';
 $ogImage = $site['baseUrl'] . '/public/assets/images/bgpage/market.png';
+
+function ozDate(string $dateStr): string {
+    $ts = strtotime($dateStr);
+    $months = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    return date('d', $ts) . ' ' . $months[(int)date('m', $ts) - 1] . ' ' . date('Y', $ts);
+}
+
+function estimateReadTime(string $content): int {
+    $text = strip_tags($content ?? '');
+    return max(1, (int)ceil(mb_strlen($text) / 1500));
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -31,7 +39,6 @@ $ogImage = $site['baseUrl'] . '/public/assets/images/bgpage/market.png';
     <meta name="description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta name="keywords" content="металлопрокат, блог, арматура, балка, труба, ГОСТ, вес металла, статьи, закупки">
     <link rel="canonical" href="<?= htmlspecialchars($pageUrl) ?>">
-    <link rel="alternate" type="application/rss+xml" title="Блог КАВ СТАЛЬ — RSS" href="<?= htmlspecialchars($site['baseUrl'] . '/rss.xml') ?>">
     <meta property="og:title" content="<?= htmlspecialchars($pageTitle) ?>">
     <meta property="og:description" content="<?= htmlspecialchars($pageDescription) ?>">
     <meta property="og:type" content="website">
@@ -46,9 +53,23 @@ $ogImage = $site['baseUrl'] . '/public/assets/images/bgpage/market.png';
     <meta name="robots" content="index, follow">
     <meta name="author" content="<?= htmlspecialchars($site['company']) ?>">
     
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="<?= $site['baseUrl'] ?>">
+    <link rel="dns-prefetch" href="https://yandex.ru">
+
+    <link rel="alternate" type="application/rss+xml" title="Блог КАВ СТАЛЬ — RSS" href="<?= htmlspecialchars($site['baseUrl'] . '/rss.xml') ?>">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"<?= $site['baseUrl'] ?>#contact","name":"КАВ СТАЛЬ","url":"<?= $site['baseUrl'] ?>","telephone":"+7-495-989-24-20","email":"<?= $site['email'] ?>","address":{"@type":"PostalAddress","streetAddress":"Семёновская площадь, 7","addressLocality":"Москва","addressRegion":"Московская область","postalCode":"115035","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-18:00"},{"@type":"Store","@id":"<?= $site['baseUrl'] ?>/market","name":"КАВ СТАЛЬ","url":"<?= $site['baseUrl'] ?>","telephone":"+7-495-989-24-20","email":"<?= $site['email'] ?>","address":{"@type":"PostalAddress","streetAddress":"Семёновская площадь, 7","addressLocality":"Москва","postalCode":"107023","addressCountry":"RU"}},{"@type":"WebSite","@id":"<?= $site['baseUrl'] ?>#website","url":"<?= $site['baseUrl'] ?>","name":"КАВ СТАЛЬ","potentialAction":{"@type":"SearchAction","target":"<?= $site['baseUrl'] ?>/search?q={search_term_string}","query":"required name=search_term_string"}}]}</script>
+
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <link rel="stylesheet" href="/public/assets/styles/catalog.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
+    <link rel="preload" href="/public/assets/styles/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/public/assets/styles/main.css"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
     <?php include_once __DIR__ . '/../components/seo-head.php'; ?>
     
     <style>
@@ -56,511 +77,383 @@ $ogImage = $site['baseUrl'] . '/public/assets/images/bgpage/market.png';
         body {
             margin: 0;
             font-family: 'Onest', system-ui, -apple-system, sans-serif;
-            background: var(--bg-page);
-            color: var(--text-primary);
+            background: #fff;
+            color: #1a1a1a;
             -webkit-font-smoothing: antialiased;
         }
         img { max-width: 100%; display: block; }
         a { color: inherit; text-decoration: none; }
 
-        .blog-layout { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .blog-container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+        .blog-py { padding-top: 24px; padding-bottom: 48px; }
 
-        .page-header {
-            padding: 48px 0 40px;
-            border-bottom: 1px solid var(--border-default);
-            background: var(--bg-white);
+        /* ── Breadcrumbs ──────────────────────────────────────── */
+        .breadcrumbs {
+            display: flex; flex-wrap: wrap; align-items: center;
+            gap: 6px; font-size: 13px; color: #9ca3af;
+            margin-bottom: 20px;
         }
-        .page-header__label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--text-tertiary);
-            margin-bottom: 12px;
+        .breadcrumbs a { color: #6b7280; transition: color 0.2s; }
+        .breadcrumbs a:hover { color: #dc2626; }
+        .breadcrumbs__sep { color: #d1d5db; margin: 0 2px; }
+        .breadcrumbs__current { color: #111; font-weight: 500; }
+
+        /* ── Page Header ──────────────────────────────────────── */
+        .blog-page-header {
+            margin-bottom: 24px;
         }
-        .page-header__title {
-            font-size: 36px;
-            font-weight: 700;
-            line-height: 1.15;
-            color: var(--text-primary);
-            margin: 0 0 12px;
+        .blog-page-title {
+            font-size: 28px; line-height: 1.2; font-weight: 800; color: #111;
+            margin: 0 0 6px;
         }
-        @media (min-width: 640px) { .page-header__title { font-size: 48px; } }
-        .page-header__desc {
-            font-size: 15px;
-            line-height: 1.6;
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0;
+        @media (min-width: 768px) { .blog-page-title { font-size: 32px; } }
+        .blog-page-desc {
+            font-size: 14px; line-height: 1.6; color: #6b7280;
+            max-width: 600px; margin: 0;
         }
 
-        .blog-main { padding: 32px 0 48px; }
-        .blog-main__grid {
+        /* ── Toolbar ─────────────────────────────────────────── */
+        .blog-toolbar {
+            display: flex; align-items: center; gap: 12px;
+            flex-wrap: wrap; margin-bottom: 24px;
+        }
+        .blog-toolbar__count {
+            font-size: 13px; font-weight: 500; color: #6b7280;
+            white-space: nowrap;
+        }
+        .blog-toolbar__count strong { color: #111; font-weight: 700; }
+
+        .blog-search {
+            flex: 1; min-width: 200px; position: relative;
+        }
+        .blog-search input {
+            width: 100%; height: 40px;
+            padding: 0 14px 0 38px;
+            border: 1px solid #e5e7eb; border-radius: 10px;
+            background: #f5f5f5; font-size: 13px;
+            font-family: 'Onest', sans-serif; color: #111;
+            outline: none; transition: all 0.2s;
+        }
+        .blog-search input::placeholder { color: #9ca3af; }
+        .blog-search input:focus {
+            border-color: #dc2626; background: #fff;
+            box-shadow: 0 0 0 3px rgba(220,38,38,0.08);
+        }
+        .blog-search__icon {
+            position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+            width: 16px; height: 16px; color: #9ca3af; pointer-events: none;
+        }
+
+        .blog-toolbar__filters { display: flex; flex-wrap: wrap; gap: 6px; }
+
+        .cat-pill {
+            height: 34px; padding: 0 14px; border-radius: 10px;
+            font-size: 12px; font-weight: 500; font-family: 'Onest', sans-serif;
+            border: 1px solid #e5e7eb;
+            background: #fff; color: #6b7280;
+            cursor: pointer; transition: all 0.2s; white-space: nowrap;
+        }
+        .cat-pill:hover { border-color: #dc2626; color: #dc2626; }
+        .cat-pill--active { background: #dc2626; color: #fff; border-color: #dc2626; }
+        .cat-pill--active:hover { background: #b91c1c; border-color: #b91c1c; }
+
+        @media (max-width: 768px) {
+            .blog-toolbar { flex-direction: column; align-items: stretch; }
+            .blog-toolbar__count { text-align: center; }
+        }
+
+        /* ── Articles Grid ───────────────────────────────────── */
+        .articles-grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 40px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
         }
-        @media (min-width: 1024px) { .blog-main__grid { grid-template-columns: 1fr 320px; } }
-        .blog-content { min-width: 0; }
+        @media (max-width: 960px) { .articles-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .articles-grid { grid-template-columns: 1fr; } }
 
-        .search-bar { position: relative; margin-bottom: 24px; }
-        .search-bar input {
-            width: 100%; height: 48px; padding: 0 16px 0 48px;
-            border: 1px solid var(--border-default); border-radius: var(--radius-xs);
-            background: var(--bg-input); font-size: 14px; font-family: 'Onest', sans-serif;
-            color: var(--text-primary); outline: none;
-            transition: background var(--transition-fast), border-color var(--transition-fast);
-        }
-        .search-bar input::placeholder { color: var(--text-tertiary); }
-        .search-bar input:focus { background: var(--bg-white); border-color: var(--primary); }
-        .search-bar__icon {
-            position: absolute; left: 16px; top: 50%;
-            transform: translateY(-50%); width: 18px; height: 18px;
-            color: var(--text-tertiary); pointer-events: none;
-        }
-
-        .cat-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
-        .cat-filters__btn {
-            height: 36px; padding: 0 20px; border-radius: var(--radius-xs);
-            font-size: 13px; font-weight: 500; font-family: 'Onest', sans-serif;
-            border: 1px solid var(--border-default);
-            background: var(--bg-white); color: var(--text-secondary); cursor: pointer;
-            transition: all var(--transition-fast); white-space: nowrap;
-        }
-        .cat-filters__btn:hover { border-color: var(--primary); color: var(--primary); }
-        .cat-filters__btn--active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-        .featured-card {
-            display: flex; flex-direction: column;
-            margin-bottom: 40px; padding-bottom: 0;
-            background: var(--bg-white); border-radius: var(--radius-s);
-            box-shadow: var(--shadow-card); overflow: hidden;
-            transition: box-shadow var(--transition-slow);
-        }
-        .featured-card:hover { box-shadow: var(--shadow-card-hover); }
-        @media (min-width: 640px) { .featured-card { flex-direction: row; } }
-        .featured-card__img {
-            width: 100%; height: 240px; object-fit: cover;
-            background: var(--bg-input);
-        }
-        @media (min-width: 640px) { .featured-card__img { width: 45%; height: auto; min-height: 280px; } }
-        .featured-card__body { padding: 24px; }
-        @media (min-width: 640px) { .featured-card__body { padding: 32px; display: flex; flex-direction: column; justify-content: center; } }
-        .featured-card__cat {
-            display: inline-block; padding: 4px 12px; border-radius: var(--radius-xs);
-            background: var(--primary-bg); color: var(--primary); font-size: 11px;
-            font-weight: 600; letter-spacing: 0.04em; width: fit-content;
-        }
-        .featured-card__title {
-            font-size: 26px; font-weight: 700; line-height: 1.2; color: var(--text-primary);
-            margin: 12px 0 12px;
-        }
-        @media (min-width: 640px) { .featured-card__title { font-size: 30px; } }
-        .featured-card__excerpt { font-size: 15px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px; }
-        .featured-card__meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text-tertiary); }
-        .featured-card__meta span { display: flex; align-items: center; gap: 6px; }
-
-        .articles-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
-        @media (min-width: 768px) { .articles-grid { grid-template-columns: repeat(2, 1fr); } }
         .article-card {
             display: flex; flex-direction: column;
-            background: var(--bg-card); border-radius: var(--radius-s);
-            box-shadow: var(--shadow-card); overflow: hidden;
-            transition: box-shadow var(--transition-slow);
-            border: 1px solid var(--border-default);
-        }
-        .article-card:hover { box-shadow: var(--shadow-card-hover); }
-        .article-card__img { width: 100%; height: 200px; object-fit: cover; background: var(--bg-input); }
-        .article-card__body { padding: 20px; display: flex; flex-direction: column; flex: 1; }
-        .article-card__cat { display: inline-block; padding: 4px 12px; border-radius: var(--radius-xs); background: var(--primary-bg); color: var(--primary); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; width: fit-content; margin-bottom: 10px; }
-        .article-card__title { font-size: 18px; font-weight: 700; line-height: 1.3; color: var(--text-primary); margin: 0 0 8px; }
-        .article-card__excerpt { font-size: 14px; line-height: 1.6; color: var(--text-secondary); flex: 1; margin-bottom: 16px; }
-        .article-card__meta { display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text-tertiary); }
-        .article-card__link { font-weight: 600; color: var(--primary); }
-
-        .pagination { display: flex; justify-content: center; gap: 6px; margin-top: 40px; }
-        .pagination__btn {
-            min-width: 40px; height: 40px; border-radius: var(--radius-xs);
-            border: 1px solid var(--border-default); background: var(--bg-white); color: var(--text-secondary);
-            font-size: 14px; font-weight: 500; font-family: 'Onest', sans-serif;
-            cursor: pointer; transition: all var(--transition-fast);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .pagination__btn:hover { border-color: var(--primary); color: var(--primary); }
-        .pagination__btn--active { background: var(--primary); color: #fff; border-color: var(--primary); }
-
-        .blog-sidebar { display: flex; flex-direction: column; gap: 20px; }
-        @media (min-width: 1024px) { .blog-sidebar { position: sticky; top: 112px; height: fit-content; } }
-        .sidebar-widget {
-            background: var(--bg-white); border-radius: var(--radius-s);
-            box-shadow: var(--shadow-card); border: 1px solid var(--border-default);
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
             overflow: hidden;
+            transition: all 0.2s;
         }
-        .sidebar-widget__header {
-            padding: 16px 20px 8px;
-            font-size: 13px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.05em; color: var(--text-secondary);
+        .article-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            border-color: #d1d5db;
         }
-        .sidebar-widget__body { padding: 4px 20px 16px; }
 
-        .popular-item { display: flex; gap: 12px; padding: 10px 0; text-decoration: none; border-bottom: 1px solid var(--border-light); }
-        .popular-item:last-child { border-bottom: none; }
-        .popular-item__img { width: 72px; height: 56px; object-fit: cover; border-radius: var(--radius-xs); background: var(--bg-input); flex-shrink: 0; }
-        .popular-item__title { font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--text-primary); margin-bottom: 4px; }
-        .popular-item__meta { font-size: 11px; color: var(--text-tertiary); }
+        .article-card__img-wrap {
+            position: relative;
+            aspect-ratio: 16/10;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+        .article-card__img-wrap img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .article-card:hover .article-card__img-wrap img { transform: scale(1.04); }
 
-        .categories-list { list-style: none; margin: 0; padding: 0; }
-        .categories-list li { margin-bottom: 6px; }
-        .categories-list a { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); padding: 6px 0; transition: color var(--transition-fast); }
-        .categories-list a:hover { color: var(--primary); }
-        .categories-list .count { color: var(--text-tertiary); font-size: 12px; }
+        .article-card__date-badge {
+            position: absolute; top: 10px; right: 10px;
+            padding: 3px 8px; border-radius: 6px;
+            background: rgba(255,255,255,0.92); backdrop-filter: blur(4px);
+            font-size: 11px; font-weight: 500; color: #6b7280;
+        }
 
-        .tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-        .tags-cloud a { padding: 4px 12px; border-radius: var(--radius-xs); background: var(--bg-input); color: var(--text-secondary); font-size: 11px; font-weight: 500; transition: all var(--transition-fast); }
-        .tags-cloud a:hover { background: var(--primary-bg); color: var(--primary); }
+        .article-card__readtime {
+            position: absolute; bottom: 10px; left: 10px;
+            padding: 3px 8px; border-radius: 6px;
+            background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            font-size: 11px; font-weight: 600; color: #fff;
+            display: flex; align-items: center; gap: 4px;
+        }
+        .article-card__readtime svg { width: 11px; height: 11px; }
 
-        .sidebar-services-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: var(--radius-xs); text-decoration: none; transition: background var(--transition-fast); }
-        .sidebar-services-item:hover { background: var(--bg-hover); }
-        .sidebar-services-icon { width: 36px; height: 36px; min-width: 36px; border-radius: var(--radius-xs); background: var(--bg-input); display: flex; align-items: center; justify-content: center; color: var(--text-secondary); }
-        .sidebar-services-title { font-size: 13px; font-weight: 600; color: var(--text-primary); }
-        .sidebar-services-desc { font-size: 11px; color: var(--text-secondary); }
+        .article-card__body {
+            padding: 14px 16px 16px;
+            display: flex; flex-direction: column; flex: 1;
+        }
+        .article-card__cat {
+            display: inline-block; align-self: flex-start;
+            padding: 2px 8px; border-radius: 6px;
+            background: #f5f5f5; color: #6b7280;
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.03em; margin-bottom: 8px;
+        }
+        .article-card__title {
+            font-size: 15px; font-weight: 700; line-height: 1.35;
+            color: #111; margin: 0 0 8px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            transition: color 0.2s;
+        }
+        .article-card:hover .article-card__title { color: #dc2626; }
+        .article-card__excerpt {
+            font-size: 13px; line-height: 1.5; color: #9ca3af;
+            flex: 1; margin: 0 0 12px;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .article-card__tags {
+            display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 12px;
+        }
+        .article-card__tag {
+            padding: 2px 6px; border-radius: 4px;
+            background: #f9fafb; color: #9ca3af;
+            font-size: 11px; font-weight: 500;
+        }
+        .article-card__footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding-top: 10px; border-top: 1px solid #f0f0f0;
+        }
+        .article-card__author { display: flex; align-items: center; gap: 6px; }
+        .article-card__avatar {
+            width: 24px; height: 24px; border-radius: 50%;
+            background: #dc2626; color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 700; flex-shrink: 0;
+        }
+        .article-card__author-name { font-size: 12px; color: #6b7280; }
+        .article-card__read {
+            font-size: 12px; font-weight: 600; color: #dc2626;
+            display: flex; align-items: center; gap: 3px;
+            transition: gap 0.2s;
+        }
+        .article-card:hover .article-card__read { gap: 6px; }
 
-        .cta-section { background: var(--bg-white); padding: 56px 0; margin-top: 40px; border-top: 1px solid var(--border-default); }
-        .cta-section__title { font-size: 28px; font-weight: 700; color: var(--text-primary); margin: 0 0 12px; text-align: center; }
-        @media (min-width: 640px) { .cta-section__title { font-size: 32px; } }
-        .cta-section__desc { font-size: 15px; line-height: 1.6; color: var(--text-secondary); max-width: 560px; margin: 0 auto 24px; text-align: center; }
-        .cta-section__actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
-        .cta-btn { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 32px; border-radius: var(--radius-xs); font-size: 14px; font-weight: 600; font-family: 'Onest', sans-serif; transition: all var(--transition-fast); cursor: pointer; }
-        .cta-btn--primary { background: var(--primary); color: #fff; border: none; }
-        .cta-btn--primary:hover { background: var(--primary-dark); }
-        .cta-btn--outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border-default); }
-        .cta-btn--outline:hover { border-color: var(--text-secondary); background: var(--bg-hover); }
+        /* ── CTA ─────────────────────────────────────────────── */
+        .cta-section {
+            margin-top: 48px; padding: 40px;
+            background: #f5f5f5; border: 1px solid #e5e7eb;
+            border-radius: 16px; text-align: center;
+        }
+        .cta-section__title {
+            font-size: 22px; font-weight: 800; color: #111; margin: 0 0 8px;
+        }
+        .cta-section__desc {
+            font-size: 14px; line-height: 1.6; color: #6b7280;
+            max-width: 480px; margin: 0 auto 24px;
+        }
+        .cta-section__actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .cta-btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            height: 44px; padding: 0 28px; border-radius: 10px;
+            font-size: 13px; font-weight: 600; font-family: 'Onest', sans-serif;
+            transition: all 0.2s; cursor: pointer;
+        }
+        .cta-btn--primary {
+            background: #dc2626; color: #fff; border: none;
+        }
+        .cta-btn--primary:hover { background: #b91c1c; }
+        .cta-btn--outline {
+            background: #fff; color: #111;
+            border: 1px solid #e5e7eb;
+        }
+        .cta-btn--outline:hover { background: #f9fafb; border-color: #d1d5db; }
 
-        .hidden { display: none !important; }
-        *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        /* ── Animations ──────────────────────────────────────── */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .article-card { opacity: 0; animation: fadeIn 0.35s ease forwards; }
+        .article-card:nth-child(1) { animation-delay: 0.03s; }
+        .article-card:nth-child(2) { animation-delay: 0.06s; }
+        .article-card:nth-child(3) { animation-delay: 0.09s; }
+        .article-card:nth-child(4) { animation-delay: 0.12s; }
+        .article-card:nth-child(5) { animation-delay: 0.15s; }
+        .article-card:nth-child(6) { animation-delay: 0.18s; }
+        .article-card:nth-child(7) { animation-delay: 0.21s; }
+        .article-card:nth-child(8) { animation-delay: 0.24s; }
+        .article-card:nth-child(9) { animation-delay: 0.27s; }
+        .article-card:nth-child(10) { animation-delay: 0.3s; }
+
+        *:focus-visible { outline: 2px solid #dc2626; outline-offset: 2px; border-radius: 4px; }
     </style>
 </head>
 <body>
-<?php include __DIR__ . '/../components/header-shared.php'; ?>
+<?php include_once './public/components/header-shared.php'; ?>
 
-<main class="w-full">
-    <div class="page-header">
-        <div class="blog-layout">
-            <span class="page-header__label">Блог</span>
-            <h1 class="page-header__title">Экспертиза металлопроката</h1>
-            <p class="page-header__desc">Статьи для закупщиков, инженеров и стройконтроля: как выбрать арматуру, рассчитать вес балки, какой ГОСТ актуален в 2026 году и где сэкономить на закупке без потери качества.</p>
-        </div>
-    </div>
 
-    <div class="blog-main">
-        <div class="blog-layout">
-            <div class="blog-main__grid">
-                <div class="blog-content" id="blog-content">
-                    <!-- Search -->
-                    <div class="search-bar">
-                        <svg class="search-bar__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                        <input type="text" id="search-input" placeholder="Поиск по статьям..." autocomplete="off">
-                    </div>
+<main class="py-8 lg:py-20 mb-[5%]">
+    <section class="blog-py">
+        <div class="blog-container">
 
-                    <!-- Category filters -->
-                    <div class="cat-filters" id="cat-filters">
-                        <?php foreach ($categories as $i => $cat): ?>
-                            <button class="cat-filters__btn<?= $i === 0 ? ' cat-filters__btn--active' : '' ?>" data-filter="<?= htmlspecialchars($cat) ?>">
-                                <?= htmlspecialchars($cat) ?>
-                            </button>
-                        <?php endforeach; ?>
-                    </div>
+            <!-- Breadcrumbs -->
+            <nav class="breadcrumbs" aria-label="Breadcrumb">
+                <a href="<?= htmlspecialchars($site['baseUrl']) ?>">Главная</a>
+                <span class="breadcrumbs__sep">/</span>
+                <span class="breadcrumbs__current">Блог</span>
+            </nav>
 
-                    <!-- Featured article -->
-                    <?php if ($featured): ?>
-                        <?php
-                        $fUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($featured['slug']);
-                        $fImg = $featured['image'] ?? '/public/assets/images/bgpage/product.png';
-                        $fImg = (str_starts_with($fImg, 'http')) ? $fImg : $site['baseUrl'] . $fImg;
-                        $fDate = date('d.m.Y', strtotime($featured['created_at'] ?? 'now'));
-                        $fExcerpt = mb_substr(strip_tags($featured['content'] ?? ''), 0, 140) . '...';
-                        ?>
-                        <a href="<?= $fUrl ?>" class="featured-card">
-                            <img class="featured-card__img" src="<?= htmlspecialchars($fImg) ?>" alt="<?= htmlspecialchars($featured['title']) ?>" loading="eager">
-                            <div class="featured-card__body">
-                                <span class="featured-card__cat"><?= htmlspecialchars($featured['category'] ?? 'Статья') ?></span>
-                                <h2 class="featured-card__title"><?= htmlspecialchars($featured['title']) ?></h2>
-                                <p class="featured-card__excerpt"><?= htmlspecialchars($fExcerpt) ?></p>
-                                <div class="featured-card__meta">
-                                    <span><?= htmlspecialchars($fDate) ?></span>
-                                    <span>·</span>
-                                    <span><?= htmlspecialchars($featured['author'] ?? $site['company']) ?></span>
-                                </div>
-                            </div>
-                        </a>
-                    <?php endif; ?>
+            <!-- Page Header -->
+            <div class="blog-page-header">
+                <h1 class="blog-page-title">Блог КАВ СТАЛЬ</h1>
+                <p class="blog-page-desc">Экспертные статьи о металлопрокате: ГОСТ, размеры, вес, расчёты, резка и доставка металла.</p>
+            </div>
 
-                    <!-- Articles grid -->
-                    <div class="articles-grid" id="articles-container">
-                        <?php foreach ($articles as $article): ?>
-                            <?php
-                            $aUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($article['slug']);
-                            $aImg = $article['image'] ?? '/public/assets/images/bgpage/product.png';
-                            $aImg = (str_starts_with($aImg, 'http')) ? $aImg : $site['baseUrl'] . $aImg;
-                            $aDate = date('d.m.Y', strtotime($article['created_at'] ?? 'now'));
-                            $aExcerpt = mb_substr(strip_tags($article['content'] ?? ''), 0, 100) . '...';
-                            ?>
-                            <a href="<?= $aUrl ?>" class="article-card" data-category="<?= htmlspecialchars($article['category'] ?? '') ?>">
-                                <img class="article-card__img" src="<?= htmlspecialchars($aImg) ?>" alt="<?= htmlspecialchars($article['title']) ?>" loading="lazy">
-                                <div class="article-card__body">
-                                    <span class="article-card__cat"><?= htmlspecialchars($article['category'] ?? 'Статья') ?></span>
-                                    <h3 class="article-card__title"><?= htmlspecialchars($article['title']) ?></h3>
-                                    <p class="article-card__excerpt"><?= htmlspecialchars($aExcerpt) ?></p>
-                                    <div class="article-card__meta">
-                                        <span><?= htmlspecialchars($aDate) ?></span>
-                                        <span class="article-card__link">Читать →</span>
-                                    </div>
-                                </div>
-                            </a>
-                        <?php endforeach; ?>
-                    </div>
-
-                    <!-- Pagination (placeholder, JS will render) -->
-                    <div class="pagination" id="pagination"></div>
+            <!-- Toolbar -->
+            <div class="blog-toolbar">
+                <div class="blog-toolbar__count">
+                    <strong><?= count($articles) ?></strong> публикаций
                 </div>
+                <div class="blog-search">
+                    <svg class="blog-search__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input type="text" id="search-input" placeholder="Поиск по статьям..." autocomplete="off">
+                </div>
+                <div class="blog-toolbar__filters" id="cat-filters">
+                    <?php foreach ($categories as $i => $cat): ?>
+                        <button class="cat-pill<?= $i === 0 ? ' cat-pill--active' : '' ?>" data-filter="<?= htmlspecialchars($cat) ?>">
+                            <?= htmlspecialchars($cat) ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
+            </div>
 
-                <!-- Sidebar -->
-                <aside class="blog-sidebar">
-                    <!-- Popular articles -->
-                    <div class="sidebar-widget">
-                        <div class="sidebar-widget__header">Популярное</div>
-                        <div class="sidebar-widget__body" id="popular-container">
-                            <?php
-                            $popular = array_slice($articles, 0, 4);
-                            foreach ($popular as $p):
-                                $pUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($p['slug']);
-                                $pImg = $p['image'] ?? '/public/assets/images/bgpage/product.png';
-                                $pImg = (str_starts_with($pImg, 'http')) ? $pImg : $site['baseUrl'] . $pImg;
-                                $pDate = date('d.m.Y', strtotime($p['created_at'] ?? 'now'));
-                            ?>
-                                <a href="<?= $pUrl ?>" class="popular-item">
-                                    <img class="popular-item__img" src="<?= htmlspecialchars($pImg) ?>" alt="<?= htmlspecialchars($p['title']) ?>" loading="lazy">
-                                    <div>
-                                        <div class="popular-item__title"><?= htmlspecialchars($p['title']) ?></div>
-                                        <div class="popular-item__meta"><?= htmlspecialchars($pDate) ?></div>
-                                    </div>
-                                </a>
+            <!-- Articles Grid -->
+            <div class="articles-grid" id="articles-grid">
+                <?php foreach ($articles as $idx => $a):
+                    $aUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($a['slug']);
+                    $aImg = $a['image'] ?? '/public/assets/images/bgpage/product.png';
+                    $aImg = (str_starts_with($aImg, 'http')) ? $aImg : $site['baseUrl'] . $aImg;
+                    $authorInitial = mb_substr($a['author'] ?? $site['company'], 0, 1);
+                    $aReadTime = estimateReadTime($a['content'] ?? '');
+                    $aTags = array_slice(array_map('trim', explode(',', $a['tags'] ?? '')), 0, 3);
+                ?>
+                <a href="<?= $aUrl ?>" class="article-card" data-category="<?= htmlspecialchars($a['category'] ?? '') ?>">
+                    <div class="article-card__img-wrap">
+                        <img src="<?= htmlspecialchars($aImg) ?>" alt="<?= htmlspecialchars($a['title']) ?>" loading="lazy">
+                        <span class="article-card__date-badge"><?= ozDate($a['created_at'] ?? 'now') ?></span>
+                        <span class="article-card__readtime">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            <?= $aReadTime ?> мин
+                        </span>
+                    </div>
+                    <div class="article-card__body">
+                        <span class="article-card__cat"><?= htmlspecialchars($a['category'] ?? 'Статья') ?></span>
+                        <h2 class="article-card__title"><?= htmlspecialchars($a['title']) ?></h2>
+                        <p class="article-card__excerpt"><?= htmlspecialchars(mb_substr(strip_tags($a['content'] ?? ''), 0, 100) . '...') ?></p>
+                        <?php if (!empty($aTags)): ?>
+                        <div class="article-card__tags">
+                            <?php foreach ($aTags as $tag): ?>
+                                <?php if ($tag): ?><span class="article-card__tag"><?= htmlspecialchars($tag) ?></span><?php endif; ?>
                             <?php endforeach; ?>
                         </div>
-                    </div>
-
-                    <!-- Categories -->
-                    <div class="sidebar-widget">
-                        <div class="sidebar-widget__header">Категории</div>
-                        <div class="sidebar-widget__body">
-                            <ul class="categories-list">
-                                <?php foreach (array_slice($categories, 1) as $cat): ?>
-                                    <?php
-                                    $count = 0;
-                                    foreach ($articles as $a) { if (($a['category'] ?? '') === $cat) $count++; }
-                                    if ($featured && ($featured['category'] ?? '') === $cat) $count++;
-                                    ?>
-                                    <li><a href="/blog?cat=<?= urlencode($cat) ?>"><?= htmlspecialchars($cat) ?> <span class="count">(<?= $count ?>)</span></a></li>
-                                <?php endforeach; ?>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!-- Tags cloud -->
-                    <div class="sidebar-widget">
-                        <div class="sidebar-widget__header">Теги</div>
-                        <div class="sidebar-widget__body">
-                            <div class="tags-cloud">
-                                <?php
-                                $allTags = [];
-                                foreach (array_merge([$featured], $articles) as $a) {
-                                    if (!empty($a['tags'])) {
-                                        $tags = array_map('trim', explode(',', $a['tags']));
-                                        foreach ($tags as $t) if ($t) $allTags[$t] = ($allTags[$t] ?? 0) + 1;
-                                    }
-                                }
-                                arsort($allTags);
-                                foreach (array_slice($allTags, 0, 15) as $tag => $cnt):
-                                ?>
-                                    <a href="/blog?tag=<?= urlencode($tag) ?>">#<?= htmlspecialchars($tag) ?></a>
-                                <?php endforeach; ?>
+                        <?php endif; ?>
+                        <div class="article-card__footer">
+                            <div class="article-card__author">
+                                <span class="article-card__avatar"><?= htmlspecialchars($authorInitial) ?></span>
+                                <span class="article-card__author-name"><?= htmlspecialchars($a['author'] ?? $site['company']) ?></span>
                             </div>
+                            <span class="article-card__read">Читать →</span>
                         </div>
                     </div>
-
-                    <!-- Services widget (like atelier) -->
-                    <div class="sidebar-widget">
-                        <div class="sidebar-widget__header">Наши услуги</div>
-                        <div class="sidebar-widget__body">
-                            <a href="/delivery" class="sidebar-services-item">
-                                <div class="sidebar-services-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V7a2 2 0 00-2-2H7a2 2 0 00-2 2v9a2 2 0 002 2h4a2 2 0 002-2v-2.5"/></svg>
-                                </div>
-                                <div>
-                                    <div class="sidebar-services-title">Доставка по Москве и МО</div>
-                                    <div class="sidebar-services-desc">Собственный автопарк, погрузка входит в стоимость</div>
-                                </div>
-                            </a>
-                            <a href="/blog/rezka-metalla-v-razmer" class="sidebar-services-item">
-                                <div class="sidebar-services-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.121 2.121"/></svg>
-                                </div>
-                                <div>
-                                    <div class="sidebar-services-title">Резка металла в размер</div>
-                                    <div class="sidebar-services-desc">Гильотина, ленточная пила, плазма — точность ±2 мм</div>
-                                </div>
-                            </a>
-                            <a href="/contacts" class="sidebar-services-item">
-                                <div class="sidebar-services-icon">
-                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                </div>
-                                <div>
-                                    <div class="sidebar-services-title">Консультация закупщика</div>
-                                    <div class="sidebar-services-desc">Бесплатно подберем оптимальный сорт и размер</div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                </aside>
+                </a>
+                <?php endforeach; ?>
             </div>
-        </div>
-    </div>
 
-    <!-- CTA Section -->
-    <div class="cta-section">
-        <div class="blog-layout">
-            <div class="cta-section__title">Нужна консультация по закупке металла?</div>
-            <p class="cta-section__desc">Позвоните или напишите — подберем оптимальный сорт, рассчитаем вес и стоимость, организуем доставку в удобные сроки.</p>
-            <div class="cta-section__actions">
-                <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="cta-btn cta-btn--primary">Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?></a>
-                <a href="/contacts" class="cta-btn cta-btn--outline">Написать нам</a>
+            <!-- CTA -->
+            <div class="cta-section">
+                <div class="cta-section__title">Нужна консультация по закупке металла?</div>
+                <p class="cta-section__desc">Позвоните или напишите — подберём оптимальный сорт, рассчитаем вес и стоимость, организуем доставку.</p>
+                <div class="cta-section__actions">
+                    <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="cta-btn cta-btn--primary">Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?></a>
+                    <a href="/contacts" class="cta-btn cta-btn--outline">Написать нам</a>
+                </div>
             </div>
+
         </div>
-    </div>
+    </section>
 </main>
 
 <?php include_once __DIR__ . '/../components/footer.php'; ?>
 
 <script>
-// Данные статей для клиентского рендера (фильтрация/поиск/пагинация)
-window.__BLOG_ARTICLES__ = <?= json_encode(array_merge([$featured], $articles), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
-
-var allArticles = window.__BLOG_ARTICLES__ || [];
 var currentFilter = 'all';
-var currentTag = '';
-var currentPage = 1;
-var perPage = 6;
 var searchQuery = '';
 
 document.addEventListener('DOMContentLoaded', function () {
-    renderAll();
     bindSearch();
+    bindFilters();
 });
 
 function bindSearch() {
     var input = document.getElementById('search-input');
     if (!input) return;
-    input.addEventListener('input', function() {
+    input.addEventListener('input', function () {
         searchQuery = this.value.trim().toLowerCase();
-        currentPage = 1;
-        renderArticles();
-        var fc = document.querySelector('.featured-card');
-        if (fc) fc.style.display = searchQuery ? 'none' : '';
+        applyFilters();
     });
 }
 
-function renderAll() {
-    renderFilters();
-    renderPopular();
-    renderArticles();
-}
-
-function renderFilters() {
+function bindFilters() {
     var container = document.getElementById('cat-filters');
-    var cats = ['all', ...new Set(allArticles.map(a => a.category).filter(Boolean))];
-    var html = '';
-    cats.forEach(function(c, i) {
-        var label = c === 'all' ? 'Все статьи' : c;
-        html += '<button data-filter="' + c + '" class="cat-filters__btn' + (i === 0 ? ' cat-filters__btn--active' : '') + '">' + label + '</button>';
-    });
-    container.innerHTML = html;
-    container.querySelectorAll('.cat-filters__btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            container.querySelectorAll('.cat-filters__btn').forEach(function(b) { b.classList.remove('cat-filters__btn--active'); });
-            this.classList.add('cat-filters__btn--active');
+    container.querySelectorAll('.cat-pill').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            container.querySelectorAll('.cat-pill').forEach(function (b) { b.classList.remove('cat-pill--active'); });
+            this.classList.add('cat-pill--active');
             currentFilter = this.dataset.filter;
-            currentPage = 1;
-            renderArticles();
+            applyFilters();
         });
     });
 }
 
-function renderPopular() {
-    var container = document.getElementById('popular-container');
-    var popular = allArticles.slice(0, 4);
-    var html = '';
-    popular.forEach(function(p) {
-        var img = p.image ? (p.image.startsWith('http') ? p.image : p.image) : '/public/assets/images/bgpage/product.png';
-        var date = p.created_at ? new Date(p.created_at).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'numeric'}) : '';
-        html += '<a href="/blog/' + p.slug + '" class="popular-item"><img class="popular-item__img" src="' + img + '" alt="' + p.title + '" loading="lazy"><div><div class="popular-item__title">' + p.title + '</div><div class="popular-item__meta">' + date + '</div></div></a>';
-    });
-    container.innerHTML = html;
-}
-
-function renderArticles() {
-    var container = document.getElementById('articles-container');
-    var filtered = allArticles.filter(function(a) {
-        var catMatch = currentFilter === 'all' || a.category === currentFilter;
-        var searchMatch = !searchQuery || a.title.toLowerCase().includes(searchQuery) || (a.category && a.category.toLowerCase().includes(searchQuery)) || (a.tags && a.tags.toLowerCase().includes(searchQuery));
-        var tagMatch = !currentTag || (a.tags && a.tags.toLowerCase().includes(currentTag));
-        return catMatch && searchMatch && tagMatch;
+function applyFilters() {
+    var cards = document.querySelectorAll('.article-card');
+    var visible = 0;
+    cards.forEach(function (card) {
+        var cat = card.dataset.category || '';
+        var title = (card.querySelector('.article-card__title') || {}).textContent || '';
+        var catMatch = currentFilter === 'all' || currentFilter === 'Все статьи' || cat === currentFilter;
+        var searchMatch = !searchQuery || title.toLowerCase().includes(searchQuery) || cat.toLowerCase().includes(searchQuery);
+        var show = catMatch && searchMatch;
+        card.style.display = show ? '' : 'none';
+        if (show) visible++;
     });
 
-    if (filtered.length === 0) {
-        container.innerHTML = searchQuery
-            ? '<div style="text-align:center;padding:60px 20px;color:#6b7280"><div style="font-size:18px;font-weight:500;margin-bottom:8px">Ничего не найдено</div><div>Попробуйте изменить запрос</div></div>'
-            : '<div style="text-align:center;padding:60px 20px;color:#6b7280"><div>Нет статей в этой категории</div></div>';
-        document.getElementById('pagination').innerHTML = '';
-        return;
-    }
-
-    var totalPages = Math.ceil(filtered.length / perPage);
-    var start = (currentPage - 1) * perPage;
-    var pageArticles = filtered.slice(start, start + perPage);
-
-    var html = '';
-    pageArticles.forEach(function(a) {
-        var img = a.image ? (a.image.startsWith('http') ? a.image : a.image) : '/public/assets/images/bgpage/product.png';
-        var date = a.created_at ? new Date(a.created_at).toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'numeric'}) : '';
-        var excerpt = (a.content || '').replace(/<[^>]*>/g, '').substring(0, 100) + '...';
-        html += '<a href="/blog/' + a.slug + '" class="article-card" data-category="' + (a.category || '') + '">' +
-            '<img class="article-card__img" src="' + img + '" alt="' + a.title + '" loading="lazy">' +
-            '<div class="article-card__body">' +
-            '<span class="article-card__cat">' + (a.category || 'Статья') + '</span>' +
-            '<h3 class="article-card__title">' + a.title + '</h3>' +
-            '<p class="article-card__excerpt">' + excerpt + '</p>' +
-            '<div class="article-card__meta"><span>' + date + '</span><span class="article-card__link">Читать →</span></div>' +
-            '</div></a>';
-    });
-    container.innerHTML = html;
-    renderPagination(filtered.length);
-}
-
-function renderPagination(total) {
-    var container = document.getElementById('pagination');
-    var totalPages = Math.ceil(total / perPage);
-    if (totalPages <= 1) { container.innerHTML = ''; return; }
-    var html = '';
-    for (var i = 1; i <= totalPages; i++) {
-        html += '<button class="pagination__btn' + (i === currentPage ? ' pagination__btn--active' : '') + '" data-page="' + i + '">' + i + '</button>';
-    }
-    container.innerHTML = html;
-    container.querySelectorAll('.pagination__btn').forEach(function(btn) {
-        btn.addEventListener('click', function() {
-            currentPage = parseInt(this.dataset.page);
-            renderArticles();
-        });
-    });
+    var countEl = document.querySelector('.blog-toolbar__count');
+    if (countEl) countEl.innerHTML = '<strong>' + visible + '</strong> публикаций';
 }
 </script>
 </body>
