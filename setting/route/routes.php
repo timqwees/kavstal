@@ -9,7 +9,6 @@ use Setting\route\function\Reviews;
 use Setting\route\function\Sitemap;
 use Setting\route\function\UrlList;
 use Setting\route\function\ProductFeed;
-use Setting\route\function\RssFeed;
 use App\Models\Cart\Cart;
 use App\Models\Order\Order;
 
@@ -173,15 +172,11 @@ Routes::get('/sitemap.xml', function () {
 Routes::get('/blog', function ($path = '/blog/index.php') {
     Routes::auto_element(dirname(__DIR__, 2) . '/public' . $path, get_defined_vars());
 });
-Routes::get('/blog/rss.xml', function () {
+Routes::get('/rss.xml', function () {
     \Setting\route\function\BlogRssFeed::output();
 });
 Routes::get('/blog/{slug}', function ($slug, $path = '/blog/article.php') {
     Routes::auto_element(dirname(__DIR__, 2) . '/public' . $path, get_defined_vars());
-});
-//==================================================================================================//BLOG RSS FEED
-Routes::get('/blog/rss.xml', function () {
-    \Setting\route\function\BlogRssFeed::output();
 });
 //==================================================================================================//PRODUCT FEED (Товарный фид YML)
 Routes::get('/feed.yml', function () {
@@ -190,10 +185,6 @@ Routes::get('/feed.yml', function () {
 //==================================================================================================//PRODUCT FEED XML ALIAS
 Routes::get('/feed.xml', function () {
     ProductFeed::outputCompressed(true);
-});
-//==================================================================================================//RSS FEED (Новости и товары)
-Routes::get('/rss.xml', function () {
-    RssFeed::output();
 });
 //==================================================================================================//SITEMAP INDEX
 Routes::get('/sitemap-index.xml', function () {

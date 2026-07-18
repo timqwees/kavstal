@@ -27,7 +27,7 @@ class BlogRssFeed
         $xml .= '    <description>Экспертные статьи о видах металлопроката, ГОСТ, расчёте веса, резке и доставке. Помогаем выбрать правильный металл для стройки и производства.</description>' . "\n";
         $xml .= '    <language>ru</language>' . "\n";
         $xml .= '    <lastBuildDate>' . date('r') . '</lastBuildDate>' . "\n";
-        $xml .= '    <atom:link href="' . htmlspecialchars($site['baseUrl'] . '/blog/rss.xml') . '" rel="self" type="application/rss+xml" />' . "\n";
+        $xml .= '    <atom:link href="' . htmlspecialchars($site['baseUrl'] . '/rss.xml') . '" rel="self" type="application/rss+xml" />' . "\n";
         $xml .= '    <image>' . "\n";
         $xml .= '      <url>' . htmlspecialchars($site['baseUrl'] . '/public/assets/images/icons/favicon/favicon.svg') . '</url>' . "\n";
         $xml .= '      <title>Блог КАВ СТАЛЬ</title>' . "\n";

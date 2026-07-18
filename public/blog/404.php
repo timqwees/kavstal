@@ -5,15 +5,83 @@ $site = $site ?? Setting\route\function\Functions::site();
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Страница не найдена — КАВ СТАЛЬ</title>
     <meta name="robots" content="noindex, follow">
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="stylesheet" href="/public/assets/styles/catalog.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Onest', system-ui, -apple-system, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        .error-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            padding: 24px;
+        }
+        .error-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-s);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border-default);
+            padding: 48px 40px;
+            text-align: center;
+            max-width: 440px;
+            width: 100%;
+        }
+        .error-code {
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--primary);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .error-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .error-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+        .error-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: var(--radius-xs);
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background var(--transition-fast);
+        }
+        .error-link:hover {
+            background: var(--primary-dark);
+        }
+        *:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+    </style>
 </head>
-<body class="bg-zinc-50 flex items-center justify-center min-h-screen">
-    <div class="text-center">
-        <h1 class="text-5xl font-bold text-red-500 mb-3">404</h1>
-        <p class="text-zinc-600 mb-6">Статья не найдена.</p>
-        <a href="<?= htmlspecialchars($site['baseUrl']) ?>/blog" class="text-red-500 font-medium hover:underline">← Вернуться в блог</a>
+<body>
+<?php include __DIR__ . '/../components/header-shared.php'; ?>
+<div class="error-wrap">
+    <div class="error-card">
+        <div class="error-code">404</div>
+        <div class="error-title">Страница не найдена</div>
+        <div class="error-desc">Статья не найдена или была удалена.</div>
+        <a href="<?= htmlspecialchars($site['baseUrl']) ?>/blog" class="error-link">← Вернуться в блог</a>
     </div>
+</div>
+<?php include_once __DIR__ . '/../components/footer.php'; ?>
 </body>
 </html>
