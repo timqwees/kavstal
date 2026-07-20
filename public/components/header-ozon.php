@@ -8,6 +8,27 @@ $catalogCategories = $tree['categories'];
 $catalogSubcategories = $tree['subcategories'];
 ?>
 <link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
+<!-- Top Bar -->
+<div class="hidden lg:block bg-white border-b border-gray-200 text-xs text-gray-500">
+  <div class="max-w-7xl mx-auto px-8 flex items-center justify-between h-9">
+    <div class="flex items-center gap-6">
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <?= htmlspecialchars($site['workingHours'] ?? 'Пн-Пт 9:00–18:00') ?>
+      </span>
+      <span class="flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+        Доставка по Москве и МО
+      </span>
+    </div>
+    <div class="flex items-center gap-5">
+      <a href="/blog" class="hover:text-red-500 transition-colors">Блоги</a>
+      <a href="/delivery" class="hover:text-red-500 transition-colors">Доставка и оплата</a>
+      <a href="/guarantees" class="hover:text-red-500 transition-colors">Гарантии</a>
+      <a href="/contacts" class="hover:text-red-500 transition-colors">Контакты</a>
+    </div>
+  </div>
+</div>
 <!-- ===================== HEADER ===================== -->
 <header class="ozon-header">
     <!-- Row 1: Logo + Search + Actions -->
@@ -59,11 +80,7 @@ $catalogSubcategories = $tree['subcategories'];
                 <a href="/about" class="ozon-nav-link">О компании</a>
                 <a href="/blog" class="ozon-nav-link">Блог</a>
             </div>
-            <div class="ozon-header-nav-right">
-                <span class="ozon-nav-text"><?= htmlspecialchars($site['workingHours'] ?? 'Пн-Пт 9:00–18:00') ?></span>
-                <span class="ozon-nav-dot">·</span>
-                <span class="ozon-nav-text">Москва и МО</span>
-            </div>
+
         </div>
     </div>
     <!-- Mega Menu -->
