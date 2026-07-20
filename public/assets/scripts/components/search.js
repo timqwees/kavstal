@@ -14,24 +14,43 @@
     return text.replace(new RegExp('(' + esc + ')', 'gi'), '<mark class="bg-yellow-100 text-yellow-800 rounded px-0.5">$1</mark>');
   }
 
+  function updateContent(html) {
+    dropdown.innerHTML = html;
+    if (dropdown.classList.contains('hidden')) {
+      dropdown.classList.remove('hidden');
+      dropdown.style.maxHeight = '0';
+      dropdown.style.opacity = '0';
+      requestAnimationFrame(function() {
+        dropdown.style.transition = 'max-height 0.25s ease, opacity 0.2s ease';
+        dropdown.style.maxHeight = '420px';
+        dropdown.style.opacity = '1';
+      });
+    } else {
+      dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+    }
+    if (dropdown.querySelector('.animate-spin')) {
+      dropdown.querySelector('.animate-spin').style.animation = 'spin 0.8s linear infinite';
+    }
+  }
+
   function showLoading(q) {
-    dropdown.innerHTML =
+    updateContent(
       '<div class="flex items-center gap-3 px-4 py-3">' +
         '<div class="w-5 h-5 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>' +
         '<span class="text-sm text-zinc-400">Поиск «' + q.replace(/</g,'&lt;') + '»…</span>' +
-      '</div>';
-    showDD();
+      '</div>'
+    );
   }
 
   function renderResults(items, q) {
     if (!items.length) {
-      dropdown.innerHTML =
+      updateContent(
         '<div class="px-4 py-6 text-center">' +
           '<svg class="w-8 h-8 mx-auto text-zinc-300 mb-2" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>' +
           '<div class="text-sm text-zinc-400">Ничего не найдено</div>' +
           '<div class="text-xs text-zinc-300 mt-1">Попробуйте другой запрос</div>' +
-        '</div>';
-      showDD();
+        '</div>'
+      );
       return;
     }
     var html = '<div class="max-h-[360px] overflow-y-auto">';
@@ -63,19 +82,7 @@
       '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6V5.25A2.25 2.25 0 0011.25 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 005.25 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9"/></svg>' +
       'Показать все результаты' +
     '</a>';
-    dropdown.innerHTML = html;
-    showDD();
-  }
-
-  function showDD() {
-    dropdown.classList.remove('hidden');
-    dropdown.style.maxHeight = '0';
-    dropdown.style.opacity = '0';
-    requestAnimationFrame(function() {
-      dropdown.style.transition = 'max-height 0.25s ease, opacity 0.2s ease';
-      dropdown.style.maxHeight = '420px';
-      dropdown.style.opacity = '1';
-    });
+    updateContent(html);
   }
 
   function hideDD() {
@@ -102,7 +109,16 @@
     }, 180);
   });
 
-  input.addEventListener('focus', function() { if (dropdown.innerHTML && dropdown.classList.contains('hidden')) showDD(); });
+  input.addEventListener('focus', function() {
+    if (dropdown.innerHTML && dropdown.classList.contains('hidden')) {
+      dropdown.classList.remove('hidden');
+      requestAnimationFrame(function() {
+        dropdown.style.transition = 'max-height 0.25s ease, opacity 0.2s ease';
+        dropdown.style.maxHeight = '420px';
+        dropdown.style.opacity = '1';
+      });
+    }
+  });
   document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) hideDD(); });
   input.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') { hideDD(); input.blur(); }
