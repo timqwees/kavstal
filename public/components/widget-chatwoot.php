@@ -4,7 +4,7 @@
 <style>
   @media (max-width: 767px) {
     .woot-widget-bubble { width: 50px !important; height: 50px !important; bottom: 70px !important; }
-    .woot-widget-bubble svg { margin: 13px !important; }
+    .woot-widget-bubble svg { margin: 13px !important; width: 20px !important; }
   }
 </style>
 <script>
