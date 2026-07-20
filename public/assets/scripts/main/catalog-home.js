@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>' +
               '</button>' +
             '</div>' +
-            '<a href="' + p.url + '" class="flex items-center justify-center h-[120px] mb-3 rounded-lg overflow-hidden bg-gray-50">' +
+            '<a href="' + p.url + '" class="flex items-center justify-center h-[120px] mb-3 rounded-lg overflow-hidden bg-gray-50" style="aspect-ratio:4/3">' +
               (p.image ? '<img src="' + p.image + '" alt="" class="max-h-full max-w-full object-contain" loading="lazy">' : '<i class="fas fa-cube text-4xl text-gray-300"></i>') +
             '</a>' +
             '<div class="flex-1 flex flex-col min-w-0">' +

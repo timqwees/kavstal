@@ -8,7 +8,8 @@ $tree = \Setting\route\function\Functions::getCatalogTree();
 $catalogCategories = $tree['categories'];
 $catalogSubcategories = $tree['subcategories'];
 ?>
-<link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
+<link rel="preload" href="/public/assets/styles/catalog-mega.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css"></noscript>
 <!-- Top Bar -->
 <div class="hidden lg:block bg-white border-b border-gray-200 text-xs text-gray-500">
   <div class="max-w-7xl mx-auto px-8 flex items-center justify-between h-9">
@@ -35,7 +36,7 @@ $catalogSubcategories = $tree['subcategories'];
 <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
   <div class="max-w-7xl mx-auto px-4 lg:px-8 flex items-center h-16 lg:h-16">
     <a href="/" class="flex-shrink-0 mr-6 lg:mr-8">
-      <img class="h-9 lg:h-10 block" src="<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($site['company']) ?>">
+      <img class="h-9 lg:h-10 block" src="<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($site['company']) ?>" width="160" height="36">
     </a>
 
     <!-- Search (like market) -->

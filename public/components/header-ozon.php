@@ -7,7 +7,8 @@ $tree = \Setting\route\function\Functions::getCatalogTree();
 $catalogCategories = $tree['categories'];
 $catalogSubcategories = $tree['subcategories'];
 ?>
-<link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
+<link rel="preload" href="/public/assets/styles/catalog-mega.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css"></noscript>
 <!-- Top Bar -->
 <div class="hidden lg:block bg-white border-b border-gray-200 text-xs text-gray-500">
   <div class="max-w-7xl mx-auto px-8 flex items-center justify-between h-9">
