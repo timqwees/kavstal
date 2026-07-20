@@ -203,7 +203,7 @@
                         <tbody class="divide-y divide-gray-200">
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Полное наименование</td>
-                                <td class="py-3 text-gray-900">ООО «КАВ Сталь»</td>
+                                <td class="py-3 text-gray-900">ООО «КАВ СТАЛЬ»</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">ИНН</td>
@@ -211,11 +211,15 @@
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">КПП</td>
-                                <td class="py-3 text-gray-900">770501001</td>
+                                <td class="py-3 text-gray-900">771901001</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">ОГРН</td>
                                 <td class="py-3 text-gray-900">1257700303838</td>
+                            </tr>
+                            <tr class="border-b border-gray-100">
+                                <td class="py-3 text-gray-500 font-medium">Генеральный директор</td>
+                                <td class="py-3 text-gray-900">Кисаков Андрей Валерьевич</td>
                             </tr>
                         </tbody>
                     </table>
@@ -225,26 +229,26 @@
                         <tbody class="divide-y divide-gray-200">
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Расчетный счет</td>
-                                <td class="py-3 text-gray-900">40702810500000000000</td>
+                                <td class="py-3 text-gray-900">40702810610001935104</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Банк</td>
-                                <td class="py-3 text-gray-900">ПАО СБЕРБАНК РОССИИ</td>
+                                <td class="py-3 text-gray-900">АО «ТБанк»</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">БИК</td>
-                                <td class="py-3 text-gray-900">044525225</td>
+                                <td class="py-3 text-gray-900">044525974</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Корр. счет</td>
-                                <td class="py-3 text-gray-900">30101810400000000225</td>
+                                <td class="py-3 text-gray-900">30101810145250000974</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="text-center mt-6">
-                <p class="text-gray-500">Юридический адрес: 115035, г. Москва, ул. Семёновская площадь, д. 7</p>
+                <p class="text-gray-500">Юридический адрес: 105318, г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2</p>
             </div>
         </div>
 

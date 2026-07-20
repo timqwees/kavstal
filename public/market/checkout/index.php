@@ -32,10 +32,12 @@ $paymentMethods = [
     <link rel="icon" type="image/svg+xml" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.svg" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@suggestions/da-suggestions@2.0.6/dist/css/suggestions.css">
     <style>
         .iti__selected-dial-code { color: #000; }
         .iti { width: 100%; }
@@ -51,6 +53,11 @@ $paymentMethods = [
         .section-body { overflow: hidden; transition: max-height 0.3s ease; }
         .section-body.collapsed { max-height: 0 !important; padding-top: 0 !important; padding-bottom: 0 !important; margin-top: 0 !important; }
     </style>
+    <script>
+    window.__dadataToken = 'efc5d536293a5bcfc7c8f09119fdc7c8256245d5';
+    window.__cityName = 'Москва';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@suggestions/da-suggestions@2.0.6/dist/js/jquery.suggestions.min.js" defer></script>
   <?php include_once __DIR__ . "/../components/seo-head.php"; ?>
 </head>
 <body class="bg-gray-50">
@@ -124,6 +131,29 @@ $paymentMethods = [
                                 </div>
                             </label>
                             <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Адрес доставки -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100" id="address-section">
+                        <div class="section-toggle flex items-center justify-between p-5" onclick="toggleSection(this)">
+                            <h2 class="text-lg font-bold text-gray-900"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Адрес доставки</h2>
+                            <i class="fas fa-chevron-down text-gray-400 arrow"></i>
+                        </div>
+                        <div class="section-body px-5 pb-5 space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Регион / Город *</label>
+                                <input type="text" name="address" id="address-input" required
+                                    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                                    placeholder="Введите город, улицу, дом">
+                                <input type="hidden" name="address_region" id="address-region">
+                                <input type="hidden" name="address_city" id="address-city">
+                                <input type="hidden" name="address_street" id="address-street">
+                                <input type="hidden" name="address_house" id="address-house">
+                                <input type="hidden" name="address_kladr_id" id="address-kladr-id">
+                                <input type="hidden" name="address_fias_id" id="address-fias-id">
+                                <p class="mt-1 text-xs text-gray-400">Начните вводить адрес — подсказки от DaData</p>
+                            </div>
                         </div>
                     </div>
 
@@ -258,6 +288,24 @@ $paymentMethods = [
                 this.setCustomValidity(digits.length !== 10 ? 'Введите полный номер телефона' : '');
             });
         });
+
+        var addressInput = document.getElementById('address-input');
+        if (addressInput && typeof $.fn.suggestions !== 'undefined') {
+            $('#address-input').suggestions({
+                token: window.__dadataToken,
+                type: 'ADDRESS',
+                minChars: 3,
+                onSelect: function(suggestion) {
+                    var data = suggestion.data;
+                    document.getElementById('address-region').value = data.region_with_type || '';
+                    document.getElementById('address-city').value = data.city_with_type || data.settlement_with_type || '';
+                    document.getElementById('address-street').value = data.street_with_type || '';
+                    document.getElementById('address-house').value = data.house || '';
+                    document.getElementById('address-kladr-id').value = data.kladr_id || '';
+                    document.getElementById('address-fias-id').value = data.fias_id || '';
+                }
+            });
+        }
 
         document.getElementById('checkout-form').addEventListener('submit', function(e){
             e.preventDefault();

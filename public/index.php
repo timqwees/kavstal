@@ -164,7 +164,6 @@
           <?php foreach ($cats as $c): ?>
           <button data-cat="<?= htmlspecialchars($c) ?>" class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium transition-colors border border-gray-200 bg-white text-gray-600 hover:border-red-500 hover:text-red-500"><?= htmlspecialchars($c) ?></button>
           <?php endforeach; ?>
-          <span class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-900"><?= count($allProducts) ?> товаров</span>
         </div>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4" id="catalog-grid"></div>

@@ -38,9 +38,9 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
 
   <!-- Bottom row -->
   <div class="max-w-7xl mx-auto px-4 lg:px-8 py-8 lg:py-12">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
       <!-- Company -->
-      <div class="col-span-2 md:col-span-1">
+      <div class="col-span-2 md:col-span-1 lg:col-span-1">
         <a href="/" class="inline-block mb-4">
           <img loading="lazy" class="h-8 block" src="<?= ($siteInfo['baseUrl'] ?? '') ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($siteInfo['company'] ?? 'КАВ СТАЛЬ') ?>">
         </a>
