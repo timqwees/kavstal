@@ -28,15 +28,13 @@
     } else {
       dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
     }
-    if (dropdown.querySelector('.animate-spin')) {
-      dropdown.querySelector('.animate-spin').style.animation = 'spin 0.8s linear infinite';
-    }
+
   }
 
   function showLoading(q) {
     updateContent(
       '<div class="flex items-center gap-3 px-4 py-3">' +
-        '<div class="w-5 h-5 border-2 border-red-300 border-t-red-600 rounded-full animate-spin"></div>' +
+        '<i class="fas fa-spinner fa-spin text-red-600 text-lg"></i>' +
         '<span class="text-sm text-zinc-400">Поиск «' + q.replace(/</g,'&lt;') + '»…</span>' +
       '</div>'
     );
