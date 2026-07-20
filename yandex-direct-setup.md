@@ -251,7 +251,7 @@
 **C** | Заголовок 1: Арматура для фундамента | Заголовок 2: От 55 000 ₽ за тонну | Текст: Доставка по Москве и МО за 24ч. Нарезка в размер. Звоните: +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/armatura?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=armatura
+- **Ссылка:** /market/katalog/sortovoy-prokat/armatura?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=armatura
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — арматура на складе, рифлёная крупно, вязанная, в бухтах, резка
 - **Кнопка:** Выбрать арматуру
@@ -309,7 +309,7 @@
 **C** | Заголовок 1: Балка 20Б1, 25Б1, 30Б1 | Заголовок 2: Купить. Цена за тонну | Текст: Двутавр горячекатаный. Все размеры. Резка, доставка. ☎ +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/balka?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=balka
+- **Ссылка:** /market/katalog/sortovoy-prokat/balki-dvutavrovye?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=balka
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — балка на складе, торец с маркировкой, металлоконструкция, монтаж, резка
 - **Кнопка:** Выбрать балку
@@ -372,7 +372,7 @@
 **C** | Заголовок 1: Швеллер горячекатаный | Заголовок 2: Цена за тонну. ГОСТ | Текст: Параметры 5–40. Резка. Доставка по МО. ☎ +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/shveller?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=shveller
+- **Ссылка:** /market/katalog/sortovoy-prokat/shveller?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=shveller
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — швеллер на складе, торец, металлоконструкция, резка, упаковка
 - **Кнопка:** Выбрать швеллер
@@ -429,7 +429,7 @@
 **B** | Заголовок 1: Уголок 50×50, 63×63, 75×75 | Заголовок 2: Склад в Москве | Текст: Резка в размер. Доставка по МО за 24 ч. +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/ugolok?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=ugolok
+- **Ссылка:** /market/katalog/sortovoy-prokat/ugolok?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=ugolok
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — уголок на складе, профиль, сварная конструкция, резка, упаковка
 - **Кнопка:** Выбрать уголок
@@ -487,7 +487,7 @@
 **B** | Заголовок 1: Круг 10–100 мм в Москве | Заголовок 2: Все размеры на складе | Текст: Горячекатаный и калиброванный. Доставка. +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/krug-stalnoy?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=krug
+- **Ссылка:** /market/katalog/sortovoy-prokat/krug-g-k?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=krug
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — круг на складе, торец, нарезка, упаковка, применение
 - **Кнопка:** Выбрать круг
@@ -545,7 +545,7 @@
 **B** | Заголовок 1: Катанка 6–8 мм — цена | Заголовок 2: От 55 000 ₽ за тонну | Текст: В бухтах. ГОСТ 30136. Доставка по РФ. ☎ +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/kvadrat-polosa-katanka?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=kvadrat
+- **Ссылка:** /market/katalog/sortovoy-prokat?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=kvadrat
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — квадрат/полоса на складе, катанка в бухтах, резка, применение
 - **Кнопка:** Выбрать
@@ -670,7 +670,7 @@
 **B** | Заголовок 1: Металлочерепица Монтеррей | Заголовок 2: Цена от 800 ₽/м² | Текст: Все цвета RAL. Доставка и монтаж. Звоните: +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/profnastil?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=profnastil
+- **Ссылка:** /market/katalog/listovoy-prokat/profnastil?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=profnastil
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — профнастил на фасаде, на кровле, забор, палитра RAL, монтаж
 - **Кнопка:** Выбрать профнастил
@@ -964,7 +964,7 @@
 **B** | Заголовок 1: Отводы и переходы стальные | Заголовок 2: Купить в Москве | Текст: Детали трубопроводов. Любые размеры. Доставка. +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/flantsy?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=flantsy
+- **Ссылка:** /market/katalog/inzhenernye-sistemy?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=flantsy
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — фланцы разные, отводы, заглушки, детали трубопроводов, чертёж
 - **Кнопка:** Выбрать фланцы
@@ -1073,7 +1073,7 @@
 **B** | Заголовок 1: Доставка металлопроката | Заголовок 2: По Москве от 1 дня | Текст: Своя логистика. Разгрузка. Доставка по МО и РФ. +7 (495) 989-24-20
 
 ### Для РСЯ
-- **Ссылка:** /market/katalog/uslugi?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=uslugi
+- **Ссылка:** /market?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=uslugi
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — резка металла на станке, доставка, склад, персонал, цех
 - **Кнопка:** Заказать услугу
