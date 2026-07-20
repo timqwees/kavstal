@@ -198,8 +198,8 @@
         <div class="flex items-center justify-between mb-8">
           <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Что нового</h2>
           <div class="flex gap-2">
-            <button id="newsSwiperPrev" class="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
-            <button id="newsSwiperNext" class="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-500 transition-colors"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+            <button id="newsSwiperPrev" class="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-500 transition-colors" aria-label="Предыдущая новость"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+            <button id="newsSwiperNext" class="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-500 transition-colors" aria-label="Следующая новость"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
           </div>
         </div>
         <?php $img = '/public/assets/images/services/products/';
@@ -270,7 +270,7 @@
             </div>
           </div>
           <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-            <iframe loading="lazy" src="https://yandex.ru/map-widget/v1/?um=constructor%3A26fac0f930c91c623aafe2f3757b7adc63f0e9f8625105edda0659e463840e3e&source=constructor" width="100%" height="380" frameborder="0" class="block"></iframe>
+            <iframe loading="lazy" src="https://yandex.ru/map-widget/v1/?um=constructor%3A26fac0f930c91c623aafe2f3757b7adc63f0e9f8625105edda0659e463840e3e&source=constructor" width="100%" height="380" frameborder="0" class="block" title="Карта проезда"></iframe>
           </div>
         </div>
       </div>
@@ -418,8 +418,8 @@
         </div>
       </div>
       <!-- Arrows outside modal -->
-      <button type="button" id="storyPrev" class="absolute left-2 md:left-[calc(50%-250px)] top-1/2 -translate-y-1/2 z-[9999] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-gray-600 hover:bg-white hover:text-gray-900 transition-all shadow-lg pointer-events-auto"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
-      <button type="button" id="storyNext" class="absolute right-2 md:right-[calc(50%-250px)] top-1/2 -translate-y-1/2 z-[9999] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-gray-600 hover:bg-white hover:text-gray-900 transition-all shadow-lg pointer-events-auto"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
+      <button type="button" id="storyPrev" class="absolute left-2 md:left-[calc(50%-250px)] top-1/2 -translate-y-1/2 z-[9999] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-gray-600 hover:bg-white hover:text-gray-900 transition-all shadow-lg pointer-events-auto" aria-label="Предыдущая история"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg></button>
+      <button type="button" id="storyNext" class="absolute right-2 md:right-[calc(50%-250px)] top-1/2 -translate-y-1/2 z-[9999] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-gray-600 hover:bg-white hover:text-gray-900 transition-all shadow-lg pointer-events-auto" aria-label="Следующая история"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg></button>
     </div>
 
     </main>

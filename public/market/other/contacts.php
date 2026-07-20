@@ -171,7 +171,7 @@
 
             <div>
                 <div class="bg-white rounded-2xl shadow-md overflow-hidden h-full min-h-[500px]">
-                    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A26fac0f930c91c623aafe2f3757b7adc63f0e9f8625105edda0659e463840e3e&amp;source=constructor" width="100%" height="100%" frameborder="0" allowfullscreen="true" style="min-height: 500px; border: 0;"></iframe>
+                    <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A26fac0f930c91c623aafe2f3757b7adc63f0e9f8625105edda0659e463840e3e&amp;source=constructor" width="100%" height="100%" frameborder="0" allowfullscreen="true" style="min-height: 500px; border: 0;" title="Карта проезда"></iframe>
                 </div>
             </div>
         </div>

@@ -1154,7 +1154,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         <div class="modal-sheet">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-lg font-bold text-zinc-900">Купить в 1 клик</h3>
-                <button id="closeBuyModal" class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200 transition">
+                <button id="closeBuyModal" class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center hover:bg-zinc-200 transition" aria-label="Закрыть">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>
             </div>

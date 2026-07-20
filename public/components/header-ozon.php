@@ -40,7 +40,7 @@ $catalogSubcategories = $tree['subcategories'];
     <div class="ozon-header-main">
         <div class="ozon-header-inner">
             <a href="/" class="ozon-logo">
-                <img loading="lazy" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($site['company']) ?>">
+                <img loading="lazy" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp" alt="<?= htmlspecialchars($site['company']) ?>" width="160" height="36">
             </a>
             <div class="ozon-search" id="searchWrap">
                 <form method="GET" action="/market" id="searchForm">

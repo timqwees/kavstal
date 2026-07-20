@@ -30,7 +30,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <nav class="flex items-center space-x-2 text-sm">
-                <a href="/" class="text-gray-600 hover:text-red-500"><i class="fas fa-home"></i></a>
+                <a href="/" class="text-gray-600 hover:text-red-500" aria-label="Главная"><i class="fas fa-home"></i></a>
                 <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
                 <span class="text-gray-900 font-medium">Корзина</span>
             </nav>
