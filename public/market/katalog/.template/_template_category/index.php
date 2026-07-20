@@ -327,13 +327,13 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                                 <div class="swiper-wrapper">
                                     <?php foreach ($productImages as $imgIdx => $imgUrl): ?>
                                     <div class="swiper-slide flex justify-center items-center">
-                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" width="140" height="140" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
                             <?php else: ?>
-                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" width="140" height="140" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
                             <?php endif; ?>
                         </a>
 

@@ -497,6 +497,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                             data-alt="<?= htmlspecialchars($product['name'] ?? $product['title']) . ($index > 0 ? ' - фото ' . ($index + 1) : '') ?>">
                             <img src="<?= htmlspecialchars($image) ?>"
                                 alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>"
+                                width="80" height="80"
                                 class="w-full h-full object-cover"
                                 loading="lazy">
                         </button>
@@ -514,6 +515,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                                 <div class="bg-white border border-zinc-200 overflow-hidden" style="aspect-ratio: 1;">
                                     <img src="<?= htmlspecialchars($image) ?>"
                                         alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?> <?= $index > 0 ? '- фото ' . ($index + 1) : '' ?>"
+                                        width="800" height="800"
                                         class="w-full h-full object-contain product-gallery-img"
                                         loading="<?= $index < 2 ? 'eager' : 'lazy' ?>">
                                 </div>
@@ -1053,6 +1055,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                                 <div class="bg-zinc-50 overflow-hidden flex items-center justify-center p-4" style="aspect-ratio: 1;">
                                     <img src="<?= htmlspecialchars($item['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
                                         alt="<?= htmlspecialchars($item['name'] ?? '') ?>"
+                                        width="200" height="200"
                                         class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
                                         loading="lazy">
                                 </div>
@@ -1160,7 +1163,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             </div>
             <div class="flex items-center gap-3 mb-5 p-3 bg-zinc-50 rounded-xl">
                 <img src="<?= htmlspecialchars($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
-                    alt="" class="w-14 h-14 rounded-xl object-contain bg-white border border-zinc-100">
+                    alt="" width="56" height="56" class="w-14 h-14 rounded-xl object-contain bg-white border border-zinc-100">
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-medium text-zinc-900 truncate"><?= htmlspecialchars($product['name'] ?? $product['title']) ?></p>
                     <?php if ($firstPrice > 0): ?>
