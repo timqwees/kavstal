@@ -1,6 +1,12 @@
 <?php
 // Chatwoot widget
 ?>
+<style>
+  @media (max-width: 767px) {
+    .woot-widget-bubble { width: 50px !important; height: 50px !important; bottom: 70px !important; }
+    .woot-widget-bubble svg { margin: 13px !important; }
+  }
+</style>
 <script>
   (function() {
     var isMobile = window.matchMedia('(max-width: 767px)').matches;
