@@ -1,4 +1,17 @@
 <?php
+// HTML-кэш для страниц без фильтров/пагинации
+$cacheKey = '';
+$_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']) || !empty($_GET['page']);
+if (!$_noCache) {
+    $cacheKey = 'katalog_' . md5($_SERVER['REQUEST_URI'] ?? '');
+    $cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $cacheKey . '.html';
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
+        readfile($cacheFile);
+        return;
+    }
+    ob_start();
+}
+
 $allProducts = Setting\route\function\Functions::listProducts();
 $site = Setting\route\function\Functions::site();
 
@@ -739,5 +752,6 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
         });
     });
     </script>
+<?php if (!$_noCache): $dir = dirname($cacheFile); if (!is_dir($dir)) mkdir($dir, 0755, true); file_put_contents($cacheFile, ob_get_contents(), LOCK_EX); ob_end_flush(); endif; ?>
 </body>
 </html>

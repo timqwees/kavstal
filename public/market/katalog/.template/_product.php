@@ -1,4 +1,16 @@
 <?php
+// HTML-кэш для страниц товаров
+$_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']);
+$_cacheKey = '';
+if (!$_noCache) {
+    $_cacheKey = 'product_' . md5($_SERVER['REQUEST_URI'] ?? '');
+    $_cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $_cacheKey . '.html';
+    if (file_exists($_cacheFile) && (time() - filemtime($_cacheFile)) < 300) {
+        readfile($_cacheFile);
+        return;
+    }
+    ob_start();
+}
 // $productID передан из роута как $name (последний сегмент URL)
 $productID = $name ?? basename(dirname(__FILE__));
 // =====================
@@ -1269,6 +1281,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     });
     </script>
 
+<?php if (!$_noCache): $_dir = dirname($_cacheFile); if (!is_dir($_dir)) mkdir($_dir, 0755, true); file_put_contents($_cacheFile, ob_get_contents(), LOCK_EX); ob_end_flush(); endif; ?>
 </body>
 
 </html>

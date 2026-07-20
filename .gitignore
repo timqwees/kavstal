@@ -9,3 +9,4 @@ public/file/cache/
 app/Storage/cache/
 *.min.css
 *.min.js
+app/Storage/cache/html/
