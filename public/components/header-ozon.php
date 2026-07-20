@@ -75,21 +75,11 @@ $catalogSubcategories = $tree['subcategories'];
                     <?= htmlspecialchars($site['phone']) ?>
                 </a>
                 <span class="ozon-nav-sep"></span>
-                <div class="relative group">
-                    <button class="ozon-nav-link inline-flex items-center gap-1 cursor-pointer bg-transparent border-none">
-                        Ещё
-                        <svg class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-                    </button>
-                    <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50">
-                        <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[200px]">
-                            <a href="/blog" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Блоги</a>
-                            <a href="/contacts" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Контакты</a>
-                            <a href="/delivery" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Доставка и оплата</a>
-                            <a href="/about" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">О компании</a>
-                            <a href="/guarantees" class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Гарантии</a>
-                        </div>
-                    </div>
-                </div>
+                <a href="/delivery" class="ozon-nav-link">Доставка</a>
+                <a href="/contacts" class="ozon-nav-link">Контакты</a>
+                <a href="/about" class="ozon-nav-link">О компании</a>
+                <a href="/blog" class="ozon-nav-link">Блог</a>
+                <a href="/guarantees" class="ozon-nav-link">Гарантии</a>
             </div>
 
         </div>
