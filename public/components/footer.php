@@ -205,31 +205,6 @@ document.getElementById('callbackForm').addEventListener('submit', function(e) {
   }
 </style>
 <script defer>
-  // Виджет Chatwoot в футере активен на десктопе и на главной (мобильной).
-  // На мобильных без футера виджет подключается через components/widget-chatwoot.php.
-  (function () {
-    var p = location.pathname.replace(/\/+$/, '');
-    var isHome = (p === '' || p === '/');
-    var isMobile = window.matchMedia('(max-width: 767px)').matches;
-    if (isMobile && !isHome) return;
-    window.chatwootSettings = { "position": "right", "type": "standard", "launcherTitle": "" };
-    (function (d, t) {
-      var BASE_URL = "https://app.chatwoot.com";
-      var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
-      g.src = BASE_URL + "/packs/js/sdk.js";
-      g.async = true;
-      var done = false;
-      var timer = setTimeout(function () { if (!done) { done = true; if (g.parentNode) g.parentNode.removeChild(g); } }, 6000);
-      g.onload = function () {
-        if (done) return;
-        done = true; clearTimeout(timer);
-        try { window.chatwootSDK.run({ websiteToken: 'Z16V1t3ANHodWwXFQanStee2', baseUrl: BASE_URL }); } catch (e) {}
-      };
-      g.onerror = function () { if (!done) { done = true; clearTimeout(timer); if (g.parentNode) g.parentNode.removeChild(g); } };
-      s.parentNode.insertBefore(g, s);
-    })(document, "script");
-  })();
-</script>
 <script>
   (function(){
     var p = location.pathname.replace(/\/+$/, '');
