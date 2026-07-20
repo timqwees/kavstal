@@ -20,6 +20,7 @@ $paymentLabel = App\Models\Order\Order::paymentLabel($order['payment_method'] ??
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+  <?php include_once __DIR__ . '/../../components/seo-head.php'; ?>
 </head>
 <body class="bg-gray-50">
 
@@ -98,6 +99,30 @@ $paymentLabel = App\Models\Order\Order::paymentLabel($order['payment_method'] ??
         </div>
     </main>
 
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({ ecommerce: null });
+    dataLayer.push({
+        event: 'purchase',
+        ecommerce: {
+            transaction_id: <?= json_encode((string)($order['id'] ?? '')) ?>,
+            value: <?= json_encode((float)($order['total'] ?? 0)) ?>,
+            currency: 'RUB',
+            items: [
+                <?php if (!empty($orderItems)): ?>
+                <?php foreach ($orderItems as $item): ?>
+                {
+                    item_id: <?= json_encode((string)($item['product_id'] ?? '')) ?>,
+                    item_name: <?= json_encode($item['product_name'] ?? '') ?>,
+                    price: <?= json_encode((float)($item['price'] ?? 0)) ?>,
+                    quantity: <?= json_encode((float)($item['quantity'] ?? 1)) ?>
+                },
+                <?php endforeach; ?>
+                <?php endif; ?>
+            ]
+        }
+    });
+    </script>
     <?php include_once './public/components/footer.php'; ?>
 </body>
 </html>

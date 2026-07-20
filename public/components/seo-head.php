@@ -51,24 +51,79 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
   <?php endif; ?>
 
   <script>
+    // === Yandex Direct: yclid capture ===
+    // Сохраняем yclid из URL в localStorage на 30 дней
+    (function(){
+      var match = location.search.match(/[?&]yclid=([^&]+)/);
+      if (match) {
+        try { localStorage.setItem('yclid', match[1]); localStorage.setItem('yclid_ts', Date.now()); } catch(e){}
+      }
+      // Удаляем yclid старше 30 дней
+      try {
+        var ts = localStorage.getItem('yclid_ts');
+        if (ts && Date.now() - parseInt(ts,10) > 30*24*60*60*1000) {
+          localStorage.removeItem('yclid'); localStorage.removeItem('yclid_ts');
+        }
+      } catch(e){}
+      window.getYclid = function(){ try { return localStorage.getItem('yclid') || ''; } catch(e){ return ''; } };
+    })();
+
     // Универсальная отправка целей в Яндекс.Метрику и GA4
     window.trackGoal = function(target, params){
       params = params || {};
+      params.yclid = window.getYclid();
       <?php if ($ymId): ?>try { ym(<?= htmlspecialchars($ymId) ?>,'reachGoal',target,params); } catch(e){}<?php endif; ?>
       <?php if ($ga4Id): ?>try { gtag('event', target, params); } catch(e){}<?php endif; ?>
     };
+
     document.addEventListener('DOMContentLoaded', function(){
+      var yclid = window.getYclid();
+
+      // Внедряем yclid в каждую форму как скрытое поле
+      if (yclid) {
+        document.querySelectorAll('form').forEach(function(form){
+          if (!form.querySelector('[name="yclid"]')) {
+            var inp = document.createElement('input');
+            inp.type = 'hidden'; inp.name = 'yclid'; inp.value = yclid;
+            form.appendChild(inp);
+          }
+        });
+      }
+
       // Авто-трекинг отправки любой формы с data-goal
       document.querySelectorAll('form[data-goal]').forEach(function(form){
         form.addEventListener('submit', function(){
           window.trackGoal(form.getAttribute('data-goal'), {page: location.pathname});
         });
       });
+
       // Кнопки с data-goal
       document.querySelectorAll('[data-goal]').forEach(function(el){
         if (el.tagName === 'FORM') return;
         el.addEventListener('click', function(){
           window.trackGoal(el.getAttribute('data-goal'), {page: location.pathname});
+        });
+      });
+
+      // Авто-трекинг кликов по телефону/email/мессенджерам
+      document.querySelectorAll('a[href^="tel:"]').forEach(function(el){
+        el.addEventListener('click', function(){
+          window.trackGoal('click_phone', {page: location.pathname, phone: this.href});
+        });
+      });
+      document.querySelectorAll('a[href^="mailto:"]').forEach(function(el){
+        el.addEventListener('click', function(){
+          window.trackGoal('click_email', {page: location.pathname, email: this.href});
+        });
+      });
+      document.querySelectorAll('a[href*="t.me"], a[href*="tg://"], a[href*="telegram"]').forEach(function(el){
+        el.addEventListener('click', function(){
+          window.trackGoal('click_telegram', {page: location.pathname});
+        });
+      });
+      document.querySelectorAll('a[href*="wa.me"], a[href*="whatsapp"]').forEach(function(el){
+        el.addEventListener('click', function(){
+          window.trackGoal('click_whatsapp', {page: location.pathname});
         });
       });
     });

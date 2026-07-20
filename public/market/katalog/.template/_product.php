@@ -626,12 +626,12 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
                     <div class="mt-5 pt-4 border-t border-zinc-100">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                            <button type="button" id="add-to-cart-btn"
+                            <button type="button" id="add-to-cart-btn" data-goal="add_to_cart"
                                 class="w-full bg-red-500 text-white py-3 px-6 rounded-xl hover:bg-red-500 transition-all font-medium shadow-sm flex items-center justify-center gap-2">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                                 В корзину
                             </button>
-                            <button type="button" id="buy-one-click-btn"
+                            <button type="button" id="buy-one-click-btn" data-goal="buy_one_click"
                                 class="w-full border-2 border-red-500 text-red-500 py-3 px-6 rounded-xl hover:bg-red-50 transition-all font-medium flex items-center justify-center gap-2">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                                 Купить в 1 клик
@@ -1171,7 +1171,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <?php endif; ?>
                 </div>
             </div>
-            <form id="buyOneClickForm" class="space-y-4">
+            <form id="buyOneClickForm" class="space-y-4" data-goal="buy_one_click_form">
                 <input type="hidden" name="product_id" value="<?= htmlspecialchars($productID) ?>">
                 <input type="hidden" name="redirect_url" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
                 <div>
@@ -1229,6 +1229,20 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     <script>
     window.__productPrices = <?= json_encode($product['units']) ?>;
     window.__productImages = <?= json_encode($product['images']) ?>;
+    window.dataLayer = window.dataLayer || [];
+    dataLayer.push({ ecommerce: null });
+    dataLayer.push({
+      event: 'view_item',
+      ecommerce: {
+        currency: 'RUB',
+        value: <?= json_encode((float)($product['units'][array_key_first($product['units'])] ?? 0)) ?>,
+        items: [{
+          item_id: <?= json_encode($product['id'] ?? '') ?>,
+          item_name: <?= json_encode($product['name'] ?? $product['title'] ?? '') ?>,
+          price: <?= json_encode((float)($product['units'][array_key_first($product['units'])] ?? 0)) ?>
+        }]
+      }
+    });
     </script>
     <script defer src="/public/assets/scripts/main/product.min.js"></script>
 
@@ -1280,6 +1294,27 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     phone.focus();
                 }
             }
+        });
+        // e-commerce: add_to_cart
+        document.querySelectorAll('#add-to-cart-btn, #mobile-add-to-cart-btn').forEach(function(btn){
+            btn.addEventListener('click', function(){
+                var qty = parseInt(document.getElementById('cart-qty-input')?.value || document.getElementById('mobile-qty-input')?.value || 1);
+                var price = <?= json_encode((float)($product['units'][array_key_first($product['units'])] ?? 0)) ?>;
+                dataLayer.push({ ecommerce: null });
+                dataLayer.push({
+                    event: 'add_to_cart',
+                    ecommerce: {
+                        currency: 'RUB',
+                        value: price * qty,
+                        items: [{
+                            item_id: <?= json_encode($product['id'] ?? '') ?>,
+                            item_name: <?= json_encode($product['name'] ?? $product['title'] ?? '') ?>,
+                            price: price,
+                            quantity: qty
+                        }]
+                    }
+                });
+            });
         });
     });
     </script>

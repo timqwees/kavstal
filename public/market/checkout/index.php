@@ -72,7 +72,7 @@ $paymentMethods = [
 
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div class="lg:col-span-3 space-y-6">
-                <form id="checkout-form" action="/checkout" method="POST" class="flex flex-col gap-6">
+                <form id="checkout-form" action="/checkout" method="POST" class="flex flex-col gap-6" data-goal="checkout">
                     <!-- Контактные данные -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100">
                         <div class="section-toggle flex items-center justify-between p-5" onclick="toggleSection(this)">

@@ -13,14 +13,14 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
     <!-- Column 1 -->
     <div class="footer-grid-card flex flex-col items-center justify-center py-6 px-4">
       <div class="text-[rgb(19,19,19)] text-sm font-medium mb-5 text-center">Свяжитесь с нами</div>
-      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full bg-[#ef4444] text-white text-sm md:text-base font-semibold tracking-tight no-underline hover:bg-[#dc2626] transition">Позвонить в компанию</a>
+      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" data-goal="click_phone" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full bg-[#ef4444] text-white text-sm md:text-base font-semibold tracking-tight no-underline hover:bg-[#dc2626] transition">Позвонить в компанию</a>
     </div>
 
     <!-- Column 2 -->
     <div class="footer-grid-card flex flex-col items-center justify-center py-6 px-4">
       <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class="text-[rgb(19,19,19)] text-sm font-medium mb-1 no-underline text-center leading-tight"><?= htmlspecialchars($siteInfo['phone'] ?? '+7 (495) 989-24-20') ?></a>
       <div class="text-[rgb(100,100,100)] text-xs text-center mb-5 leading-tight">с 9 до 18</div>
-      <button type="button" onclick="document.getElementById('callbackModal').classList.remove('hidden')" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full border border-[rgb(221,220,219)] bg-white text-[rgb(19,19,19)] text-sm md:text-base font-medium tracking-tight cursor-pointer hover:border-[rgb(171,170,170)] transition">Перезвоните мне</button>
+      <button type="button" onclick="document.getElementById('callbackModal').classList.remove('hidden')" data-goal="open_callback" class="flex items-center justify-center w-full md:w-auto h-12 md:h-14 px-4 md:px-8 rounded-full border border-[rgb(221,220,219)] bg-white text-[rgb(19,19,19)] text-sm md:text-base font-medium tracking-tight cursor-pointer hover:border-[rgb(171,170,170)] transition">Перезвоните мне</button>
     </div>
 
     <!-- Column 3 -->
@@ -151,7 +151,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
       <h3 class="text-xl font-bold text-gray-900">Заказать звонок</h3>
       <p class="text-sm text-gray-500 mt-1">Оставьте номер — мы перезвоним в течение 15 минут</p>
     </div>
-    <form id="callbackForm" class="space-y-4">
+    <form id="callbackForm" class="space-y-4" data-goal="callback">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label>
         <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="Иван Иванов">
