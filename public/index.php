@@ -75,7 +75,7 @@
     <!-- Breadcrumb -->
     <nav class="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
       <div class="max-w-7xl mx-auto px-4 lg:px-8 py-2 flex items-center text-sm text-gray-500">
-        <a href="/" class="hover:text-red-500 transition-colors"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></a>
+        <a href="/" class="hover:text-red-500 transition-colors" aria-label="Главная"><svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></a>
         <svg class="w-3 h-3 mx-2 text-gray-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
         <span class="text-gray-900 font-medium">Металлобаза КАВ СТАЛЬ</span>
       </div>
