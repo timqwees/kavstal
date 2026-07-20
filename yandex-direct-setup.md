@@ -191,6 +191,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=metalloprokat
+- **Ссылка на объявление:** https://kavstal.ru/market
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — фото склада, сортамента, резки, доставки, логотип
 - **Кнопка:** Перейти в каталог
@@ -252,6 +253,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/sortovoy-prokat/armatura?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=armatura
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/sortovoy-prokat/armatura
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — арматура на складе, рифлёная крупно, вязанная, в бухтах, резка
 - **Кнопка:** Выбрать арматуру
@@ -310,6 +312,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/sortovoy-prokat/balki-dvutavrovye?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=balka
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/sortovoy-prokat/balki-dvutavrovye
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — балка на складе, торец с маркировкой, металлоконструкция, монтаж, резка
 - **Кнопка:** Выбрать балку
@@ -373,6 +376,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/sortovoy-prokat/shveller?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=shveller
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/sortovoy-prokat/shveller
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — швеллер на складе, торец, металлоконструкция, резка, упаковка
 - **Кнопка:** Выбрать швеллер
@@ -430,6 +434,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/sortovoy-prokat/ugolok?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=ugolok
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/sortovoy-prokat/ugolok
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — уголок на складе, профиль, сварная конструкция, резка, упаковка
 - **Кнопка:** Выбрать уголок
@@ -488,6 +493,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/sortovoy-prokat/krug-g-k?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=krug
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/sortovoy-prokat/krug-g-k
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — круг на складе, торец, нарезка, упаковка, применение
 - **Кнопка:** Выбрать круг
@@ -546,6 +552,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/sortovoy-prokat?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=kvadrat
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/sortovoy-prokat
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — квадрат/полоса на складе, катанка в бухтах, резка, применение
 - **Кнопка:** Выбрать
@@ -613,6 +620,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/listovoy-prokat?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=list
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/listovoy-prokat
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — лист г/к, х/к, оцинковка, рифлёный, резка гильотиной
 - **Кнопка:** Выбрать лист
@@ -671,6 +679,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/listovoy-prokat/profnastil?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=profnastil
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/listovoy-prokat/profnastil
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — профнастил на фасаде, на кровле, забор, палитра RAL, монтаж
 - **Кнопка:** Выбрать профнастил
@@ -741,6 +750,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/truby?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=truby
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/truby
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — трубы на складе, профильная, ВГП, э/с, резка
 - **Кнопка:** Выбрать трубы
@@ -797,6 +807,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/nerzhaveyushchaya-stal?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=nerzhaveyka
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/nerzhaveyushchaya-stal
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — нержавейка лист/круг/труба, зеркальный блеск, пищевое применение, резка
 - **Кнопка:** Выбрать нержавейку
@@ -851,6 +862,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/cvetnye-metally?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=cvetmet
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/cvetnye-metally
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — алюминий/латунь/медь круг, лист, шина, цветовая палитра
 - **Кнопка:** Выбрать цветмет
@@ -910,6 +922,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/metizy?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=metizy
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/metizy
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — крепёж россыпью, наборы, болты/гайки/шайбы, сетка, проволока
 - **Кнопка:** Выбрать метизы
@@ -965,6 +978,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/inzhenernye-sistemy?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=flantsy
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/inzhenernye-sistemy
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — фланцы разные, отводы, заглушки, детали трубопроводов, чертёж
 - **Кнопка:** Выбрать фланцы
@@ -1020,6 +1034,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market/katalog/inzhenernye-sistemy?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=gazgolder
+- **Ссылка на объявление:** https://kavstal.ru/market/katalog/inzhenernye-sistemy
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — газгольдер под ключ, монтаж, дом с газом, водосток на фасаде, элементы
 - **Кнопка:** Заказать
@@ -1074,6 +1089,7 @@
 
 ### Для РСЯ
 - **Ссылка:** /market?utm_source=yandex&utm_medium=cpm&utm_campaign=rsya&utm_content=uslugi
+- **Ссылка на объявление:** https://kavstal.ru/market
 - **Тип:** Комбинаторное
 - **Изображения:** 5 шт — резка металла на станке, доставка, склад, персонал, цех
 - **Кнопка:** Заказать услугу
