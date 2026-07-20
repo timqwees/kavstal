@@ -204,7 +204,6 @@ document.getElementById('callbackForm').addEventListener('submit', function(e) {
     .footer-grid-card:nth-child(4) { border-bottom: none; }
   }
 </style>
-<script defer>
 <script>
   (function(){
     var p = location.pathname.replace(/\/+$/, '');
