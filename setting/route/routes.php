@@ -11,7 +11,6 @@ use Setting\route\function\UrlList;
 use Setting\route\function\ProductFeed;
 use App\Models\Cart\Cart;
 use App\Models\Order\Order;
-use App\Models\YCP\YCP;
 
 //==================================================================================================//MAIN
 Routes::get('/', function ($path = '/index.php') {
@@ -342,39 +341,6 @@ Routes::post('/api/orders/quick', function () {
         error_log('Quick order error: ' . $e->getMessage());
         print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
     }
-});
-//==================================================================================================//YCP (Yandex Commerce Protocol)
-Routes::get('/ymclick', function () {
-    http_response_code(200);
-    header('Content-Type: application/json');
-    echo json_encode(['status' => 'ok']);
-});
-Routes::post('/ymclick/checkout/basket/check', function () {
-    \App\Models\YCP\YCP::authenticate();
-    YCP::handleBasketCheck();
-});
-Routes::post('/ymclick/checkout/session/create', function () {
-    \App\Models\YCP\YCP::authenticate();
-    YCP::handleCreateSession();
-});
-Routes::post('/ymclick/checkout/session/{sessionId}/submit', function ($sessionId) {
-    \App\Models\YCP\YCP::authenticate();
-    YCP::handleSubmitOrder($sessionId);
-});
-Routes::post('/ymclick/checkout/session/{sessionId}/cancel', function ($sessionId) {
-    \App\Models\YCP\YCP::authenticate();
-    YCP::handleCancelSession($sessionId);
-});
-Routes::post('/ymclick/order/{orderId}/cancel', function ($orderId) {
-    \App\Models\YCP\YCP::authenticate();
-    YCP::handleCancelOrder((int)$orderId);
-});
-Routes::get('/ymclick/warehouses', function () {
-    \App\Models\YCP\YCP::authenticate();
-    YCP::handleWarehouses();
-});
-Routes::get('/ymclick/healthcheck', function () {
-    YCP::handleHealthCheck();
 });
 //==================================================================================================//FAVORITES PAGE
 Routes::get('/favorites', function () {
