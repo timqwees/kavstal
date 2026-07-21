@@ -11,6 +11,7 @@ use Setting\route\function\UrlList;
 use Setting\route\function\ProductFeed;
 use App\Models\Cart\Cart;
 use App\Models\Order\Order;
+use App\Models\YCP\YCP;
 
 //==================================================================================================//MAIN
 Routes::get('/', function ($path = '/index.php') {
@@ -341,6 +342,34 @@ Routes::post('/api/orders/quick', function () {
         error_log('Quick order error: ' . $e->getMessage());
         print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
     }
+});
+//==================================================================================================//YCP (Yandex Commerce Protocol)
+Routes::post('/api/v1/checkout/basket/check', function () {
+    \App\Models\YCP\YCP::authenticate();
+    YCP::handleBasketCheck();
+});
+Routes::post('/api/v1/checkout/session/create', function () {
+    \App\Models\YCP\YCP::authenticate();
+    YCP::handleCreateSession();
+});
+Routes::post('/api/v1/checkout/session/{sessionId}/submit', function ($sessionId) {
+    \App\Models\YCP\YCP::authenticate();
+    YCP::handleSubmitOrder($sessionId);
+});
+Routes::post('/api/v1/checkout/session/{sessionId}/cancel', function ($sessionId) {
+    \App\Models\YCP\YCP::authenticate();
+    YCP::handleCancelSession($sessionId);
+});
+Routes::post('/api/v1/order/{orderId}/cancel', function ($orderId) {
+    \App\Models\YCP\YCP::authenticate();
+    YCP::handleCancelOrder((int)$orderId);
+});
+Routes::get('/api/v1/warehouses', function () {
+    \App\Models\YCP\YCP::authenticate();
+    YCP::handleWarehouses();
+});
+Routes::get('/api/v1/healthcheck', function () {
+    YCP::handleHealthCheck();
 });
 //==================================================================================================//FAVORITES PAGE
 Routes::get('/favorites', function () {
