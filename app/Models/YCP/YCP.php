@@ -290,14 +290,63 @@ class YCP
 
     public static function handleWarehouses(): void
     {
-        self::json([
-            'warehouses' => [
-                [
-                    'id' => '1',
-                    'name' => 'Основной склад',
-                    'address' => 'г. Москва, ул. Промышленная, д. 1',
+        $warehouses = [
+            [
+                'id' => '1',
+                'title' => 'Основной склад',
+                'address' => 'г. Москва, ул. Промышленная, д. 1',
+                'self_pickup_options' => [
+                    'enabled' => true,
+                    'schedule' => [
+                        'restrictions' => [
+                            [
+                                'day' => 1,
+                                'time_from' => '09:00',
+                                'time_to' => '20:00',
+                                'time_zone' => 3,
+                            ],
+                            [
+                                'day' => 2,
+                                'time_from' => '09:00',
+                                'time_to' => '20:00',
+                                'time_zone' => 3,
+                            ],
+                            [
+                                'day' => 3,
+                                'time_from' => '09:00',
+                                'time_to' => '20:00',
+                                'time_zone' => 3,
+                            ],
+                            [
+                                'day' => 4,
+                                'time_from' => '09:00',
+                                'time_to' => '20:00',
+                                'time_zone' => 3,
+                            ],
+                            [
+                                'day' => 5,
+                                'time_from' => '09:00',
+                                'time_to' => '20:00',
+                                'time_zone' => 3,
+                            ],
+                            [
+                                'day' => 6,
+                                'time_from' => '10:00',
+                                'time_to' => '18:00',
+                                'time_zone' => 3,
+                            ],
+                        ],
+                    ],
+                ],
+                'ycp_delivery_options' => [
+                    'enabled' => true,
                 ],
             ],
+        ];
+
+        self::json([
+            'total_count' => count($warehouses),
+            'warehouses' => $warehouses,
         ]);
     }
 
