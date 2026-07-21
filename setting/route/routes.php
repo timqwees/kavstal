@@ -344,31 +344,31 @@ Routes::post('/api/orders/quick', function () {
     }
 });
 //==================================================================================================//YCP (Yandex Commerce Protocol)
-Routes::post('/api/v1/checkout/basket/check', function () {
+Routes::post('/ymclick/checkout/basket/check', function () {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleBasketCheck();
 });
-Routes::post('/api/v1/checkout/session/create', function () {
+Routes::post('/ymclick/checkout/session/create', function () {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleCreateSession();
 });
-Routes::post('/api/v1/checkout/session/{sessionId}/submit', function ($sessionId) {
+Routes::post('/ymclick/checkout/session/{sessionId}/submit', function ($sessionId) {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleSubmitOrder($sessionId);
 });
-Routes::post('/api/v1/checkout/session/{sessionId}/cancel', function ($sessionId) {
+Routes::post('/ymclick/checkout/session/{sessionId}/cancel', function ($sessionId) {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleCancelSession($sessionId);
 });
-Routes::post('/api/v1/order/{orderId}/cancel', function ($orderId) {
+Routes::post('/ymclick/order/{orderId}/cancel', function ($orderId) {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleCancelOrder((int)$orderId);
 });
-Routes::get('/api/v1/warehouses', function () {
+Routes::get('/ymclick/warehouses', function () {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleWarehouses();
 });
-Routes::get('/api/v1/healthcheck', function () {
+Routes::get('/ymclick/healthcheck', function () {
     YCP::handleHealthCheck();
 });
 //==================================================================================================//FAVORITES PAGE
