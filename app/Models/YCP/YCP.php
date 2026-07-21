@@ -9,7 +9,7 @@ use Setting\route\function\Functions;
 
 class YCP
 {
-    private const ACCESS_TOKEN = '8825f1c0ddd178d4826605d32655cb034bda97511b1ff2eaf26353087fd922fb';
+    private const ACCESS_TOKEN = '019f8578-9442-75b9-bb23-5ef2b48c1acc#BVTnytIYJqFSao650OR00UG5EwUGorXiFPZzttRMzngaaNNgl6ou82eaN1WuYuQd';
 
     private static bool $tablesChecked = false;
 
