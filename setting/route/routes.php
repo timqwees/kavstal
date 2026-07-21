@@ -344,6 +344,11 @@ Routes::post('/api/orders/quick', function () {
     }
 });
 //==================================================================================================//YCP (Yandex Commerce Protocol)
+Routes::get('/ymclick', function () {
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 'ok']);
+});
 Routes::post('/ymclick/checkout/basket/check', function () {
     \App\Models\YCP\YCP::authenticate();
     YCP::handleBasketCheck();

@@ -49,7 +49,7 @@ class Routes extends Network
         // Затем обычный плейсхолдер "{id}"
         $pattern = preg_replace('~\{([a-zA-Z0-9_]+)\}~', '(?P<$1>[^/]+)', $path);
         // Начало и конец строки, общая регулярка
-        $pattern = "~^" . $pattern . "$~";
+        $pattern = "~^" . $pattern . "/?$~";
 
         // вызов встроенных функций
         if (is_string($callback) && method_exists(Functions::class, $callback)) {
