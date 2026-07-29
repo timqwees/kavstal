@@ -53,7 +53,8 @@ class Functions
     private static function cacheGet(string $key, int $ttl = 300): mixed
     {
         $file = self::getCacheDir() . '/' . $key . '.json';
-        if (!file_exists($file)) return null;
+        if (!file_exists($file))
+            return null;
         if ((time() - filemtime($file)) > $ttl) {
             unlink($file);
             return null;
@@ -226,17 +227,28 @@ class Functions
             $rows = self::readCsvTable($csvPath);
             if (!empty($rows)) {
                 $row = $rows[0];
-                if (!empty($row['телефон'])) $data['phone'] = $row['телефон'];
-                if (!empty($row['phone_clean'])) $data['phone_clean'] = $row['phone_clean'];
-                if (!empty($row['почта'])) $data['email'] = $row['почта'];
-                if (!empty($row['адрес'])) $data['address'] = $row['адрес'];
-                if (!empty($row['режим_работы'])) $data['workingHours'] = $row['режим_работы'];
-                if (!empty($row['зоны_доставки'])) $data['deliveryAreas'] = array_map('trim', explode(';', $row['зоны_доставки']));
-                if (!empty($row['компания'])) $data['company'] = $row['компания'];
-                if (!empty($row['whatsapp'])) $data['whatsapp'] = $row['whatsapp'];
-                if (!empty($row['telegram'])) $data['telegram'] = $row['telegram'];
-                if (!empty($row['vk'])) $data['vk'] = $row['vk'];
-                if (!empty($row['instagram'])) $data['instagram'] = $row['instagram'];
+                if (!empty($row['телефон']))
+                    $data['phone'] = $row['телефон'];
+                if (!empty($row['phone_clean']))
+                    $data['phone_clean'] = $row['phone_clean'];
+                if (!empty($row['почта']))
+                    $data['email'] = $row['почта'];
+                if (!empty($row['адрес']))
+                    $data['address'] = $row['адрес'];
+                if (!empty($row['режим_работы']))
+                    $data['workingHours'] = $row['режим_работы'];
+                if (!empty($row['зоны_доставки']))
+                    $data['deliveryAreas'] = array_map('trim', explode(';', $row['зоны_доставки']));
+                if (!empty($row['компания']))
+                    $data['company'] = $row['компания'];
+                if (!empty($row['whatsapp']))
+                    $data['whatsapp'] = $row['whatsapp'];
+                if (!empty($row['telegram']))
+                    $data['telegram'] = $row['telegram'];
+                if (!empty($row['vk']))
+                    $data['vk'] = $row['vk'];
+                if (!empty($row['instagram']))
+                    $data['instagram'] = $row['instagram'];
             }
         }
 
@@ -309,11 +321,18 @@ class Functions
                     $pImages = $product['images'] ?? [];
                     $firstImg = null;
                     foreach ($pImages as $img) {
-                        if ($img && strpos($img, 'unknown.png') === false) { $firstImg = $img; break; }
+                        if ($img && strpos($img, 'unknown.png') === false) {
+                            $firstImg = $img;
+                            break;
+                        }
                     }
                     if ($firstImg) {
-                        if ($catTitle && empty($categoryImages[$catTitle])) { $categoryImages[$catTitle] = $firstImg; }
-                        if ($subTitle && empty($subcategoryImages[$subKey])) { $subcategoryImages[$subKey] = $firstImg; }
+                        if ($catTitle && empty($categoryImages[$catTitle])) {
+                            $categoryImages[$catTitle] = $firstImg;
+                        }
+                        if ($subTitle && empty($subcategoryImages[$subKey])) {
+                            $subcategoryImages[$subKey] = $firstImg;
+                        }
                     }
                 }
             }
@@ -448,12 +467,12 @@ class Functions
             }
             for ($i = 0; $i < count($rows); $i++) {
                 $row = $rows[$i];
-                $catTitle = trim((string)($row['категория'] ?? ''));
+                $catTitle = trim((string) ($row['категория'] ?? ''));
                 if (!in_array($catTitle, $cats, true)) {
                     continue;
                 }
-                $subTitle = trim((string)($row['подкатегория'] ?? ''));
-                $photo = trim((string)($row['фото'] ?? ''));
+                $subTitle = trim((string) ($row['подкатегория'] ?? ''));
+                $photo = trim((string) ($row['фото'] ?? ''));
                 if (preg_match('#^https?://[^/]+(/.*)$#u', $photo, $m)) {
                     $photo = $m[1];
                 }
@@ -464,8 +483,8 @@ class Functions
                 if (isset($cards[$catTitle][$subTitle])) {
                     continue;
                 }
-                $priceRaw = trim((string)($row['цена'] ?? ''));
-                $unitRaw = trim((string)($row['единица'] ?? ''));
+                $priceRaw = trim((string) ($row['цена'] ?? ''));
+                $unitRaw = trim((string) ($row['единица'] ?? ''));
                 $prices = array_map('trim', explode(';', $priceRaw));
                 $unitsList = array_map('trim', explode(';', $unitRaw));
                 $units = [];
@@ -478,8 +497,8 @@ class Functions
                     continue;
                 }
                 $firstUnit = array_key_first($units);
-                $name = trim((string)($row['название'] ?? ''));
-                $inStock = (trim((string)($row['в_наличии'] ?? '0')) === '1');
+                $name = trim((string) ($row['название'] ?? ''));
+                $inStock = (trim((string) ($row['в_наличии'] ?? '0')) === '1');
                 $slug = self::slugify($subTitle);
                 $catSlug = self::slugify($catTitle);
                 $cards[$catTitle][$subTitle] = [
@@ -540,8 +559,8 @@ class Functions
                     continue;
                 }
                 foreach ($rows as $row) {
-                    $catTitle = trim((string)($row['категория'] ?? ''));
-                    $subTitle = trim((string)($row['подкатегория'] ?? ''));
+                    $catTitle = trim((string) ($row['категория'] ?? ''));
+                    $subTitle = trim((string) ($row['подкатегория'] ?? ''));
                     if ($catTitle === '' || $subTitle === '') {
                         continue;
                     }
@@ -560,7 +579,7 @@ class Functions
                     if (isset($subcategories[$catSlug][$subSlug])) {
                         continue;
                     }
-                    $photo = trim((string)($row['фото'] ?? ''));
+                    $photo = trim((string) ($row['фото'] ?? ''));
                     if (preg_match('#^https?://[^/]+(/.*)$#u', $photo, $m)) {
                         $photo = $m[1];
                     }
@@ -679,7 +698,7 @@ class Functions
             error_log('Mail Error: ' . $e->getMessage());
         }
 
-        self::sendToBitrix24($data, $attachmentPath);
+        self::sendToBitrix24($data);
 
         if (!isset($data->both)) {
             Network::onRedirect('/');
@@ -697,7 +716,8 @@ class Functions
         $comment = $data->сообщение ?? $data->message ?? '';
 
         $info = "Имя: {$name}\nТелефон: {$phone}";
-        if ($email) $info .= "\nEmail: {$email}";
+        if ($email)
+            $info .= "\nEmail: {$email}";
 
         $extra = [];
         foreach ($data as $key => $value) {
@@ -707,8 +727,10 @@ class Functions
                 }
             }
         }
-        if ($extra) $info .= "\n\n" . implode("\n", $extra);
-        if ($comment) $info .= "\n\n{$comment}";
+        if ($extra)
+            $info .= "\n\n" . implode("\n", $extra);
+        if ($comment)
+            $info .= "\n\n{$comment}";
 
         $webhookUrl = 'https://b24-rpu7xy.bitrix24.ru/rest/1/q9npq8wqxwhwlhi0/crm.deal.add.json';
 
@@ -717,12 +739,14 @@ class Functions
             return;
         }
 
-        $postData = http_build_query(['fields' => [
-            'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
-            'CATEGORY_ID' => 1,
-            'STAGE_ID' => 0,
-            'COMMENTS' => $info,
-        ]]);
+        $postData = http_build_query([
+            'fields' => [
+                'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
+                'CATEGORY_ID' => 1,
+                'STAGE_ID' => 0,
+                'COMMENTS' => $info,
+            ]
+        ]);
 
         try {
             $ch = curl_init($webhookUrl);

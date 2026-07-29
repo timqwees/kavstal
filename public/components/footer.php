@@ -174,7 +174,7 @@ document.getElementById('callbackForm').addEventListener('submit', function(e) {
   const btn = this.querySelector('button[type="submit"]');
   btn.disabled = true;
   btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Отправляем...';
-  fetch('/api/callback', { method: 'POST', body: new URLSearchParams(new FormData(this)) })
+  fetch('/api/callback', { method: 'POST', body: new FormData(this) })
     .then(function(r) { return r.json(); })
     .then(function(d) {
       if (d.success) {

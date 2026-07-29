@@ -322,7 +322,7 @@ $paymentMethods = [
             const btn = this.querySelector('#submit-order');
             btn.disabled = true;
             btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Оформляем...';
-            fetch(this.action, { method: 'POST', body: new URLSearchParams(new FormData(this)) })
+            fetch(this.action, { method: 'POST', body: new FormData(this) })
                 .then(function(r){ return r.json(); })
                 .then(function(d){
                     if (d.success) {
