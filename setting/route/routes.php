@@ -393,25 +393,5 @@ Routes::get('/order/{id}/pdf', function ($id) {
     }
     Routes::error_404('Счёт не найден');
 });
-//==================================================================================================//SEND EMAIL (единый endpoint для всех форм)
-Routes::post('/send/email', function () {
-    $data = (object) $_POST;
-    header('Content-Type: application/json; charset=utf-8');
-    set_time_limit(60);
-    $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
-    if ($phone === '') {
-        if (ob_get_level()) ob_clean();
-        print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
-        return;
-    }
-    try {
-        \Setting\route\function\Functions::sendMail($data);
-        if (ob_get_level()) ob_clean();
-        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
-    } catch (\Throwable $e) {
-        if (ob_get_level()) ob_clean();
-        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
-    }
-});
 //==================================================================================================//SITEMAP
 Routes::get('/pages', [UrlList::class, 'output']);
