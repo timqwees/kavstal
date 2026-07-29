@@ -187,5 +187,4 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
     }
   })();
 </script>
-<script src="/public/assets/scripts/ajax-forms.js" defer></script>
 <?php include_once __DIR__ . '/widget-chatwoot.php'; ?>
