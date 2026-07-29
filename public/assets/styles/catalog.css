@@ -1667,6 +1667,10 @@ body {
     z-index: 2;
 }
 
+.card-image {
+    aspect-ratio: 1;
+}
+
 #products-container.list-view .product-card .card-image {
     width: 160px;
     min-width: 160px;

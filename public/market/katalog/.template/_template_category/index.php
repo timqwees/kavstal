@@ -288,7 +288,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                 <!-- Product Grid -->
                 <?php if (!empty($pageProducts)): ?>
                 <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-5">
-                    <?php foreach ($pageProducts as $item):
+                    <?php foreach ($pageProducts as $idx => $item):
                         $productImages = $item['images'] ?? [];
                         if (empty($productImages)) $productImages = [$site['baseUrl'] . '/public/assets/images/unknown/unknown.png'];
                         $specs = $item['specs'] ?? [];
@@ -327,13 +327,13 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                                 <div class="swiper-wrapper">
                                     <?php foreach ($productImages as $imgIdx => $imgUrl): ?>
                                     <div class="swiper-slide flex justify-center items-center">
-                                        <img loading="lazy" src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" width="140" height="140" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                                        <img <?= $idx === 0 && $imgIdx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> src="<?= htmlspecialchars($imgUrl) ?>" alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" width="140" height="140" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
                                     </div>
                                     <?php endforeach; ?>
                                 </div>
                             </div>
                             <?php else: ?>
-                            <img loading="lazy" src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" width="140" height="140" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
+                            <img <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" width="140" height="140" class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
                             <?php endif; ?>
                         </a>
 

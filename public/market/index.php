@@ -331,7 +331,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                     <!-- Products Grid -->
                     <div id="products-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" itemscope itemtype="https://schema.org/ItemList">
                     <?php if (!empty($pageProducts)): ?>
-                        <?php foreach ($pageProducts as $product):
+                        <?php foreach ($pageProducts as $idx => $product):
                             $canonicalUrl = $product['seo']['canonicalUrl'] ?? '#';
                             $units = $product['units'] ?? [];
                             $firstUnit = array_key_first($units);
@@ -353,7 +353,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                 </button>
                             </div>
                             <a href="<?php echo htmlspecialchars($canonicalUrl); ?>" class="card-image flex items-center justify-center h-[120px] mb-3 rounded-lg overflow-hidden">
-                                <img src="<?php echo htmlspecialchars($productImages[0]); ?>" alt="<?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?>" width="120" height="120" class="max-h-full max-w-full object-contain" loading="lazy" />
+                                <img src="<?php echo htmlspecialchars($productImages[0]); ?>" alt="<?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?>" width="120" height="120" class="max-h-full max-w-full object-contain" <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> />
                             </a>
                             <div class="card-body flex-1 flex flex-col min-w-0">
                                 <a href="<?php echo htmlspecialchars($canonicalUrl); ?>" class="text-[13px] font-semibold text-neutral-800 hover:text-red-500 transition-colors line-clamp-2 leading-snug mb-2 block min-h-[36px]"><?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?></a>
