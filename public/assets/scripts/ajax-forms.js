@@ -22,7 +22,7 @@ document.addEventListener('submit', function(e) {
     var action = form.action || '/send/email';
     var fd = new FormData(form);
 
-    fetch(action, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+    fetch(action, { method: 'POST', body: fd })
         .then(function(r) { return r.json(); })
         .then(function(d) {
             if (d.success) {

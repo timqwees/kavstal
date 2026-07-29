@@ -325,7 +325,6 @@ Routes::post('/send/email', function () {
     set_time_limit(60);
     $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
     if ($phone === '') {
-        if (ob_get_level()) ob_clean();
         print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
@@ -335,10 +334,8 @@ Routes::post('/send/email', function () {
             \App\Models\Order\Order::quickCreate($data->name ?? $data->имя ?? '', $phone, $productId);
         }
         \Setting\route\function\Functions::sendMail($data);
-        if (ob_get_level()) ob_clean();
         print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
-        if (ob_get_level()) ob_clean();
         print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
     }
 });
