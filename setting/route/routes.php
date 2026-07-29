@@ -329,6 +329,12 @@ Routes::post('/api/orders/quick', function () {
     }
     try {
         $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
+        print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
+        if (function_exists('fastcgi_finish_request')) {
+            fastcgi_finish_request();
+        } else {
+            ob_flush(); flush();
+        }
         $data = (object)[
             'name' => $name,
             'phone' => $phone,
@@ -336,10 +342,11 @@ Routes::post('/api/orders/quick', function () {
             'both' => true,
         ];
         \Setting\route\function\Functions::sendMail($data);
-        print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
     } catch (\Exception $e) {
         error_log('Quick order error: ' . $e->getMessage());
-        print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
+        if (!headers_sent()) {
+            print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
+        }
     }
 });
 //==================================================================================================//FAVORITES PAGE
