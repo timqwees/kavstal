@@ -145,8 +145,8 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                 if ($searchTerm) {
                     $searchTermLower = mb_strtolower($searchTerm);
                     $productsOnly = array_filter($productsOnly, function ($product) use ($searchTermLower) {
-                        $name = mb_strtolower($product['name'] ?? ''); $title = mb_strtolower($product['title'] ?? ''); $description = mb_strtolower($product['description'] ?? '');
-                        return mb_strpos($name, $searchTermLower) !== false || mb_strpos($title, $searchTermLower) !== false || mb_strpos($description, $searchTermLower) !== false;
+                        $name = mb_strtolower($product['name'] ?? ''); $title = mb_strtolower($product['title'] ?? ''); $description = mb_strtolower($product['description'] ?? ''); $keywords = mb_strtolower($product['keywords'] ?? '');
+                        return mb_strpos($name, $searchTermLower) !== false || mb_strpos($title, $searchTermLower) !== false || mb_strpos($description, $searchTermLower) !== false || mb_strpos($keywords, $searchTermLower) !== false;
                     });
                 }
                 $activeCategory = $_GET['category'] ?? ''; $activeMarka = $_GET['marka'] ?? ''; $activeGost = $_GET['gost'] ?? ''; $activeSize = $_GET['size'] ?? '';

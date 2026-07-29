@@ -628,6 +628,7 @@ class Functions
                 $light[] = $item; // виртуальные записи категорий нужны для фильтров
                 continue;
             }
+            $keywords = $item['keywords'] ?? [];
             $light[] = [
                 'id' => $item['id'] ?? '',
                 'name' => $item['name'] ?? '',
@@ -641,6 +642,7 @@ class Functions
                 'in_stock' => $item['in_stock'] ?? false,
                 'seo' => ['canonicalUrl' => $item['seo']['canonicalUrl'] ?? ''],
                 '_table' => $item['_table'] ?? null,
+                'keywords' => !empty($keywords) ? implode(' ', $keywords) : '',
             ];
         }
 

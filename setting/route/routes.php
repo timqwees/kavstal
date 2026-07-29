@@ -79,6 +79,7 @@ Routes::get('/api/search', function () {
             $units = $p['units'] ?? [];
             $firstUnit = array_key_first($units);
             $images = $p['images'] ?? [];
+            $keywords = $p['keywords'] ?? [];
             $cachedProducts[] = [
                 'id'       => $p['id'],
                 'name'     => mb_strtolower($p['name'] ?? $p['title'] ?? ''),
@@ -90,6 +91,7 @@ Routes::get('/api/search', function () {
                 'cat'      => $p['categories']['title'] ?? '',
                 'subcat'   => $p['categories']['subcategory_title'] ?? '',
                 'in_stock' => $p['in_stock'] ?? false,
+                'keywords' => !empty($keywords) ? implode(' ', $keywords) : '',
             ];
         }
     }
@@ -103,6 +105,8 @@ Routes::get('/api/search', function () {
             if (mb_strpos($p['name'], $q) !== false) {
                 $score = (mb_strpos($p['name'], $q) === 0) ? 3 : 2;
             } elseif (mb_strpos($p['cat'], $q) !== false || mb_strpos($p['subcat'], $q) !== false) {
+                $score = 1;
+            } elseif (mb_strpos($p['keywords'], $q) !== false) {
                 $score = 1;
             }
             if ($score > 0) {
