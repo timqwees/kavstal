@@ -1171,7 +1171,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <?php endif; ?>
                 </div>
             </div>
-            <form id="buyOneClickForm" class="space-y-4" data-goal="buy_one_click_form">
+            <form id="buyOneClickForm" class="space-y-4" method="POST" action="/send/email" data-goal="buy_one_click_form">
                 <input type="hidden" name="product_id" value="<?= htmlspecialchars($productID) ?>">
                 <input type="hidden" name="redirect_url" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>">
                 <div>
