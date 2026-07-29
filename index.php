@@ -55,5 +55,5 @@ Database::getConnection();
 include_once __DIR__ . '/setting/route/routes.php';
 Network::onRoute();
 
-ob_end_flush();
+if (ob_get_level()) ob_end_flush();
 ?>

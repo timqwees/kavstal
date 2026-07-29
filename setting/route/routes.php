@@ -320,12 +320,17 @@ Routes::get('/api/orders/list', function () {
 });
 //==================================================================================================//SEND EMAIL (единый endpoint для всех форм)
 Routes::post('/send/email', function () {
-    header('Content-Type: application/json; charset=utf-8');
-    print json_encode(['success' => true, 'message' => 'Успешно отправлено!'], JSON_UNESCAPED_UNICODE);
+    ignore_user_abort(true);
 
-    if (function_exists('fastcgi_finish_request')) {
-        fastcgi_finish_request();
-    }
+    $json = json_encode(['success' => true, 'message' => 'Успешно отправлено!'], JSON_UNESCAPED_UNICODE);
+
+    while (ob_get_level()) ob_end_clean();
+    header('Content-Type: application/json; charset=utf-8');
+    header('Content-Length: ' . strlen($json));
+    header('Connection: close');
+    print $json;
+    flush();
+    session_write_close();
 
     set_time_limit(60);
     \Setting\route\function\Functions::sendMail((object) $_POST);
