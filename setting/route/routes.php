@@ -320,6 +320,7 @@ Routes::get('/api/orders/list', function () {
 });
 Routes::post('/api/orders/quick', function () {
     header('Content-Type: application/json; charset=utf-8');
+    set_time_limit(60);
     $name = trim($_POST['name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $productId = trim($_POST['product_id'] ?? '');
@@ -327,23 +328,19 @@ Routes::post('/api/orders/quick', function () {
         print json_encode(['success' => false, 'error' => 'Укажите имя и телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
-    $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
-    print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
-    ignore_user_abort(true);
-    if (function_exists('fastcgi_finish_request')) {
-        fastcgi_finish_request();
-    } else {
-        if (ob_get_level()) ob_end_flush();
-        flush();
-    }
     try {
+        $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
         \Setting\route\function\Functions::sendMail((object)[
             'name' => $name,
             'phone' => $phone,
             'product_id' => $productId,
         ]);
+        print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
-        error_log('Quick order sendMail error: ' . $e->getMessage());
+        error_log('Quick order error: ' . $e->getMessage());
+        if (!headers_sent()) {
+            print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
+        }
     }
 });
 //==================================================================================================//FAVORITES PAGE
@@ -401,23 +398,17 @@ Routes::get('/order/{id}/pdf', function ($id) {
 Routes::post('/send/email', function () {
     $data = (object) $_POST;
     header('Content-Type: application/json; charset=utf-8');
+    set_time_limit(60);
     $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
     if ($phone === '') {
         print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
-    print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
-    ignore_user_abort(true);
-    if (function_exists('fastcgi_finish_request')) {
-        fastcgi_finish_request();
-    } else {
-        if (ob_get_level()) ob_end_flush();
-        flush();
-    }
     try {
         \Setting\route\function\Functions::sendMail($data);
+        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
-        error_log('SendMail error: ' . $e->getMessage());
+        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
     }
 });
 //==================================================================================================//SITEMAP
