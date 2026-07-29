@@ -461,7 +461,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
         var btn = this.querySelector('button[type="submit"]');
         btn.disabled = true;
         btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" class="opacity-75"/></svg>';
-        fetch(this.action, { method: 'POST', body: new URLSearchParams(new FormData(this)) })
+        fetch(this.action, { method: 'POST', body: new FormData(this) })
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 if (d.success) {
