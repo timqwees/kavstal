@@ -434,6 +434,51 @@ $noindexMarket = $hasFilters || $marketPage > 1;
         </section>
     </main>
 
+    <section class="bg-zinc-50 border-t border-zinc-200">
+        <div class="max-w-4xl mx-auto px-4 py-12 md:py-16 text-center">
+            <h2 class="text-xl md:text-2xl font-bold text-zinc-900 mb-3">Не нашли то, что искали?</h2>
+            <p class="text-sm md:text-base text-zinc-500 mb-8 max-w-xl mx-auto">У нас есть все возможные материалы, и некоторые могут не отображаться в каталоге. Оставьте заявку — мы подберём нужный товар и свяжемся с вами.</p>
+            <form id="market-feedback-form" data-goal="market_feedback" method="POST" action="/api/feedback" class="max-w-md mx-auto space-y-4">
+                <input type="text" name="name" placeholder="Ваше имя" required
+                    class="w-full h-12 px-4 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all">
+                <input type="tel" name="phone" placeholder="Номер телефона" required
+                    class="w-full h-12 px-4 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all">
+                <textarea name="message" placeholder="Что именно вас интересует? (размер, марка стали, количество)" rows="3"
+                    class="w-full px-4 py-3 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all resize-none"></textarea>
+                <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
+                <button type="submit"
+                    class="w-full h-12 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors">Отправить заявку</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+    document.getElementById('market-feedback-form')?.addEventListener('submit', function(e) {
+        if (this.querySelector('input[name="website"]').value) { e.preventDefault(); return; }
+        e.preventDefault();
+        var btn = this.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" class="opacity-75"/></svg>';
+        fetch(this.action, { method: 'POST', body: new URLSearchParams(new FormData(this)) })
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d.success) {
+                    document.getElementById('market-feedback-form').innerHTML = '<div class="py-8 text-center"><div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div><p class="text-lg font-semibold text-zinc-900">Спасибо!</p><p class="text-sm text-zinc-500 mt-1">Мы свяжемся с вами в ближайшее время.</p></div>';
+                    document.dispatchEvent(new CustomEvent('form:success', { detail: { goal: 'market_feedback' } }));
+                } else {
+                    alert(d.error || 'Ошибка. Попробуйте ещё раз.');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Отправить заявку';
+                }
+            })
+            .catch(function() {
+                alert('Ошибка сети. Попробуйте ещё раз.');
+                btn.disabled = false;
+                btn.innerHTML = 'Отправить заявку';
+            });
+    });
+    </script>
+
     <?php include_once './public/components/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>

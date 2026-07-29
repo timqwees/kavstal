@@ -394,6 +394,29 @@ Routes::get('/order/{id}/pdf', function ($id) {
     Routes::error_404('Счёт не найден');
 });
 //==================================================================================================//CALLBACK
+Routes::post('/api/feedback', function () {
+    $name = trim($_POST['name'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+    header('Content-Type: application/json; charset=utf-8');
+    if (empty($name) || empty($phone)) {
+        print json_encode(['success' => false, 'error' => 'Заполните имя и телефон'], JSON_UNESCAPED_UNICODE);
+        exit;
+    }
+    try {
+        \Setting\route\function\Functions::sendMail((object)[
+            'имя' => $name,
+            'телефон' => $phone,
+            'сообщение' => $message ?: '—',
+            'страница' => $_SERVER['HTTP_REFERER'] ?? '',
+            'both' => true,
+        ]);
+        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    } catch (\Throwable $e) {
+        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
+    }
+    exit;
+});
 Routes::post('/api/callback', function () {
     $name = trim($_POST['name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
