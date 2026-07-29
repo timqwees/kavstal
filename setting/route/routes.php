@@ -323,7 +323,7 @@ Routes::post('/send/email', function () {
     header('Content-Type: application/json; charset=utf-8');
     set_time_limit(60);
     \Setting\route\function\Functions::sendMail((object) $_POST);
-    print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    print json_encode(['success' => true, 'message' => 'Успешно отправлено!'], JSON_UNESCAPED_UNICODE);
 });
 //==================================================================================================//FAVORITES PAGE
 Routes::get('/favorites', function () {

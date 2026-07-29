@@ -151,7 +151,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
       <h3 class="text-xl font-bold text-gray-900">Заказать звонок</h3>
       <p class="text-sm text-gray-500 mt-1">Оставьте номер — мы перезвоним в течение 15 минут</p>
     </div>
-    <form id="callbackForm" class="space-y-4" data-goal="callback" method="POST" action="/send/email">
+    <form id="callbackForm" class="ajax-form space-y-4" data-goal="callback" method="POST" action="/send/email">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label>
         <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="Иван Иванов">
@@ -187,4 +187,5 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
     }
   })();
 </script>
+<script src="/public/assets/scripts/ajax-forms.js" defer></script>
 <?php include_once __DIR__ . '/widget-chatwoot.php'; ?>
