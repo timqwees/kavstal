@@ -36,8 +36,10 @@ $paymentMethods = [
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@suggestions/da-suggestions@2.0.6/dist/css/suggestions.css">
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css"></noscript>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/@suggestions/da-suggestions@2.0.6/dist/css/suggestions.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@suggestions/da-suggestions@2.0.6/dist/css/suggestions.css"></noscript>
     <style>
         .iti__selected-dial-code { color: #000; }
         .iti { width: 100%; }
