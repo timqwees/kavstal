@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Гарантии | КАВ СТАЛЬ - Качество металлопроката</title>
     <meta name="description"
-        content="Гарантии качества металлопроката от КАВ СТАЛЬ. Сертификаты ГОСТ, возврат брака, соответствие заявленным характеристикам. Честные цены и прозрачные условия.">
+        content="Гарантии качества металлопроката от КАВ СТАЛЬ. Сертификаты ГОСТ, соответствие заявленным характеристикам. Честные цены и прозрачные условия.">
 
     <meta property="og:title" content="Гарантии | КАВ СТАЛЬ">
     <meta property="og:description" content="Гарантии качества металлопроката">
@@ -55,7 +55,7 @@
         "legalName": "ООО «КАВ Сталь»",
         "url": "<?php echo $site['baseUrl']; ?>/guarantees",
         "logo": "<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp",
-        "description": "Гарантии качества металлопроката от КАВ СТАЛЬ. Сертификаты ГОСТ, возврат брака, соответствие заявленным характеристикам.",
+        "description": "Гарантии качества металлопроката от КАВ СТАЛЬ. Сертификаты ГОСТ, соответствие заявленным характеристикам.",
         "hasOfferCatalog": {
             "@type": "OfferCatalog",
             "name": "Гарантии и условия",
@@ -66,22 +66,6 @@
                         "@type": "Service",
                         "name": "Сертификаты ГОСТ",
                         "description": "На всю продукцию предоставляем сертификаты качества и паспорта"
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Возврат брака",
-                        "description": "Обмен или возврат некачественного товара в течение 14 дней"
-                    }
-                },
-                {
-                    "@type": "Offer",
-                    "itemOffered": {
-                        "@type": "Service",
-                        "name": "Точный вес",
-                        "description": "Весы калибруются ежегодно. Вес соответствует документам"
                     }
                 },
                 {
@@ -133,27 +117,13 @@
         </p>
 
         <!-- Main Guarantees -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <div class="flex flex-wrap justify-center gap-6 mb-16">
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <i class="fas fa-certificate text-red-500 text-3xl"></i>
                 </div>
                 <h3 class="text-lg font-bold text-gray-900 mb-2">Сертификаты ГОСТ</h3>
                 <p class="text-gray-600 text-sm">На всю продукцию предоставляем сертификаты качества и паспорта</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
-                <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-undo text-red-500 text-3xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Возврат брака</h3>
-                <p class="text-gray-600 text-sm">Обмен или возврат некачественного товара в течение 14 дней</p>
-            </div>
-            <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
-                <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <i class="fas fa-balance-scale text-red-500 text-3xl"></i>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900 mb-2">Точный вес</h3>
-                <p class="text-gray-600 text-sm">Весы калибруются ежегодно. Вес соответствует документам</p>
             </div>
             <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
                 <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -240,10 +210,6 @@
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-red-200 mt-1 mr-3"></i>
-                        <span>При обнаружении брака — бесплатная замена или возврат денег</span>
-                    </li>
-                    <li class="flex items-start">
-                        <i class="fas fa-check text-red-200 mt-1 mr-3"></i>
                         <span>Соответствие заявленного веса фактическому — ±3% допустимое отклонение</span>
                     </li>
                     <li class="flex items-start">
@@ -251,51 +217,6 @@
                         <span>Срок рассмотрения рекламации — до 3 рабочих дней</span>
                     </li>
                 </ul>
-            </div>
-        </div>
-
-        <!-- Return Policy -->
-        <div class="bg-gray-100 rounded-2xl p-8 mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Условия возврата</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Возврат возможен если:</h3>
-                    <ul class="space-y-3 text-gray-700">
-                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i>Обнаружен
-                            заводской брак (трещины, расслоения, коррозия)</li>
-                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i>Несоответствие
-                            марки стали заявленной</li>
-                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i>Неверные
-                            геометрические размеры</li>
-                        <li class="flex items-center"><i class="fas fa-check text-green-500 mr-3"></i>Ошибка в
-                            комплектации заказа</li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-4">Порядок возврата:</h3>
-                    <ol class="space-y-3 text-gray-700">
-                        <li class="flex items-start">
-                            <span
-                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">1</span>
-                            <span>Свяжитесь с менеджером по телефону или почте</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span
-                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">2</span>
-                            <span>Предоставьте фото/видео подтверждающие дефект</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span
-                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">3</span>
-                            <span>Рассмотрение заявки в течение 3 дней</span>
-                        </li>
-                        <li class="flex items-start">
-                            <span
-                                class="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm mr-3 flex-shrink-0">4</span>
-                            <span>Замена товара или возврат денег</span>
-                        </li>
-                    </ol>
-                </div>
             </div>
         </div>
 
