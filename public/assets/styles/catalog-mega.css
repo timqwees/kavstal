@@ -30,11 +30,13 @@
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
 .ozon-mega-menu.open {
     opacity: 1;
     transform: translateY(0);
     pointer-events: auto;
 }
+
 .ozon-mega-menu-inner {
     max-width: 1400px;
     margin: 0 auto;
@@ -44,6 +46,7 @@
     max-height: 70vh;
     overflow: hidden;
 }
+
 .ozon-mega-sidebar {
     width: 280px;
     flex-shrink: 0;
@@ -51,13 +54,16 @@
     border-right: 1px solid var(--border-light);
     padding-right: 16px;
 }
+
 .ozon-mega-sidebar::-webkit-scrollbar {
     width: 4px;
 }
+
 .ozon-mega-sidebar::-webkit-scrollbar-thumb {
     background: var(--border-default);
     border-radius: 2px;
 }
+
 .ozon-mega-item {
     display: flex;
     align-items: center;
@@ -71,48 +77,58 @@
     font-size: 14px;
     font-weight: 500;
 }
+
 .ozon-mega-item:hover,
 .ozon-mega-item.active {
     background: var(--primary-bg);
     color: var(--primary);
 }
+
 .ozon-mega-item svg {
     width: 16px;
     height: 16px;
     opacity: 0.3;
     flex-shrink: 0;
 }
+
 .ozon-mega-item:hover svg,
 .ozon-mega-item.active svg {
     opacity: 1;
     color: var(--primary);
 }
+
 .ozon-mega-content {
     flex: 1;
     padding-left: 24px;
     overflow-y: auto;
 }
+
 .ozon-mega-content::-webkit-scrollbar {
     width: 4px;
 }
+
 .ozon-mega-content::-webkit-scrollbar-thumb {
     background: var(--border-default);
     border-radius: 2px;
 }
+
 .ozon-mega-content-panel {
     display: none;
 }
+
 .ozon-mega-content-title {
     font-size: 18px;
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 16px;
 }
+
 .ozon-mega-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
 }
+
 .ozon-mega-subcategory {
     display: flex;
     align-items: center;
@@ -124,10 +140,12 @@
     font-size: 13px;
     transition: background var(--transition-fast), color var(--transition-fast);
 }
+
 .ozon-mega-subcategory:hover {
     background: var(--bg-hover);
     color: var(--text-primary);
 }
+
 .ozon-mega-product-link {
     display: block;
     padding: 6px 12px 6px 20px;
@@ -137,10 +155,12 @@
     transition: color var(--transition-fast);
     border-radius: var(--radius-xs);
 }
+
 .ozon-mega-product-link:hover {
     color: var(--primary);
     background: var(--primary-bg);
 }
+
 .ozon-mega-empty {
     padding: 40px;
     text-align: center;
@@ -153,6 +173,7 @@
         flex-direction: column;
         padding: 16px;
     }
+
     .ozon-mega-sidebar {
         width: 100%;
         border-right: none;
@@ -162,6 +183,7 @@
         margin-bottom: 12px;
         max-height: 200px;
     }
+
     .ozon-mega-grid {
         grid-template-columns: repeat(2, 1fr);
     }

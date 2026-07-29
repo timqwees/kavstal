@@ -56,11 +56,27 @@ $catalogSubcategories = $tree['subcategories'];
     <!-- Row 1: Logo + Search + Actions -->
     <div class="ozon-header-main">
         <div class="ozon-header-inner">
-            <a href="/" class="ozon-logo">
-                <img loading="lazy" src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp"
-                    alt="<?= htmlspecialchars($site['company']) ?>" width="160" height="36">
+            <a href="/" class="relative ozon-logo">
+                <style>
+                    .mobile-logo {
+                        width: 150px;
+                        height: 100%;
+                        object-fit: contain;
+                        transform: translateY(2px);
+                    }
+
+                    @media (min-width: 768px) {
+                        .mobile-logo {
+                            width: 200px;
+                            height: auto;
+                        }
+                    }
+                </style>
+                <img class="mobile-logo" loading="lazy"
+                    src="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp"
+                    alt="<?= htmlspecialchars($site['company']) ?>">
             </a>
-            <div class="ozon-search" id="searchWrap">
+            <div class=" ozon-search" id="searchWrap">
                 <form method="GET" action="/market" id="searchForm">
                     <input type="text" name="search" id="searchInput" placeholder="Искать в каталоге"
                         autocomplete="off">

@@ -3,25 +3,33 @@
 ?>
 <style>
   @media (max-width: 767px) {
-    .woot-widget-bubble { width: 50px !important; height: 50px !important; bottom: 70px !important; }
-    .woot-widget-bubble svg { margin: 13px !important; width: 20px !important; }
+    .woot-widget-bubble {
+      width: 50px !important;
+      height: 50px !important;
+      bottom: 70px !important;
+    }
+
+    .woot-widget-bubble svg {
+      transform: translate(-7px, -7px) !important;
+      width: 20px !important;
+    }
   }
 </style>
 <script>
-  (function() {
+  (function () {
     var isMobile = window.matchMedia('(max-width: 767px)').matches;
     window.chatwootSettings = {
       "position": "right",
       "type": isMobile ? "standard" : "expanded_bubble",
       "launcherTitle": ""
     };
-    (function(d,t) {
+    (function (d, t) {
       var BASE_URL = "https://app.chatwoot.com";
       var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
       g.src = BASE_URL + "/packs/js/sdk.js";
       g.async = true;
       s.parentNode.insertBefore(g, s);
-      g.onload = function() {
+      g.onload = function () {
         window.chatwootSDK.run({
           websiteToken: 'Z16V1t3ANHodWwXFQanStee2',
           baseUrl: BASE_URL
