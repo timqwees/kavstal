@@ -312,57 +312,35 @@
           <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">Калькулятор</span>
           <h2 class="text-xl md:text-2xl font-bold text-gray-900">Рассчитайте стоимость онлайн</h2>
         </div>
-        <?php
-        $calcProducts = []; $seen = [];
-        foreach ($allProducts as $p) {
-          if (!isset($p['units']) || empty($p['units'])) continue;
-          $b = $p['badge'] ?? '';
-          if ($b === 'Категория' || $b === 'Подкатегория') continue;
-          $sk = $p['cat'] ?? 'other';
-          if (!isset($seen[$sk])) { $seen[$sk] = true; $calcProducts[] = $p; }
-          if (count($calcProducts) >= 100) break;
-        }
-        ?>
         <div class="max-w-4xl mx-auto">
           <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">
             <form method="POST" action="/send/email" class="ajax-form space-y-5" data-goal="calculator_request">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label for="metalType" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>Тип металлопроката</label>
-                  <select name="тип_металлопроката" id="metalType" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="updateCalculatorUnits()">
-                    <option value="">Выберите тип</option>
-                    <?php foreach ($calcProducts as $product): ?>
-                    <option value="<?= htmlspecialchars($product['id']) ?>" data-units='<?= json_encode($product['units']) ?>'><?= htmlspecialchars($product['name'] ?? $product['title']) ?></option>
-                    <?php endforeach; ?>
-                  </select>
+                  <label for="metalName" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z"/><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z"/></svg>Название металлопроката</label>
+                  <input type="text" name="тип_металлопроката" id="metalName" placeholder="Например, Арматура А500С 12 мм" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
                 </div>
                 <div>
-                  <label for="unitSelect" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5"/></svg>Единица измерения</label>
-                  <select id="unitSelect" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="calculateMetal()">
-                    <option value="">Сначала выберите тип</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5a2.25 2.25 0 012.25 2.25v.75H6v-.75A2.25 2.25 0 018.25 6z"/></svg>Количество</label>
-                  <input type="number" id="quantity" min="0.1" step="0.1" placeholder="Укажите количество" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" oninput="calculateMetal()">
+                  <label for="calculatorQuantity" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5a2.25 2.25 0 012.25 2.25v.75H6v-.75A2.25 2.25 0 018.25 6z"/></svg>Количество</label>
+                  <input type="text" name="количество" id="calculatorQuantity" placeholder="Например, 2 тонны или 50 штук" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
                 </div>
                 <div>
                   <label for="delivery" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/></svg>Доставка</label>
-                  <select id="delivery" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="calculateMetal()">
-                    <option value="0">Самовывоз</option>
-                    <option value="5000">По Москве (в пределах МКАД)</option>
-                    <option value="8000">МО (до 50 км)</option>
-                    <option value="15000">Дальняя доставка (от 50 км)</option>
+                  <select name="доставка" id="delivery" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
+                    <option value="Самовывоз">Самовывоз</option>
+                    <option value="По Москве (в пределах МКАД)">По Москве (в пределах МКАД)</option>
+                    <option value="МО (до 50 км)">МО (до 50 км)</option>
+                    <option value="Дальняя доставка (от 50 км)">Дальняя доставка (от 50 км)</option>
                   </select>
                 </div>
                 <div>
-                  <label for="discount" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Скидка (опт)</label>
-                  <select id="discount" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition" onchange="calculateMetal()">
-                    <option value="0">Нет скидки</option>
-                    <option value="3">От 10 тонн (3%)</option>
-                    <option value="5">От 50 тонн (5%)</option>
-                    <option value="7">От 100 тонн (7%)</option>
-                    <option value="10">От 500 тонн (10%)</option>
+                  <label for="discount" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>Объём / Скидка</label>
+                  <select name="скидка" id="discount" class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
+                    <option value="Розница">Розница</option>
+                    <option value="От 10 тонн">От 10 тонн</option>
+                    <option value="От 50 тонн">От 50 тонн</option>
+                    <option value="От 100 тонн">От 100 тонн</option>
+                    <option value="От 500 тонн">От 500 тонн</option>
                   </select>
                 </div>
                 <div>
@@ -373,12 +351,7 @@
               <div class="absolute opacity-0 pointer-events-none" aria-hidden="true">
                 <input type="text" name="website" tabindex="-1" autocomplete="off">
               </div>
-              <div class="bg-gradient-to-r from-red-50 to-white rounded-xl p-5 border border-red-100 grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                <div><p class="text-xs text-gray-500 mb-0.5">Стоимость металла</p><p class="text-xl font-bold text-gray-900" id="metalCost">0 ₽</p></div>
-                <div><p class="text-xs text-gray-500 mb-0.5">Доставка</p><p class="text-xl font-bold text-gray-900" id="deliveryCost">0 ₽</p></div>
-                <div><p class="text-xs text-gray-500 mb-0.5">Итого</p><p class="text-2xl font-bold text-red-500" id="totalCost">0 ₽</p></div>
-              </div>
-              <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-500 hover:from-red-500 hover:to-red-500 text-white py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md shadow-red-500/20">Оставить запрос →</button>
+              <button type="submit" class="w-full bg-gradient-to-r from-red-500 to-red-500 hover:from-red-500 hover:to-red-500 text-white py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md shadow-red-500/20">Отправить запрос →</button>
             </form>
           </div>
         </div>
@@ -463,7 +436,6 @@
   <script defer src="/public/assets/scripts/components/swiper.min.js"></script>
   <script defer src="/public/assets/scripts/components/search.min.js"></script>
   <script defer src="/public/assets/scripts/components/lazyIMG.min.js"></script>
-  <script defer src="/public/assets/scripts/components/calculator.min.js"></script>
   <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
   <script defer src="/public/assets/scripts/main/switchUnit.min.js"></script>
   <script defer src="/public/assets/scripts/main/catalog-home.min.js"></script>
