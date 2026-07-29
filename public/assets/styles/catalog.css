@@ -2091,3 +2091,11 @@ body {
 }
 
 .ozon-phone-btn { display: flex; }
+
+@media (max-width: 767px) {
+    input:not([type="hidden"]):not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]):not([type="search"]),
+    textarea, select {
+        font-size: 16px !important;
+        min-height: 48px !important;
+    }
+}
