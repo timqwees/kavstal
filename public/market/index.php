@@ -439,16 +439,16 @@ $noindexMarket = $hasFilters || $marketPage > 1;
             <h2 class="text-xl md:text-2xl font-bold text-zinc-900 mb-3">Не нашли то, что искали?</h2>
             <p class="text-sm md:text-base text-zinc-500 mb-8 max-w-xl mx-auto">У нас есть все возможные материалы, и некоторые могут не отображаться в каталоге. Оставьте заявку — мы подберём нужный товар и свяжемся с вами.</p>
             <form id="market-feedback-form" data-goal="market_feedback" method="POST" action="/api/feedback" class="max-w-2xl mx-auto">
-                <div class="flex flex-col sm:flex-row gap-3 mb-3">
+                <div class="flex flex-col sm:flex-row gap-4 sm:gap-3 mb-4 sm:mb-3">
                     <input type="text" name="name" placeholder="Ваше имя" required
-                        class="flex-1 h-12 px-4 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all">
+                        class="flex-1 h-14 sm:h-12 px-4 bg-white border border-zinc-300 rounded-xl text-base sm:text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all">
                     <input type="tel" name="phone" placeholder="Номер телефона" required
-                        class="flex-1 h-12 px-4 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all">
+                        class="flex-1 h-14 sm:h-12 px-4 bg-white border border-zinc-300 rounded-xl text-base sm:text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all">
                     <button type="submit"
-                        class="h-12 px-6 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors whitespace-nowrap">Отправить</button>
+                        class="h-14 sm:h-12 px-6 bg-red-500 hover:bg-red-600 text-white font-semibold rounded-xl transition-colors whitespace-nowrap">Отправить</button>
                 </div>
                 <textarea name="message" placeholder="Что именно вас интересует? (размер, марка стали, количество)" rows="2"
-                    class="w-full px-4 py-3 bg-white border border-zinc-300 rounded-xl text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all resize-none"></textarea>
+                    class="w-full px-4 py-4 sm:py-3 bg-white border border-zinc-300 rounded-xl text-base sm:text-sm outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all resize-none"></textarea>
                 <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
             </form>
         </div>
