@@ -1,3 +1,5 @@
+document.head.insertAdjacentHTML('beforeend', '<style>@keyframes spin{to{transform:rotate(360deg)}}.ajax-spinner{animation:spin .8s linear infinite}</style>');
+
 document.querySelectorAll('form.ajax-form').forEach(form => {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
@@ -6,7 +8,7 @@ document.querySelectorAll('form.ajax-form').forEach(form => {
     const originalHtml = btn ? btn.innerHTML : null;
     if (btn) {
       btn.disabled = true;
-      btn.innerHTML = '<svg class="animate-spin w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" class="opacity-75"/></svg>';
+      btn.innerHTML = '<svg class="ajax-spinner w-5 h-5 mx-auto" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" style="opacity:.25"/><path d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" fill="currentColor" style="opacity:.75"/></svg>';
     }
 
     const formData = new FormData(this);
