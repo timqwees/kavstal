@@ -21,7 +21,7 @@
             <!-- Desktop Contact -->
             <div class="hidden lg:flex items-stretch items-end gap-6">
                 <div class="flex flex-col justify-center items-center lg:hidden xl:flex">
-                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
+                    <a href="tel:<?= htmlspecialchars($site['phone']) ?>"
                         class="text-xl font-bold text-gray-800"><?= htmlspecialchars($site['phone']) ?></a>
                     <p class="text-sm text-gray-600">
                         <?= htmlspecialchars($site['workingHours']) ?>
