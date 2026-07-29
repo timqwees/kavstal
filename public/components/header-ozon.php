@@ -60,6 +60,9 @@ $catalogSubcategories = $tree['subcategories'];
                 <span class="ozon-cart-badge cart-count-badge" style="display:none;">0</span>
                 <span>Корзина</span>
             </a>
+            <a href="tel:<?= $phone_clean ?>" class="ozon-header-action ozon-phone-btn" aria-label="Позвонить">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </a>
             <a href="/favorites" class="ozon-header-action" id="headerFavBtn">
                 <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 10.163C3 7.262 5.13 5 8 5c1.929 0 3.244 1.102 4 2.066C12.756 6.102 14.071 5 16 5c2.87 0 5 2.264 5 5.163 0 4.561-4.568 7.856-8.243 9.66a1.71 1.71 0 0 1-1.514 0C7.568 18.02 3 14.724 3 10.163"/></svg>
                 <span class="ozon-cart-badge" id="favCountBadge" style="display:none;">0</span>
