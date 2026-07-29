@@ -151,7 +151,7 @@
     <!-- Stories -->
     <section class="pb-6 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <h3 class="text-lg font-bold text-gray-900 mb-3">Наши новости</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-3">Наши услуги</h3>
         <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-stretch">
           <?php
           $infoDir = __DIR__ . '/assets/images/info';
@@ -225,8 +225,8 @@
                   class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold flex-shrink-0 leading-relaxed"><?= htmlspecialchars($p['badge'] ?? 'Новинка') ?></span>
                 <button type="button"
                   class="add-to-fav-btn w-7 h-7 rounded-md border border-gray-200 flex items-center justify-center shrink-0 hover:border-gray-400 hover:bg-gray-50 transition-colors"
-                  data-pid="<?= htmlspecialchars($p['pid'] ?? $p['id'] ?? '') ?>" title="В избранное"><svg width="13" height="13"
-                    viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round"
+                  data-pid="<?= htmlspecialchars($p['pid'] ?? $p['id'] ?? '') ?>" title="В избранное"><svg width="13"
+                    height="13" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
                     <path
                       d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -285,8 +285,8 @@
                     </div>
                     <button type="button"
                       class="add-to-cart-btn w-8 h-7 rounded-lg bg-red-500 hover:bg-red-500 active:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors"
-                      data-pid="<?= htmlspecialchars($p['pid'] ?? $p['id'] ?? '') ?>" data-unit="<?= htmlspecialchars($firstUnit) ?>"
-                      title="В заявку">
+                      data-pid="<?= htmlspecialchars($p['pid'] ?? $p['id'] ?? '') ?>"
+                      data-unit="<?= htmlspecialchars($firstUnit) ?>" title="В заявку">
                       <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                         <circle cx="9" cy="21" r="1" />
                         <circle cx="20" cy="21" r="1" />
