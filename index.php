@@ -55,5 +55,9 @@ Database::getConnection();
 include_once __DIR__ . '/setting/route/routes.php';
 Network::onRoute();
 
+if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+    if (ob_get_level()) ob_clean();
+}
+
 ob_end_flush();
 ?>

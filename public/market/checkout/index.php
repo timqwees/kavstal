@@ -72,7 +72,7 @@ $paymentMethods = [
 
         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
             <div class="lg:col-span-3 space-y-6">
-                <form id="checkout-form" action="/checkout" method="POST" class="flex flex-col gap-6" data-goal="checkout">
+                <form id="checkout-form" action="/checkout" method="POST" class="flex flex-col gap-6" data-goal="checkout" data-ajax="false">
                     <!-- Контактные данные -->
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100">
                         <div class="section-toggle flex items-center justify-between p-5" onclick="toggleSection(this)">
@@ -322,7 +322,7 @@ $paymentMethods = [
             const btn = this.querySelector('#submit-order');
             btn.disabled = true;
             btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Оформляем...';
-            fetch(this.action, { method: 'POST', body: new FormData(this) })
+            fetch(this.action, { method: 'POST', body: new FormData(this), headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                 .then(function(r){ return r.json(); })
                 .then(function(d){
                     if (d.success) {

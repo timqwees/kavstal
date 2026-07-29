@@ -325,6 +325,7 @@ Routes::post('/api/orders/quick', function () {
     $phone = trim($_POST['phone'] ?? '');
     $productId = trim($_POST['product_id'] ?? '');
     if (empty($name) || empty($phone)) {
+        if (ob_get_level()) ob_clean();
         print json_encode(['success' => false, 'error' => 'Укажите имя и телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
@@ -335,9 +336,11 @@ Routes::post('/api/orders/quick', function () {
             'phone' => $phone,
             'product_id' => $productId,
         ]);
+        if (ob_get_level()) ob_clean();
         print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
         error_log('Quick order error: ' . $e->getMessage());
+        if (ob_get_level()) ob_clean();
         if (!headers_sent()) {
             print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
         }
@@ -401,13 +404,16 @@ Routes::post('/send/email', function () {
     set_time_limit(60);
     $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
     if ($phone === '') {
+        if (ob_get_level()) ob_clean();
         print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
     try {
         \Setting\route\function\Functions::sendMail($data);
+        if (ob_get_level()) ob_clean();
         print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
+        if (ob_get_level()) ob_clean();
         print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
     }
 });

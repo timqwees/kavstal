@@ -366,7 +366,7 @@ document.querySelectorAll('.accordion-header').forEach(function(header) {
         form.addEventListener('submit', function(e) {
             if (this.querySelector('input[name="website"]').value) { e.preventDefault(); return; }
             var fd = new FormData(this);
-            fetch('/api/orders/quick', { method: 'POST', body: fd })
+            fetch('/api/orders/quick', { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                 .then(function(r) { return r.json(); })
                 .then(function(d) {
                     if (d.success) {

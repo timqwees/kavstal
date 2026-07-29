@@ -151,7 +151,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
       <h3 class="text-xl font-bold text-gray-900">Заказать звонок</h3>
       <p class="text-sm text-gray-500 mt-1">Оставьте номер — мы перезвоним в течение 15 минут</p>
     </div>
-    <form id="callbackForm" class="space-y-4" data-goal="callback">
+    <form id="callbackForm" class="space-y-4" data-goal="callback" method="POST" action="/send/email">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label>
         <input type="text" name="name" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm" placeholder="Иван Иванов">
@@ -167,31 +167,6 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
     <p class="text-xs text-gray-400 text-center mt-4">Нажимая кнопку, вы соглашаетесь на обработку персональных данных</p>
   </div>
 </div>
-
-<script>
-document.getElementById('callbackForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const btn = this.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  btn.innerHTML = '<svg class="animate-spin w-5 h-5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" stroke-dasharray="31.4" stroke-dashoffset="10"/></svg> Отправляем...';
-  fetch('/send/email', { method: 'POST', body: new FormData(this) })
-    .then(function(r) { return r.json(); })
-    .then(function(d) {
-      if (d.success) {
-        document.getElementById('callbackModal').innerHTML = '<div class="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md mx-4 text-center"><div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i class="fas fa-check-circle text-green-600 text-2xl"></i></div><h3 class="text-xl font-bold text-gray-900 mb-2">Спасибо!</h3><p class="text-gray-500">Мы перезвоним вам в ближайшее время.</p><button type="button" onclick="document.getElementById(\'callbackModal\').classList.add(\'hidden\')" class="mt-6 px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition">Закрыть</button></div>';
-      } else {
-        alert(d.error || 'Ошибка. Попробуйте ещё раз.');
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-phone"></i> Перезвоните мне';
-      }
-    })
-    .catch(function() {
-      alert('Ошибка отправки. Попробуйте ещё раз.');
-      btn.disabled = false;
-      btn.innerHTML = '<i class="fas fa-phone"></i> Перезвоните мне';
-    });
-});
-</script>
 
 <style>
   @media only screen and (max-width: 767px) {
@@ -212,4 +187,5 @@ document.getElementById('callbackForm').addEventListener('submit', function(e) {
     }
   })();
 </script>
+<script src="/public/assets/scripts/ajax-forms.js" defer></script>
 <?php include_once __DIR__ . '/widget-chatwoot.php'; ?>
