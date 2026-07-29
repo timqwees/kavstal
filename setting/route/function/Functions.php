@@ -182,13 +182,13 @@ class Functions
         // хоста (прокси/кэш от другого окружения) не отдавать неверный домен.
         $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
         $host = preg_replace('/^https?:\/\//i', '', $host);
-        $isDev = preg_match('/^(localhost|127\.0\.0\.1)(:|$)/i', $host) || preg_match('/\.local$/i', $host);
-        // Локальная разработка — оставляем как есть (http://localhost:8000)
-        if ($isDev) {
-            $baseUrl = 'http://' . $host;
-        } else {
-            // Прод/прокси: всегда https + www.kavstal.ru (игнорируем неверный backend-хост www.localhost:8000)
+        $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
+        // Прод/прокси: всегда https + www.kavstal.ru (игнорируем неверный backend-хост)
+        if ($isHttps || preg_match('/kavstal\.ru$/i', $host)) {
             $baseUrl = 'https://www.kavstal.ru';
+        } else {
+            $baseUrl = 'http://' . $host;
         }
         $requestUri = $_SERVER['REQUEST_URI'] ?? '/';
         $canonical = $baseUrl . $requestUri;
