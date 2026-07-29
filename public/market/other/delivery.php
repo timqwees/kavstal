@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Доставка и оплата | КАВ СТАЛЬ - Условия доставки металлопроката</title>
     <meta name="description"
-        content="Доставка металлопроката по Москве и Московской области. Собственный автопарк, доставка в день заказа. Оплата наличными, картой, безналичный расчет с НДС.">
+        content="Доставка металлопроката по Москве и Московской области. Организуем доставку подходящим транспортом, стоимость рассчитывается индивидуально. Безналичный расчёт с НДС.">
 
     <meta property="og:title" content="Доставка и оплата | КАВ СТАЛЬ">
     <meta property="og:description" content="Условия доставки и способы оплаты металлопроката">
@@ -52,7 +52,7 @@
         "@context": "https://schema.org",
         "@type": "Offer",
         "name": "Доставка металлопроката",
-        "description": "Доставка металлопроката по Москве и Московской области. Собственный автопарк, доставка в день заказа.",
+        "description": "Доставка металлопроката по Москве и Московской области.",
         "url": "<?php echo $site['baseUrl']; ?>/delivery",
         "provider": {
             "@type": "Organization",
@@ -133,59 +133,33 @@
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-truck text-red-500 text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2">Доставка в день заказа</h3>
-                    <p class="text-gray-600">При заказе до 14:00 доставка выполняется в тот же день по Москве и ближнему
-                        Подмосковью</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Срочная доставка</h3>
+                    <p class="text-gray-600">При заказе в первой половине дня возможна доставка в день заказа — сроки уточняет менеджер</p>
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-map-marked-alt text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">По всей Московской области</h3>
-                    <p class="text-gray-600">Доставляем металлопрокат в любую точку Московской области — от 1 часа до 24
-                        часов</p>
+                    <p class="text-gray-600">Доставляем металлопрокат по Москве и Московской области — сроки рассчитываются индивидуально</p>
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-weight-hanging text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Любой объем</h3>
-                    <p class="text-gray-600">От нескольких арматурин до 20 тонн — у нас есть техника для любых задач</p>
+                    <p class="text-gray-600">От небольших партий до крупных — транспорт подбирается под объём заказа</p>
                 </div>
             </div>
 
-            <!-- Transport Types -->
+            <!-- Transport info -->
             <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-12">
                 <div class="p-6 border-b border-gray-200">
-                    <h3 class="text-2xl font-bold text-gray-900">Наш автопарк</h3>
+                    <h3 class="text-2xl font-bold text-gray-900">Организация доставки</h3>
                 </div>
                 <div class="p-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-truck-pickup text-red-500 text-3xl mb-3"></i>
-                            <h4 class="font-bold text-gray-900 mb-2">Газель</h4>
-                            <p class="text-sm text-gray-600 mb-2">До 1.5 тонн, 3-4 м длина</p>
-                            <p class="text-lg font-bold text-red-500">от 1 500 ₽</p>
-                        </div>
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-truck text-red-500 text-3xl mb-3"></i>
-                            <h4 class="font-bold text-gray-900 mb-2">Бортовой</h4>
-                            <p class="text-sm text-gray-600 mb-2">До 5 тонн, 6 м длина</p>
-                            <p class="text-lg font-bold text-red-500">от 3 500 ₽</p>
-                        </div>
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-truck-moving text-red-500 text-3xl mb-3"></i>
-                            <h4 class="font-bold text-gray-900 mb-2">Манипулятор</h4>
-                            <p class="text-sm text-gray-600 mb-2">До 10 тонн, разгрузка</p>
-                            <p class="text-lg font-bold text-red-500">от 8 000 ₽</p>
-                        </div>
-                        <div class="border border-gray-200 rounded-lg p-4">
-                            <i class="fas fa-shipping-fast text-red-500 text-3xl mb-3"></i>
-                            <h4 class="font-bold text-gray-900 mb-2">Фура</h4>
-                            <p class="text-sm text-gray-600 mb-2">До 20 тонн, 13.6 м</p>
-                            <p class="text-lg font-bold text-red-500">от 15 000 ₽</p>
-                        </div>
-                    </div>
+                    <p class="text-gray-600 mb-4">Тип транспорта подбирается под характеристики груза: вес, длину, габариты, способ погрузки и разгрузки, маршрут и пропускной режим объекта. Для поставки могут использоваться малотоннажные автомобили, бортовые машины, длинномеры, манипуляторы и другой специализированный транспорт.</p>
+                    <p class="text-gray-600">Стоимость и срок доставки рассчитываются индивидуально после подтверждения наличия товара, адреса отгрузки и адреса получателя. Если заказ комплектуется с нескольких складов, менеджер заранее согласует схему поставки.</p>
                 </div>
             </div>
 
@@ -271,21 +245,12 @@
         <div class="bg-white rounded-2xl shadow-md p-8">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="mb-6 md:mb-0 md:mr-8">
-                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Самовывоз со склада</h3>
-                    <p class="text-gray-600 mb-4">Заберите заказ самостоятельно со склада в Хованской промзоне.
-                        Бесплатно, без очередей.</p>
-                    <ul class="space-y-2 text-gray-600">
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Адрес: Москва, Хованская промзона, вл. 20
-                        </li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Часы работы: Пн-Пт 9:00-18:00, Сб 9:00-15:00
-                        </li>
-                        <li><i class="fas fa-check text-green-500 mr-2"></i>Погрузка краном или вилочным погрузчиком
-                        </li>
-                    </ul>
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">Самовывоз</h3>
+                    <p class="text-gray-600 mb-4">Самовывоз возможен по согласованию со склада отгрузки. Адрес, время и условия погрузки направляются после оформления заказа.</p>
                 </div>
                 <a href="/contacts"
                     class="bg-red-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-500 transition whitespace-nowrap">
-                    Схема проезда
+                    Контакты
                 </a>
             </div>
         </div>

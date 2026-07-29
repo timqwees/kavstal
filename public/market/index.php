@@ -11,9 +11,9 @@ $noindexMarket = $hasFilters || $marketPage > 1;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>КАВ СТАЛЬ | Поставки металлопроката по Москве и МО</title>
-    <meta name="description" content="МЕТАЛЛОБАЗА 'КАВ СТАЛЬ' - поставки металлопроката по Москве и МО. Арматура, балка, круг, лист, полоса, проволока, профнастил, сваи, рельс, сетка, труба, уголок, швеллер и другая продукция.">
-    <meta property="og:title" content="КАВ СТАЛЬ | Металлобаза - поставки металлопроката по Москве и МО">
-    <meta property="og:description" content="МЕТАЛЛОБАЗА 'КАВ СТАЛЬ' - поставки металлопроката по Москве и МО. Арматура, балка, круг, лист, полоса, проволока, профнастил, сваи, рельс, сетка, труба, уголок, швеллер. ООО 'КАВ Сталь' ИНН: 9719080724.">
+    <meta name="description" content="КАВ СТАЛЬ — поставки металлопроката по Москве и МО. Арматура, балка, круг, лист, полоса, проволока, профнастил, сваи, рельс, сетка, труба, уголок, швеллер и другая продукция.">
+    <meta property="og:title" content="КАВ СТАЛЬ | Поставки металлопроката по Москве и МО">
+    <meta property="og:description" content="КАВ СТАЛЬ — поставки металлопроката по Москве и МО. Арматура, балка, круг, лист, полоса, проволока, профнастил, сваи, рельс, сетка, труба, уголок, швеллер.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?php echo $site['baseUrl']; ?>/market">
     <meta property="og:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/market.png">
@@ -22,12 +22,12 @@ $noindexMarket = $hasFilters || $marketPage > 1;
     <meta property="og:site_name" content="КАВ СТАЛЬ">
     <meta property="og:locale" content="ru_RU">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="КАВ СТАЛЬ | Металлобаза - поставки металлопроката">
+    <meta name="twitter:title" content="КАВ СТАЛЬ | Поставки металлопроката">
     <meta name="twitter:description" content="Поставки металлопроката по Москве и МО.">
     <meta name="twitter:image" content="<?php echo $site['baseUrl']; ?>/public/assets/images/bgpage/market.png">
     <meta name="robots" content="<?= $noindexMarket ? 'noindex, follow' : 'index, follow' ?>">
     <meta name="author" content="ООО 'КАВ Сталь'">
-    <meta name="keywords" content="металлобаза, металлопрокат, арматура, балка, круг, лист, труба, Москва, МО, ГОСТ, КАВ СТАЛЬ">
+    <meta name="keywords" content="металлопрокат, арматура, балка, круг, лист, труба, Москва, МО, ГОСТ, КАВ СТАЛЬ">
     <link rel="canonical" href="<?php echo $site['baseUrl']; ?>/market">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -59,8 +59,8 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                 "openingHours": "Mo-Su 09:00-18:00", "priceRange": "$$"
             },
             {
-                "@type": "Store", "@id": <?= json_encode($site['baseUrl'] . '/market', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-                "name": "КАВ СТАЛЬ - Металлобаза", "description": "Интернет-магазин металлопроката",
+                "@type": "CollectionPage", "@id": <?= json_encode($site['baseUrl'] . '/market', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
+                "name": "Каталог металлопроката КАВ СТАЛЬ", "description": "Поставки металлопроката по Москве и МО",
                 "url": <?= json_encode($site['baseUrl'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
                 "telephone": "+7-495-989-24-20", "email": "<?= $site['email'] ?>",
                 "currenciesAccepted": "RUB", "priceRange": "₽₽"
@@ -327,8 +327,6 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                             </div>
                             <?php endif; ?>
 
-
-
                             <!-- Сбросить -->
                             <?php if ($activeCategory || $activeMarka || $activeSize || $activePriceFrom !== '' || $activePriceTo !== '' || $searchTerm): ?>
                             <a href="/market" class="block text-center text-xs text-red-500 hover:text-red-500 font-medium py-1.5 rounded-lg hover:bg-red-50 transition-colors border border-red-100">Сбросить все фильтры</a>
@@ -377,7 +375,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                 <div class="mt-auto">
                                     <div class="flex items-center gap-1.5 mb-2">
                                         <span class="inline-block w-1.5 h-1.5 rounded-full <?= $inStock ? 'bg-emerald-500' : 'bg-zinc-300' ?>"></span>
-                                        <span class="text-[11px] font-medium <?= $inStock ? 'text-emerald-600' : 'text-zinc-400' ?>"><?= $inStock ? 'В наличии' : 'Под заказ' ?></span>
+                                        <span class="text-[11px] font-medium <?= $inStock ? 'text-amber-600' : 'text-zinc-400' ?>"><?= $inStock ? 'Уточняйте наличие' : 'Под заказ' ?></span>
                                     </div>
                                     <div class="flex items-end justify-between gap-2">
                                         <div itemprop="offers" itemscope itemtype="https://schema.org/Offer" class="min-w-0">
@@ -390,7 +388,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                                 <?php endforeach; ?>
                                             </div>
                                         </div>
-                                        <button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="<?= htmlspecialchars($product['id'] ?? '') ?>" data-unit="<?= htmlspecialchars($firstUnit ?? '') ?>" title="В корзину">
+                                        <button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="<?= htmlspecialchars($product['id'] ?? '') ?>" data-unit="<?= htmlspecialchars($firstUnit ?? '') ?>" title="В заявку">
                                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                                         </button>
                                     </div>

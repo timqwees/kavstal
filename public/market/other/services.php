@@ -54,7 +54,7 @@ $services = [
         'color' => 'green',
         'price_from' => 'от 1 500 ₽',
         'price_note' => 'По Москве и Московской области',
-        'desc' => 'Доставка металлопроката по Москве и Московской области. Собственный автопарк от Gazelle до фуры. Грузчики включены.',
+        'desc' => 'Доставка металлопроката по Москве и Московской области. Подбираем транспорт под характеристики груза — от малотоннажного до длинномеров. Грузчики включены.',
         'specs' => [
             'Тип ТС' => 'Газель, Камаз, фура, манипулятор',
             'Грузоподъёмность' => 'до 20 тн',
@@ -62,7 +62,7 @@ $services = [
             'Срок' => 'В день заказа / на завтра',
             'Зона' => 'Москва, МО, регионы РФ',
         ],
-        'features' => ['Собственный автопарк', 'Грузчики в подарок', 'Отслеживание в пути', 'Наличный и безналичный расчёт'],
+        'features' => ['Подбор транспорта под груз', 'Грузчики в подарок', 'Отслеживание в пути', 'Безналичный расчёт'],
     ],
     'welding' => [
         'title' => 'Сварка металла',
@@ -158,7 +158,7 @@ $services = [
         "@context": "https://schema.org",
         "@type": "ItemList",
         "name": "Услуги металлообработки",
-        "description": "Услуги металлобазы КАВ СТАЛЬ: резка, гибка, сварка, покраска, доставка",
+        "description": "Услуги компании КАВ СТАЛЬ: резка, гибка, сварка, покраска, доставка",
         "itemListElement": [
             {"@type":"ListItem","position":1,"name":"Резка металла","url":"<?= $site['baseUrl'] ?>/services#cutting"},
             {"@type":"ListItem","position":2,"name":"Гибка металла","url":"<?= $site['baseUrl'] ?>/services#bending"},
@@ -257,8 +257,8 @@ $services = [
                 <div class="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 md:p-12 mb-8 text-white">
                     <div class="flex flex-col md:flex-row items-center gap-6">
                         <div class="flex-1">
-                            <span class="text-red-400 text-sm font-semibold tracking-wider uppercase">Услуги металлобазы</span>
-                            <h1 class="text-3xl md:text-4xl font-bold mt-2 mb-4">Услуги металлообработки<br><span class="text-red-400">с гарантией качества</span></h1>
+                            <span class="text-red-400 text-sm font-semibold tracking-wider uppercase">Услуги компании</span>
+                            <h1 class="text-3xl md:text-4xl font-bold mt-2 mb-4">Услуги металлообработки</h1>
                             <p class="text-gray-300 text-lg mb-6">Резка, гибка, сварка, покраска и доставка металлопроката. Работаем с физическими и юридическими лицами.</p>
                             <div class="flex flex-wrap gap-4">
                                 <a href="#services" class="bg-red-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-500 transition flex items-center gap-2">
@@ -414,7 +414,7 @@ $services = [
                                 <span class="text-red-500 font-bold text-lg">4</span>
                             </div>
                             <h4 class="font-semibold text-gray-900 mb-1">Получаете результат</h4>
-                            <p class="text-sm text-gray-500">Готовые изделия с гарантией качества</p>
+                            <p class="text-sm text-gray-500">Готовые изделия любой сложности</p>
                         </div>
                     </div>
                 </div>

@@ -91,7 +91,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                     });
                 }
                 var stock = p.in_stock
-                    ? '<span class="inline-flex items-center gap-0.5 text-[11px] font-medium text-emerald-600"><span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500"></span>В наличии</span>'
+                    ? '<span class="inline-flex items-center gap-0.5 text-[11px] font-medium text-amber-600"><span class="inline-block w-1.5 h-1.5 rounded-full bg-amber-500"></span>Уточняйте наличие</span>'
                     : '<span class="inline-flex items-center gap-0.5 text-[11px] font-medium text-zinc-400"><span class="inline-block w-1.5 h-1.5 rounded-full bg-zinc-300"></span>Под заказ</span>';
 
                 var specsHtml = '';
@@ -122,7 +122,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                                 '<div class="price-display text-[15px] font-bold text-neutral-900 leading-tight">' + Math.round(firstPrice).toLocaleString('ru-RU') + ' ₽</div>' +
                                 '<div class="flex gap-0.5 mt-1">' + unitsHtml + '</div>' +
                             '</div>' +
-                            '<button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="' + p.id + '" data-unit="' + firstUnit + '" title="В корзину">' +
+                            '<button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="' + p.id + '" data-unit="' + firstUnit + '" title="В заявку">' +
                                 '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>' +
                             '</button>' +
                         '</div>' +

@@ -9,8 +9,8 @@ $cartCount = App\Models\Cart\Cart::getCount();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Корзина | <?= htmlspecialchars($site['company']) ?></title>
-    <meta name="description" content="Ваша корзина на металлобазе <?= htmlspecialchars($site['company']) ?>">
+    <title>Заявка | <?= htmlspecialchars($site['company']) ?></title>
+    <meta name="description" content="Оформить заявку на металлопрокат в <?= htmlspecialchars($site['company']) ?>">
     <meta name="robots" content="noindex, follow">
     <link rel="canonical" href="<?= $site['baseUrl'] ?>/cart">
     <link rel="icon" type="image/png" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96" />
@@ -32,22 +32,22 @@ $cartCount = App\Models\Cart\Cart::getCount();
             <nav class="flex items-center space-x-2 text-sm">
                 <a href="/" class="text-gray-600 hover:text-red-500" aria-label="Главная"><i class="fas fa-home"></i></a>
                 <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
-                <span class="text-gray-900 font-medium">Корзина</span>
+                <span class="text-gray-900 font-medium">Заявка</span>
             </nav>
         </div>
     </div>
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-8">Корзина</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-8">Заявка</h1>
 
         <?php if (empty($cartItems)): ?>
         <div class="bg-white rounded-2xl shadow-md p-12 text-center max-w-lg mx-auto">
             <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-shopping-cart text-gray-400 text-4xl"></i>
             </div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-3">Корзина пуста</h2>
-            <p class="text-gray-500 mb-8">Добавьте товары из каталога, чтобы оформить заказ</p>
+            <h2 class="text-2xl font-bold text-gray-900 mb-3">Заявка пуста</h2>
+            <p class="text-gray-500 mb-8">Добавьте товары из каталога, чтобы отправить заявку</p>
             <a href="/market" class="inline-flex items-center px-6 py-3 bg-red-500 text-white rounded-lg font-medium hover:bg-red-500 transition">
                 <i class="fas fa-arrow-left mr-2"></i> Перейти в каталог
             </a>
@@ -163,7 +163,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
             if (this.dataset.action === 'increase') val += 1;
             else if (this.dataset.action === 'decrease' && val > 1) val -= 1;
             else if (this.dataset.action === 'decrease' && val <= 1) {
-                if (confirm('Удалить товар из корзины?')) {
+                if (confirm('Удалить товар из заявки?')) {
                     const pid = input.dataset.productId;
                     const unit = input.dataset.unit;
                     removeCartItem(pid, unit).then(r => {
@@ -198,7 +198,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
 
     document.querySelectorAll('.remove-item').forEach(btn => {
         btn.addEventListener('click', function() {
-            if (!confirm('Удалить товар из корзины?')) return;
+            if (!confirm('Удалить товар из заявки?')) return;
             const pid = this.dataset.productId;
             const unit = this.dataset.unit;
             removeCartItem(pid, unit).then(r => { if (r.success) location.reload(); });

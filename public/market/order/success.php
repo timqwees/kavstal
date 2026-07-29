@@ -11,7 +11,7 @@ $paymentLabel = App\Models\Order\Order::paymentLabel($order['payment_method'] ??
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказ #<?= $order['id'] ?? '' ?> оформлен | <?= htmlspecialchars($site['company']) ?></title>
-    <meta name="description" content="Заказ успешно оформлен на металлобазе <?= htmlspecialchars($site['company']) ?>">
+    <meta name="description" content="Заказ успешно оформлен в компании <?= htmlspecialchars($site['company']) ?>">
     <meta name="robots" content="noindex, follow">
     <link rel="icon" type="image/png" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.svg" />

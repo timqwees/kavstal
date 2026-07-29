@@ -25,7 +25,7 @@ $paymentMethods = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Оформление заказа | <?= htmlspecialchars($site['company']) ?></title>
-    <meta name="description" content="Оформление заказа на металлобазе <?= htmlspecialchars($site['company']) ?>">
+    <meta name="description" content="Оформление заказа в компании <?= htmlspecialchars($site['company']) ?>">
     <meta name="robots" content="noindex, follow">
     <link rel="canonical" href="<?= $site['baseUrl'] ?>/checkout">
     <link rel="icon" type="image/png" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96" />

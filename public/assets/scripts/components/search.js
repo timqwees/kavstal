@@ -5,7 +5,8 @@
       wrap = document.getElementById('searchWrap'),
       timer = null,
       lastQuery = '',
-      abortCtrl = null;
+      abortCtrl = null,
+      hideTimer = null;
   if (!input || !dropdown) return;
 
   function highlight(text, q) {
@@ -26,7 +27,9 @@
         dropdown.style.opacity = '1';
       });
     } else {
+      dropdown.style.transition = 'max-height 0.25s ease, opacity 0.2s ease';
       dropdown.style.maxHeight = dropdown.scrollHeight + 'px';
+      dropdown.style.opacity = '1';
     }
 
   }
@@ -57,7 +60,7 @@
         ? '<img src="' + p.image.replace(/"/g,'&quot;') + '" class="w-11 h-11 object-contain rounded-lg bg-zinc-50 border border-zinc-100 flex-shrink-0" loading="lazy">'
         : '<div class="w-11 h-11 rounded-lg bg-zinc-100 flex-shrink-0 flex items-center justify-center"><svg class="w-5 h-5 text-zinc-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5a1.5 1.5 0 001.5-1.5V5.25a1.5 1.5 0 00-1.5-1.5H3.75a1.5 1.5 0 00-1.5 1.5v14.25a1.5 1.5 0 001.5 1.5z"/></svg></div>';
       var stock = p.in_stock
-        ? '<span class="inline-flex items-center gap-0.5 text-[10px] text-emerald-600 font-medium"><span class="w-1 h-1 rounded-full bg-emerald-500"></span>В наличии</span>'
+        ? '<span class="inline-flex items-center gap-0.5 text-[10px] text-amber-600 font-medium"><span class="w-1 h-1 rounded-full bg-amber-500"></span>Уточняйте наличие</span>'
         : '<span class="inline-flex items-center gap-0.5 text-[10px] text-zinc-400"><span class="w-1 h-1 rounded-full bg-zinc-300"></span>Под заказ</span>';
       var cat = p.cat ? '<span class="text-[10px] text-zinc-400">' + p.cat.replace(/</g,'&lt;') + '</span>' : '';
       html +=
@@ -84,15 +87,18 @@
   }
 
   function hideDD() {
+    clearTimeout(hideTimer);
     dropdown.style.transition = 'max-height 0.15s ease, opacity 0.1s ease';
     dropdown.style.maxHeight = '0';
     dropdown.style.opacity = '0';
-    setTimeout(function() { dropdown.classList.add('hidden'); }, 160);
+    lastQuery = '';
+    hideTimer = setTimeout(function() { dropdown.classList.add('hidden'); }, 160);
   }
 
   input.addEventListener('input', function() {
     var q = this.value.trim();
     clearTimeout(timer);
+    clearTimeout(hideTimer);
     if (q.length < 2) { hideDD(); lastQuery = ''; return; }
     if (q === lastQuery) return;
     lastQuery = q;

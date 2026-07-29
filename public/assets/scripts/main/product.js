@@ -178,7 +178,7 @@ updateCartCount();
             if ((d.products || []).indexOf(pid) !== -1) {
             var btn = document.getElementById('add-to-cart-btn');
             if (btn) {
-                btn.innerHTML = '<i class="fas fa-plus"></i> В корзине';
+                btn.innerHTML = '<i class="fas fa-plus"></i> В заявке';
                 btn.classList.add('bg-green-600', 'in-cart');
             }
         }
@@ -213,14 +213,14 @@ document.addEventListener('DOMContentLoaded', function() {
         addToCart(pid, qty, unit).then(r => {
             if (r.success) {
                 feedback.className = 'text-sm font-medium text-green-600';
-                feedback.textContent = '✓ Товар добавлен в корзину!';
+                feedback.textContent = '✓ Товар добавлен в заявку!';
                 this.classList.add('bg-green-600', 'in-cart');
-                this.innerHTML = '<i class="fas fa-plus"></i> В корзине';
+                this.innerHTML = '<i class="fas fa-plus"></i> В заявке';
                 updateCartCount();
             } else {
                 feedback.className = 'text-sm font-medium text-red-600';
                 feedback.textContent = 'Ошибка: ' + (r.error || 'повторите попытку');
-                this.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
+                this.innerHTML = '<i class="fas fa-shopping-cart"></i> В заявку';
             }
             this.disabled = false;
             setTimeout(() => { feedback.className = 'hidden'; }, 3000);
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
             feedback.className = 'text-sm font-medium text-red-600';
             feedback.textContent = 'Ошибка сети';
             this.disabled = false;
-            this.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
+            this.innerHTML = '<i class="fas fa-shopping-cart"></i> В заявку';
         });
     });
 });
@@ -380,11 +380,11 @@ document.querySelectorAll('.accordion-header').forEach(function(header) {
 
     function syncMobileBtn() {
         if (desktopBtn.classList.contains('in-cart')) {
-            mobileBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> В корзине';
+            mobileBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> В заявке';
             mobileBtn.classList.add('bg-green-600');
             mobileBtn.classList.remove('bg-red-600');
         } else {
-            mobileBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> В корзину';
+            mobileBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> В заявку';
             mobileBtn.classList.remove('bg-green-600');
             mobileBtn.classList.add('bg-red-600');
         }

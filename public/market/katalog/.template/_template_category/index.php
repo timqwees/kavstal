@@ -83,12 +83,12 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> купить в Москве — цена за тонну, сортамент, ГОСТ | КАВ СТАЛЬ</title>
-    <meta name="description" content="<?= htmlspecialchars(($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' — купить в Москве по выгодной цене за тонну и за метр. ' . ($categoryInfo['description'] ?: 'Широкий сортамент металлопроката по ГОСТ, резка в размер, доставка по Москве и МО от КАВ СТАЛЬ.')) ?>">
-    <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, купить <?= htmlspecialchars(mb_strtolower($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория')) ?> в Москве, металлопрокат, цена за тонну, сортамент, ГОСТ, доставка, резка">
+    <title><?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?> купить в Москве — сортамент, ГОСТ | КАВ СТАЛЬ</title>
+    <meta name="description" content="<?= htmlspecialchars(($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') . ' — цена, характеристики, сортамент по ГОСТ. ' . ($categoryInfo['description'] ?: 'Уточняйте наличие и условия поставки у менеджера.')) ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория') ?>, купить <?= htmlspecialchars(mb_strtolower($subcategoryInfo['name'] ?? $categoryInfo['title'] ?? 'Категория')) ?> в Москве, металлопрокат, сортамент, ГОСТ, доставка">
     <link rel="canonical" href="<?= $site['baseUrl'] ?><?= htmlspecialchars(($subcategoryInfo['seo']['canonicalUrl'] ?? $categoryInfo['seo']['canonicalUrl'] ?? parse_url($_SERVER['REQUEST_URI'] ?? '/market', PHP_URL_PATH))) ?>">
 
-    <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> – цены | КАВ СТАЛЬ">
+    <meta property="og:title" content="<?= htmlspecialchars($categoryInfo['title'] ?? 'Категория') ?> | КАВ СТАЛЬ">
     <meta property="og:description" content="<?= htmlspecialchars($categoryInfo['description'] ?? $categoryInfo['title'] ?? 'Категория') ?>">
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?= $site['baseUrl'] ?><?= htmlspecialchars(($subcategoryInfo['seo']['canonicalUrl'] ?? $categoryInfo['seo']['canonicalUrl'] ?? '/market')) ?>">
@@ -316,7 +316,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                         <!-- Header: Badge + Fav -->
                         <div class="flex items-start justify-between gap-2 p-3 pb-0">
                             <span class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold leading-relaxed">
-                                <?= $inStock ? 'В наличии' : 'Под заказ' ?>
+                                <?= $inStock ? 'Уточняйте наличие' : 'Под заказ' ?>
                             </span>
                             <button type="button" class="add-to-fav-btn w-7 h-7 rounded-md border border-zinc-200 flex items-center justify-center shrink-0 hover:border-zinc-400 hover:bg-zinc-50 transition-colors" data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>" title="В избранное">
                                 <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z" stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -414,7 +414,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                                         class="add-to-cart-btn w-8 h-7 rounded-lg bg-red-500 hover:bg-red-500 active:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors"
                                         data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>"
                                         data-unit="<?= htmlspecialchars($firstUnit) ?>"
-                                        title="В корзину">
+                                        title="В заявку">
                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                                     </button>
                                 </div>
@@ -495,21 +495,22 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
         <p>
           Цена на <?= htmlspecialchars(mb_strtolower($seoTitle)) ?> за тонну и за метр зависит от марки стали, размера и объёма заказа.
           Чтобы узнать актуальную стоимость, выберите позицию в таблице выше или оставьте заявку —
-          менеджер рассчитает цену с учётом скидок при заказе от 10 тонн. Доставка металлобазы —
-          в день оплаты, самовывоз со склада в Москве.
+          менеджер рассчитает цену с учётом объёма заказа. Сроки и условия доставки уточняйте при подтверждении заказа.
         </p>
         <p class="text-zinc-500">
           Похожие разделы:
           <?php
           $relCats = [
-            'Сортовой прокат' => 'sortovoy-prokat',
-            'Трубы' => 'truby',
-            'Листовой прокат' => 'listovoy-prokat',
+            'Чёрный металлопрокат' => 'chernyy-metalloprokat',
             'Нержавеющая сталь' => 'nerzhaveyushchaya-stal',
-            'Цветные металлы' => 'cvetnye-metally',
-            'Метизы' => 'metizy',
-            'Качественные стали' => 'kachestvennye-stali',
-            'Инженерные системы' => 'inzhenernye-sistemy',
+            'Цветные металлы' => 'tsvetnye-metally',
+            'Качественные и специальные стали' => 'kachestvennye-i-spetsialnye-stali',
+            'Крепёж и метизы' => 'krepezh-i-metizy',
+            'Детали трубопроводов' => 'detali-truboprovodov',
+            'Трубопроводная арматура' => 'truboprovodnaya-armatura',
+            'Кровельные и фасадные материалы' => 'krovelnye-i-fasadnye-materialy',
+            'Полимеры и технические материалы' => 'polimery-i-tekhnicheskie-materialy',
+            'Изделия и проектные позиции' => 'izdeliya-i-proektnye-pozitsii',
           ];
           $relLinks = [];
           foreach ($relCats as $rt => $rslug) {
@@ -584,7 +585,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
                 var qty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
                 var unit = unitSelect ? unitSelect.value : this.dataset.unit;
                 var wasInCart = this.classList.contains('in-cart');
-                var originalCart = '<i class="fas fa-shopping-cart text-[10px]"></i> В корзину';
+                var originalCart = '<i class="fas fa-shopping-cart text-[10px]"></i> В заявку';
                 var originalInCart = '<i class="fas fa-plus"></i>';
 
                 this.disabled = true;

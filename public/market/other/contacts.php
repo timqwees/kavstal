@@ -7,10 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Контакты | <?= htmlspecialchars($site['company']) ?> - Свяжитесь с нами</title>
     <meta name="description"
-        content="Контакты металлобазы <?= htmlspecialchars($site['company']) ?> в Москве. Телефон <?= htmlspecialchars($site['phone']) ?>, адрес: <?= htmlspecialchars($site['address']) ?>. Режим работы: <?= htmlspecialchars($site['workingHours']) ?>.">
+        content="Контакты компании <?= htmlspecialchars($site['company']) ?> в Москве. Телефон <?= htmlspecialchars($site['phone']) ?>, адрес: <?= htmlspecialchars($site['address']) ?>. Режим работы: <?= htmlspecialchars($site['workingHours']) ?>.">
 
     <meta property="og:title" content="Контакты | <?= htmlspecialchars($site['company']) ?>">
-    <meta property="og:description" content="Контактная информация металлобазы <?= htmlspecialchars($site['company']) ?>">
+    <meta property="og:description" content="Контактная информация компании <?= htmlspecialchars($site['company']) ?>">
     <meta property="og:type" content="website">
     <meta property="og:url" content="<?= $site['baseUrl'] ?>/contacts">
     <meta property="og:image" content="<?= $site['baseUrl'] ?>/public/assets/images/bgpage/main.jpg">
@@ -21,7 +21,7 @@
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Контакты | <?= htmlspecialchars($site['company']) ?>">
-    <meta name="twitter:description" content="Контактная информация металлобазы <?= htmlspecialchars($site['company']) ?>">
+    <meta name="twitter:description" content="Контактная информация компании <?= htmlspecialchars($site['company']) ?>">
     <meta name="twitter:image" content="<?= $site['baseUrl'] ?>/public/assets/images/bgpage/main.jpg">
 
     <meta name="robots" content="index, follow">
@@ -48,7 +48,7 @@
         "name": "<?= htmlspecialchars($site['company']) ?>",
         "url": "<?= $site['baseUrl'] ?>",
         "logo": "<?= $site['baseUrl'] ?>/public/assets/images/icons/logo/logo.webp",
-        "description": "Металлобаза <?= htmlspecialchars($site['company']) ?> — поставщик металлопроката в Москве и Московской области",
+        "description": "Компания <?= htmlspecialchars($site['company']) ?> — поставщик металлопроката в Москве и Московской области",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "<?= htmlspecialchars($site['address']) ?>",
@@ -170,6 +170,32 @@
             </div>
 
             <div>
+                <!-- Spec Upload Form -->
+                <div class="bg-white rounded-2xl shadow-md p-8 mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Загрузить спецификацию</h2>
+                    <p class="text-gray-500 text-sm mb-6">Пришлите файл спецификации (Excel, PDF) — мы рассчитаем стоимость и свяжемся с вами</p>
+                    <form id="specForm" enctype="multipart/form-data" class="space-y-4">
+                        <input type="text" name="name" placeholder="Ваше имя" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                        <input type="tel" name="phone" placeholder="Телефон" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                        <input type="email" name="email" placeholder="Email"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none">
+                        <textarea name="comment" rows="3" placeholder="Комментарий к заявке"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 outline-none"></textarea>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Файл спецификации</label>
+                            <input type="file" name="spec_file" accept=".xlsx,.xls,.pdf,.csv,.doc,.docx" required
+                                class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-500 hover:file:bg-red-100">
+                        </div>
+                        <button type="submit"
+                            class="w-full bg-red-500 text-white py-3 rounded-lg font-semibold hover:bg-red-500 transition">
+                            Отправить заявку
+                        </button>
+                    </form>
+                    <div id="specFormStatus" class="mt-4 text-sm font-medium"></div>
+                </div>
+
                 <div class="bg-white rounded-2xl shadow-md overflow-hidden h-full min-h-[500px]">
                     <iframe src="https://yandex.ru/map-widget/v1/?um=constructor%3A26fac0f930c91c623aafe2f3757b7adc63f0e9f8625105edda0659e463840e3e&amp;source=constructor" width="100%" height="100%" frameborder="0" allowfullscreen="true" style="min-height: 500px; border: 0;" title="Карта проезда"></iframe>
                 </div>
@@ -226,6 +252,33 @@
 
     <?php include_once './public/components/footer.php'; ?>
     <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
+    <script>
+    document.getElementById('specForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const status = document.getElementById('specFormStatus');
+        const btn = this.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Отправка...';
+        const fd = new FormData(this);
+        try {
+            const res = await fetch('/api/spec-upload', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (data.success) {
+                status.className = 'mt-4 text-sm font-medium text-green-600';
+                status.textContent = 'Заявка отправлена! Мы свяжемся с вами в ближайшее время.';
+                this.reset();
+            } else {
+                status.className = 'mt-4 text-sm font-medium text-red-600';
+                status.textContent = 'Ошибка: ' + (data.error || 'повторите попытку');
+            }
+        } catch {
+            status.className = 'mt-4 text-sm font-medium text-red-600';
+            status.textContent = 'Ошибка соединения. Попробуйте позже.';
+        }
+        btn.disabled = false;
+        btn.textContent = 'Отправить заявку';
+    });
+    </script>
 </body>
 
 </html>

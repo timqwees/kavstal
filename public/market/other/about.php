@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>О компании | КАВ СТАЛЬ - Поставщик металлопроката в Москве</title>
     <meta name="description"
-        content="ООО КАВ СТАЛЬ — надежный поставщик металлопроката в Москве и Московской области с 2018 года. Сертификаты ГОСТ, доставка в день заказа, работаем с юр и физ лицами.">
+        content="ООО КАВ СТАЛЬ — поставщик металлопроката и промышленных материалов в Москве и Московской области. Комплектуем заявки любой сложности, работаем с юр и физ лицами.">
 
     <meta property="og:title" content="О компании | КАВ СТАЛЬ">
     <meta property="og:description" content="Поставщик металлопроката в Москве и МО">
@@ -55,8 +55,8 @@
         "legalName": "ООО «КАВ Сталь»",
         "url": "<?php echo $site['baseUrl']; ?>/about",
         "logo": "<?php echo $site['baseUrl']; ?>/public/assets/images/icons/logo/logo.webp",
-        "description": "ООО КАВ СТАЛЬ — надежный поставщик металлопроката в Москве и Московской области с 2018 года",
-        "foundingDate": "2018",
+        "description": "ООО КАВ СТАЛЬ — поставщик металлопроката и промышленных материалов в Москве и Московской области",
+        "foundingDate": "2025",
         "address": {
             "@type": "PostalAddress",
             "streetAddress": "ул. Семёновская площадь, д. 7, офис 412",
@@ -119,28 +119,24 @@
         <div class="text-center mb-16">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">О компании КАВ СТАЛЬ</h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Ведущий поставщик металлопроката в Москве и Московской области.
-                Работаем с 2018 года, обеспечиваем качественный сервис и надежные поставки.
+                Поставщик металлопроката и промышленных материалов в Москве и Московской области.
+                Опыт команды в сфере снабжения позволяет решать задачи разного масштаба — от розничной заявки до комплексной комплектации проектов.
             </p>
         </div>
 
         <!-- Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-500 mb-2">7+</div>
-                <div class="text-gray-600">лет на рынке</div>
-            </div>
-            <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-500 mb-2">5000+</div>
-                <div class="text-gray-600">довольных клиентов</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">500+</div>
+                <div class="text-gray-600">поставленных позиций</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
                 <div class="text-4xl font-bold text-red-500 mb-2">500+</div>
                 <div class="text-gray-600">наименований металла</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-500 mb-2">24ч</div>
-                <div class="text-gray-600">доставка по МО</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">от 1 дня</div>
+                <div class="text-gray-600">срок поставки по МО</div>
             </div>
         </div>
 
@@ -150,18 +146,13 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-6">Кто мы</h2>
                 <div class="prose text-gray-600 space-y-4">
                     <p>
-                        ООО «КАВ Сталь» — компания полного цикла в сфере металлоторговли.
-                        Мы работаем напрямую с ведущими металлургическими заводами России,
-                        что позволяет предлагать конкурентные цены на весь ассортимент продукции.
+                        ООО «КАВ Сталь» (ИНН 9719080724) — поставщик металлопроката и промышленных материалов.
+                        Работаем с проверенными производителями и поставщиками, подбираем продукцию
+                        по марке, ГОСТу, размерам и бюджету.
                     </p>
                     <p>
-                        Наш склад расположен в Хованской промзоне Москвы, обеспечивая удобную
-                        логистику для доставки по всей Московской области. Площадь склада
-                        составляет более 5000 м², где постоянно поддерживается наличие
-                        металлопроката всех типоразмеров.
-                    </p>
-                    <p>
-                        Мы работаем как с юридическими, так и с физическими лицами.
+                        Организуем обработку, комплектацию документов и доставку по Москве, Московской области
+                        и регионам России. Работаем как с юридическими, так и с физическими лицами.
                         Предоставляем полный пакет документов: сертификаты качества ГОСТ,
                         паспорта на продукцию, счета и акты выполненных работ.
                     </p>
@@ -176,7 +167,7 @@
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check-circle text-red-200 mt-1 mr-3"></i>
-                        <span>Собственный автопарк — доставка в день заказа по Москве и МО</span>
+                        <span>Организуем доставку подходящим транспортом по Москве, МО и регионам России</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check-circle text-red-200 mt-1 mr-3"></i>
@@ -184,7 +175,7 @@
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check-circle text-red-200 mt-1 mr-3"></i>
-                        <span>Работаем с НДС и без НДС — удобная форма оплаты для всех клиентов</span>
+                        <span>Работаем по безналичному расчёту с НДС, предоставляем закрывающие документы</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check-circle text-red-200 mt-1 mr-3"></i>

@@ -91,12 +91,12 @@ $catalogSubcategories = $tree['subcategories'];
                     class="absolute left-0 right-0 top-full mt-1 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 hidden overflow-y-auto max-h-[420px]">
                 </div>
             </div>
-            <button id="ozonCatalogToggle" class="ozon-catalog-btn" aria-label="Открыть каталог" aria-expanded="false">
+             <button id="ozonCatalogToggle" class="ozon-catalog-btn" aria-label="Открыть категории" aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path
                         d="M4 7.556C4 4.628 4.628 4 7.556 4s3.555.628 3.555 3.556-.627 3.555-3.555 3.555S4 10.484 4 7.556m0 8.888c0-2.928.628-3.555 3.556-3.555s3.555.627 3.555 3.555S10.484 20 7.556 20 4 19.372 4 16.444M16.444 4c-2.928 0-3.555.628-3.555 3.556s.627 3.555 3.555 3.555S20 10.484 20 7.556 19.372 4 16.444 4m-3.555 12.444c0-2.928.627-3.555 3.555-3.555S20 13.516 20 16.444 19.372 20 16.444 20s-3.555-.628-3.555-3.556" />
                 </svg>
-                <span>Каталог</span>
+                <span>Категории</span>
             </button>
             <a href="tel:<?= htmlspecialchars($site['phone']) ?>" class=" ozon-catalog-btn" aria-label="Позвонить"
                 aria-expanded="false">
@@ -109,7 +109,7 @@ $catalogSubcategories = $tree['subcategories'];
                         d="M9.925 5.371a1 1 0 1 0-1.858-.742L6.317 9h-1.2c-1.076 0-1.614 0-1.913.346-.3.346-.222.878-.067 1.942l.271 1.864c.475 3.265.902 4.898 2.03 5.873s2.778.975 6.08.975h.96c3.302 0 4.953 0 6.08-.975 1.128-.975 1.559-2.608 2.034-5.873l.271-1.864c.155-1.064.233-1.596-.067-1.942S19.96 9 18.883 9h-1.205l-1.75-4.371a1 1 0 0 0-1.857.742L15.523 9h-7.05zM10.997 14v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 2 0M14 13a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1" />
                 </svg>
                 <span class="ozon-cart-badge cart-count-badge" style="display:none;">0</span>
-                <span>Корзина</span>
+                <span>Заявка</span>
             </a>
             <a href="/favorites" class="ozon-header-action" id="headerFavBtn">
                 <svg viewBox="0 0 24 24" fill="currentColor">
@@ -255,7 +255,7 @@ $bnmCls = function ($paths) use ($bnmActive) {
         </svg>
         <span
             class="cart-count-badge absolute -top-0.5 right-0 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[14px] h-3.5 items-center justify-center px-0.5 hidden"></span>
-        Корзина
+        Заявка
     </a>
     <a href="/orders"
         class="flex flex-col items-center gap-0.5 no-underline text-[10px] font-medium py-1 px-3 <?= $bnmCls(['/orders']) ?>">

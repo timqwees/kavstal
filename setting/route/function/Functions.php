@@ -157,7 +157,6 @@ class Functions
                 'units' => ['Uknown' => 0],
                 'in_stock' => false,
                 'rating' => 0,
-                'reviews' => 0,
                 'badge' => 'Uknown',
                 'image' => 'Uknown',
                 'specs' => [],
@@ -265,14 +264,7 @@ class Functions
      */
     public static function getProductsFull(): array
     {
-        $cached = self::cacheGet('products_full', self::$_cacheTtl);
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $full = self::listProducts();
-        self::cacheSet('products_full', $full);
-        return $full;
+        return self::listProducts();
     }
 
     public static function listProducts(?string $table = null): array
@@ -347,7 +339,6 @@ class Functions
                     'units' => [],
                     'in_stock' => false,
                     'rating' => 0,
-                    'reviews' => 0,
                     'badge' => 'Категория',
                     'images' => [$categoryImages[$catTitle] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
                     'specs' => [],
@@ -375,7 +366,6 @@ class Functions
                     'units' => [],
                     'in_stock' => false,
                     'rating' => 0,
-                    'reviews' => 0,
                     'badge' => 'Подкатегория',
                     'images' => [$subcategoryImages[$subKey] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
                     'specs' => [],
@@ -454,7 +444,7 @@ class Functions
         }
 
         $tables = self::listCsvTables($csvDir);
-        $cats = ['Сортовой прокат', 'Трубы', 'Листовой прокат', 'Нержавеющая сталь', 'Цветные металлы', 'Метизы', 'Качественные стали', 'Инженерные системы'];
+        $cats = ['Чёрный металлопрокат', 'Нержавеющая сталь', 'Цветные металлы', 'Качественные и специальные стали', 'Крепёж и метизы', 'Детали трубопроводов', 'Трубопроводная арматура', 'Кровельные и фасадные материалы', 'Полимеры и технические материалы', 'Изделия и проектные позиции'];
 
         foreach ($tables as $tableName) {
             $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
@@ -503,6 +493,7 @@ class Functions
                 $catSlug = self::slugify($catTitle);
                 $cards[$catTitle][$subTitle] = [
                     'id' => $catSlug . '-' . $slug,
+                    'pid' => self::slugify($name),
                     'name' => $name,
                     'title' => $subTitle,
                     'url' => '/market/katalog/' . $catSlug . '/' . $catSlug . '-' . $slug,
@@ -862,7 +853,6 @@ class Functions
         $единица = $row['единица'] ?? 'тн';
         $в_наличии = $row['в_наличии'] ?? $row['in_stock'] ?? '0';
         $рейтинг = $row['рейтинг'] ?? $row['rating'] ?? '0';
-        $отзывы = $row['отзывы'] ?? $row['reviews'] ?? '0';
         $фото = $row['фото'] ?? $row['images'] ?? '';
         $ключевые = $row['ключевые_слова'] ?? $row['keywords'] ?? '';
         $категория = $row['категория'] ?? '';
@@ -973,10 +963,10 @@ class Functions
         }
         $metaDesc = $описание;
         if (empty($metaDesc)) {
-            $metaDesc = $название . $specsPart . ' – продажа с доставкой по Москве и МО. Цена от ' . ($цена ?: 'уточняйте') . ' ₽/тн, наличие на складе.';
+            $metaDesc = $название . $specsPart . ' – цена, характеристики, условия поставки уточняйте у менеджера.';
         }
         $seo = [
-            'metaTitle' => ($название ?: $id) . $specsPart . ' – цена за тонну, характеристики, купить в Москве | КАВ СТАЛЬ',
+            'metaTitle' => ($название ?: $id) . $specsPart . ' – цена, характеристики, купить в Москве | КАВ СТАЛЬ',
             'metaDescription' => $metaDesc,
             'keywords' => $keywords,
             'canonicalUrl' => '',
@@ -1006,7 +996,6 @@ class Functions
             'units' => $units,
             'in_stock' => $inStock,
             'rating' => (float) $рейтинг,
-            'reviews' => (int) $отзывы,
             'images' => $images,
             'specs' => $specs,
             'keywords' => $keywords,
@@ -1259,10 +1248,10 @@ class Functions
                     'name' => $product['name'],
                     'title' => $product['title'] ?? '',
                     'price' => $price,
-                    'priceDisplay' => $price > 0 ? number_format($price, 0, '', ' ') . ' ₽/т' : 'Цена по запросу',
+                    'priceDisplay' => $price > 0 ? 'от ' . number_format($price, 0, '', ' ') . ' ₽/т' : 'Цена по запросу',
                     'inStock' => $product['in_stock'] ?? false,
-                    'stockText' => ($product['in_stock'] ?? false) ? 'В наличии' : 'Под заказ',
-                    'availability' => ($product['in_stock'] ?? false) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    'stockText' => ($product['in_stock'] ?? false) ? 'Уточняйте наличие' : 'Под заказ',
+                    'availability' => 'https://schema.org/PreOrder',
                     'url' => $product['seo']['canonicalUrl'] ?? '/market',
                     'icon' => $icon,
                 ];
@@ -1338,10 +1327,10 @@ class Functions
                     'name' => $product['name'],
                     'title' => $product['title'] ?? '',
                     'price' => $price,
-                    'priceDisplay' => $price > 0 ? number_format($price, 0, '', ' ') . ' ₽/т' : 'Цена по запросу',
+                    'priceDisplay' => $price > 0 ? 'от ' . number_format($price, 0, '', ' ') . ' ₽/т' : 'Цена по запросу',
                     'inStock' => $product['in_stock'] ?? false,
-                    'stockText' => ($product['in_stock'] ?? false) ? 'В наличии' : 'Под заказ',
-                    'availability' => ($product['in_stock'] ?? false) ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+                    'stockText' => ($product['in_stock'] ?? false) ? 'Уточняйте наличие' : 'Под заказ',
+                    'availability' => 'https://schema.org/PreOrder',
                     'url' => $product['seo']['canonicalUrl'] ?? '/market',
                     'icon' => $icon,
                 ];

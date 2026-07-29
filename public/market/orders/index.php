@@ -43,7 +43,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
         <div id="orders-empty" class="hidden text-center py-20">
             <i class="fas fa-clipboard-list text-gray-300 text-6xl mb-4"></i>
             <p class="text-gray-500 text-lg mb-2">У вас пока нет заказов</p>
-            <p class="text-gray-400 text-sm mb-6">Оформите заказ, добавив товары в корзину</p>
+            <p class="text-gray-400 text-sm mb-6">Оформите заявку, добавив товары из каталога</p>
             <a href="/market" class="inline-block bg-red-500 text-white px-6 py-2.5 rounded-lg text-sm font-medium hover:bg-red-500 transition">Перейти в каталог</a>
         </div>
 

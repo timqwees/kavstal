@@ -59,7 +59,7 @@ class Order
 
         $cartItems = Cart::getItems();
         if (empty($cartItems)) {
-            return ['success' => false, 'error' => 'Корзина пуста'];
+            return ['success' => false, 'error' => 'Заявка пуста'];
         }
 
         $total = Cart::getTotal();
