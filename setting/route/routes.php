@@ -318,32 +318,28 @@ Routes::get('/api/orders/list', function () {
     $orders = \App\Models\Order\Order::getBySession();
     print json_encode(['orders' => $orders], JSON_UNESCAPED_UNICODE);
 });
-Routes::post('/api/orders/quick', function () {
+//==================================================================================================//SEND EMAIL (единый endpoint для всех форм)
+Routes::post('/send/email', function () {
+    $data = (object) $_POST;
     header('Content-Type: application/json; charset=utf-8');
     set_time_limit(60);
-    $name = trim($_POST['name'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $productId = trim($_POST['product_id'] ?? '');
-    if (empty($name) || empty($phone)) {
+    $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
+    if ($phone === '') {
         if (ob_get_level()) ob_clean();
-        print json_encode(['success' => false, 'error' => 'Укажите имя и телефон'], JSON_UNESCAPED_UNICODE);
+        print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
     try {
-        $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
-        \Setting\route\function\Functions::sendMail((object)[
-            'name' => $name,
-            'phone' => $phone,
-            'product_id' => $productId,
-        ]);
-        if (ob_get_level()) ob_clean();
-        print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
-    } catch (\Throwable $e) {
-        error_log('Quick order error: ' . $e->getMessage());
-        if (ob_get_level()) ob_clean();
-        if (!headers_sent()) {
-            print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
+        $productId = $data->product_id ?? '';
+        if ($productId !== '') {
+            \App\Models\Order\Order::quickCreate($data->name ?? $data->имя ?? '', $phone, $productId);
         }
+        \Setting\route\function\Functions::sendMail($data);
+        if (ob_get_level()) ob_clean();
+        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    } catch (\Throwable $e) {
+        if (ob_get_level()) ob_clean();
+        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
     }
 });
 //==================================================================================================//FAVORITES PAGE

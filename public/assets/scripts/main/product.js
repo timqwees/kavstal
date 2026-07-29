@@ -362,23 +362,6 @@ document.querySelectorAll('.accordion-header').forEach(function(header) {
     closeBtn.addEventListener('click', closeModal);
     modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); });
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            if (this.querySelector('input[name="website"]').value) { e.preventDefault(); return; }
-            var fd = new FormData(this);
-            fetch('/api/orders/quick', { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then(function(r) { return r.json(); })
-                .then(function(d) {
-                    if (d.success) {
-                        form.innerHTML = '<div class="text-center py-8"><div class="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-7 h-7 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div><p class="text-lg font-medium text-gray-900">Заявка отправлена!</p><p class="text-sm text-gray-500 mt-1">Перезвоним в течение 15 минут</p></div>';
-                    } else {
-                        alert('Ошибка: ' + (d.error || 'повторите попытку'));
-                    }
-                })
-                .catch(function() { alert('Ошибка сети'); });
-            e.preventDefault();
-        });
-    }
 })();
 
 /* ===== MOBILE STICKY CART SYNC ===== */
