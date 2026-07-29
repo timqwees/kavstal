@@ -122,7 +122,6 @@ body {
     cursor: pointer;
     transition: background var(--transition-fast);
     white-space: nowrap;
-    height: 44px;
 }
 
 .ozon-catalog-btn:hover,
