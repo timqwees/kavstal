@@ -146,7 +146,14 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                     $searchTermLower = mb_strtolower($searchTerm);
                     $productsOnly = array_filter($productsOnly, function ($product) use ($searchTermLower) {
                         $name = mb_strtolower($product['name'] ?? ''); $title = mb_strtolower($product['title'] ?? ''); $description = mb_strtolower($product['description'] ?? ''); $keywords = mb_strtolower($product['keywords'] ?? '');
-                        return mb_strpos($name, $searchTermLower) !== false || mb_strpos($title, $searchTermLower) !== false || mb_strpos($description, $searchTermLower) !== false || mb_strpos($keywords, $searchTermLower) !== false;
+                        if (mb_strpos($name, $searchTermLower) !== false || mb_strpos($title, $searchTermLower) !== false || mb_strpos($description, $searchTermLower) !== false || mb_strpos($keywords, $searchTermLower) !== false) return true;
+                        $words = array_values(array_filter(explode(' ', $searchTermLower)));
+                        if (count($words) < 2) return false;
+                        $text = $name . ' ' . $title . ' ' . $description . ' ' . $keywords;
+                        foreach ($words as $w) {
+                            if (mb_strpos($text, $w) === false) return false;
+                        }
+                        return true;
                     });
                 }
                 $activeCategory = $_GET['category'] ?? ''; $activeMarka = $_GET['marka'] ?? ''; $activeGost = $_GET['gost'] ?? ''; $activeSize = $_GET['size'] ?? '';

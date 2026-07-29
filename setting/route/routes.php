@@ -100,14 +100,21 @@ Routes::get('/api/search', function () {
     if ($query !== '') {
         $q = mb_strtolower($query);
         $qlen = mb_strlen($q);
+        $words = array_values(array_filter(explode(' ', $q)));
+        $multiWord = count($words) > 1;
         foreach ($cachedProducts as $p) {
             $score = 0;
             if (mb_strpos($p['name'], $q) !== false) {
                 $score = (mb_strpos($p['name'], $q) === 0) ? 3 : 2;
             } elseif (mb_strpos($p['cat'], $q) !== false || mb_strpos($p['subcat'], $q) !== false) {
                 $score = 1;
-            } elseif (mb_strpos($p['keywords'], $q) !== false) {
-                $score = 1;
+            } elseif ($multiWord) {
+                $text = $p['name'] . ' ' . $p['cat'] . ' ' . $p['subcat'] . ' ' . $p['keywords'];
+                $allMatch = true;
+                foreach ($words as $w) {
+                    if (mb_strpos($text, $w) === false) { $allMatch = false; break; }
+                }
+                if ($allMatch) $score = 1;
             }
             if ($score > 0) {
                 $p['score'] = $score;
