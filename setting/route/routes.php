@@ -320,10 +320,10 @@ Routes::get('/api/orders/list', function () {
 });
 //==================================================================================================//SEND EMAIL (единый endpoint для всех форм)
 Routes::post('/send/email', function () {
-    header('Content-Type: application/json; charset=utf-8');
     set_time_limit(60);
     \Setting\route\function\Functions::sendMail((object) $_POST);
-    print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/market'));
+    exit;
 });
 //==================================================================================================//FAVORITES PAGE
 Routes::get('/favorites', function () {
