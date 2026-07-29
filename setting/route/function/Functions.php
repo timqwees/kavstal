@@ -679,11 +679,9 @@ class Functions
      */
     public static function sendMail(object $data, ?string $attachmentPath = null): void
     {
-        // Серверная валидация телефона
         $phone = $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? '';
         $phone = trim(preg_replace('/[^0-9+]/', '', $phone));
         if ($phone === '') {
-            Network::onRedirect('/');
             return;
         }
 
@@ -699,10 +697,6 @@ class Functions
         }
 
         self::sendToBitrix24($data);
-
-        if (!isset($data->both)) {
-            Network::onRedirect('/');
-        }
     }
 
     /**
@@ -721,7 +715,7 @@ class Functions
 
         $extra = [];
         foreach ($data as $key => $value) {
-            if (!in_array($key, ['имя', 'name', 'телефн', 'телефон', 'phone', 'почта', 'email', 'сообщение', 'message', 'both'])) {
+            if (!in_array($key, ['имя', 'name', 'телефн', 'телефон', 'phone', 'почта', 'email', 'сообщение', 'message'])) {
                 if (is_string($value) && $value !== '') {
                     $extra[] = "{$key}: {$value}";
                 }
@@ -781,18 +775,6 @@ class Functions
      * @param object $data
      * @return void
      */
-    public static function sendBoth(object $data): void
-    {
-        $data = (array) $data;
-        $data['both'] = true;
-        try {
-            self::sendMail((object) $data);
-        } catch (\Exception $e) {
-            error_log('ошибка' . $e->getMessage());
-        }
-        Network::onRedirect('/');
-        exit(1);
-    }
 
     private static function getCsvDir(): string
     {

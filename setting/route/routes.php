@@ -339,7 +339,6 @@ Routes::post('/api/orders/quick', function () {
             'name' => $name,
             'phone' => $phone,
             'product_id' => $productId,
-            'both' => true,
         ];
         \Setting\route\function\Functions::sendMail($data);
     } catch (\Exception $e) {
@@ -400,54 +399,22 @@ Routes::get('/order/{id}/pdf', function ($id) {
     }
     Routes::error_404('Счёт не найден');
 });
-//==================================================================================================//CALLBACK
-Routes::post('/api/feedback', function () {
-    $name = trim($_POST['name'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $message = trim($_POST['message'] ?? '');
+//==================================================================================================//SEND EMAIL (единый endpoint для всех форм)
+Routes::post('/send/email', function () {
+    $data = (object) $_POST;
     header('Content-Type: application/json; charset=utf-8');
-    if (empty($name) || empty($phone)) {
-        print json_encode(['success' => false, 'error' => 'Заполните имя и телефон'], JSON_UNESCAPED_UNICODE);
+    $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
+    if ($phone === '') {
+        print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
         exit;
     }
     try {
-        \Setting\route\function\Functions::sendMail((object)[
-            'имя' => $name,
-            'телефон' => $phone,
-            'сообщение' => $message ?: '—',
-            'страница' => $_SERVER['HTTP_REFERER'] ?? '',
-            'both' => true,
-        ]);
+        \Setting\route\function\Functions::sendMail($data);
         print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
         print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
     }
     exit;
 });
-Routes::post('/api/callback', function () {
-    $name = trim($_POST['name'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    header('Content-Type: application/json; charset=utf-8');
-    if (empty($name) || empty($phone)) {
-        print json_encode(['success' => false, 'error' => 'Заполните все поля'], JSON_UNESCAPED_UNICODE);
-        exit;
-    }
-    try {
-        \Setting\route\function\Functions::sendMail((object)[
-            'имя' => $name,
-            'телефон' => $phone,
-            'both' => true,
-        ]);
-        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
-    } catch (\Throwable $e) {
-        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
-    }
-    exit;
-});
-//==================================================================================================//SEND EMAIL
-Routes::post('/send/email', [Functions::class, 'sendMail']);
-//==================================================================================================//Отправка телеграм
-//==================================================================================================//Отправка обоих
-Routes::post('/send/both', [Functions::class, 'sendBoth']);
-//==================================================================================================//Отправка обоих
+//==================================================================================================//SITEMAP
 Routes::get('/pages', [UrlList::class, 'output']);
