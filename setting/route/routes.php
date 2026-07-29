@@ -327,19 +327,23 @@ Routes::post('/api/orders/quick', function () {
         print json_encode(['success' => false, 'error' => 'Укажите имя и телефон'], JSON_UNESCAPED_UNICODE);
         return;
     }
+    $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
+    print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
+    ignore_user_abort(true);
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    } else {
+        if (ob_get_level()) ob_end_flush();
+        flush();
+    }
     try {
-        $orderId = \App\Models\Order\Order::quickCreate($name, $phone, $productId);
         \Setting\route\function\Functions::sendMail((object)[
             'name' => $name,
             'phone' => $phone,
             'product_id' => $productId,
         ]);
-        print json_encode(['success' => true, 'order_id' => (int)$orderId], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
-        error_log('Quick order error: ' . $e->getMessage());
-        if (!headers_sent()) {
-            print json_encode(['success' => false, 'error' => 'Ошибка оформления'], JSON_UNESCAPED_UNICODE);
-        }
+        error_log('Quick order sendMail error: ' . $e->getMessage());
     }
 });
 //==================================================================================================//FAVORITES PAGE
@@ -400,15 +404,21 @@ Routes::post('/send/email', function () {
     $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
     if ($phone === '') {
         print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
-        exit;
+        return;
+    }
+    print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+    ignore_user_abort(true);
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    } else {
+        if (ob_get_level()) ob_end_flush();
+        flush();
     }
     try {
         \Setting\route\function\Functions::sendMail($data);
-        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
     } catch (\Throwable $e) {
-        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
+        error_log('SendMail error: ' . $e->getMessage());
     }
-    exit;
 });
 //==================================================================================================//SITEMAP
 Routes::get('/pages', [UrlList::class, 'output']);
