@@ -1283,18 +1283,6 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 }
             });
         });
-        document.getElementById('buyOneClickForm').addEventListener('submit', function(e){
-            const phone = this.querySelector('[data-type-phone]');
-            if (phone) {
-                const digits = phone.value.replace(/\D/g, '');
-                if (digits.length !== 10) {
-                    e.preventDefault();
-                    phone.setCustomValidity('Введите полный номер телефона');
-                    phone.reportValidity();
-                    phone.focus();
-                }
-            }
-        });
         // e-commerce: add_to_cart
         document.querySelectorAll('#add-to-cart-btn, #mobile-add-to-cart-btn').forEach(function(btn){
             btn.addEventListener('click', function(){
