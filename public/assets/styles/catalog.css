@@ -2090,7 +2090,4 @@ body {
     list-style: none;
 }
 
-.ozon-phone-btn { display: none; }
-@media (max-width: 1024px) {
-    .ozon-phone-btn { display: flex; }
-}
+.ozon-phone-btn { display: flex; }
