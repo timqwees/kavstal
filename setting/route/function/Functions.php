@@ -771,11 +771,6 @@ class Functions
         }
     }
 
-    /**
-     * @param object $data
-     * @return void
-     */
-
     private static function getCsvDir(): string
     {
         return './setting/config/excel';

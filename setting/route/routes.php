@@ -321,11 +321,16 @@ Routes::get('/api/orders/list', function () {
 //==================================================================================================//SEND EMAIL (единый endpoint для всех форм)
 Routes::post('/send/email', function () {
     $data = (object) $_POST;
-    header('Content-Type: application/json; charset=utf-8');
     set_time_limit(60);
     $phone = trim(preg_replace('/[^0-9+]/', '', $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? ''));
     if ($phone === '') {
-        print json_encode(['success' => false, 'error' => 'Укажите телефон'], JSON_UNESCAPED_UNICODE);
+        $error = 'Укажите телефон';
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            header('Content-Type: application/json; charset=utf-8');
+            print json_encode(['success' => false, 'error' => $error], JSON_UNESCAPED_UNICODE);
+        } else {
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/') . '?success=0&error=' . urlencode($error));
+        }
         return;
     }
     try {
@@ -334,9 +339,20 @@ Routes::post('/send/email', function () {
             \App\Models\Order\Order::quickCreate($data->name ?? $data->имя ?? '', $phone, $productId);
         }
         \Setting\route\function\Functions::sendMail($data);
-        print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            header('Content-Type: application/json; charset=utf-8');
+            print json_encode(['success' => true], JSON_UNESCAPED_UNICODE);
+        } else {
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/') . '?success=1');
+        }
     } catch (\Throwable $e) {
-        print json_encode(['success' => false, 'error' => 'Ошибка отправки'], JSON_UNESCAPED_UNICODE);
+        $error = 'Ошибка отправки';
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest') {
+            header('Content-Type: application/json; charset=utf-8');
+            print json_encode(['success' => false, 'error' => $error], JSON_UNESCAPED_UNICODE);
+        } else {
+            header('Location: ' . ($_SERVER['HTTP_REFERER'] ?? '/') . '?success=0&error=' . urlencode($error));
+        }
     }
 });
 //==================================================================================================//FAVORITES PAGE
