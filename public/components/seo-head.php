@@ -47,7 +47,7 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
     ym(<?= htmlspecialchars($ymId) ?>,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true,ecommerce:'dataLayer',forms:false});
     window.ymGoal = function(target, params){ try { ym(<?= htmlspecialchars($ymId) ?>,'reachGoal',target, params||{}); } catch(e){} };
 
-    document.addEventListener('form:success', function(e){
+    document.addEventListener('fetchit:success', function(e){
       var goal = (e.detail && e.detail.goal) || 'FORM_SEND';
       try { ym(<?= htmlspecialchars($ymId) ?>,'reachGoal',goal, e.detail || {}); } catch(ex){}
     });

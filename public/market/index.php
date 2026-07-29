@@ -464,7 +464,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
             .then(function(d) {
                 if (d.success) {
                     document.getElementById('market-feedback-form').innerHTML = '<div class="py-8 text-center"><div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div><p class="text-lg font-semibold text-zinc-900">Спасибо!</p><p class="text-sm text-zinc-500 mt-1">Мы свяжемся с вами в ближайшее время.</p></div>';
-                    document.dispatchEvent(new CustomEvent('form:success', { detail: { goal: 'market_feedback' } }));
+                    document.dispatchEvent(new CustomEvent('fetchit:success', { detail: { goal: 'market_feedback' } }));
                 } else {
                     alert(d.error || 'Ошибка. Попробуйте ещё раз.');
                     btn.disabled = false;
