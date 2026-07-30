@@ -43,8 +43,11 @@
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    </noscript>
 
     <!-- Schema.org Organization -->
     <script type="application/ld+json">
@@ -86,7 +89,7 @@
         }
     }
     </script>
-  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
+    <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-gray-50">
@@ -120,7 +123,8 @@
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">О компании КАВ СТАЛЬ</h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
                 Поставщик металлопроката и промышленных материалов в Москве и Московской области.
-                Опыт команды в сфере снабжения позволяет решать задачи разного масштаба — от розничной заявки до комплексной комплектации проектов.
+                Опыт команды в сфере снабжения позволяет решать задачи разного масштаба — от розничной заявки до
+                комплексной комплектации проектов.
             </p>
         </div>
 
@@ -239,7 +243,8 @@
                 </div>
             </div>
             <div class="text-center mt-6">
-                <p class="text-gray-500">Юридический адрес: 105318, г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2</p>
+                <p class="text-gray-500">Юридический адрес: 105318, г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2
+                </p>
             </div>
         </div>
 

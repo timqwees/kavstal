@@ -43,8 +43,11 @@
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    </noscript>
 
     <!-- Schema.org Organization with Warranty -->
     <script type="application/ld+json">
@@ -82,7 +85,7 @@
         "email": "<?= $site['email'] ?>"
     }
     </script>
-  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
+    <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-gray-50">

@@ -43,8 +43,11 @@
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style"
+        onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    </noscript>
 
     <!-- Schema.org Delivery Charges -->
     <script type="application/ld+json">
@@ -93,7 +96,7 @@
         }
     }
     </script>
-  <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
+    <?php include_once __DIR__ . "/../../components/seo-head.php"; ?>
 </head>
 
 <body class="bg-gray-50">
@@ -134,14 +137,16 @@
                         <i class="fas fa-truck text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">Срочная доставка</h3>
-                    <p class="text-gray-600">При заказе в первой половине дня возможна доставка в день заказа — сроки уточняет менеджер</p>
+                    <p class="text-gray-600">При заказе в первой половине дня возможна доставка в день заказа — сроки
+                        уточняет менеджер</p>
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-map-marked-alt text-red-500 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-2">По всей Московской области</h3>
-                    <p class="text-gray-600">Доставляем металлопрокат по Москве и Московской области — сроки рассчитываются индивидуально</p>
+                    <p class="text-gray-600">Доставляем металлопрокат по Москве и Московской области — сроки
+                        рассчитываются индивидуально</p>
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6 text-center">
                     <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -158,8 +163,13 @@
                     <h3 class="text-2xl font-bold text-gray-900">Организация доставки</h3>
                 </div>
                 <div class="p-6">
-                    <p class="text-gray-600 mb-4">Тип транспорта подбирается под характеристики груза: вес, длину, габариты, способ погрузки и разгрузки, маршрут и пропускной режим объекта. Для поставки могут использоваться малотоннажные автомобили, бортовые машины, длинномеры, манипуляторы и другой специализированный транспорт.</p>
-                    <p class="text-gray-600">Стоимость и срок доставки рассчитываются индивидуально после подтверждения наличия товара, адреса отгрузки и адреса получателя. Если заказ комплектуется с нескольких складов, менеджер заранее согласует схему поставки.</p>
+                    <p class="text-gray-600 mb-4">Тип транспорта подбирается под характеристики груза: вес, длину,
+                        габариты, способ погрузки и разгрузки, маршрут и пропускной режим объекта. Для поставки могут
+                        использоваться малотоннажные автомобили, бортовые машины, длинномеры, манипуляторы и другой
+                        специализированный транспорт.</p>
+                    <p class="text-gray-600">Стоимость и срок доставки рассчитываются индивидуально после подтверждения
+                        наличия товара, адреса отгрузки и адреса получателя. Если заказ комплектуется с нескольких
+                        складов, менеджер заранее согласует схему поставки.</p>
                 </div>
             </div>
 
@@ -246,7 +256,8 @@
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <div class="mb-6 md:mb-0 md:mr-8">
                     <h3 class="text-2xl font-bold text-gray-900 mb-4">Самовывоз</h3>
-                    <p class="text-gray-600 mb-4">Самовывоз возможен по согласованию со склада отгрузки. Адрес, время и условия погрузки направляются после оформления заказа.</p>
+                    <p class="text-gray-600 mb-4">Самовывоз возможен по согласованию со склада отгрузки. Адрес, время и
+                        условия погрузки направляются после оформления заказа.</p>
                 </div>
                 <a href="/contacts"
                     class="bg-red-500 text-white px-8 py-3 rounded-lg font-bold hover:bg-red-500 transition whitespace-nowrap">

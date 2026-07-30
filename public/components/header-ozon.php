@@ -91,7 +91,8 @@ $catalogSubcategories = $tree['subcategories'];
                     class="absolute left-0 right-0 top-full mt-1 bg-white border border-zinc-200 rounded-xl shadow-xl z-50 hidden overflow-y-auto max-h-[420px]">
                 </div>
             </div>
-             <button id="ozonCatalogToggle" class="ozon-catalog-btn" aria-label="Открыть категории" aria-expanded="false">
+            <button id="ozonCatalogToggle" class="ozon-catalog-btn" aria-label="Открыть категории"
+                aria-expanded="false">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                     <path
                         d="M4 7.556C4 4.628 4.628 4 7.556 4s3.555.628 3.555 3.556-.627 3.555-3.555 3.555S4 10.484 4 7.556m0 8.888c0-2.928.628-3.555 3.556-3.555s3.555.627 3.555 3.555S10.484 20 7.556 20 4 19.372 4 16.444M16.444 4c-2.928 0-3.555.628-3.555 3.556s.627 3.555 3.555 3.555S20 10.484 20 7.556 19.372 4 16.444 4m-3.555 12.444c0-2.928.627-3.555 3.555-3.555S20 13.516 20 16.444 19.372 20 16.444 20s-3.555-.628-3.555-3.556" />
@@ -154,46 +155,46 @@ $catalogSubcategories = $tree['subcategories'];
         <div class="ozon-mega-menu-inner">
             <div class="ozon-mega-sidebar" id="ozonMegaSidebar">
                 <?php foreach ($catalogCategories as $i => $cat): ?>
-                    <?php $catSlug = $cat['id'] ?? ''; ?>
-                    <a href="/market/katalog/<?= htmlspecialchars($catSlug) ?>"
-                        class="ozon-mega-item<?= $i === 0 ? ' active' : '' ?>"
-                        data-category-id="<?= htmlspecialchars($catSlug) ?>"
-                        data-href="/market/katalog/<?= htmlspecialchars($catSlug) ?>">
-                        <span><?= htmlspecialchars($cat['name']) ?></span>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <polyline points="9 18 15 12 9 6"></polyline>
-                        </svg>
-                    </a>
+                        <?php $catSlug = $cat['id'] ?? ''; ?>
+                        <a href="/market/katalog/<?= htmlspecialchars($catSlug) ?>"
+                            class="ozon-mega-item<?= $i === 0 ? ' active' : '' ?>"
+                            data-category-id="<?= htmlspecialchars($catSlug) ?>"
+                            data-href="/market/katalog/<?= htmlspecialchars($catSlug) ?>">
+                            <span><?= htmlspecialchars($cat['name']) ?></span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </a>
                 <?php endforeach; ?>
             </div>
             <div class="ozon-mega-content">
                 <?php foreach ($catalogCategories as $i => $cat): ?>
-                    <?php $catSlug = $cat['id'] ?? ''; ?>
-                    <div class="ozon-mega-content-panel" data-category-id="<?= htmlspecialchars($catSlug) ?>"
-                        style="<?= $i === 0 ? 'display:block' : 'display:none' ?>">
-                        <div class="ozon-mega-content-title"><?= htmlspecialchars($cat['name']) ?></div>
-                        <div class="ozon-mega-grid">
-                            <?php foreach ($catalogSubcategories[$catSlug] ?? [] as $sub): ?>
-                                <?php $subSlug = $sub['categories']['id'] ?? ''; ?>
-                                <?php $parentId = $sub['categories']['parent_id'] ?? ''; ?>
-                                <?php $subImages = $sub['images'] ?? []; ?>
-                                <?php $img = $subImages[0] ?? ''; ?>
-                                <a href="/market/katalog/<?= htmlspecialchars($parentId) ?>/<?= htmlspecialchars($subSlug) ?>"
-                                    class="ozon-mega-subcategory">
-                                    <?php if ($img): ?>
-                                        <div class="w-12 h-12 rounded-lg overflow-hidden bg-zinc-100 flex-shrink-0">
-                                            <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($sub['name']) ?>"
-                                                class="w-full h-full object-contain" loading="lazy">
-                                        </div>
-                                    <?php endif; ?>
-                                    <span><?= htmlspecialchars($sub['name']) ?></span>
-                                </a>
-                            <?php endforeach; ?>
+                        <?php $catSlug = $cat['id'] ?? ''; ?>
+                        <div class="ozon-mega-content-panel" data-category-id="<?= htmlspecialchars($catSlug) ?>"
+                            style="<?= $i === 0 ? 'display:block' : 'display:none' ?>">
+                            <div class="ozon-mega-content-title"><?= htmlspecialchars($cat['name']) ?></div>
+                            <div class="ozon-mega-grid">
+                                <?php foreach ($catalogSubcategories[$catSlug] ?? [] as $sub): ?>
+                                        <?php $subSlug = $sub['categories']['id'] ?? ''; ?>
+                                        <?php $parentId = $sub['categories']['parent_id'] ?? ''; ?>
+                                        <?php $subImages = $sub['images'] ?? []; ?>
+                                        <?php $img = $subImages[0] ?? ''; ?>
+                                        <a href="/market/katalog/<?= htmlspecialchars($parentId) ?>/<?= htmlspecialchars($subSlug) ?>"
+                                            class="ozon-mega-subcategory">
+                                            <?php if ($img): ?>
+                                                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-zinc-100 flex-shrink-0">
+                                                        <img src="<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars($sub['name']) ?>"
+                                                            class="w-full h-full object-contain" loading="lazy">
+                                                    </div>
+                                            <?php endif; ?>
+                                            <span><?= htmlspecialchars($sub['name']) ?></span>
+                                        </a>
+                                <?php endforeach; ?>
+                            </div>
+                            <a href="/market/katalog/<?= htmlspecialchars($catSlug) ?>" class="ozon-mega-all-link">Показать все
+                                в категории &rarr;</a>
                         </div>
-                        <a href="/market/katalog/<?= htmlspecialchars($catSlug) ?>" class="ozon-mega-all-link">Показать все
-                            в категории &rarr;</a>
-                    </div>
                 <?php endforeach; ?>
             </div>
         </div>

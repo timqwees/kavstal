@@ -608,23 +608,23 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             </svg>
 
             <?php if ($subcategoryTitle): ?>
-                <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>/<?= htmlspecialchars($subcategorySlug) ?>"
-                    class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope
-                    itemtype="https://schema.org/Thing"
-                    itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>/<?= htmlspecialchars($subcategorySlug) ?>">
-                    <span itemprop="name"><?= htmlspecialchars($subcategoryTitle) ?></span>
-                </a>
-                <meta itemprop="position" content="4">
-                <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
-                </svg>
-                <span class="text-zinc-900 font-medium"
-                    itemprop="name"><?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?></span>
-                <meta itemprop="position" content="5">
+                    <a href="/market/katalog/<?= htmlspecialchars($katalog) ?>/<?= htmlspecialchars($subcategorySlug) ?>"
+                        class="text-zinc-500 hover:text-red-500 transition-colors" itemprop="item" itemscope
+                        itemtype="https://schema.org/Thing"
+                        itemid="<?= $site['baseUrl'] ?>/market/katalog/<?= htmlspecialchars($katalog) ?>/<?= htmlspecialchars($subcategorySlug) ?>">
+                        <span itemprop="name"><?= htmlspecialchars($subcategoryTitle) ?></span>
+                    </a>
+                    <meta itemprop="position" content="4">
+                    <svg class="h-4 w-4 text-zinc-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 5 7 7-7 7" />
+                    </svg>
+                    <span class="text-zinc-900 font-medium"
+                        itemprop="name"><?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?></span>
+                    <meta itemprop="position" content="5">
             <?php else: ?>
-                <span class="text-zinc-900 font-medium"
-                    itemprop="name"><?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?></span>
-                <meta itemprop="position" content="4">
+                    <span class="text-zinc-900 font-medium"
+                        itemprop="name"><?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?></span>
+                    <meta itemprop="position" content="4">
             <?php endif; ?>
         </nav>
 
@@ -647,14 +647,14 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     </div>
                     <div class="flex gap-2 overflow-x-auto pb-1" id="thumbnail-list">
                         <?php foreach ($product['images'] as $index => $image): ?>
-                            <button
-                                class="thumbnail-btn flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 <?= $index === 0 ? 'active border-red-500' : 'border-zinc-200' ?> hover:border-red-300 transition-colors"
-                                data-src="<?= htmlspecialchars($image) ?>"
-                                data-alt="<?= htmlspecialchars($product['name'] ?? $product['title']) . ($index > 0 ? ' - фото ' . ($index + 1) : '') ?>">
-                                <img src="<?= htmlspecialchars($image) ?>"
-                                    alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>" width="80"
-                                    height="80" class="w-full h-full object-cover" loading="lazy">
-                            </button>
+                                <button
+                                    class="thumbnail-btn flex-shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 <?= $index === 0 ? 'active border-red-500' : 'border-zinc-200' ?> hover:border-red-300 transition-colors"
+                                    data-src="<?= htmlspecialchars($image) ?>"
+                                    data-alt="<?= htmlspecialchars($product['name'] ?? $product['title']) . ($index > 0 ? ' - фото ' . ($index + 1) : '') ?>">
+                                    <img src="<?= htmlspecialchars($image) ?>"
+                                        alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?>" width="80"
+                                        height="80" class="w-full h-full object-cover" loading="lazy">
+                                </button>
                         <?php endforeach; ?>
                     </div>
                     <p class="text-xs text-zinc-400 text-center mt-3">Наведите курсор на изображение для увеличения</p>
@@ -665,15 +665,15 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <div class="swiper product-gallery-mobile" style="border-radius: 12px; overflow: hidden;">
                         <div class="swiper-wrapper">
                             <?php foreach ($product['images'] as $index => $image): ?>
-                                <div class="swiper-slide">
-                                    <div class="bg-white border border-zinc-200 overflow-hidden" style="aspect-ratio: 1;">
-                                        <img src="<?= htmlspecialchars($image) ?>"
-                                            alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?> <?= $index > 0 ? '- фото ' . ($index + 1) : '' ?>"
-                                            width="800" height="800"
-                                            class="w-full h-full object-contain product-gallery-img"
-                                            loading="<?= $index < 2 ? 'eager' : 'lazy' ?>">
+                                    <div class="swiper-slide">
+                                        <div class="bg-white border border-zinc-200 overflow-hidden" style="aspect-ratio: 1;">
+                                            <img src="<?= htmlspecialchars($image) ?>"
+                                                alt="<?= htmlspecialchars($product['name'] ?? $product['title']) ?> <?= $index > 0 ? '- фото ' . ($index + 1) : '' ?>"
+                                                width="800" height="800"
+                                                class="w-full h-full object-contain product-gallery-img"
+                                                loading="<?= $index < 2 ? 'eager' : 'lazy' ?>">
+                                        </div>
                                     </div>
-                                </div>
                             <?php endforeach; ?>
                         </div>
                         <div class="swiper-pagination product-gallery-pagination"></div>
@@ -739,12 +739,12 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                             <div class="flex flex-wrap gap-2 mt-2 text-sm" id="alternative-prices">
                                 <?php foreach (($product['units'] ?? []) as $unit => $price):
                                     if ($unit !== $firstUnit && is_numeric($price)): ?>
-                                        <span
-                                            class="bg-zinc-50 px-3 py-1 rounded-lg border border-zinc-200 hover:border-red-200 hover:bg-red-50 transition-colors">
-                                            <strong class="text-red-500"><?= number_format((float) $price, 0, '', ' ') ?>
-                                                ₽</strong> / <?= htmlspecialchars($unit) ?>
-                                        </span>
-                                    <?php endif; endforeach; ?>
+                                                <span
+                                                    class="bg-zinc-50 px-3 py-1 rounded-lg border border-zinc-200 hover:border-red-200 hover:bg-red-50 transition-colors">
+                                                    <strong class="text-red-500"><?= number_format((float) $price, 0, '', ' ') ?>
+                                                        ₽</strong> / <?= htmlspecialchars($unit) ?>
+                                                </span>
+                                        <?php endif; endforeach; ?>
                             </div>
                         </div>
                         <div class="flex items-center gap-4 shrink-0">
@@ -785,11 +785,11 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                                 <select id="cart-unit-select"
                                     class="w-full h-10 px-3 border border-zinc-200 rounded-xl text-sm focus:ring-2 focus:ring-red-500 focus:border-red-500 bg-white min-w-[100px]">
                                     <?php foreach ($product['units'] as $unit => $price): ?>
-                                        <option value="<?= htmlspecialchars($unit) ?>" data-price="<?= (float) $price ?>">
-                                            <?= htmlspecialchars($unit) ?> —
-                                            <?= number_format((float) $price, 0, '', ' ') ?>
-                                            ₽
-                                        </option>
+                                            <option value="<?= htmlspecialchars($unit) ?>" data-price="<?= (float) $price ?>">
+                                                <?= htmlspecialchars($unit) ?> —
+                                                <?= number_format((float) $price, 0, '', ' ') ?>
+                                                ₽
+                                            </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -830,36 +830,36 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
                 <!-- Key Specs -->
                 <?php if (!empty($product['specs']) && is_array($product['specs'])): ?>
-                    <div class="bg-white rounded-2xl border border-zinc-200 p-5">
-                        <h3 class="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">Характеристики</h3>
-                        <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                            <?php $specCount = 0;
-                            $specEntries = [];
-                            foreach ($product['specs'] as $key => $val) {
-                                if (is_array($val) && isset($val['label'], $val['value'])) {
-                                    $specEntries[$val['label']] = $val['value'];
-                                } elseif (is_string($val) && $val !== '') {
-                                    $specEntries[$key] = $val;
+                        <div class="bg-white rounded-2xl border border-zinc-200 p-5">
+                            <h3 class="text-xs font-semibold text-zinc-500 mb-3 uppercase tracking-wider">Характеристики</h3>
+                            <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                                <?php $specCount = 0;
+                                $specEntries = [];
+                                foreach ($product['specs'] as $key => $val) {
+                                    if (is_array($val) && isset($val['label'], $val['value'])) {
+                                        $specEntries[$val['label']] = $val['value'];
+                                    } elseif (is_string($val) && $val !== '') {
+                                        $specEntries[$key] = $val;
+                                    }
                                 }
-                            }
-                            foreach ($specEntries as $label => $value):
-                                if ($specCount >= 8)
-                                    break;
-                                $specCount++; ?>
-                                <div class="flex justify-between py-2 border-b border-zinc-50">
-                                    <span class="text-zinc-500"><?= htmlspecialchars($label) ?></span>
-                                    <span
-                                        class="font-medium text-zinc-900 text-right ml-2"><?= htmlspecialchars($value) ?></span>
-                                </div>
-                            <?php endforeach; ?>
+                                foreach ($specEntries as $label => $value):
+                                    if ($specCount >= 8)
+                                        break;
+                                    $specCount++; ?>
+                                        <div class="flex justify-between py-2 border-b border-zinc-50">
+                                            <span class="text-zinc-500"><?= htmlspecialchars($label) ?></span>
+                                            <span
+                                                class="font-medium text-zinc-900 text-right ml-2"><?= htmlspecialchars($value) ?></span>
+                                        </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <?php if (count($specEntries) > 8): ?>
+                                    <button onclick="document.querySelector('[data-section=specs]').scrollIntoView({behavior:'smooth'})"
+                                        class="mt-3 text-sm text-red-500 hover:text-red-500 font-medium">
+                                        Все характеристики <i class="fas fa-arrow-right ml-1"></i>
+                                    </button>
+                            <?php endif; ?>
                         </div>
-                        <?php if (count($specEntries) > 8): ?>
-                            <button onclick="document.querySelector('[data-section=specs]').scrollIntoView({behavior:'smooth'})"
-                                class="mt-3 text-sm text-red-500 hover:text-red-500 font-medium">
-                                Все характеристики <i class="fas fa-arrow-right ml-1"></i>
-                            </button>
-                        <?php endif; ?>
-                    </div>
                 <?php endif; ?>
 
                 <!-- Delivery + Contact -->
@@ -921,11 +921,11 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 <!-- Tab: Описание -->
                 <div id="tab-desc" class="tab-content px-6 lg:px-8 py-6 lg:py-8" role="tabpanel">
                     <?php if (!empty($product['description'])): ?>
-                        <div class="text-zinc-600 leading-relaxed text-sm lg:text-base max-w-3xl">
-                            <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-                        </div>
+                            <div class="text-zinc-600 leading-relaxed text-sm lg:text-base max-w-3xl">
+                                <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
+                            </div>
                     <?php else: ?>
-                        <p class="text-sm text-zinc-400">Описание не указано</p>
+                            <p class="text-sm text-zinc-400">Описание не указано</p>
                     <?php endif; ?>
                 </div>
 
@@ -933,27 +933,27 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 <div id="tab-specs" class="tab-content px-6 lg:px-8 py-6 lg:py-8 hidden" data-section="specs"
                     role="tabpanel">
                     <?php if (!empty($product['specs']) && is_array($product['specs'])): ?>
-                        <?php
-                        $allSpecs = [];
-                        foreach ($product['specs'] as $key => $val) {
-                            if (is_array($val) && isset($val['label'], $val['value'])) {
-                                $allSpecs[$val['label']] = $val['value'];
-                            } elseif (is_string($val) && $val !== '') {
-                                $allSpecs[$key] = $val;
+                            <?php
+                            $allSpecs = [];
+                            foreach ($product['specs'] as $key => $val) {
+                                if (is_array($val) && isset($val['label'], $val['value'])) {
+                                    $allSpecs[$val['label']] = $val['value'];
+                                } elseif (is_string($val) && $val !== '') {
+                                    $allSpecs[$key] = $val;
+                                }
                             }
-                        }
-                        ?>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
-                            <?php foreach ($allSpecs as $label => $value): ?>
-                                <div class="flex justify-between py-3 border-b border-zinc-50">
-                                    <span class="text-zinc-500 text-sm"><?= htmlspecialchars($label) ?></span>
-                                    <span
-                                        class="font-medium text-zinc-900 text-sm text-right ml-2"><?= htmlspecialchars($value) ?></span>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+                            ?>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1">
+                                <?php foreach ($allSpecs as $label => $value): ?>
+                                        <div class="flex justify-between py-3 border-b border-zinc-50">
+                                            <span class="text-zinc-500 text-sm"><?= htmlspecialchars($label) ?></span>
+                                            <span
+                                                class="font-medium text-zinc-900 text-sm text-right ml-2"><?= htmlspecialchars($value) ?></span>
+                                        </div>
+                                <?php endforeach; ?>
+                            </div>
                     <?php else: ?>
-                        <p class="text-sm text-zinc-400">Характеристики не указаны</p>
+                            <p class="text-sm text-zinc-400">Характеристики не указаны</p>
                     <?php endif; ?>
                 </div>
 
@@ -1056,81 +1056,81 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         }
         ?>
         <?php if (!empty($similarProducts)): ?>
-            <div class="bg-white rounded-2xl border border-zinc-200 p-5 lg:p-6 shadow-sm mt-6">
-                <div class="flex items-center justify-between mb-5">
-                    <h2 class="text-lg font-bold text-zinc-900">Похожие товары</h2>
-                    <div class="flex items-center gap-2">
-                        <button
-                            class="similar-prev w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 hover:border-red-200 transition disabled:opacity-30">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="3" stroke-linecap="round">
-                                <polyline points="15 18 9 12 15 6" />
-                            </svg>
-                        </button>
-                        <button
-                            class="similar-next w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 hover:border-red-200 transition disabled:opacity-30">
-                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="3" stroke-linecap="round">
-                                <polyline points="9 18 15 12 9 6" />
-                            </svg>
-                        </button>
+                <div class="bg-white rounded-2xl border border-zinc-200 p-5 lg:p-6 shadow-sm mt-6">
+                    <div class="flex items-center justify-between mb-5">
+                        <h2 class="text-lg font-bold text-zinc-900">Похожие товары</h2>
+                        <div class="flex items-center gap-2">
+                            <button
+                                class="similar-prev w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 hover:border-red-200 transition disabled:opacity-30">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3" stroke-linecap="round">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                            </button>
+                            <button
+                                class="similar-next w-8 h-8 bg-white border border-zinc-200 rounded-full flex items-center justify-center hover:bg-zinc-50 hover:border-red-200 transition disabled:opacity-30">
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="3" stroke-linecap="round">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="swiper similar-slider" style="padding-bottom: 28px;">
-                    <div class="swiper-wrapper">
-                        <?php foreach ($similarProducts as $item):
-                            $itemUnit = array_key_first($item['units'] ?? []);
-                            $itemPrice = ($itemUnit !== null && is_numeric($item['units'][$itemUnit] ?? null)) ? (float) $item['units'][$itemUnit] : 0;
-                            $itemSpecs = [];
-                            if (!empty($item['specs']) && is_array($item['specs'])) {
-                                $specCount = 0;
-                                foreach ($item['specs'] as $sk => $sv) {
-                                    if ($specCount >= 2)
-                                        break;
-                                    $label = is_array($sv) ? ($sv['label'] ?? $sk) : $sk;
-                                    $value = is_array($sv) ? ($sv['value'] ?? $sv) : $sv;
-                                    if (is_string($value) && $value !== '') {
-                                        $itemSpecs[] = htmlspecialchars($value);
-                                        $specCount++;
+                    <div class="swiper similar-slider" style="padding-bottom: 28px;">
+                        <div class="swiper-wrapper">
+                            <?php foreach ($similarProducts as $item):
+                                $itemUnit = array_key_first($item['units'] ?? []);
+                                $itemPrice = ($itemUnit !== null && is_numeric($item['units'][$itemUnit] ?? null)) ? (float) $item['units'][$itemUnit] : 0;
+                                $itemSpecs = [];
+                                if (!empty($item['specs']) && is_array($item['specs'])) {
+                                    $specCount = 0;
+                                    foreach ($item['specs'] as $sk => $sv) {
+                                        if ($specCount >= 2)
+                                            break;
+                                        $label = is_array($sv) ? ($sv['label'] ?? $sk) : $sk;
+                                        $value = is_array($sv) ? ($sv['value'] ?? $sv) : $sv;
+                                        if (is_string($value) && $value !== '') {
+                                            $itemSpecs[] = htmlspecialchars($value);
+                                            $specCount++;
+                                        }
                                     }
                                 }
-                            }
-                            ?>
-                            <div class="swiper-slide">
-                                <a href="<?= htmlspecialchars($item['seo']['canonicalUrl'] ?? '#') ?>"
-                                    class="group block border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-zinc-200 transition-all duration-200 similar-card bg-white">
-                                    <div class="bg-zinc-50 overflow-hidden flex items-center justify-center p-4"
-                                        style="aspect-ratio: 1;">
-                                        <img src="<?= htmlspecialchars($item['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
-                                            alt="<?= htmlspecialchars($item['name'] ?? '') ?>" width="200" height="200"
-                                            class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                                            loading="lazy">
-                                    </div>
-                                    <div class="p-3 border-t border-zinc-50">
-                                        <p class="text-sm font-medium text-zinc-900 line-clamp-2 leading-tight min-h-[2.5em]">
-                                            <?= htmlspecialchars($item['name'] ?? '') ?>
-                                        </p>
-                                        <?php if (!empty($itemSpecs)): ?>
-                                            <div class="flex flex-wrap gap-1 mt-1.5">
-                                                <?php foreach ($itemSpecs as $sv): ?>
-                                                    <span
-                                                        class="text-[10px] px-1.5 py-0.5 bg-zinc-100 text-zinc-500 rounded"><?= $sv ?></span>
-                                                <?php endforeach; ?>
+                                ?>
+                                    <div class="swiper-slide">
+                                        <a href="<?= htmlspecialchars($item['seo']['canonicalUrl'] ?? '#') ?>"
+                                            class="group block border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-zinc-200 transition-all duration-200 similar-card bg-white">
+                                            <div class="bg-zinc-50 overflow-hidden flex items-center justify-center p-4"
+                                                style="aspect-ratio: 1;">
+                                                <img src="<?= htmlspecialchars($item['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
+                                                    alt="<?= htmlspecialchars($item['name'] ?? '') ?>" width="200" height="200"
+                                                    class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                                                    loading="lazy">
                                             </div>
-                                        <?php endif; ?>
-                                        <?php if ($itemPrice > 0): ?>
-                                            <p class="text-sm font-bold text-red-500 mt-2">
-                                                от <?= number_format($itemPrice, 0, '', ' ') ?> ₽
-                                            </p>
-                                        <?php endif; ?>
+                                            <div class="p-3 border-t border-zinc-50">
+                                                <p class="text-sm font-medium text-zinc-900 line-clamp-2 leading-tight min-h-[2.5em]">
+                                                    <?= htmlspecialchars($item['name'] ?? '') ?>
+                                                </p>
+                                                <?php if (!empty($itemSpecs)): ?>
+                                                        <div class="flex flex-wrap gap-1 mt-1.5">
+                                                            <?php foreach ($itemSpecs as $sv): ?>
+                                                                    <span
+                                                                        class="text-[10px] px-1.5 py-0.5 bg-zinc-100 text-zinc-500 rounded"><?= $sv ?></span>
+                                                            <?php endforeach; ?>
+                                                        </div>
+                                                <?php endif; ?>
+                                                <?php if ($itemPrice > 0): ?>
+                                                        <p class="text-sm font-bold text-red-500 mt-2">
+                                                            от <?= number_format($itemPrice, 0, '', ' ') ?> ₽
+                                                        </p>
+                                                <?php endif; ?>
+                                            </div>
+                                        </a>
                                     </div>
-                                </a>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="swiper-pagination similar-pagination" style="bottom: 0;"></div>
                     </div>
-                    <div class="swiper-pagination similar-pagination" style="bottom: 0;"></div>
                 </div>
-            </div>
         <?php endif; ?>
 
         </div>
@@ -1154,13 +1154,13 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 ];
                 foreach ($faqItems as $q => $a):
                     ?>
-                    <div class="border border-zinc-200 rounded-lg p-4" itemscope itemprop="mainEntity"
-                        itemtype="https://schema.org/Question">
-                        <h3 class="font-semibold text-zinc-900" itemprop="name"><?= htmlspecialchars($q) ?></h3>
-                        <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
-                            <p class="mt-2 text-zinc-600" itemprop="text"><?= htmlspecialchars($a) ?></p>
+                        <div class="border border-zinc-200 rounded-lg p-4" itemscope itemprop="mainEntity"
+                            itemtype="https://schema.org/Question">
+                            <h3 class="font-semibold text-zinc-900" itemprop="name"><?= htmlspecialchars($q) ?></h3>
+                            <div itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+                                <p class="mt-2 text-zinc-600" itemprop="text"><?= htmlspecialchars($a) ?></p>
+                            </div>
                         </div>
-                    </div>
                 <?php endforeach; ?>
             </div>
         </section>
@@ -1244,9 +1244,9 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                         <?= htmlspecialchars($product['name'] ?? $product['title']) ?>
                     </p>
                     <?php if ($firstPrice > 0): ?>
-                        <p class="text-sm font-bold text-red-500 mt-0.5"><?= number_format($firstPrice, 0, '', ' ') ?> ₽ /
-                            <?= htmlspecialchars($firstUnit) ?>
-                        </p>
+                            <p class="text-sm font-bold text-red-500 mt-0.5"><?= number_format($firstPrice, 0, '', ' ') ?> ₽ /
+                                <?= htmlspecialchars($firstUnit) ?>
+                            </p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1285,10 +1285,10 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                 </p>
                 <p class="text-lg font-bold text-zinc-900 leading-tight">
                     <?php if ($firstPrice > 0): ?>
-                        <?= number_format($firstPrice, 0, '', ' ') ?> <span
-                            class="text-xs font-normal text-zinc-500">₽/<?= htmlspecialchars($firstUnit) ?></span>
+                            <?= number_format($firstPrice, 0, '', ' ') ?> <span
+                                class="text-xs font-normal text-zinc-500">₽/<?= htmlspecialchars($firstUnit) ?></span>
                     <?php else: ?>
-                        Цена по запросу
+                            Цена по запросу
                     <?php endif; ?>
                 </p>
             </div>
