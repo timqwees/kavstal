@@ -92,6 +92,7 @@
     dropdown.style.maxHeight = '0';
     dropdown.style.opacity = '0';
     lastQuery = '';
+    dropdown.innerHTML = '';
     hideTimer = setTimeout(function() { dropdown.classList.add('hidden'); }, 160);
   }
 
@@ -114,14 +115,7 @@
   });
 
   input.addEventListener('focus', function() {
-    if (dropdown.innerHTML && dropdown.classList.contains('hidden')) {
-      dropdown.classList.remove('hidden');
-      requestAnimationFrame(function() {
-        dropdown.style.transition = 'max-height 0.25s ease, opacity 0.2s ease';
-        dropdown.style.maxHeight = '420px';
-        dropdown.style.opacity = '1';
-      });
-    }
+    if (dropdown.classList.contains('hidden')) return;
   });
   document.addEventListener('click', function(e) { if (!wrap.contains(e.target)) hideDD(); });
   input.addEventListener('keydown', function(e) {

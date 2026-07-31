@@ -242,7 +242,8 @@ $services = [
 
             <!-- Sidebar -->
             <aside class="lg:w-64 flex-shrink-0">
-                <div class="hidden lg:block bg-white rounded-lg shadow-sm border border-gray-200 sticky top-24">
+                <div class="hidden lg:block bg-white rounded-lg shadow-sm border border-gray-200 sticky"
+                    style="top:152px">
                     <div class="p-4 border-b border-gray-100">
                         <h2 class="text-sm font-bold text-gray-900 uppercase tracking-wide">Категории</h2>
                     </div>

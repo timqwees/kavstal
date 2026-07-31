@@ -286,7 +286,8 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                 <div class="flex gap-6 max-w-7xl mx-auto">
                     <!-- Left Sidebar: Filters -->
                     <aside class="hidden lg:block w-64 shrink-0">
-                        <div class="sticky top-28 bg-white border border-zinc-200 rounded-xl p-3 space-y-3 max-h-[calc(100vh-120px)] overflow-y-auto">
+                        <div class="sticky bg-white border border-zinc-200 rounded-xl p-3 space-y-3 overflow-y-auto"
+                            style="top:152px;max-height:calc(100vh - 152px)">
 
                             <!-- Категория -->
                             <?php if (!empty($filterCategories)): ?>

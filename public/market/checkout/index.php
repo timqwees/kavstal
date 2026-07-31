@@ -276,7 +276,8 @@ $paymentMethods = [
 
             <!-- Order Summary -->
             <div class="lg:col-span-2">
-                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky top-28">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 sticky"
+                    style="top:152px">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">Состав заказа</h2>
                     <div class="space-y-3 max-h-[400px] overflow-y-auto pr-1">
                         <?php foreach ($cartItems as $item): ?>

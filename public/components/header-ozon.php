@@ -17,19 +17,22 @@ $catalogSubcategories = $tree['subcategories'];
 <noscript>
     <link rel="stylesheet" href="/public/assets/styles/main.css">
 </noscript>
+<!-- Fixed header wrapper -->
+<div class="fixed inset-x-0 top-0 z-50 bg-white">
+
 <!-- Top Bar -->
 <div class="hidden lg:block bg-white border-b border-gray-200 text-xs text-gray-500">
-    <div class="max-w-7xl mx-auto px-8 flex items-center justify-between h-9">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8 flex items-center justify-between h-12">
         <div class="flex items-center gap-6">
-            <span class="flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
                 <?= htmlspecialchars($site['workingHours'] ?? 'Пн-Пт 9:00–18:00') ?>
             </span>
-            <span class="flex items-center gap-1.5">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <span class="flex items-center gap-1">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <rect x="1" y="3" width="15" height="13"></rect>
                     <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
                     <circle cx="5.5" cy="18.5" r="2.5"></circle>
@@ -38,21 +41,32 @@ $catalogSubcategories = $tree['subcategories'];
                 Доставка по Москве и МО
             </span>
         </div>
-        <div class="flex items-center gap-3">
-            <a href="https://t.me/<?= htmlspecialchars(ltrim($site['telegram'] ?? '@kavstal_bot', '@')) ?>"
-                target="_blank" rel="noopener"
-                class="inline-flex items-center gap-1.5 hover:text-red-500 transition-colors">
-                <i class="fab fa-telegram text-sm"></i>
-                Telegram
+        <div class="flex items-center gap-2">
+            <a href="https://t.me/kavstal_bot" target="_blank" rel="noopener noreferrer"
+                class="flex items-center gap-1 px-3 h-7 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors font-medium">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                </svg>
+                Написать в Telegram
             </a>
-            <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? '74959892420') ?>"
-                class="inline-flex items-center gap-1.5 font-medium hover:text-red-500 transition-colors">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
+                class="flex items-center gap-1 px-3 h-7 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors font-medium">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <rect x="2" y="4" width="20" height="16" rx="2" />
+                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+                </svg>
+                Написать на почту
+            </a>
+            <button type="button"
+                onclick="event.preventDefault();document.getElementById('specOverlay').classList.add('show');document.getElementById('specModal').classList.add('show');"
+                class="flex items-center gap-1 px-3 h-7 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors font-medium cursor-pointer border-none">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path
                         d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
                 </svg>
-                <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?>
-            </a>
+                Связаться
+            </button>
         </div>
     </div>
 </div>
@@ -60,7 +74,7 @@ $catalogSubcategories = $tree['subcategories'];
 <header class="ozon-header">
     <!-- Row 1: Logo + Search + Actions -->
     <div class="ozon-header-main">
-        <div class="ozon-header-inner">
+        <div class="ozon-header-inner max-w-7xl">
             <a href="/" class="relative ozon-logo">
                 <style>
                     .mobile-logo {
@@ -106,7 +120,10 @@ $catalogSubcategories = $tree['subcategories'];
             </button>
             <a href="tel:<?= htmlspecialchars($site['phone']) ?>" class=" ozon-catalog-btn" aria-label="Позвонить"
                 aria-expanded="false">
-                <i class="fa fa-phone"></i>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                        d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.36 11.36 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1A17 17 0 013 4a1 1 0 011-1h3.5a1 1 0 011 1 11.36 11.36 0 00.57 3.58 1 1 0 01-.25 1.01l-2.2 2.2z" />
+                </svg>
                 <span>Позвонить</span>
             </a>
             <a href="/cart" class="ozon-header-action">
@@ -136,7 +153,7 @@ $catalogSubcategories = $tree['subcategories'];
     </div>
     <!-- Row 2: Nav links -->
     <div class="ozon-header-nav">
-        <div class="ozon-header-nav-inner">
+        <div class="ozon-header-nav-inner max-w-7xl">
             <div class="ozon-header-nav-links">
                 <a href="tel:<?= $phone_clean ?>" class="ozon-nav-link ozon-nav-phone">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -147,10 +164,30 @@ $catalogSubcategories = $tree['subcategories'];
                 </a>
                 <span class="ozon-nav-sep"></span>
                 <a href="/delivery" class="ozon-nav-link">Доставка</a>
+                <a href="/delivery-map" class="ozon-nav-link">Карта отгрузок</a>
                 <a href="/contacts" class="ozon-nav-link">Контакты</a>
                 <a href="/about" class="ozon-nav-link">О компании</a>
                 <a href="/blog" class="ozon-nav-link">Блог</a>
                 <a href="/guarantees" class="ozon-nav-link">Гарантии</a>
+                <span class="ozon-nav-sep"></span>
+                <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
+                    class="ozon-nav-link ozon-nav-email">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+                    </svg>
+                    <?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>
+                </a>
+                <span class="ozon-nav-sep"></span>
+                <a href="/" class="ozon-nav-link">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    На главную
+                </a>
             </div>
 
         </div>
@@ -205,6 +242,13 @@ $catalogSubcategories = $tree['subcategories'];
         </div>
     </div>
 </header>
+
+</div>
+<!-- /Fixed header wrapper -->
+
+<!-- Spacer for fixed header: 48px top bar + 64px main + 40px nav = 152px on desktop, 56px on mobile -->
+<div style="height:56px" class="lg:hidden"></div>
+<div style="height:152px" class="hidden lg:block"></div>
 
 <!-- Mobile Bottom Bar -->
 <?php
