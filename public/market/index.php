@@ -78,7 +78,6 @@ $noindexMarket = $hasFilters || $marketPage > 1;
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
     <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
@@ -528,7 +527,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
 
     <section class="bg-zinc-50 border-t border-zinc-200">
         <div class="max-w-4xl mx-auto px-4 py-12 md:py-16 text-center">
-            <h2 class="text-xl md:text-2xl font-bold text-zinc-900 mb-3">Не нашли то, что искали?</h2>
+            <h2 class="section-title mb-3 text-center">Не нашли то, что искали?</h2>
             <p class="text-sm md:text-base text-zinc-500 mb-8 max-w-xl mx-auto">У нас есть все возможные материалы, и некоторые могут не отображаться в каталоге. Оставьте заявку — мы подберём нужный товар и свяжемся с вами.</p>
             <form id="market-feedback-form" data-goal="market_feedback" method="POST" action="/send/email" class="ajax-form max-w-2xl mx-auto">
                 <div class="flex flex-col sm:flex-row gap-4 sm:gap-3 mb-4 sm:mb-3">

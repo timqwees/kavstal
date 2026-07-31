@@ -91,7 +91,7 @@ $paymentLabel = App\Models\Order\Order::paymentLabel($order['payment_method'] ??
         </div>
 
         <div class="mt-8 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 text-center text-white">
-            <h2 class="text-2xl font-bold mb-3">Нужна помощь?</h2>
+            <h2 class="section-title mb-3" style="color:#fff;">Нужна помощь?</h2>
             <p class="mb-6 opacity-80">Позвоните нам — уточним детали по заказу</p>
             <a href="tel:+74959892420" class="inline-flex items-center gap-2 bg-white text-gray-900 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg">
                 <i class="fas fa-phone"></i> +7 (495) 989-24-20

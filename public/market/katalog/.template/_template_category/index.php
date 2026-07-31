@@ -161,7 +161,6 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
 
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
 
     <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style"
@@ -620,7 +619,7 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
         $seoParent = $categoryInfo['title'] ?? '';
         $seoDesc = !empty($categoryInfo['description']) ? $categoryInfo['description'] : '';
         ?>
-        <h2 class="text-lg lg:text-xl font-bold text-zinc-900 mb-3">
+        <h2 class="section-title mb-3">
             <?= htmlspecialchars($seoTitle) ?> — купить в Москве с доставкой по выгодной цене
         </h2>
         <div class="text-sm text-zinc-600 leading-relaxed space-y-3">
@@ -673,7 +672,6 @@ $pageProducts = array_slice($allCategoryProducts, $offset, $itemsPerPage);
     <?php include_once './public/components/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-    <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
 
     <script>

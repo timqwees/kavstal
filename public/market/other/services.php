@@ -343,7 +343,7 @@ $services = [
                 <!-- Services Grid -->
                 <div id="services" class="space-y-6 mb-12">
                     <div class="flex items-center justify-between mb-2">
-                        <h2 class="text-2xl font-bold text-gray-900">Услуги</h2>
+                        <h2 class="section-title">Услуги</h2>
                         <span class="text-sm text-gray-500"><?= count($services) ?> услуги</span>
                     </div>
 
@@ -424,7 +424,7 @@ $services = [
                 <!-- Calc CTA -->
                 <div
                     class="bg-gradient-to-r from-red-500 to-red-500 rounded-2xl p-8 md:p-10 mb-8 text-white text-center">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-3">Нужен точный расчёт стоимости?</h2>
+                    <h2 class="section-title mb-3" style="color:#fff;">Нужен точный расчёт стоимости?</h2>
                     <p class="text-lg opacity-90 mb-6">Пришлите спецификацию — мы рассчитаем за 15 минут</p>
                     <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-xl mx-auto">
                         <a href="tel:+74959892420"
@@ -446,7 +446,7 @@ $services = [
 
                 <!-- How It Works -->
                 <div class="bg-white rounded-xl border border-gray-200 p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Как заказать услугу</h2>
+                    <h2 class="section-title mb-6 text-center">Как заказать услугу</h2>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div class="text-center">
                             <div
@@ -486,7 +486,7 @@ $services = [
                 <!-- FAQ -->
                 <div class="bg-white rounded-xl border border-gray-200 p-8" itemscope
                     itemtype="https://schema.org/FAQPage">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Часто задаваемые вопросы</h2>
+                    <h2 class="section-title mb-6">Часто задаваемые вопросы</h2>
                     <div class="space-y-3" x-data="{ open: null }">
                         <?php
                         $faqs = [

@@ -12,6 +12,11 @@ $catalogSubcategories = $tree['subcategories'];
 <noscript>
     <link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
 </noscript>
+<link rel="preload" href="/public/assets/styles/main.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+    <link rel="stylesheet" href="/public/assets/styles/main.css">
+</noscript>
 <!-- Top Bar -->
 <div class="hidden lg:block bg-white border-b border-gray-200 text-xs text-gray-500">
     <div class="max-w-7xl mx-auto px-8 flex items-center justify-between h-9">
@@ -269,3 +274,4 @@ $bnmCls = function ($paths) use ($bnmActive) {
 </div>
 
 <script src="/public/assets/scripts/components/catalog-mega.min.js" defer></script>
+<script src="/public/assets/scripts/components/search.min.js" defer></script>

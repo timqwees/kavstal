@@ -1,7 +1,6 @@
 {
-  "name": "КАВ СТАЛЬ — поставки металлопроката в Москве",
-  "short_name": "КАВ СТАЛЬ",
-  "description": "Поставки металлопроката по Москве и МО. Арматура, балка, труба, лист и другие виды металлопроката.",
+  "name": "КавСталь",
+  "short_name": "Кав",
   "icons": [
     {
       "src": "/public/assets/images/icons/favicon/web-app-manifest-192x192.png",
@@ -16,12 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#dc2626",
+  "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "display": "standalone",
-  "start_url": "/",
-  "scope": "/",
-  "categories": ["business", "shopping", "industry"],
-  "lang": "ru-RU",
-  "orientation": "any"
+  "display": "standalone"
 }

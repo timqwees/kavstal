@@ -96,13 +96,37 @@ function renderContent(string $text, array $contentImages = []): string {
 
 $contentHtml = renderContent($article['content'] ?? '', $article['contentImages'] ?? []);
 
-$related = array_filter($articles, fn($a) => ($a['slug'] ?? '') !== $slug && ($a['category'] ?? '') === ($article['category'] ?? ''));
+$articleTags = array_map('trim', array_filter(array_map('trim', explode(',', $article['tags'] ?? '')), fn($t) => $t !== ''));
+$related = [];
+foreach ($articles as $a) {
+    if (($a['slug'] ?? '') === $slug) continue;
+    $score = 0;
+    if (($a['category'] ?? '') === ($article['category'] ?? '')) $score += 3;
+    $aTags = array_map('trim', array_filter(array_map('trim', explode(',', $a['tags'] ?? '')), fn($t) => $t !== ''));
+    foreach ($aTags as $t) {
+        if (in_array($t, $articleTags, true)) $score += 1;
+    }
+    if ($score > 0) $related[] = ['article' => $a, 'score' => $score];
+}
+usort($related, fn($x, $y) => $y['score'] <=> $x['score']);
+$related = array_map(fn($r) => $r['article'], array_slice($related, 0, 4));
 if (count($related) < 4) {
     foreach ($articles as $a) {
         if (($a['slug'] ?? '') !== $slug && count($related) < 4 && !in_array($a, $related, true)) $related[] = $a;
     }
 }
 $related = array_slice(array_values($related), 0, 4);
+
+usort($articles, fn($a, $b) => strtotime($b['created_at'] ?? '0') <=> strtotime($a['created_at'] ?? '0'));
+$prevArticle = null;
+$nextArticle = null;
+foreach ($articles as $i => $a) {
+    if (($a['slug'] ?? '') === $slug) {
+        $prevArticle = $articles[$i + 1] ?? null;
+        $nextArticle = $articles[$i - 1] ?? null;
+        break;
+    }
+}
 
 function ozDateArticle(string $dateStr): string {
     $ts = strtotime($dateStr);
@@ -218,7 +242,13 @@ $readTime = estimateReadTime($article['content'] ?? '');
             background: #f0fdf4;
             transition: all 0.2s;
         }
-        .article-tags a:hover { color: #15803d; background: #dcfce7; }
+        .article-tags a:hover { background: #dcfce7; color: #15803d; text-decoration: none; }
+
+        .article-cat-chip {
+            display: inline-block; padding: 4px 12px; border-radius: 8px;
+            background: #fef2f2; color: #dc2626;
+            font-size: 12px; font-weight: 700; margin-bottom: 12px;
+        }
 
         .article-title {
             font-size: 32px; line-height: 1.2; font-weight: 800; color: #111827;
@@ -395,20 +425,96 @@ $readTime = estimateReadTime($article['content'] ?? '');
         .sidebar-cta-gradient__btn:hover { background: #fef2f2; }
         .sidebar-cta-gradient__btn svg { margin-left: 6px; width: 14px; height: 14px; }
 
+        /* ── Prev / Next ────────────────────────────────────── */
+        .article-prevnext {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+            margin-top: 28px;
+        }
+        @media (max-width: 640px) { .article-prevnext { grid-template-columns: 1fr; } }
+        .article-prevnext__link {
+            display: flex; flex-direction: column; gap: 4px;
+            padding: 16px; border: 1px solid #e5e7eb; border-radius: 12px;
+            background: #fff; transition: all 0.2s;
+        }
+        .article-prevnext__link:hover {
+            border-color: #dc2626;
+            box-shadow: 0 4px 16px rgba(220,38,38,0.08);
+        }
+        .article-prevnext__link--next { text-align: right; align-items: flex-end; }
+        .article-prevnext__label {
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.05em; color: #9ca3af;
+        }
+        .article-prevnext__title {
+            font-size: 14px; font-weight: 700; color: #111827; line-height: 1.35;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            transition: color 0.2s;
+        }
+        .article-prevnext__link:hover .article-prevnext__title { color: #dc2626; }
+
+        /* ── Related Cluster ────────────────────────────────── */
+        .related-cluster { margin-top: 40px; }
+        .related-cluster__title {
+            font-size: 24px; font-weight: 800; color: #111827;
+            margin: 0 0 20px;
+        }
+        .related-cluster__grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+        }
+        @media (max-width: 1024px) { .related-cluster__grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 560px) { .related-cluster__grid { grid-template-columns: 1fr; } }
+        .related-cluster__card {
+            display: flex; flex-direction: column;
+            border: 1px solid #e5e7eb; border-radius: 12px;
+            background: #fff; overflow: hidden; transition: all 0.2s;
+        }
+        .related-cluster__card:hover { border-color: #dc2626; box-shadow: 0 6px 20px rgba(220,38,38,0.08); }
+        .related-cluster__img-wrap {
+            height: 140px; overflow: hidden; background: #f3f4f6;
+        }
+        .related-cluster__img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .related-cluster__card:hover .related-cluster__img-wrap img { transform: scale(1.04); }
+        .related-cluster__body { padding: 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .related-cluster__cat {
+            align-self: flex-start; padding: 3px 10px; border-radius: 6px;
+            background: #fef2f2; color: #dc2626;
+            font-size: 11px; font-weight: 700;
+        }
+        .related-cluster__title {
+            font-size: 14px; font-weight: 700; color: #111827; line-height: 1.35;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+            transition: color 0.2s;
+        }
+        .related-cluster__card:hover .related-cluster__title { color: #dc2626; }
+        .related-cluster__meta { font-size: 11px; color: #9ca3af; margin-top: auto; }
+
         /* ── CTA Section ───────────────────────────────────── */
         .cta-section {
-            margin-top: 40px; padding: 36px;
-            background: #f5f5f5; border: 1px solid #e5e7eb;
-            border-radius: 14px; text-align: center;
+            margin-top: 40px; padding: 36px; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #111827 0%, #1f2937 55%, #7f1d1d 130%);
+            border-radius: 16px; text-align: center;
         }
+        .cta-section::before {
+            content: ''; position: absolute; top: -80px; right: -80px;
+            width: 240px; height: 240px; pointer-events: none;
+            background: radial-gradient(circle, rgba(220,38,38,0.35) 0%, transparent 70%);
+        }
+        .cta-section > * { position: relative; z-index: 1; }
         .cta-section__title {
-            font-size: 20px; font-weight: 800; color: #111827; margin: 0 0 8px;
+            font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 8px;
         }
         .cta-section__desc {
-            font-size: 14px; line-height: 1.6; color: #6b7280;
+            font-size: 14px; line-height: 1.6; color: #9ca3af;
             max-width: 480px; margin: 0 auto 20px;
         }
         .cta-section__actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .cta-section .btn-cta--outline {
+            background: rgba(255,255,255,0.06); color: #fff;
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        .cta-section .btn-cta--outline:hover {
+            background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3);
+        }
 
         /* ── Share ─────────────────────────────────────────── */
         .article-share {
@@ -544,6 +650,8 @@ $readTime = estimateReadTime($article['content'] ?? '');
                         </div>
                     </div>
 
+                    <a href="<?= htmlspecialchars($site['baseUrl'] . '/blog') ?>" class="article-cat-chip"><?= htmlspecialchars($article['category'] ?? 'Статья') ?></a>
+
                     <h1 class="article-title" itemprop="headline"><?= htmlspecialchars($article['title']) ?></h1>
 
                     <?php if (!empty($article['excerpt'])): ?>
@@ -581,8 +689,28 @@ $readTime = estimateReadTime($article['content'] ?? '');
                     <div class="article-tags" style="margin-top:24px;">
                         <?php foreach (array_slice(explode(',', $article['tags']), 0, 3) as $tag):
                             $tag = trim($tag); if ($tag): ?>
-                            <a href="#"><?= htmlspecialchars($tag) ?></a>
+                            <a href="<?= htmlspecialchars($site['baseUrl'] . '/blog?q=' . urlencode($tag)) ?>"><?= htmlspecialchars($tag) ?></a>
                         <?php endif; endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+
+                    <!-- Prev / Next -->
+                    <?php if ($prevArticle || $nextArticle): ?>
+                    <div class="article-prevnext">
+                        <?php if ($prevArticle): ?>
+                        <a href="<?= htmlspecialchars($site['baseUrl'] . '/blog/' . $prevArticle['slug']) ?>" class="article-prevnext__link">
+                            <span class="article-prevnext__label">← Предыдущая</span>
+                            <span class="article-prevnext__title"><?= htmlspecialchars($prevArticle['title']) ?></span>
+                        </a>
+                        <?php else: ?>
+                        <span></span>
+                        <?php endif; ?>
+                        <?php if ($nextArticle): ?>
+                        <a href="<?= htmlspecialchars($site['baseUrl'] . '/blog/' . $nextArticle['slug']) ?>" class="article-prevnext__link article-prevnext__link--next">
+                            <span class="article-prevnext__label">Следующая →</span>
+                            <span class="article-prevnext__title"><?= htmlspecialchars($nextArticle['title']) ?></span>
+                        </a>
+                        <?php endif; ?>
                     </div>
                     <?php endif; ?>
 
@@ -641,6 +769,31 @@ $readTime = estimateReadTime($article['content'] ?? '');
 
                 </aside>
             </div>
+
+            <!-- Related Articles Cluster -->
+            <?php if (!empty($related)): ?>
+            <div class="related-cluster">
+                <h2 class="section-title mb-5">Похожие статьи</h2>
+                <div class="related-cluster__grid">
+                    <?php foreach ($related as $r):
+                        $rImg = $r['image'] ?? '/public/assets/images/bgpage/product.png';
+                        $rImg = (str_starts_with($rImg, 'http://') || str_starts_with($rImg, 'https://')) ? $rImg : $site['baseUrl'] . $rImg;
+                        $rCat = $r['category'] ?? 'Статья';
+                    ?>
+                    <a href="<?= htmlspecialchars($site['baseUrl'] . '/blog/' . $r['slug']) ?>" class="related-cluster__card">
+                        <div class="related-cluster__img-wrap">
+                            <img src="<?= htmlspecialchars($rImg) ?>" alt="<?= htmlspecialchars($r['title']) ?>" loading="lazy">
+                        </div>
+                        <div class="related-cluster__body">
+                            <span class="related-cluster__cat"><?= htmlspecialchars($rCat) ?></span>
+                            <div class="related-cluster__title"><?= htmlspecialchars($r['title']) ?></div>
+                            <div class="related-cluster__meta"><?= ozDateArticle($r['created_at'] ?? 'now') ?> · <?= estimateReadTime($r['content'] ?? '') ?> мин чтения</div>
+                        </div>
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
 
             <!-- CTA -->
             <div class="cta-section">

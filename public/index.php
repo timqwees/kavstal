@@ -984,7 +984,7 @@
     <section class="py-12 lg:py-16" itemscope itemtype="https://schema.org/CollectionPage">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
         <div class="flex items-center justify-between mb-5">
-          <h2 class="text-xl md:text-2xl font-bold text-gray-900" itemprop="name">Каталог металлопроката</h2>
+          <h2 class="text-xl md:text-2xl section-title" itemprop="name">Каталог металлопроката</h2>
           <a href="/market" class="text-sm font-medium text-red-500 hover:underline">Смотреть все →</a>
         </div>
 
@@ -997,7 +997,7 @@
           <?php endforeach; ?>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4" id="catalog-grid">
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4" id="catalog-grid">
           <?php
           $initialProducts = $homeProducts;
           shuffle($initialProducts);
@@ -1128,32 +1128,21 @@
     </div>
 
     <!-- Что нового -->
-    <section class="py-14 lg:py-20">
-      <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 tracking-tight">Что нового</h2>
-          <div class="flex gap-2">
-            <button id="newsSwiperPrev"
-              class="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-500 transition-colors"
-              aria-label="Предыдущая новость"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
-              </svg></button>
-            <button id="newsSwiperNext"
-              class="w-11 h-11 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:border-gray-500 transition-colors"
-              aria-label="Следующая новость"><svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
-              </svg></button>
-          </div>
-        </div>
-        <?php $img = '/public/assets/images/services/products/';
+    <section class="news-section">
+      <div class="news-container">
+
+        <?php $img = '/public/assets/images/services/stories/';
         $vid = '/public/assets/images/services/vides/';
+        $info = '/public/assets/images/info/';
         $stories = [
-          ['title' => 'Лазерная резка', 'slides' => [['title' => 'Лазерная резка металла', 'desc' => 'Высокоточная резка до 25 мм', 'video' => $vid . 'lazer.MP4', 'bg' => $img . 'ЛИСТ.webp']]],
+          ['title' => 'Лазерная резка', 'slides' => [['title' => 'Лазерная резка металла', 'desc' => 'Высокоточная резка до 25 мм', 'video' => $vid . 'lazer.MP4', 'bg' => 'https://content.storage-cdn.ru/custom/vitrina/other/stories/37/content-31-4anv.png']]],
           ['title' => 'Гибка металла', 'slides' => [['title' => 'Гибка металла', 'desc' => 'Точная гибка листового металла', 'video' => $vid . 'gibkametalla.MP4', 'bg' => $img . 'ПРОФНАСТИЛ.webp']]],
           ['title' => 'Плазменная резка', 'slides' => [['title' => 'Плазменная резка', 'desc' => 'Резка толстого металла до 150 мм', 'video' => $vid . 'plazma.MP4', 'bg' => $img . 'БАЛКА.webp']]],
-          ['title' => 'Доставка по Москве', 'slides' => [['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid . 'dostavka.MP4', 'bg' => $img . 'ШВЕЛЛЕР.webp']]],
+          ['title' => 'Доставка по Москве', 'tagName' => 'Видео', 'slides' => [
+            ['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid . 'dostavka.MP4', 'bg' => $img . 'ШВЕЛЛЕР.webp'],
+            ['title' => 'Комплексная доставка на объект', 'desc' => 'Кран-борт, манипулятор, разгрузка', 'video' => $vid . 'dostavkaKD.MP4', 'bg' => $img . 'СВАИ.webp'],
+            ['title' => 'Доставка по всей России', 'desc' => 'Более 100 городов, отгрузка от 1 дня', 'bg' => $img . 'ТРУБА.webp'],
+          ]],
           ['title' => 'Горячее цинкование', 'slides' => [['title' => 'Горячее цинкование', 'desc' => 'Защита от коррозии на 50+ лет', 'video' => $vid . 'gorachiethinkirovanie.MP4', 'bg' => $img . 'УГОЛОК.webp']]],
           ['title' => 'Ленточнопильная резка', 'slides' => [['title' => 'Ленточнопильная резка', 'desc' => 'Точная резка балок и труб', 'video' => $vid . 'lentochnopilnik.MP4', 'bg' => $img . 'БАЛКА.webp']]],
           ['title' => 'Ручная резка', 'slides' => [['title' => 'Ручная резка металла', 'desc' => 'Индивидуальная резка по размерам', 'video' => $vid . 'ruchnairezka.MP4', 'bg' => $img . 'ПОЛОСА.webp']]],
@@ -1161,33 +1150,226 @@
           ['title' => 'Доставка КД', 'slides' => [['title' => 'Доставка КД', 'desc' => 'Комплексная доставка на объект', 'video' => $vid . 'dostavkaKD.MP4', 'bg' => $img . 'СВАИ.webp']]],
           ['title' => 'Арматура А500С', 'slides' => [['title' => 'Арматура А500С', 'desc' => 'Свежая партия от ММК. Диаметр 10-40 мм', 'bg' => $img . 'АРМАТУРА.webp']]],
           ['title' => 'Листовой прокат', 'slides' => [['title' => 'Листовой прокат', 'desc' => 'Сталь листовая ГК от 2 до 60 мм', 'bg' => $img . 'ЛИСТ.webp']]],
-          ['title' => 'Трубы стальные', 'slides' => [['title' => 'Трубы стальные', 'desc' => 'Водогазопроводные и профильные трубы', 'bg' => $img . 'ТРУБА.webp']]],
           ['title' => 'Балка двутавровая', 'slides' => [['title' => 'Балка двутавровая', 'desc' => 'Балки №10-№40 ГОСТ 8239-89', 'bg' => $img . 'БАЛКА.webp']]],
           ['title' => 'Швеллер', 'slides' => [['title' => 'Швеллер', 'desc' => 'Профильный прокат от 5 до 40', 'bg' => $img . 'ШВЕЛЛЕР.webp']]],
           ['title' => 'Уголок стальной', 'slides' => [['title' => 'Уголок стальной', 'desc' => 'Равнополочный уголок 25-200 мм', 'bg' => $img . 'УГОЛОК.webp']]],
-          ['title' => 'Нержавеющая сталь', 'slides' => [['title' => 'Нержавеющая сталь', 'desc' => 'AISI 304, 201, 430 — большой ассортимент', 'bg' => $img . 'НЕРЖАВЕЮЩИЙМЕТАЛЛ.webp']]],
-          ['title' => 'Цветные металлы', 'slides' => [['title' => 'Цветные металлы', 'desc' => 'Медь, латунь, алюминий — листы и проволока', 'bg' => $img . 'ЦВЕТМЕТАЛЛ.webp']]],
-          ['title' => 'Сетка стальная', 'slides' => [['title' => 'Сетка стальная', 'desc' => 'Сварная и плетёная сетка в наличии', 'bg' => $img . 'СЕТКА.png']]],
-          ['title' => 'Сваи забивные', 'slides' => [['title' => 'Сваи забивные', 'desc' => 'ЖБ сваи для фундаментов', 'bg' => $img . 'СВАИ.webp']]],
+          ['title' => 'Расчёт материалов под ключ', 'tagName' => 'Услуги', 'slides' => [['title' => 'Расчёт материалов под ключ', 'desc' => 'Считаем все материалы на объект под ключ', 'bg' => $info . '1.webp']]],
+          ['title' => 'Доставка в день заказа', 'tagName' => 'Услуги', 'slides' => [['title' => 'Доставка в день заказа', 'desc' => 'Привезём металлопрокат в день заказа', 'bg' => $info . '2.webp']]],
+          ['title' => 'Резка металлопроката по размеру', 'tagName' => 'Услуги', 'slides' => [['title' => 'Резка металлопроката по размеру', 'desc' => 'Нарежем металлопрокат точно под ваши размеры', 'bg' => $info . '3.webp']]],
+          ['title' => 'Счёт за 30 минут', 'tagName' => 'Услуги', 'slides' => [['title' => 'Счёт за 30 минут', 'desc' => 'Пришлём счёт до 20 позиций за 30 минут', 'bg' => $info . '4.webp']]],
+          ['title' => 'Всё одной машиной', 'tagName' => 'Услуги', 'slides' => [['title' => 'Всё одной машиной', 'desc' => 'Привезём металлопрокат и сопутствующие материалы одной машиной', 'bg' => $info . '5.webp']]],
         ]; ?>
-        <div class="swiper newsSwiper pb-4">
+
+        <div class="news-header">
+          <div>
+            <span class="news-kicker">Новости компании</span>
+            <h2 class="section-title">Что нового</h2>
+          </div>
+          <div class="news-controls">
+            <button id="newsSwiperPrev" class="news-arrow" aria-label="Предыдущая новость"><svg fill="none"
+                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg></button>
+            <button id="newsSwiperNext" class="news-arrow" aria-label="Следующая новость"><svg fill="none"
+                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg></button>
+          </div>
+        </div>
+
+        <style>
+          .news-section {
+            padding: 72px 0;
+          }
+
+          .news-kicker {
+            display: block;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #9a9a9a;
+            margin-bottom: 10px;
+          }
+
+          .news-header h2 {
+            font-size: 36px;
+            font-weight: 500;
+            letter-spacing: -0.03em;
+            color: #141414;
+          }
+
+          .news-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 16px;
+          }
+
+          .news-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 32px;
+          }
+
+          .news-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+          }
+
+          .news-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+          }
+
+          .news-arrow {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgb(227, 225, 223);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b6b6b;
+            cursor: pointer;
+            transition: color 0.2s ease, border-color 0.2s ease;
+          }
+
+          .news-arrow svg {
+            width: 15px;
+            height: 15px;
+          }
+
+          .news-arrow:hover {
+            border-color: rgb(201, 198, 194);
+            color: #1a1a1a;
+          }
+
+          .news-arrow.swiper-button-disabled {
+            opacity: 0.35;
+            cursor: default;
+            color: #9a9a9a;
+            border-color: rgb(227, 225, 223);
+          }
+
+          .story-card {
+            position: relative;
+            display: block;
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1.5px solid rgb(229, 228, 226);
+            padding: 5px;
+            background: #fff;
+            text-align: left;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+          }
+
+          .story-card-media {
+            position: relative;
+            display: block;
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-radius: 9px;
+          }
+
+          .story-card-media img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .story-card-body {
+            display: block;
+            padding: 12px 8px 8px;
+          }
+
+          .story-card-cat {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #a3a3a3;
+            margin-bottom: 6px;
+          }
+
+          .story-card-title {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            color: #141414;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.45;
+            letter-spacing: -0.03em;
+          }
+
+          .story-card-play {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            z-index: 2;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            pointer-events: none;
+            transition: background-color 0.2s ease;
+          }
+
+          .story-card-play svg {
+            width: 12px;
+            height: 12px;
+            margin-left: 1px;
+          }
+
+          .story-card:hover {
+            border-color: rgb(200, 197, 193);
+          }
+
+          .story-card:hover .story-card-play {
+            background: #fff;
+          }
+
+          @media (max-width: 767px) {
+            .news-section {
+              padding: 48px 0;
+            }
+
+            .news-header h2 {
+              font-size: 28px;
+            }
+          }
+        </style>
+        <div class="swiper newsSwiper">
           <div class="swiper-wrapper">
             <?php foreach ($stories as $i => $s): ?>
-              <div class="swiper-slide" style="width: auto;">
-                <button type="button" class="story-card group"
-                  style="position: relative; border-radius: 10px; overflow: hidden; padding: 3px; border: 2px solid rgb(244, 244, 243); width: 193px; height: 257px; cursor: pointer; transition: border-color 0.2s; flex-shrink: 0;"
-                  data-story-index="<?= $i ?>" onmouseenter="this.style.borderColor='rgb(171,170,170)'"
-                  onmouseleave="this.style.borderColor='rgb(244,244,243)'">
-                  <div style="position: absolute; top: 8px; left: 8px; right: 8px; z-index: 2; pointer-events: none;">
-                    <div
-                      style="display: inline-block; background: rgba(255,255,255,0.9); border-radius: 6px; padding: 5px 8px; max-width: 100%;">
-                      <span
-                        style="font-weight: 700; font-size: 12px; line-height: 1.3; color: #1a1a1a; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;"><?= $s['title'] ?></span>
-                    </div>
-                  </div>
-                  <img src="<?= $s['slides'][0]['bg'] ?>" alt="<?= htmlspecialchars($s['title']) ?>"
-                    style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 7px;"
-                    loading="lazy">
+              <div class="swiper-slide story-slide">
+                <button type="button" class="story-card" data-story-index="<?= $i ?>"
+                  aria-label="<?= htmlspecialchars($s['title']) ?>">
+                  <span class="story-card-media">
+                    <img src="<?= $s['slides'][0]['bg'] ?>" alt="<?= htmlspecialchars($s['title']) ?>" loading="lazy">
+                    <span class="story-card-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M8 5v14l11-7z" />
+                      </svg></span>
+                  </span>
+                  <span class="story-card-body">
+                    <span class="story-card-cat"><?= htmlspecialchars($s['tagName'] ?? 'Новость') ?></span>
+                    <span class="story-card-title"><?= $s['title'] ?></span>
+                  </span>
                 </button>
               </div>
             <?php endforeach; ?>
@@ -1203,12 +1385,15 @@
         <div class="text-center max-w-xl mx-auto mb-8">
           <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">География
             поставок</span>
-          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Карта отгрузок по всей России</h2>
+          <h2 class="text-xl md:text-2xl section-title">Карта отгрузок по всей России</h2>
+          <p class="text-gray-600 text-sm mt-2">Доставляем металлопрокат в более чем 100 городов России — <a
+              href="/delivery-map" class="text-red-500 hover:text-red-600 font-medium underline underline-offset-2">все
+              города на карте отгрузок</a></p>
         </div>
         <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm" style="height:420px;">
           <iframe
             src="https://yandex.ru/map-widget/v1/?um=constructor%3A5d7f9c69d82be5cfae8e60fc3a09dca546e89e06c8c576248c668b43aba603ae&amp;source=constructor"
-            width="1244" height="680" frameborder="0"></iframe>
+            width="100%" height="680" frameborder="0"></iframe>
         </div>
       </div>
     </section>
@@ -1224,7 +1409,7 @@
         <div class="text-center max-w-xl mx-auto mb-8">
           <span
             class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">Калькулятор</span>
-          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Рассчитайте стоимость онлайн</h2>
+          <h2 class="text-xl md:text-2xl section-title">Рассчитайте стоимость онлайн</h2>
         </div>
         <div class="max-w-4xl mx-auto">
           <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">
@@ -1326,31 +1511,205 @@
     </section>
 
     <!-- Stories Modal -->
-    <div id="storyModal" class="fixed inset-0 z-[9999] hidden">
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" id="storyOverlay"></div>
+    <style>
+      #storyModal {
+        z-index: 9999;
+      }
+
+      #storyModal:not(.hidden) .story-overlay {
+        animation: story-fade 0.25s ease forwards;
+      }
+
+      #storyModal:not(.hidden) .story-container {
+        animation: story-pop 0.3s ease forwards;
+      }
+
+      @keyframes story-fade {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes story-pop {
+        from {
+          opacity: 0;
+          transform: translateY(14px) scale(0.98);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .story-overlay {
+        background: rgba(0, 0, 0, 0.72);
+      }
+
+      .story-container {
+        width: 100%;
+        max-width: 400px;
+        height: 85vh;
+        max-height: 740px;
+      }
+
+      .story-progress {
+        display: flex;
+        gap: 6px;
+        padding: 14px 16px 8px;
+      }
+
+      .story-progress > div {
+        flex: 1;
+        height: 3px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, 0.55);
+      }
+
+      .story-progress > div > div {
+        height: 100%;
+        border-radius: 999px;
+        background: #fff;
+      }
+
+      .story-ctrl-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .story-ctrl-btn:hover {
+        background: #fff;
+      }
+
+      .story-ctrl-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .story-title {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.14);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 10px;
+        padding: 6px 12px;
+        color: #fff;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 1.35;
+        letter-spacing: -0.03em;
+      }
+
+      .story-cta-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        border-radius: 22px;
+        background: #dc2626;
+        color: #fff;
+        height: 44px;
+        padding: 0 24px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .story-cta-btn:hover {
+        background: #b91c1c;
+      }
+
+      .story-nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 9999;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgb(232, 231, 229);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #333;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      }
+
+      .story-nav-btn:hover {
+        background: #fff;
+      }
+
+      .story-nav-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      .story-nav-prev {
+        left: 12px;
+      }
+
+      .story-nav-next {
+        right: 12px;
+      }
+
+      @media (min-width: 768px) {
+        .story-nav-prev {
+          left: calc(50% - 268px);
+        }
+
+        .story-nav-next {
+          right: calc(50% - 268px);
+        }
+      }
+
+      @media (max-width: 767px) {
+        .story-container {
+          top: -50px;
+        }
+
+        .story-nav-btn {
+          top: 43%;
+        }
+
+        .story-nav-prev {
+          left: 30px;
+        }
+
+        .story-nav-next {
+          right: 30px;
+        }
+      }
+    </style>
+    <div id="storyModal" class="fixed inset-0 hidden">
+      <div class="absolute inset-0 story-overlay" id="storyOverlay"></div>
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
-          class="relative rounded-2xl overflow-hidden w-full max-w-[380px] h-[85vh] max-h-[740px] shadow-2xl pointer-events-auto"
-          id="storyContainer" style="background:#1a1a1a;">
+          class="relative rounded-2xl overflow-hidden shadow-2xl pointer-events-auto story-container"
+          id="storyContainer" style="background: linear-gradient(160deg, #2b2b2b 0%, #1c1c1c 55%, #131313 100%);">
           <!-- Progress bars -->
-          <div id="storyProgress" class="absolute top-0 left-0 right-0 z-30 flex gap-1.5 px-3 pt-3 pb-2"></div>
-          <!-- Top-right buttons: mute + close -->
-          <div class="absolute top-3 right-3 z-30 flex items-center gap-2">
-            <button type="button" id="storyMute"
-              class="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-all">
-              <svg id="muteIcon" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-              </svg>
-              <svg id="unmuteIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z" />
-              </svg>
-            </button>
-            <button type="button" id="storyClose"
-              class="w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-all">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <div id="storyProgress" class="absolute top-0 left-0 right-0 z-30 story-progress"></div>
+          <!-- Top-right buttons: close -->
+          <div class="absolute right-3 z-30 flex items-center gap-2" style="top: 28px;">
+            <button type="button" id="storyClose" class="story-ctrl-btn" aria-label="Закрыть">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -1362,28 +1721,24 @@
               class="absolute inset-0 w-full h-full object-cover hidden"></video>
           </div>
           <!-- Title overlaid on media -->
-          <div class="absolute inset-x-0 top-1/3 z-10 px-6 text-center pointer-events-none">
-            <h3 id="storyTitle" class="text-white font-bold text-2xl md:text-3xl leading-tight drop-shadow-lg"></h3>
+          <div
+            style="position: absolute; left: 20px; right: 20px; top: 28px; z-index: 10; text-align: left; pointer-events: none;">
+            <h3 id="storyTitle" class="story-title"></h3>
           </div>
-          <!-- Orange button at bottom -->
+          <!-- CTA button at bottom -->
           <div
             style="position: absolute; bottom: 32px; display: flex; flex-direction: column; width: 100%; padding: 0px 32px; z-index: 20;">
-            <button type="button" id="storyNextBtn"
-              style="display: inline-flex; position: relative; flex-flow: row; justify-content: center; align-items: center; box-sizing: border-box; white-space: nowrap; overflow: hidden; border-radius: 32px; cursor: pointer; transition: color 0.2s, background 0.2s; text-decoration: none; border-color: transparent; background: rgb(252, 76, 2); color: rgb(255, 255, 255); height: 56px; padding: 0px 32px; font-size: 16px; line-height: 24px; letter-spacing: -0.32px; font-weight: 600;">Подробнее</button>
+            <button type="button" id="storyNextBtn" class="story-cta-btn">Дальше</button>
           </div>
         </div>
       </div>
       <!-- Arrows outside modal -->
-      <button type="button" id="storyPrev"
-        class="absolute left-2 md:left-[calc(50%-250px)] top-1/2 -translate-y-1/2 z-[9999] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-gray-600 hover:bg-white hover:text-gray-900 transition-all shadow-lg pointer-events-auto"
-        aria-label="Предыдущая история"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5"
-          viewBox="0 0 24 24">
+      <button type="button" id="storyPrev" class="story-nav-btn story-nav-prev" aria-label="Предыдущая история"><svg
+          fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
         </svg></button>
-      <button type="button" id="storyNext"
-        class="absolute right-2 md:right-[calc(50%-250px)] top-1/2 -translate-y-1/2 z-[9999] w-12 h-12 rounded-full bg-white/90 flex items-center justify-center text-gray-600 hover:bg-white hover:text-gray-900 transition-all shadow-lg pointer-events-auto"
-        aria-label="Следующая история"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5"
-          viewBox="0 0 24 24">
+      <button type="button" id="storyNext" class="story-nav-btn story-nav-next" aria-label="Следующая история"><svg
+          fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg></button>
     </div>
@@ -1393,7 +1748,7 @@
   <!-- SEO-описание — охват запросов по металлопрокату -->
   <section class="bg-white border-t border-gray-100">
     <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
-      <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Металлопрокат с доставкой по Москве и Московской
+      <h2 class="text-xl md:text-2xl section-title mb-4">Металлопрокат с доставкой по Москве и Московской
         области</h2>
       <div class="text-sm text-gray-600 leading-relaxed space-y-3">
         <p>
@@ -1432,7 +1787,6 @@
 
   <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script defer src="/public/assets/scripts/components/swiper.min.js"></script>
-  <script defer src="/public/assets/scripts/components/search.min.js"></script>
   <script defer src="/public/assets/scripts/components/lazyIMG.min.js"></script>
   <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
   <script defer src="/public/assets/scripts/main/switchUnit.min.js"></script>

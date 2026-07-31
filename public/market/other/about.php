@@ -142,12 +142,16 @@
                 <div class="text-4xl font-bold text-red-500 mb-2">от 1 дня</div>
                 <div class="text-gray-600">срок поставки по МО</div>
             </div>
+            <div class="bg-white rounded-xl p-6 text-center shadow-md">
+                <div class="text-4xl font-bold text-red-500 mb-2">100+</div>
+                <div class="text-gray-600">городов доставки по России</div>
+            </div>
         </div>
 
         <!-- About Content -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             <div>
-                <h2 class="text-3xl font-bold text-gray-900 mb-6">Кто мы</h2>
+                <h2 class="section-title mb-6">Кто мы</h2>
                 <div class="prose text-gray-600 space-y-4">
                     <p>
                         ООО «КАВ Сталь» (ИНН 9719080724) — поставщик металлопроката и промышленных материалов.
@@ -191,7 +195,7 @@
 
         <!-- Requisites -->
         <div class="bg-white rounded-2xl shadow-md p-8 mb-16">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Реквизиты компании</h2>
+            <h2 class="section-title mb-8 text-center">Реквизиты компании</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 <div>
                     <table class="w-full">
@@ -250,7 +254,7 @@
 
         <!-- CTA -->
         <div class="text-center bg-gray-900 rounded-2xl p-8 md:p-12 text-white">
-            <h2 class="text-3xl font-bold mb-4">Станьте нашим партнером!</h2>
+            <h2 class="section-title mb-4" style="color:#fff;">Станьте нашим партнером!</h2>
             <p class="text-lg mb-8 opacity-90">Индивидуальные условия для постоянных клиентов и строительных организаций
             </p>
             <a href="tel:+74959892420"

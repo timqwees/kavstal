@@ -121,6 +121,7 @@ class Sitemap
             '/about',
             '/contacts',
             '/delivery',
+            '/delivery-map',
             '/guarantees',
             '/services'
         ];

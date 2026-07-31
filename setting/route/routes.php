@@ -184,6 +184,10 @@ Routes::get('/about', function ($path = '/about.php') {
 Routes::get('/delivery', function ($path = '/delivery.php') {
     Routes::auto_element(dirname(__DIR__, 2) . '/public/market/other' . $path, get_defined_vars());
 });
+//==================================================================================================//DELIVERY-MAP
+Routes::get('/delivery-map', function ($path = '/delivery-map.php') {
+    Routes::auto_element(dirname(__DIR__, 2) . '/public/market/other' . $path, get_defined_vars());
+});
 //==================================================================================================//GUARANTEES
 Routes::get('/guarantees', function ($path = '/guarantees.php') {
     Routes::auto_element(dirname(__DIR__, 2) . '/public/market/other' . $path, get_defined_vars());

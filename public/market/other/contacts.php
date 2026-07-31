@@ -111,7 +111,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div>
                 <div class="bg-white rounded-2xl shadow-md p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Свяжитесь с нами</h2>
+                    <h2 class="section-title mb-6">Свяжитесь с нами</h2>
 
                     <div class="space-y-6">
                         <div class="flex items-start">
@@ -186,7 +186,7 @@
             <div>
                 <!-- Spec Upload Form -->
                 <div class="bg-white rounded-2xl shadow-md p-8 mb-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Загрузить спецификацию</h2>
+                    <h2 class="section-title mb-4">Загрузить спецификацию</h2>
                     <p class="text-gray-500 text-sm mb-6">Пришлите файл спецификации (Excel, PDF) — мы рассчитаем
                         стоимость и свяжемся с вами</p>
                     <form id="specForm" enctype="multipart/form-data" class="space-y-4">
@@ -253,7 +253,7 @@
 
         <div class="mt-16 bg-gradient-to-r from-red-500 to-red-500 rounded-2xl p-8 md:p-12">
             <div class="max-w-2xl mx-auto text-center text-white">
-                <h2 class="text-3xl font-bold mb-4">Остались вопросы?</h2>
+                <h2 class="section-title mb-4" style="color:#fff;">Остались вопросы?</h2>
                 <p class="text-lg mb-8 opacity-90">Позвоните нам или напишите — мы ответим в течение 15 минут в рабочее
                     время</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">

@@ -271,7 +271,6 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="/public/assets/scripts/components/search.min.js" defer></script>
     <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
 
     <!-- Swiper Slider CSS -->
@@ -1137,7 +1136,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
         <!-- FAQ: типовые вопросы по металлопрокату -->
         <section class="max-w-7xl mx-auto px-4 py-10" aria-labelledby="faq-title">
-            <h2 id="faq-title" class="text-2xl font-bold text-zinc-900 mb-6">Частые вопросы</h2>
+            <h2 id="faq-title" class="section-title mb-6">Частые вопросы</h2>
             <div class="space-y-4" itemscope itemtype="https://schema.org/FAQPage">
                 <?php
                 $faqItems = [

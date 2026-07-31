@@ -73,10 +73,17 @@ $(document).ready(() => {
         if (document.querySelector('.newsSwiper')) {
             new Swiper('.newsSwiper', {
                 loop: false,
-                slidesPerView: 'auto',
-                spaceBetween: 14,
+                slidesPerView: 2,
+                spaceBetween: 16,
                 freeMode: true,
+                grabCursor: true,
                 navigation: { nextEl: '#newsSwiperNext', prevEl: '#newsSwiperPrev' },
+                breakpoints: {
+                    480: { slidesPerView: 2.6 },
+                    768: { slidesPerView: 4 },
+                    1024: { slidesPerView: 5 },
+                    1280: { slidesPerView: 6 },
+                },
             });
         }
 

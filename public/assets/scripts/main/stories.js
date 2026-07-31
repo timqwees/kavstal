@@ -11,9 +11,6 @@
   var nextBtn = document.getElementById('storyNext');
   var nextStoryBtn = document.getElementById('storyNextBtn');
   var closeBtn = document.getElementById('storyClose');
-  var muteBtn = document.getElementById('storyMute');
-  var muteIcon = document.getElementById('muteIcon');
-  var unmuteIcon = document.getElementById('unmuteIcon');
   var currentStory = 0, currentSlide = 0, timer = null, muted = true;
 
   function open(storyIndex){
@@ -63,12 +60,10 @@
       bar.className = 'flex-1 h-[3px] rounded-full overflow-hidden bg-white/30';
       var fill = document.createElement('div');
       fill.className = 'h-full bg-white rounded-full';
-      if (i < currentSlide) fill.style.width = '100%';
+      fill.style.width = i < currentSlide ? '100%' : '0%';
       bar.appendChild(fill);
       progress.appendChild(bar);
     });
-    prevBtn.style.display = currentSlide > 0 ? '' : 'none';
-    nextBtn.style.display = '';
   }
   function animateProgress(dur){
     var bars = progress.children;
@@ -92,7 +87,14 @@
     advance();
   }
   function prevSlide(){
-    if (currentSlide > 0){ clearTimeout(timer); video.pause(); currentSlide--; render(); }
+    clearTimeout(timer);
+    video.pause();
+    if (currentSlide > 0){ currentSlide--; render(); }
+    else if (currentStory > 0){
+      currentStory--;
+      currentSlide = storiesData[currentStory].slides.length - 1;
+      render();
+    }
   }
   function nextStory(){
     clearTimeout(timer);
@@ -113,13 +115,6 @@
   });
   closeBtn.addEventListener('click', close);
   overlay.addEventListener('click', close);
-  muteBtn.addEventListener('click', function(e){
-    e.stopPropagation();
-    muted = !muted;
-    video.muted = muted;
-    muteIcon.classList.toggle('hidden', muted);
-    unmuteIcon.classList.toggle('hidden', !muted);
-  });
   prevBtn.addEventListener('click', function(e){ e.stopPropagation(); prevSlide(); });
   nextBtn.addEventListener('click', function(e){ e.stopPropagation(); nextSlide(); });
   nextStoryBtn.addEventListener('click', function(e){ e.stopPropagation(); nextSlide(); });

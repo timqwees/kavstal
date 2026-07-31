@@ -140,7 +140,7 @@
         <!-- Quality Control -->
         <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-16">
             <div class="p-8">
-                <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Контроль качества</h2>
+                <h2 class="section-title mb-8 text-center">Контроль качества</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div class="flex flex-col items-center text-center">
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
@@ -225,7 +225,7 @@
 
         <!-- CTA -->
         <div class="text-center bg-gradient-to-r from-red-500 to-red-500 rounded-2xl p-8 md:p-12 text-white">
-            <h2 class="text-3xl font-bold mb-4">Остались вопросы?</h2>
+            <h2 class="section-title mb-4" style="color:#fff;">Остались вопросы?</h2>
             <p class="text-lg mb-8 opacity-90">Наши специалисты ответят на все вопросы о качестве продукции и гарантиях
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">

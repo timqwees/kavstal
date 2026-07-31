@@ -14,6 +14,16 @@ foreach ($articles as $a) {
     }
 }
 
+$tagCounts = [];
+foreach ($articles as $a) {
+    foreach (array_map('trim', explode(',', $a['tags'] ?? '')) as $t) {
+        if ($t === '') continue;
+        $tagCounts[$t] = ($tagCounts[$t] ?? 0) + 1;
+    }
+}
+arsort($tagCounts);
+$popularTags = array_slice(array_keys($tagCounts), 0, 10);
+
 $pageTitle = 'Блог КАВ СТАЛЬ — экспертные статьи о металлопрокате, ГОСТ, расчетах и закупках';
 $pageDescription = 'Полезные статьи для закупщиков и инженеров: виды арматуры, балки, трубы, листовой прокат, таблицы веса, ГОСТ, резка и доставка металла. Советы профи от компании КАВ СТАЛЬ.';
 $pageUrl = $site['baseUrl'] . '/blog';
@@ -157,6 +167,22 @@ function estimateReadTime(string $content): int {
         .cat-pill--active { background: #dc2626; color: #fff; border-color: #dc2626; }
         .cat-pill--active:hover { background: #b91c1c; border-color: #b91c1c; }
 
+        .blog-toolbar__clusters {
+            display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+            width: 100%; padding-top: 2px;
+        }
+        .blog-toolbar__clusters-label {
+            font-size: 12px; font-weight: 600; color: #9ca3af; margin-right: 2px;
+        }
+        .cluster-chip {
+            display: inline-flex; align-items: center;
+            height: 26px; padding: 0 10px; border-radius: 999px;
+            font-size: 12px; font-weight: 500; font-family: 'Onest', sans-serif;
+            background: #fef2f2; color: #dc2626; border: 1px solid #fecaca;
+            transition: all 0.2s; white-space: nowrap;
+        }
+        .cluster-chip:hover { background: #fee2e2; color: #b91c1c; text-decoration: none; }
+
         @media (max-width: 768px) {
             .blog-toolbar { flex-direction: column; align-items: stretch; }
             .blog-toolbar__count { text-align: center; }
@@ -174,14 +200,14 @@ function estimateReadTime(string $content): int {
         .article-card {
             display: flex; flex-direction: column;
             background: #fff;
-            border: 1px solid #e5e7eb;
+            border: 1px solid #d9dee5;
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.2s;
         }
         .article-card:hover {
             box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-            border-color: #d1d5db;
+            border-color: #dc2626;
         }
 
         .article-card__img-wrap {
@@ -262,17 +288,104 @@ function estimateReadTime(string $content): int {
         }
         .article-card:hover .article-card__read { gap: 6px; }
 
+        /* ── Featured Article ────────────────────────────────── */
+        .featured-card {
+            display: grid; grid-template-columns: 1.15fr 1fr;
+            border: 1px solid #d9dee5; border-radius: 16px; overflow: hidden;
+            background: #fff; margin-bottom: 20px;
+            transition: box-shadow 0.25s, border-color 0.25s;
+        }
+        .featured-card:hover {
+            box-shadow: 0 12px 32px rgba(0,0,0,0.10);
+            border-color: #dc2626;
+        }
+        .featured-card__img-wrap {
+            position: relative; min-height: 280px; background: #f5f5f5;
+        }
+        .featured-card__img-wrap img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; transition: transform 0.4s ease;
+        }
+        .featured-card:hover .featured-card__img-wrap img { transform: scale(1.03); }
+        .featured-card__badge {
+            position: absolute; top: 14px; left: 14px;
+            padding: 5px 12px; border-radius: 8px;
+            background: #dc2626; color: #fff;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.05em; box-shadow: 0 2px 8px rgba(220,38,38,0.35);
+        }
+        .featured-card__body {
+            padding: 28px; display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start;
+        }
+        .featured-card__title {
+            font-size: 22px; font-weight: 800; line-height: 1.3;
+            color: #111; margin: 10px 0 10px; transition: color 0.2s;
+        }
+        .featured-card:hover .featured-card__title { color: #dc2626; }
+        .featured-card__excerpt {
+            font-size: 14px; line-height: 1.6; color: #6b7280;
+            margin: 0 0 18px;
+            display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        .featured-card__meta {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: #9ca3af; margin-bottom: 18px; flex-wrap: wrap;
+        }
+        .featured-card__dot { color: #d1d5db; }
+        .featured-card__cta {
+            font-size: 13px; font-weight: 700; color: #dc2626;
+            display: inline-flex; align-items: center; gap: 6px;
+            transition: gap 0.2s;
+        }
+        .featured-card:hover .featured-card__cta { gap: 10px; }
+        @media (max-width: 860px) {
+            .featured-card { grid-template-columns: 1fr; }
+            .featured-card__img-wrap { min-height: 200px; }
+            .featured-card__body { padding: 20px; }
+            .featured-card__title { font-size: 18px; }
+        }
+
+        /* ── Load More ───────────────────────────────────────── */
+        .load-more-wrap { display: flex; justify-content: center; margin-top: 24px; }
+        .load-more-btn {
+            height: 44px; padding: 0 32px; border-radius: 10px;
+            border: 1px solid #e5e7eb; background: #fff; color: #111;
+            font-size: 13px; font-weight: 600; font-family: 'Onest', sans-serif;
+            cursor: pointer; transition: all 0.2s;
+        }
+        .load-more-btn:hover { border-color: #dc2626; color: #dc2626; background: #fff7f7; }
+
+        /* ── No Results ──────────────────────────────────────── */
+        .no-results {
+            display: none; text-align: center; padding: 60px 20px;
+        }
+        .no-results svg { width: 48px; height: 48px; margin: 0 auto 16px; color: #d1d5db; }
+        .no-results__title { font-size: 18px; font-weight: 700; color: #111; margin-bottom: 6px; }
+        .no-results__desc { font-size: 14px; color: #9ca3af; margin: 0; }
+
         /* ── CTA ─────────────────────────────────────────────── */
         .cta-section {
-            margin-top: 48px; padding: 40px;
-            background: #f5f5f5; border: 1px solid #e5e7eb;
-            border-radius: 16px; text-align: center;
+            margin-top: 48px; padding: 48px 40px; position: relative; overflow: hidden;
+            background: linear-gradient(135deg, #111827 0%, #1f2937 55%, #7f1d1d 130%);
+            border-radius: 20px; text-align: center;
         }
+        .cta-section::before {
+            content: ''; position: absolute; top: -80px; right: -80px;
+            width: 260px; height: 260px; pointer-events: none;
+            background: radial-gradient(circle, rgba(220,38,38,0.35) 0%, transparent 70%);
+        }
+        .cta-section::after {
+            content: ''; position: absolute; bottom: -100px; left: -60px;
+            width: 220px; height: 220px; pointer-events: none;
+            background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+        }
+        .cta-section > * { position: relative; z-index: 1; }
         .cta-section__title {
-            font-size: 22px; font-weight: 800; color: #111; margin: 0 0 8px;
+            font-size: 24px; font-weight: 800; color: #fff; margin: 0 0 8px;
         }
         .cta-section__desc {
-            font-size: 14px; line-height: 1.6; color: #6b7280;
+            font-size: 14px; line-height: 1.6; color: #9ca3af;
             max-width: 480px; margin: 0 auto 24px;
         }
         .cta-section__actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
@@ -285,12 +398,12 @@ function estimateReadTime(string $content): int {
         .cta-btn--primary {
             background: #dc2626; color: #fff; border: none;
         }
-        .cta-btn--primary:hover { background: #b91c1c; }
+        .cta-btn--primary:hover { background: #ef4444; transform: translateY(-1px); }
         .cta-btn--outline {
-            background: #fff; color: #111;
-            border: 1px solid #e5e7eb;
+            background: rgba(255,255,255,0.06); color: #fff;
+            border: 1px solid rgba(255,255,255,0.18);
         }
-        .cta-btn--outline:hover { background: #f9fafb; border-color: #d1d5db; }
+        .cta-btn--outline:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.3); }
 
         /* ── Animations ──────────────────────────────────────── */
         @keyframes fadeIn {
@@ -349,7 +462,45 @@ function estimateReadTime(string $content): int {
                         </button>
                     <?php endforeach; ?>
                 </div>
+                <?php if (!empty($popularTags)): ?>
+                <div class="blog-toolbar__clusters">
+                    <span class="blog-toolbar__clusters-label">Популярные темы:</span>
+                    <?php foreach ($popularTags as $tag): ?>
+                        <a class="cluster-chip" href="<?= htmlspecialchars($site['baseUrl'] . '/blog?q=' . urlencode($tag)) ?>"><?= htmlspecialchars($tag) ?></a>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
             </div>
+
+            <!-- Featured Article -->
+            <?php if (!empty($articles)):
+                $f = $articles[0];
+                $fUrl = $site['baseUrl'] . '/blog/' . htmlspecialchars($f['slug']);
+                $fImg = $f['image'] ?? '/public/assets/images/bgpage/product.png';
+                $fImg = (str_starts_with($fImg, 'http')) ? $fImg : $site['baseUrl'] . $fImg;
+                $fReadTime = estimateReadTime($f['content'] ?? '');
+            ?>
+            <a href="<?= $fUrl ?>" class="featured-card">
+                <div class="featured-card__img-wrap">
+                    <img src="<?= htmlspecialchars($fImg) ?>" alt="<?= htmlspecialchars($f['title']) ?>" loading="lazy">
+                    <span class="featured-card__badge">Актуально</span>
+                </div>
+                <div class="featured-card__body">
+                    <span class="article-card__cat"><?= htmlspecialchars($f['category'] ?? 'Статья') ?></span>
+                    <h2 class="featured-card__title"><?= htmlspecialchars($f['title']) ?></h2>
+                    <p class="featured-card__excerpt"><?= htmlspecialchars(mb_substr(strip_tags($f['content'] ?? ''), 0, 220)) ?>...</p>
+                    <div class="featured-card__meta">
+                        <span class="article-card__avatar"><?= htmlspecialchars(mb_substr($f['author'] ?? $site['company'], 0, 1)) ?></span>
+                        <span><?= htmlspecialchars($f['author'] ?? $site['company']) ?></span>
+                        <span class="featured-card__dot">•</span>
+                        <span><?= ozDate($f['created_at'] ?? 'now') ?></span>
+                        <span class="featured-card__dot">•</span>
+                        <span><?= $fReadTime ?> мин чтения</span>
+                    </div>
+                    <span class="featured-card__cta">Читать статью →</span>
+                </div>
+            </a>
+            <?php endif; ?>
 
             <!-- Articles Grid -->
             <div class="articles-grid" id="articles-grid">
@@ -393,6 +544,18 @@ function estimateReadTime(string $content): int {
                 <?php endforeach; ?>
             </div>
 
+            <!-- No Results -->
+            <div class="no-results" id="no-results">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <p class="no-results__title">Ничего не найдено</p>
+                <p class="no-results__desc">Попробуйте изменить запрос или выбрать другую категорию</p>
+            </div>
+
+            <!-- Load More -->
+            <div class="load-more-wrap" id="load-more-wrap">
+                <button type="button" class="load-more-btn" id="load-more">Показать ещё</button>
+            </div>
+
             <!-- CTA -->
             <div class="cta-section">
                 <div class="cta-section__title">Нужна консультация по закупке металла?</div>
@@ -412,10 +575,35 @@ function estimateReadTime(string $content): int {
 <script>
 var currentFilter = 'all';
 var searchQuery = '';
+var pageSize = 9;
+var visibleCount = pageSize;
 
 document.addEventListener('DOMContentLoaded', function () {
     bindSearch();
     bindFilters();
+    bindLoadMore();
+    var params = new URLSearchParams(window.location.search);
+    var q = (params.get('q') || '').trim();
+    if (q) {
+        searchQuery = q.toLowerCase();
+        var input = document.getElementById('search-input');
+        if (input) input.value = q;
+    }
+    var cat = (params.get('cat') || '').trim();
+    if (cat) {
+        currentFilter = cat;
+        var container = document.getElementById('cat-filters');
+        if (container) {
+            container.querySelectorAll('.cat-pill').forEach(function (b) {
+                if (b.dataset.filter === cat) {
+                    b.classList.add('cat-pill--active');
+                } else {
+                    b.classList.remove('cat-pill--active');
+                }
+            });
+        }
+    }
+    applyFilters();
 });
 
 function bindSearch() {
@@ -423,6 +611,7 @@ function bindSearch() {
     if (!input) return;
     input.addEventListener('input', function () {
         searchQuery = this.value.trim().toLowerCase();
+        visibleCount = pageSize;
         applyFilters();
     });
 }
@@ -434,8 +623,18 @@ function bindFilters() {
             container.querySelectorAll('.cat-pill').forEach(function (b) { b.classList.remove('cat-pill--active'); });
             this.classList.add('cat-pill--active');
             currentFilter = this.dataset.filter;
+            visibleCount = pageSize;
             applyFilters();
         });
+    });
+}
+
+function bindLoadMore() {
+    var btn = document.getElementById('load-more');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+        visibleCount += pageSize;
+        applyFilters();
     });
 }
 
@@ -445,15 +644,27 @@ function applyFilters() {
     cards.forEach(function (card) {
         var cat = card.dataset.category || '';
         var title = (card.querySelector('.article-card__title') || {}).textContent || '';
+        var excerpt = (card.querySelector('.article-card__excerpt') || {}).textContent || '';
+        var tags = (card.querySelector('.article-card__tags') || {}).textContent || '';
         var catMatch = currentFilter === 'all' || currentFilter === 'Все статьи' || cat === currentFilter;
-        var searchMatch = !searchQuery || title.toLowerCase().includes(searchQuery) || cat.toLowerCase().includes(searchQuery);
+        var searchMatch = !searchQuery ||
+            title.toLowerCase().includes(searchQuery) ||
+            cat.toLowerCase().includes(searchQuery) ||
+            excerpt.toLowerCase().includes(searchQuery) ||
+            tags.toLowerCase().includes(searchQuery);
         var show = catMatch && searchMatch;
-        card.style.display = show ? '' : 'none';
         if (show) visible++;
+        card.style.display = (show && visible <= visibleCount) ? '' : 'none';
     });
 
     var countEl = document.querySelector('.blog-toolbar__count');
     if (countEl) countEl.innerHTML = '<strong>' + visible + '</strong> публикаций';
+
+    var btn = document.getElementById('load-more');
+    if (btn) btn.style.display = visible > visibleCount ? '' : 'none';
+
+    var empty = document.getElementById('no-results');
+    if (empty) empty.style.display = visible === 0 ? '' : 'none';
 }
 </script>
 </body>
