@@ -1,5 +1,6 @@
 <?php
 $site = $site ?? Setting\route\function\Functions::site();
+$siteInfo = $siteInfo ?? $site ?? [];
 $cartCount = isset($cartCount) ? $cartCount : \App\Models\Cart\Cart::getCount();
 $phone_clean = $site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone']);
 
@@ -40,10 +41,20 @@ $catalogSubcategories = $tree['subcategories'];
       </span>
     </div>
     <div class="flex items-center gap-5">
-      <a href="/blog" class="hover:text-red-500 transition-colors">Блоги</a>
-      <a href="/delivery" class="hover:text-red-500 transition-colors">Доставка и оплата</a>
-      <a href="/guarantees" class="hover:text-red-500 transition-colors">Гарантии</a>
-      <a href="/contacts" class="hover:text-red-500 transition-colors">Контакты</a>
+      <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
+        class="hover:text-red-500 transition-colors flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <rect x="2" y="4" width="20" height="16" rx="2" />
+          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+        </svg>
+        <?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>
+      </a>
+      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class="hover:text-red-500 transition-colors flex items-center gap-1.5">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+        </svg>
+        <?= htmlspecialchars($site['phone']) ?>
+      </a>
     </div>
   </div>
 </div>
@@ -51,10 +62,10 @@ $catalogSubcategories = $tree['subcategories'];
 <!-- Header -->
 <header class="sticky top-0 z-50 bg-white border-b border-gray-200">
   <div class="relative max-w-7xl mx-auto px-4 lg:px-8 flex items-center h-16 lg:h-16">
-    <a href="/" class="flex-shrink-0 mr-6 lg:mr-8">
+    <a href="/" class="flex-shrink-0 mr-3 lg:mr-8">
       <style>
         .mobile-logo {
-          width: 180px;
+          width: 140px;
           height: 100%;
           object-fit: contain;
           transform: translateY(2px);
@@ -62,7 +73,7 @@ $catalogSubcategories = $tree['subcategories'];
 
         @media (min-width: 768px) {
           .mobile-logo {
-            width: 200px;
+            width: 180px;
             height: auto;
           }
         }
@@ -73,7 +84,7 @@ $catalogSubcategories = $tree['subcategories'];
     </a>
 
     <!-- Search (like market) -->
-    <div class="hidden lg:flex flex-1 max-w-xl relative mr-4" id="searchWrap">
+    <div class="hidden xl:flex flex-1 max-w-xl relative mr-4" id="searchWrap">
       <form method="GET" action="/market" class="flex items-center w-full">
         <input type="text" name="search" id="searchInput" placeholder="Искать в каталоге" autocomplete="off"
           class="w-full h-11 px-4 pr-12 bg-gray-100 border border-transparent rounded-xl text-sm outline-none focus:border-red-500 focus:bg-white transition-colors">
@@ -189,10 +200,47 @@ $catalogSubcategories = $tree['subcategories'];
 
     <!-- Right -->
     <div class="flex items-center gap-1 ml-auto">
-      <a href="tel:<?= htmlspecialchars($phone_clean) ?>"
-        class="hidden lg:block text-sm font-bold text-gray-900 hover:text-red-500 whitespace-nowrap mr-3"><?= htmlspecialchars($site['phone']) ?></a>
 
-      <button id="mobileSearchBtn" class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg text-gray-600"
+      <!-- Email -->
+      <div class="hidden lg:flex items-center gap-2 pr-2">
+        <span class="flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.125 6.125L12 11.1875L20.4375 6.125M5.25 18.3044C4.00736 18.3044 3 17.297 3 16.0544V7.25C3 6.00736 4.00736 5 5.25 5H18.75C19.9926 5 21 6.00736 21 7.25V16.0543C21 17.297 19.9926 18.3044 18.75 18.3044H5.25Z" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <div class="leading-tight">
+          <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
+            class="text-[13px] font-medium text-gray-900 hover:text-red-500 transition-colors whitespace-nowrap"><?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?></a>
+          <div class="text-[10px] text-gray-400 whitespace-nowrap"><?= htmlspecialchars($site['workingHours'] ?? 'пн-пт 09:00 - 18:00') ?></div>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="hidden lg:flex items-center gap-2 px-2">
+        <span class="flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </span>
+        <div class="leading-tight">
+          <a href="tel:<?= htmlspecialchars($phone_clean) ?>"
+            class="text-[13px] font-medium text-gray-900 hover:text-red-500 transition-colors whitespace-nowrap"><?= htmlspecialchars($site['phone']) ?></a>
+          <div class="text-[10px] text-gray-400">Заказать звонок</div>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="hidden lg:flex items-center gap-2 pl-2">
+        <span class="flex-shrink-0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="12" cy="10" r="3" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></circle>
+          </svg>
+        </span>
+        <span class="text-[13px] text-gray-700 leading-tight max-w-[180px]"><?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, ул 8-я Текстильщиков, д. 8') ?></span>
+      </div>
+
+      <button id="mobileSearchBtn" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-600"
         aria-label="Поиск">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" />
@@ -234,7 +282,7 @@ $catalogSubcategories = $tree['subcategories'];
       </a>
 
       <a href="tel:<?= htmlspecialchars($phone_clean) ?>"
-        class="lg:hidden w-10 h-10 flex items-center justify-center rounded-lg text-gray-600" aria-label="Позвонить">
+        class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-600" aria-label="Позвонить">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path
             d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
@@ -242,7 +290,7 @@ $catalogSubcategories = $tree['subcategories'];
       </a>
 
       <button
-        class="burger lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1 bg-transparent border-none cursor-pointer"
+        class="burger lg:hidden relative w-9 h-9 flex flex-col items-center justify-center gap-1 bg-transparent border-none cursor-pointer rounded-lg hover:bg-gray-100 transition-colors"
         aria-label="Меню">
         <span class="block w-5 h-0.5 bg-gray-800 rounded"></span>
         <span class="block w-5 h-0.5 bg-gray-800 rounded"></span>
@@ -393,6 +441,23 @@ $drawerCls = function ($paths) use ($bnmActive) {
         </svg>
         <?= htmlspecialchars($site['phone']) ?>
       </a>
+      <div class="border-t border-gray-100 my-3"></div>
+      <div class="flex flex-col gap-2 px-3 py-1">
+        <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
+          class="flex items-center gap-3 text-sm text-gray-600 hover:text-red-500 transition-colors no-underline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4.125 6.125L12 11.1875L20.4375 6.125M5.25 18.3044C4.00736 18.3044 3 17.297 3 16.0544V7.25C3 6.00736 4.00736 5 5.25 5H18.75C19.9926 5 21 6.00736 21 7.25V16.0543C21 17.297 19.9926 18.3044 18.75 18.3044H5.25Z" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>
+        </a>
+        <div class="flex items-center gap-3 text-sm text-gray-600">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+            <circle cx="12" cy="10" r="3" stroke="#888888" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></circle>
+          </svg>
+          <?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, ул 8-я Текстильщиков, д. 8') ?>
+        </div>
+      </div>
     </nav>
   </div>
 </div>

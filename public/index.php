@@ -165,10 +165,20 @@
         transform: scale(1.05);
       }
 
+      .hero-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
       .hero-overlay {
         position: absolute;
         inset: 0;
-        background: linear-gradient(135deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.45) 100%);
+        background: linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.5) 40%, transparent 70%);
         z-index: 1;
         pointer-events: none;
       }
@@ -229,32 +239,41 @@
         position: relative;
         z-index: 5;
         padding: 140px 60px 0;
-        max-width: 700px;
+        max-width: 800px;
         will-change: transform;
         transition: transform 0.12s ease-out;
       }
 
+      .hero-label {
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 20px;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
       .hero-title {
-        font-size: 64px;
+        font-size: clamp(32px, 4vw, 56px);
         font-weight: 700;
-        line-height: 1.1;
+        line-height: 1.25;
         color: #fff;
         margin-bottom: 24px;
+        word-break: normal;
+        overflow-wrap: break-word;
+        opacity: 0;
+        transform: translateY(20px);
       }
 
       .hero-title span {
         display: block;
-        overflow: hidden;
-      }
-
-      .hero-title .char {
-        display: inline-block;
-        opacity: 0;
-        transform: translateY(100%);
       }
 
       .hero-desc {
-        font-size: 16px;
+        font-size: 20px;
         line-height: 1.7;
         color: rgba(255, 255, 255, 0.8);
         margin-bottom: 36px;
@@ -282,9 +301,9 @@
         gap: 10px;
         padding: 14px 32px;
         border: 1.5px solid #fff;
-        border-radius: 50px;
-        background: transparent;
-        color: #fff;
+        border-radius: 20px;
+        background: #fff;
+        color: #111;
         font-size: 15px;
         font-weight: 500;
         cursor: pointer;
@@ -298,7 +317,7 @@
         content: '';
         position: absolute;
         inset: 0;
-        border-radius: 50px;
+        border-radius: 20px;
         background: rgba(255, 255, 255, 0.1);
         opacity: 0;
         transition: opacity 0.4s;
@@ -309,8 +328,8 @@
       }
 
       .hero-cta:hover {
-        background: #fff;
-        color: #111;
+        background: transparent;
+        color: #fff;
         box-shadow: 0 0 30px rgba(255, 255, 255, 0.15), 0 4px 20px rgba(0, 0, 0, 0.2);
       }
 
@@ -318,7 +337,7 @@
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background: #fff;
+        background: #111;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -326,18 +345,18 @@
       }
 
       .hero-cta:hover .hero-cta-arrow {
-        background: #111;
+        background: #fff;
         transform: translateX(4px);
       }
 
       .hero-cta:hover .hero-cta-arrow svg {
-        stroke: #fff;
+        stroke: #111;
       }
 
       .hero-cta-arrow svg {
         width: 14px;
         height: 14px;
-        stroke: #111;
+        stroke: #fff;
       }
 
       .hero-link {
@@ -345,12 +364,46 @@
         font-size: 15px;
         font-weight: 500;
         text-decoration: none;
-        transition: opacity 0.3s, text-shadow 0.3s;
+        border: 1.5px solid #fff;
+        border-radius: 20px;
+        padding: 18px 32px;
+        min-width: 220px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s, opacity 0.3s;
       }
 
       .hero-link:hover {
-        opacity: 0.8;
-        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        background: #111;
+        border-color: #111;
+      }
+
+      .hero-link-arrow {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        transition: background 0.3s, transform 0.3s;
+      }
+
+      .hero-link:hover .hero-link-arrow {
+        background: #fff;
+        transform: translateX(4px);
+      }
+
+      .hero-link:hover .hero-link-arrow svg {
+        stroke: #111;
+      }
+
+      .hero-link-arrow svg {
+        width: 12px;
+        height: 12px;
+        stroke: #111;
       }
 
       .hero-stats {
@@ -396,10 +449,11 @@
 
         .hero-content {
           padding: 120px 32px 0;
+          max-width: 100%;
         }
 
         .hero-title {
-          font-size: 44px;
+          font-size: 38px;
         }
 
         .hero-stat {
@@ -426,11 +480,23 @@
         }
 
         .hero-title {
-          font-size: 32px;
+          font-size: 30px;
         }
 
         .hero-desc {
           font-size: 14px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+        }
+
+        .hero-cta,
+        .hero-link {
+          justify-content: center;
+          min-width: 0;
         }
 
         .hero-stats {
@@ -452,7 +518,15 @@
         }
 
         .hero-cta {
-          padding: 10px 20px;
+          padding: 12px 24px;
+        }
+
+        .hero-link {
+          padding: 12px 24px;
+        }
+
+        .hero-scroll {
+          display: none;
         }
       }
 
@@ -498,71 +572,13 @@
           opacity: 1;
         }
       }
-
-      .hero-scroll {
-        position: absolute;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 10;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 6px;
-        opacity: 0;
-        animation: fadeInScroll 1s ease 2.5s forwards;
-      }
-
-      .hero-scroll span {
-        font-size: 11px;
-        color: rgba(255, 255, 255, 0.5);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-      }
-
-      .hero-scroll-line {
-        width: 1px;
-        height: 40px;
-        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero-scroll-line::after {
-        content: '';
-        position: absolute;
-        top: -100%;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #fff;
-        animation: scrollLine 2s ease-in-out infinite;
-      }
-
-      @keyframes scrollLine {
-        0% {
-          top: -100%;
-        }
-
-        50% {
-          top: 100%;
-        }
-
-        100% {
-          top: 100%;
-        }
-      }
-
-      @keyframes fadeInScroll {
-        to {
-          opacity: 1;
-        }
-      }
     </style>
 
     <section class="hero">
       <div class="hero-shape">
-        <img class="hero-img active" src="/public/assets/images/bgpage/hero/bg1.png" alt="" data-slide="0">
+        <img class="hero-img active" src="/public/assets/images/bgpage/hero/bg.jpeg" alt="" data-slide="0">
+        <!-- <video class="hero-video" src="https://khoper.ru/upload/iblock/cfb/4q2lepajajkmypu2qa7d9xw33y6r6qwm.mp4"
+          autoplay muted loop playsinline></video> -->
       </div>
       <div class="hero-overlay"></div>
       <div class="hero-glow"></div>
@@ -570,26 +586,25 @@
       <div class="hero-shadow-bottom"></div>
 
       <div class="hero-content">
+        <span class="hero-label">КОМПЛЕКСНОЕ СНАБЖЕНИЕ МЕТАЛЛОПРОКАТОМ</span>
         <h1 class="hero-title">
-          <span>КАВ</span>
-          <span>СТАЛЬ <i class="fa fa-tools"></i></span>
+          <span>КАВ Сталь — качество, амбиции, возможности</span>
         </h1>
-        <p class="hero-desc">Название ООО «<span class="accent">КАВ Сталь</span>» объединяет ключевые ценности нашей
-          компании: <span class="accent">качество</span>, <span class="accent">амбиции</span> и <span
-            class="accent">возможности</span>.
-          Организуем комплектацию заявок, <span class="accent">металлообработку</span> по техническому заданию и <span
-            class="accent">доставку продукции</span> по всей территории России.</p>
+        <p class="hero-desc">Организуем комплектацию заявок, металлообработку
+          по техническому заданию и доставку продукции по всей территории России.</p>
         <div class="hero-actions">
           <a href="#spec" class="hero-cta" id="heroCta"
             onclick="event.preventDefault();document.getElementById('specOverlay').classList.add('show');document.getElementById('specModal').classList.add('show');">
-            Оставить заявку
+            Получить предложение
             <span class="hero-cta-arrow">
               <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </span>
           </a>
-          <a href="/market" class="hero-link">Каталог →</a>
+          <a href="/market" class="hero-link">
+            Перейти в каталог
+          </a>
         </div>
       </div>
 
@@ -607,24 +622,20 @@
           <div class="hero-stat-label">Наименований в каталоге</div>
         </div>
       </div>
-
-      <div class="hero-scroll">
-        <span>Scroll</span>
-        <div class="hero-scroll-line"></div>
-      </div>
     </section>
 
     <script>
-      (function () {
-        var imgs = document.querySelectorAll('.hero-img');
-        if (imgs.length < 2) return;
-        var current = 0;
-        setInterval(function () {
-          imgs[current].classList.remove('active');
-          current = (current + 1) % imgs.length;
-          imgs[current].classList.add('active');
-        }, 6000);
-      })();
+      // Hero img slideshow — закомментировано, используется видео
+      // (function () {
+      //   var imgs = document.querySelectorAll('.hero-img');
+      //   if (imgs.length < 2) return;
+      //   var current = 0;
+      //   setInterval(function () {
+      //     imgs[current].classList.remove('active');
+      //     current = (current + 1) % imgs.length;
+      //     imgs[current].classList.add('active');
+      //   }, 6000);
+      // })();
     </script>
 
     <script>
@@ -635,29 +646,11 @@
         var hero = document.querySelector('.hero');
         if (!hero) return;
 
-        /* ── Split title into chars ── */
-        var titleSpans = document.querySelectorAll('.hero-title span');
-        titleSpans.forEach(function (span) {
-          var text = span.textContent;
-          span.innerHTML = '';
-          text.split('').forEach(function (ch) {
-            var el = document.createElement('span');
-            el.className = 'char';
-            el.textContent = ch === ' ' ? '\u00A0' : ch;
-            span.appendChild(el);
-          });
-        });
-
         /* ── Entrance timeline ── */
         var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-        tl.to('.hero-title .char', {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.04,
-          delay: 0.5
-        })
+        tl.to('.hero-label', { y: 0, opacity: 1, duration: 0.6, delay: 0.3 })
+          .to('.hero-title', { y: 0, opacity: 1, duration: 0.8 }, '-=0.3')
           .to('.hero-desc', { y: 0, opacity: 1, duration: 0.8 }, '-=0.3')
           .to('.hero-actions', { y: 0, opacity: 1, duration: 0.8 }, '-=0.5')
           .to('.hero-stat', {
@@ -724,63 +717,6 @@
             opacity: 0,
             ease: 'none',
             scrollTrigger: { trigger: hero, start: '30% top', end: '80% top', scrub: true }
-          });
-        }
-
-        /* ── 3D Parallax on mouse move ── */
-        var isMobile = window.matchMedia('(max-width: 768px)').matches;
-        if (!isMobile) {
-          var heroShape = document.querySelector('.hero-shape');
-          var heroContent = document.querySelector('.hero-content');
-          var heroGlow = document.querySelector('.hero-glow');
-
-          hero.addEventListener('mousemove', function (e) {
-            var rect = hero.getBoundingClientRect();
-            var x = (e.clientX - rect.left) / rect.width - 0.5;
-            var y = (e.clientY - rect.top) / rect.height - 0.5;
-
-            if (heroShape) {
-              heroShape.style.transform = 'translate(' + (x * -12) + 'px, ' + (y * -12) + 'px)';
-            }
-            if (heroContent) {
-              heroContent.style.transform = 'translate(' + (x * 15) + 'px, ' + (y * 10) + 'px)';
-            }
-            if (heroGlow) {
-              heroGlow.style.transform = 'translate(' + (x * 40) + 'px, ' + (y * 40) + 'px) scale(' + (1 + Math.abs(x) * 0.1) + ')';
-            }
-          });
-
-          hero.addEventListener('mouseleave', function () {
-            if (heroShape) heroShape.style.transform = '';
-            if (heroContent) heroContent.style.transform = '';
-            if (heroGlow) heroGlow.style.transform = '';
-          });
-        }
-
-        /* ── Magnetic button ── */
-        var cta = document.getElementById('heroCta');
-        if (cta && !isMobile) {
-          cta.addEventListener('mousemove', function (e) {
-            var rect = cta.getBoundingClientRect();
-            var x = e.clientX - rect.left - rect.width / 2;
-            var y = e.clientY - rect.top - rect.height / 2;
-            cta.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px)';
-          });
-          cta.addEventListener('mouseleave', function () {
-            cta.style.transform = '';
-          });
-        }
-
-        /* ── Scroll indicator fade ── */
-        var scrollEl = document.querySelector('.hero-scroll');
-        if (scrollEl) {
-          ScrollTrigger.create({
-            trigger: hero,
-            start: 'top top',
-            end: '30% top',
-            onUpdate: function (self) {
-              scrollEl.style.opacity = 1 - self.progress * 3;
-            }
           });
         }
       });
@@ -1127,27 +1063,374 @@
       </div>
     </div>
 
+    <!-- Видео-слайдер -->
+    <?php $img = '/public/assets/images/services/stories/';
+    $vid = '/public/assets/images/services/vides/';
+    $info = '/public/assets/images/info/';
+    $videoStories = [
+      ['title' => 'Лазерная резка металла', 'desc' => 'Высокоточная резка до 25 мм', 'video' => $vid . 'lazer.MP4', 'bg' => 'https://content.storage-cdn.ru/custom/vitrina/other/stories/37/content-31-4anv.png'],
+      ['title' => 'Гибка металла', 'desc' => 'Точная гибка листового металла', 'video' => $vid . 'gibkametalla.MP4', 'bg' => $img . 'ПРОФНАСТИЛ.webp'],
+      ['title' => 'Плазменная резка', 'desc' => 'Резка толстого металла до 150 мм', 'video' => $vid . 'plazma.MP4', 'bg' => $img . 'БАЛКА.webp'],
+      ['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid . 'dostavka.MP4', 'bg' => $img . 'ШВЕЛЛЕР.webp'],
+      ['title' => 'Комплексная доставка на объект', 'desc' => 'Кран-борт, манипулятор, разгрузка', 'video' => $vid . 'dostavkaKD.MP4', 'bg' => $img . 'СВАИ.webp'],
+      ['title' => 'Горячее цинкование', 'desc' => 'Защита от коррозии на 50+ лет', 'video' => $vid . 'gorachiethinkirovanie.MP4', 'bg' => $img . 'УГОЛОК.webp'],
+      ['title' => 'Ленточнопильная резка', 'desc' => 'Точная резка балок и труб', 'video' => $vid . 'lentochnopilnik.MP4', 'bg' => $img . 'БАЛКА.webp'],
+      ['title' => 'Ручная резка металла', 'desc' => 'Индивидуальная резка по размерам', 'video' => $vid . 'ruchnairezka.MP4', 'bg' => $img . 'ПОЛОСА.webp'],
+      ['title' => 'Изоляция трубопроводов', 'desc' => 'Тепло- и звукоизоляция', 'video' => $vid . 'izolatiatrub.MP4', 'bg' => $img . 'ТРУБА.webp'],
+    ]; ?>
+    <style>
+      .video-section {
+        padding: 72px 0 48px;
+      }
+
+      .video-section .news-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 16px;
+      }
+
+      .video-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 32px;
+      }
+
+      .video-kicker {
+        display: block;
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #9a9a9a;
+        margin-bottom: 8px;
+      }
+
+      .video-header h2 {
+        font-size: 36px;
+        font-weight: 500;
+        color: #141414;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+        margin: 0;
+      }
+
+      .video-controls {
+        display: flex;
+        gap: 8px;
+      }
+
+      .video-arrow {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: 1px solid rgb(227, 225, 223);
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: border-color 0.2s, color 0.2s;
+        color: #1a1a1a;
+      }
+
+      .video-arrow:hover {
+        border-color: rgb(201, 198, 194);
+        color: #1a1a1a;
+      }
+
+      .video-arrow svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        fill: none;
+        stroke-width: 2;
+      }
+
+      .video-arrow.swiper-button-disabled {
+        opacity: 0.35;
+        cursor: default;
+      }
+
+      .video-swiper {
+        overflow: hidden;
+      }
+
+      .video-slide {
+        height: auto;
+      }
+
+      .video-card {
+        position: relative;
+        border-radius: 16px;
+        overflow: hidden;
+        display: block;
+        text-decoration: none;
+        cursor: pointer;
+        aspect-ratio: 9 / 14;
+      }
+
+      .video-card-media {
+        position: absolute;
+        inset: 0;
+      }
+
+      .video-card-media video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .video-card-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15) 0%, transparent 30%, transparent 50%, rgba(0, 0, 0, 0.7) 100%);
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .video-card-badge {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        pointer-events: none;
+      }
+
+      .video-card-badge-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #dc2626;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .video-card-badge-icon svg {
+        width: 14px;
+        height: 14px;
+        fill: #fff;
+      }
+
+      .video-card-badge-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: #fff;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+      }
+
+      .video-card-body {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 16px;
+        z-index: 2;
+      }
+
+      .video-card-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #fff;
+        line-height: 1.35;
+        text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      .video-card-desc {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-top: 4px;
+        line-height: 1.4;
+      }
+
+      .video-pagination {
+        text-align: center;
+        margin-top: 24px;
+      }
+
+      .video-pagination .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        background: #d1d5db;
+        opacity: 1;
+        transition: background 0.2s, width 0.2s;
+      }
+
+      .video-pagination .swiper-pagination-bullet-active {
+        background: #dc2626;
+        width: 24px;
+        border-radius: 4px;
+      }
+
+      @media (max-width: 900px) {
+        .video-header h2 {
+          font-size: 28px;
+        }
+
+        .video-card {
+          aspect-ratio: 9 / 13;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .video-section {
+          padding: 48px 0 32px;
+        }
+
+        .video-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .video-header h2 {
+          font-size: 24px;
+        }
+
+        .video-card {
+          aspect-ratio: 9 / 14;
+        }
+
+        .video-card-title {
+          font-size: 14px;
+        }
+
+        .video-card-body {
+          padding: 16px 12px;
+        }
+      }
+    </style>
+
+    <section class="video-section">
+      <div class="news-container">
+        <div class="video-header">
+          <div>
+            <span class="video-kicker">Наши возможности</span>
+            <h2 class="section-title">Видео с производства</h2>
+          </div>
+          <div class="video-controls">
+            <button type="button" class="video-arrow video-prev" aria-label="Назад">
+              <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6" />
+              </svg>
+            </button>
+            <button type="button" class="video-arrow video-next" aria-label="Вперёд">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="swiper video-swiper" id="videoSwiper">
+          <div class="swiper-wrapper">
+            <?php foreach ($videoStories as $vs): ?>
+              <div class="swiper-slide video-slide">
+                <div class="video-card" tabindex="0">
+                  <div class="video-card-media">
+                    <video src="<?= $vs['video'] ?>" muted loop playsinline preload="none"></video>
+                  </div>
+                  <div class="video-card-overlay"></div>
+                  <div class="video-card-badge">
+                    <span class="video-card-badge-icon">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </span>
+                    <span class="video-card-badge-text">Кав Сталь — услуги</span>
+                  </div>
+                  <div class="video-card-body">
+                    <div class="video-card-title"><?= $vs['title'] ?></div>
+                    <div class="video-card-desc"><?= $vs['desc'] ?></div>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+          <div class="video-pagination"></div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (typeof Swiper === 'undefined') return;
+
+        var videoSwiper = new Swiper('#videoSwiper', {
+          slidesPerView: 1.3,
+          spaceBetween: 16,
+          grabCursor: true,
+          pagination: { el: '.video-pagination', clickable: true },
+          navigation: { nextEl: '.video-next', prevEl: '.video-prev' },
+          breakpoints: {
+            480: { slidesPerView: 2.2 },
+            768: { slidesPerView: 3.2 },
+            1024: { slidesPerView: 4 }
+          }
+        });
+
+        document.querySelectorAll('.video-card').forEach(function (card) {
+          var video = card.querySelector('video');
+          if (!video) return;
+
+          card.addEventListener('mouseenter', function () {
+            video.play().catch(function () { });
+          });
+
+          card.addEventListener('mouseleave', function () {
+            video.pause();
+          });
+        });
+
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            var video = entry.target.querySelector('video');
+            if (!video) return;
+            if (entry.isIntersecting) {
+              video.play().catch(function () { });
+            } else {
+              video.pause();
+            }
+          });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.video-card').forEach(function (card) {
+          observer.observe(card);
+        });
+      });
+    </script>
+
+    <!-- Карта отгрузок -->
+    <section class="py-14 lg:py-20">
+      <div class="max-w-7xl mx-auto px-4 lg:px-8">
+        <div class="text-center max-w-xl mx-auto mb-8">
+          <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">География
+            поставок</span>
+          <h2 class="text-xl md:text-2xl section-title">Карта отгрузок по всей России</h2>
+          <p class="text-gray-600 text-sm mt-2">Доставляем металлопрокат в более чем 100 городов России — <a
+              href="/delivery-map" class="text-red-500 hover:text-red-600 font-medium underline underline-offset-2">все
+              города на карте отгрузок</a></p>
+        </div>
+        <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm" style="height:420px;">
+          <iframe
+            src="https://yandex.ru/map-widget/v1/?um=constructor%3A5d7f9c69d82be5cfae8e60fc3a09dca546e89e06c8c576248c668b43aba603ae&amp;source=constructor"
+            width="100%" height="680" frameborder="0"></iframe>
+        </div>
+      </div>
+    </section>
+
     <!-- Что нового -->
     <section class="news-section">
       <div class="news-container">
 
-        <?php $img = '/public/assets/images/services/stories/';
-        $vid = '/public/assets/images/services/vides/';
-        $info = '/public/assets/images/info/';
-        $stories = [
-          ['title' => 'Лазерная резка', 'slides' => [['title' => 'Лазерная резка металла', 'desc' => 'Высокоточная резка до 25 мм', 'video' => $vid . 'lazer.MP4', 'bg' => 'https://content.storage-cdn.ru/custom/vitrina/other/stories/37/content-31-4anv.png']]],
-          ['title' => 'Гибка металла', 'slides' => [['title' => 'Гибка металла', 'desc' => 'Точная гибка листового металла', 'video' => $vid . 'gibkametalla.MP4', 'bg' => $img . 'ПРОФНАСТИЛ.webp']]],
-          ['title' => 'Плазменная резка', 'slides' => [['title' => 'Плазменная резка', 'desc' => 'Резка толстого металла до 150 мм', 'video' => $vid . 'plazma.MP4', 'bg' => $img . 'БАЛКА.webp']]],
-          ['title' => 'Доставка по Москве', 'tagName' => 'Видео', 'slides' => [
-            ['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid . 'dostavka.MP4', 'bg' => $img . 'ШВЕЛЛЕР.webp'],
-            ['title' => 'Комплексная доставка на объект', 'desc' => 'Кран-борт, манипулятор, разгрузка', 'video' => $vid . 'dostavkaKD.MP4', 'bg' => $img . 'СВАИ.webp'],
-            ['title' => 'Доставка по всей России', 'desc' => 'Более 100 городов, отгрузка от 1 дня', 'bg' => $img . 'ТРУБА.webp'],
-          ]],
-          ['title' => 'Горячее цинкование', 'slides' => [['title' => 'Горячее цинкование', 'desc' => 'Защита от коррозии на 50+ лет', 'video' => $vid . 'gorachiethinkirovanie.MP4', 'bg' => $img . 'УГОЛОК.webp']]],
-          ['title' => 'Ленточнопильная резка', 'slides' => [['title' => 'Ленточнопильная резка', 'desc' => 'Точная резка балок и труб', 'video' => $vid . 'lentochnopilnik.MP4', 'bg' => $img . 'БАЛКА.webp']]],
-          ['title' => 'Ручная резка', 'slides' => [['title' => 'Ручная резка металла', 'desc' => 'Индивидуальная резка по размерам', 'video' => $vid . 'ruchnairezka.MP4', 'bg' => $img . 'ПОЛОСА.webp']]],
-          ['title' => 'Изоляция труб', 'slides' => [['title' => 'Изоляция трубопроводов', 'desc' => 'Тепло- и звукоизоляция', 'video' => $vid . 'izolatiatrub.MP4', 'bg' => $img . 'ТРУБА.webp']]],
-          ['title' => 'Доставка КД', 'slides' => [['title' => 'Доставка КД', 'desc' => 'Комплексная доставка на объект', 'video' => $vid . 'dostavkaKD.MP4', 'bg' => $img . 'СВАИ.webp']]],
+        <?php $stories = [
           ['title' => 'Арматура А500С', 'slides' => [['title' => 'Арматура А500С', 'desc' => 'Свежая партия от ММК. Диаметр 10-40 мм', 'bg' => $img . 'АРМАТУРА.webp']]],
           ['title' => 'Листовой прокат', 'slides' => [['title' => 'Листовой прокат', 'desc' => 'Сталь листовая ГК от 2 до 60 мм', 'bg' => $img . 'ЛИСТ.webp']]],
           ['title' => 'Балка двутавровая', 'slides' => [['title' => 'Балка двутавровая', 'desc' => 'Балки №10-№40 ГОСТ 8239-89', 'bg' => $img . 'БАЛКА.webp']]],
@@ -1378,26 +1661,6 @@
       </div>
     </section>
 
-    <!-- About -->
-    <!-- Карта отгрузок -->
-    <section class="py-14 lg:py-20">
-      <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <div class="text-center max-w-xl mx-auto mb-8">
-          <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">География
-            поставок</span>
-          <h2 class="text-xl md:text-2xl section-title">Карта отгрузок по всей России</h2>
-          <p class="text-gray-600 text-sm mt-2">Доставляем металлопрокат в более чем 100 городов России — <a
-              href="/delivery-map" class="text-red-500 hover:text-red-600 font-medium underline underline-offset-2">все
-              города на карте отгрузок</a></p>
-        </div>
-        <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm" style="height:420px;">
-          <iframe
-            src="https://yandex.ru/map-widget/v1/?um=constructor%3A5d7f9c69d82be5cfae8e60fc3a09dca546e89e06c8c576248c668b43aba603ae&amp;source=constructor"
-            width="100%" height="680" frameborder="0"></iframe>
-        </div>
-      </div>
-    </section>
-
     <!-- Calculator -->
     <section id="calculator" class="py-14 lg:py-20 relative">
       <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-red-400 opacity-5 blur-3xl animate-pulse"></div>
@@ -1563,7 +1826,7 @@
         padding: 14px 16px 8px;
       }
 
-      .story-progress > div {
+      .story-progress>div {
         flex: 1;
         height: 3px;
         border-radius: 999px;
@@ -1571,7 +1834,7 @@
         background: rgba(255, 255, 255, 0.55);
       }
 
-      .story-progress > div > div {
+      .story-progress>div>div {
         height: 100%;
         border-radius: 999px;
         background: #fff;
@@ -1701,8 +1964,7 @@
     <div id="storyModal" class="fixed inset-0 hidden">
       <div class="absolute inset-0 story-overlay" id="storyOverlay"></div>
       <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div
-          class="relative rounded-2xl overflow-hidden shadow-2xl pointer-events-auto story-container"
+        <div class="relative rounded-2xl overflow-hidden shadow-2xl pointer-events-auto story-container"
           id="storyContainer" style="background: linear-gradient(160deg, #2b2b2b 0%, #1c1c1c 55%, #131313 100%);">
           <!-- Progress bars -->
           <div id="storyProgress" class="absolute top-0 left-0 right-0 z-30 story-progress"></div>
@@ -1746,39 +2008,57 @@
   </main>
 
   <!-- SEO-описание — охват запросов по металлопрокату -->
-  <section class="bg-white border-t border-gray-100">
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 py-12">
-      <h2 class="text-xl md:text-2xl section-title mb-4">Металлопрокат с доставкой по Москве и Московской
-        области</h2>
-      <div class="text-sm text-gray-600 leading-relaxed space-y-3">
-        <p>
-          «КАВ СТАЛЬ» — комплексное снабжение металлопрокатом в Москве. В каталоге представлены:
-          чёрный металлопрокат (арматура, балка, швеллер, уголок, круг, квадрат, полоса, катанка,
-          листовой прокат, трубы профильные/электросварные/ВГП/бесшовные),
-          нержавеющая сталь, цветные металлы, качественные и специальные стали,
-          крепёж и метизы, детали трубопроводов, трубопроводная арматура,
-          кровельные и фасадные материалы, полимеры и изоляция. Весь сортамент — по ГОСТ и ТУ.
-        </p>
-        <p>
-          Цена металлопроката за тонну и за метр зависит от марки стали (Ст3, 09Г2С, 12Х18Н10Т, А500С и др.),
-          размера и объёма заказа. Организуем резку в размер,
-          доставку и сопроводительные документы. На всю продукцию —
-          сертификаты качества и паспорта.
-        </p>
-        <p class="text-gray-500">
-          Популярные категории:
-          <a href="/market/katalog/chernyy-metalloprokat" class="text-red-500 hover:underline">чёрный металлопрокат</a>,
-          <a href="/market/katalog/nerzhaveyushchaya-stal" class="text-red-500 hover:underline">нержавеющая сталь</a>,
-          <a href="/market/katalog/tsvetnye-metally" class="text-red-500 hover:underline">цветные металлы</a>,
-          <a href="/market/katalog/krepezh-i-metizy" class="text-red-500 hover:underline">крепёж и метизы</a>,
-          <a href="/market/katalog/detali-truboprovodov" class="text-red-500 hover:underline">детали трубопроводов</a>,
-          <a href="/market/katalog/truboprovodnaya-armatura" class="text-red-500 hover:underline">трубопроводная
-            арматура</a>,
-          <a href="/market/katalog/kachestvennye-i-spetsialnye-stali" class="text-red-500 hover:underline">качественные
-            и специальные стали</a>,
-          <a href="/market/katalog/krovelnye-i-fasadnye-materialy" class="text-red-500 hover:underline">кровельные и
-            фасадные материалы</a>.
-        </p>
+  <section class="py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 lg:px-8">
+      <h2 class="text-2xl md:text-3xl font-medium text-gray-900 tracking-tight leading-snug mb-6">
+        Металлопрокат с доставкой по Москве и Московской области
+      </h2>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="space-y-4 text-[15px] text-gray-500 leading-relaxed">
+          <p>
+            «КАВ СТАЛЬ» — комплексное снабжение металлопрокатом в Москве. В каталоге представлены:
+            чёрный металлопрокат (арматура, балка, швеллер, уголок, круг, квадрат, полоса, катанка,
+            листовой прокат, трубы профильные, электросварные, ВГП, бесшовные),
+            нержавеющая сталь, цветные металлы, качественные и специальные стали,
+            крепёж и метизы, детали трубопроводов, трубопроводная арматура,
+            кровельные и фасадные материалы, полимеры и изоляция.
+            Весь сортамент — по ГОСТ и ТУ.
+          </p>
+          <p>
+            Цена металлопроката за тонну и за метр зависит от марки стали
+            (Ст3, 09Г2С, 12Х18Н10Т, А500С и др.), размера и объёма заказа.
+            Организуем резку в размер, доставку и сопроводительные документы.
+            На всю продукцию — сертификаты качества и паспорта.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3 content-start">
+          <a href="/market/katalog/chernyy-metalloprokat"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Чёрный
+            металлопрокат</a>
+          <a href="/market/katalog/nerzhaveyushchaya-stal"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Нержавеющая
+            сталь</a>
+          <a href="/market/katalog/tsvetnye-metally"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Цветные
+            металлы</a>
+          <a href="/market/katalog/krepezh-i-metizy"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Крепёж
+            и метизы</a>
+          <a href="/market/katalog/detali-truboprovodov"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Детали
+            трубопроводов</a>
+          <a href="/market/katalog/truboprovodnaya-armatura"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Трубопроводная
+            арматура</a>
+          <a href="/market/katalog/kachestvennye-i-spetsialnye-stali"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Качественные
+            и специальные стали</a>
+          <a href="/market/katalog/krovelnye-i-fasadnye-materialy"
+            class="inline-flex items-center px-5 py-2.5 rounded-lg bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-900 hover:text-white transition-colors">Кровельные
+            и фасадные материалы</a>
+        </div>
       </div>
     </div>
   </section>
