@@ -23,15 +23,15 @@ $catalogSubcategories = $tree['subcategories'];
 <div class="hidden lg:block bg-white border-b border-gray-200 text-xs text-gray-500">
   <div class="max-w-7xl mx-auto px-8 flex items-center justify-between h-9">
     <div class="flex items-center gap-6">
-      <span class="flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" />
           <polyline points="12 6 12 12 16 14" />
         </svg>
         <?= htmlspecialchars($site['workingHours'] ?? 'Пн-Пт 09:00-18:00') ?>
       </span>
-      <span class="flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <span class="flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <rect x="1" y="3" width="15" height="13" />
           <polygon points="16 8 20 8 23 11 23 16 16 16 16 8" />
           <circle cx="5.5" cy="18.5" r="2.5" />
@@ -40,21 +40,30 @@ $catalogSubcategories = $tree['subcategories'];
         Доставка по Москве и МО
       </span>
     </div>
-    <div class="flex items-center gap-5">
+    <div class="flex items-center gap-2">
+      <a href="https://t.me/kavstal_bot" target="_blank" rel="noopener noreferrer"
+        class="flex items-center gap-1 px-3 h-7 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors font-medium">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+        </svg>
+        Написать в Telegram
+      </a>
       <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
-        class="hover:text-red-500 transition-colors flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        class="flex items-center gap-1 px-3 h-7 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors font-medium">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <rect x="2" y="4" width="20" height="16" rx="2" />
           <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
         </svg>
-        <?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>
+        Написать на почту
       </a>
-      <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class="hover:text-red-500 transition-colors flex items-center gap-1.5">
-        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <button type="button" onclick="event.preventDefault();document.getElementById('specOverlay').classList.add('show');document.getElementById('specModal').classList.add('show');"
+        class="flex items-center gap-1 px-3 h-7 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900 transition-colors font-medium cursor-pointer border-none">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
         </svg>
-        <?= htmlspecialchars($site['phone']) ?>
-      </a>
+        Связаться
+      </button>
     </div>
   </div>
 </div>
@@ -106,7 +115,7 @@ $catalogSubcategories = $tree['subcategories'];
       <!-- Каталог mega-menu -->
       <div id="catalogMegaWrap">
         <button id="catalogMegaBtn"
-          class="px-4 py-2 rounded-lg text-sm font-medium text-white bg-red-500 hover:bg-red-500 transition-colors inline-flex items-center gap-2 cursor-pointer border-none">
+          class="px-4 py-2 rounded-xl text-sm font-medium text-white bg-gray-900 hover:shadow-md transition-all inline-flex items-center gap-2 cursor-pointer border-none shadow-sm">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M4 7.556C4 4.628 4.628 4 7.556 4s3.555.628 3.555 3.556-.627 3.555-3.555 3.555S4 10.484 4 7.556m0 8.888c0-2.928.628-3.555 3.556-3.555s3.555.627 3.555 3.555S10.484 20 7.556 20 4 19.372 4 16.444M16.444 4c-2.928 0-3.555.628-3.555 3.556s.627 3.555 3.555 3.555S20 10.484 20 7.556 19.372 4 16.444 4m-3.555 12.444c0-2.928.627-3.555 3.555-3.555S20 13.516 20 16.444 19.372 20 16.444 20s-3.555-.628-3.555-3.556" />
@@ -169,30 +178,83 @@ $catalogSubcategories = $tree['subcategories'];
       <!-- Ещё dropdown -->
       <div class="relative group">
         <button
-          class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:text-red-500 hover:bg-red-50 transition-colors inline-flex items-center gap-1 cursor-pointer bg-transparent border-none">
+          class="px-3 py-2 rounded-xl text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all duration-200 inline-flex items-center gap-1 cursor-pointer bg-transparent border-none">
+          <svg class="w-4 h-4 opacity-50" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v.01M12 12v.01M12 19v.01" />
+          </svg>
           Ещё
-          <svg class="w-3 h-3 opacity-50 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor"
-            stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-3 h-3 opacity-50 transition-transform duration-200" fill="none"
+            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
           </svg>
         </button>
-        <div class="absolute left-0 top-full pt-1 hidden group-hover:block z-50">
-          <div class="bg-white rounded-xl shadow-lg border border-gray-100 py-2 min-w-[200px]">
+        <div
+          class="absolute left-0 top-full pt-2 hidden group-hover:block z-50 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <div class="bg-white rounded-2xl shadow-xl border border-gray-100 py-2 min-w-[200px] overflow-hidden">
             <a href="/blog"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Блоги</a>
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+              <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path
+                    d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2" />
+                  <path d="M18 14h-8" />
+                  <path d="M15 18h-5" />
+                  <path d="M10 6h8v4h-8Z" />
+                </svg>
+              </span>
+              Блоги
+            </a>
             <a href="/contacts"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Контакты</a>
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+              <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path
+                    d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                </svg>
+              </span>
+              Контакты
+            </a>
             <a href="/delivery"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Доставка
-              и оплата</a>
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+              <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z" />
+                  <circle cx="7" cy="18" r="1.6" />
+                  <circle cx="17.5" cy="18" r="1.6" />
+                </svg>
+              </span>
+              Доставка и оплата
+            </a>
             <a href="/delivery-map"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Карта
-              отгрузок</a>
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+              <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </span>
+              Карта отгрузок
+            </a>
+            <div class="border-t border-gray-100 my-2"></div>
             <a href="/about"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">О
-              компании</a>
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+              <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 13h.01M9 17h.01" />
+                </svg>
+              </span>
+              О компании
+            </a>
             <a href="/guarantees"
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-500 transition-colors">Гарантии</a>
+              class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+              <span class="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" />
+                  <path d="m9 12 2 2 4-4" />
+                </svg>
+              </span>
+              Гарантии
+            </a>
           </div>
         </div>
       </div>
@@ -497,7 +559,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
       <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
     </svg>
     <span
-      class="cart-count-badge absolute -top-0.5 right-0 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[14px] h-3.5 items-center justify-center px-0.5 hidden"
+      class="cart-count-badge absolute -top-0.5 right-0 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[14px] h-4 items-center justify-center px-0.5 hidden"
       style="display:none"></span>
     Заявка
   </a>
