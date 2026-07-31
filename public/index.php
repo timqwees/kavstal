@@ -943,7 +943,7 @@
     <!-- Stories -->
     <section class="pb-6 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <h3 class="text-lg font-bold text-gray-900 mb-3">Наши услуги</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-3">Уникальное торговое предложение</h3>
         <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-stretch">
           <?php
           $infoDir = __DIR__ . '/assets/images/info';
