@@ -224,19 +224,19 @@
                         <tbody class="divide-y divide-gray-200">
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Расчетный счет</td>
-                                <td class="py-3 text-gray-900">40702810610001935104</td>
+                                <td class="py-3 text-gray-900">40702810738720025650</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Банк</td>
-                                <td class="py-3 text-gray-900">АО «ТБанк»</td>
+                                <td class="py-3 text-gray-900">ПАО Сбербанк г. Москва</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">БИК</td>
-                                <td class="py-3 text-gray-900">044525974</td>
+                                <td class="py-3 text-gray-900">044525225</td>
                             </tr>
                             <tr class="border-b border-gray-100">
                                 <td class="py-3 text-gray-500 font-medium">Корр. счет</td>
-                                <td class="py-3 text-gray-900">30101810145250000974</td>
+                                <td class="py-3 text-gray-900">30101810400000000225</td>
                             </tr>
                         </tbody>
                     </table>

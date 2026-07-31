@@ -111,3 +111,8 @@ input[type="search"]::-webkit-search-cancel-button {
 .mobile-menu.active .mobile-menu-toggle span:nth-child(3) {
     transform: rotate(-45deg) translate(3px, 3px);
 }
+
+/* Slightly wider than Tailwind 7xl (1280px → 1328px) */
+.max-w-7xl {
+    max-width: 83rem !important;
+}

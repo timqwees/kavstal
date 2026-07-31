@@ -74,6 +74,9 @@
   <noscript>
     <link rel="stylesheet" href="/public/assets/styles/main.css">
   </noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/css/intlTelInput.css" as="style"
     onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
@@ -115,6 +118,10 @@
     </nav>
 
     <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
       .hero {
         position: relative;
         height: 90dvh;
@@ -127,14 +134,17 @@
         max-width: 98%;
         margin-inline: auto;
         margin-top: 20px;
+        perspective: 1200px;
+        transform-style: preserve-3d;
       }
 
       .hero-shape {
         position: absolute;
-        inset: 0;
+        inset: -40px;
         animation: scale-up-center 2200ms ease-out 600ms both;
         overflow: hidden;
-        will-change: clip-path;
+        will-change: clip-path, transform;
+        transition: transform 0.15s ease-out;
       }
 
       .hero-img {
@@ -158,9 +168,34 @@
       .hero-overlay {
         position: absolute;
         inset: 0;
-        animation: scale-up-center 2200ms ease-out 600ms both;
+        background: linear-gradient(135deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.45) 100%);
         z-index: 1;
         pointer-events: none;
+      }
+
+      .hero-glow {
+        position: absolute;
+        top: -20%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, transparent 65%);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 1;
+        animation: glowPulse 6s ease-in-out infinite alternate;
+      }
+
+      @keyframes glowPulse {
+        0% {
+          opacity: 0.4;
+          transform: scale(0.95);
+        }
+
+        100% {
+          opacity: 0.8;
+          transform: scale(1.08);
+        }
       }
 
       .hero-shadow-left {
@@ -195,7 +230,8 @@
         z-index: 5;
         padding: 140px 60px 0;
         max-width: 700px;
-        animation: fade-up 1000ms ease-out 1200ms both;
+        will-change: transform;
+        transition: transform 0.12s ease-out;
       }
 
       .hero-title {
@@ -208,6 +244,13 @@
 
       .hero-title span {
         display: block;
+        overflow: hidden;
+      }
+
+      .hero-title .char {
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(100%);
       }
 
       .hero-desc {
@@ -216,6 +259,8 @@
         color: rgba(255, 255, 255, 0.8);
         margin-bottom: 36px;
         max-width: 520px;
+        opacity: 0;
+        transform: translateY(20px);
       }
 
       .accent {
@@ -227,6 +272,8 @@
         display: flex;
         align-items: center;
         gap: 24px;
+        opacity: 0;
+        transform: translateY(20px);
       }
 
       .hero-cta {
@@ -241,13 +288,30 @@
         font-size: 15px;
         font-weight: 500;
         cursor: pointer;
-        transition: background 0.3s, color 0.3s;
+        transition: background 0.3s, color 0.3s, box-shadow 0.4s, transform 0.2s ease-out;
         text-decoration: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-cta::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 50px;
+        background: rgba(255, 255, 255, 0.1);
+        opacity: 0;
+        transition: opacity 0.4s;
+      }
+
+      .hero-cta:hover::before {
+        opacity: 1;
       }
 
       .hero-cta:hover {
         background: #fff;
         color: #111;
+        box-shadow: 0 0 30px rgba(255, 255, 255, 0.15), 0 4px 20px rgba(0, 0, 0, 0.2);
       }
 
       .hero-cta-arrow {
@@ -258,11 +322,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: background 0.3s;
+        transition: background 0.3s, transform 0.3s;
       }
 
       .hero-cta:hover .hero-cta-arrow {
         background: #111;
+        transform: translateX(4px);
       }
 
       .hero-cta:hover .hero-cta-arrow svg {
@@ -280,11 +345,12 @@
         font-size: 15px;
         font-weight: 500;
         text-decoration: none;
-        transition: opacity 0.3s;
+        transition: opacity 0.3s, text-shadow 0.3s;
       }
 
       .hero-link:hover {
-        opacity: 0.7;
+        opacity: 0.8;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
       }
 
       .hero-stats {
@@ -293,12 +359,17 @@
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         border-top: 1px solid rgba(255, 255, 255, 0.15);
-        animation: fade-up 1000ms ease-out 1800ms both;
+        backdrop-filter: blur(8px);
+        background: rgba(0, 0, 0, 0.15);
+        will-change: transform;
+        transition: transform 0.12s ease-out;
       }
 
       .hero-stat {
         padding: 32px 60px;
         border-right: 1px solid rgba(255, 255, 255, 0.15);
+        opacity: 0;
+        transform: translateY(30px);
       }
 
       .hero-stat:last-child {
@@ -338,6 +409,15 @@
         .hero-stat-value {
           font-size: 32px;
         }
+
+        .hero-glow {
+          width: 300px;
+          height: 300px;
+        }
+
+        .hero-scroll {
+          display: none;
+        }
       }
 
       @media (max-width: 600px) {
@@ -352,12 +432,6 @@
         .hero-desc {
           font-size: 14px;
         }
-
-        /* .hero-actions {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 16px;
-        } */
 
         .hero-stats {
           grid-template-columns: 1fr;
@@ -398,10 +472,6 @@
           filter: blur(0);
         }
 
-        75% {
-          clip-path: inset(0 1.5% 0 1.5% round 4px);
-        }
-
         100% {
           clip-path: inset(0 round 0);
         }
@@ -428,6 +498,66 @@
           opacity: 1;
         }
       }
+
+      .hero-scroll {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        opacity: 0;
+        animation: fadeInScroll 1s ease 2.5s forwards;
+      }
+
+      .hero-scroll span {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.5);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      .hero-scroll-line {
+        width: 1px;
+        height: 40px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-scroll-line::after {
+        content: '';
+        position: absolute;
+        top: -100%;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        animation: scrollLine 2s ease-in-out infinite;
+      }
+
+      @keyframes scrollLine {
+        0% {
+          top: -100%;
+        }
+
+        50% {
+          top: 100%;
+        }
+
+        100% {
+          top: 100%;
+        }
+      }
+
+      @keyframes fadeInScroll {
+        to {
+          opacity: 1;
+        }
+      }
     </style>
 
     <section class="hero">
@@ -435,6 +565,7 @@
         <img class="hero-img active" src="/public/assets/images/bgpage/hero/bg1.png" alt="" data-slide="0">
       </div>
       <div class="hero-overlay"></div>
+      <div class="hero-glow"></div>
       <div class="hero-shadow-left"></div>
       <div class="hero-shadow-bottom"></div>
 
@@ -449,7 +580,7 @@
           Организуем комплектацию заявок, <span class="accent">металлообработку</span> по техническому заданию и <span
             class="accent">доставку продукции</span> по всей территории России.</p>
         <div class="hero-actions">
-          <a href="#spec" class="hero-cta"
+          <a href="#spec" class="hero-cta" id="heroCta"
             onclick="event.preventDefault();document.getElementById('specOverlay').classList.add('show');document.getElementById('specModal').classList.add('show');">
             Оставить заявку
             <span class="hero-cta-arrow">
@@ -464,17 +595,22 @@
 
       <div class="hero-stats">
         <div class="hero-stat">
-          <div class="hero-stat-value">100%</div>
+          <div class="hero-stat-value" data-count="100" data-suffix="%">0%</div>
           <div class="hero-stat-label">Документы качества</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-value">500+</div>
+          <div class="hero-stat-value" data-count="500" data-suffix="+">0</div>
           <div class="hero-stat-label">Клиентов</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-value">1000+</div>
+          <div class="hero-stat-value" data-count="1000" data-suffix="+">0</div>
           <div class="hero-stat-label">Наименований в каталоге</div>
         </div>
+      </div>
+
+      <div class="hero-scroll">
+        <span>Scroll</span>
+        <div class="hero-scroll-line"></div>
       </div>
     </section>
 
@@ -489,6 +625,165 @@
           imgs[current].classList.add('active');
         }, 6000);
       })();
+    </script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+        gsap.registerPlugin(ScrollTrigger);
+
+        var hero = document.querySelector('.hero');
+        if (!hero) return;
+
+        /* ── Split title into chars ── */
+        var titleSpans = document.querySelectorAll('.hero-title span');
+        titleSpans.forEach(function (span) {
+          var text = span.textContent;
+          span.innerHTML = '';
+          text.split('').forEach(function (ch) {
+            var el = document.createElement('span');
+            el.className = 'char';
+            el.textContent = ch === ' ' ? '\u00A0' : ch;
+            span.appendChild(el);
+          });
+        });
+
+        /* ── Entrance timeline ── */
+        var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        tl.to('.hero-title .char', {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.04,
+          delay: 0.5
+        })
+          .to('.hero-desc', { y: 0, opacity: 1, duration: 0.8 }, '-=0.3')
+          .to('.hero-actions', { y: 0, opacity: 1, duration: 0.8 }, '-=0.5')
+          .to('.hero-stat', {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.15
+          }, '-=0.4');
+
+        /* ── Stat counters ── */
+        document.querySelectorAll('.hero-stat-value').forEach(function (el) {
+          var target = parseInt(el.getAttribute('data-count'), 10);
+          var suffix = el.getAttribute('data-suffix') || '';
+          var obj = { val: 0 };
+          gsap.to(obj, {
+            val: target,
+            duration: 2,
+            delay: 1.8,
+            ease: 'power2.out',
+            onUpdate: function () {
+              el.textContent = Math.round(obj.val) + suffix;
+            }
+          });
+        });
+
+        /* ── Scroll parallax ── */
+        gsap.to(hero, {
+          yPercent: 15,
+          opacity: 0,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: hero,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          }
+        });
+
+        var shape = document.querySelector('.hero-shape');
+        var content = document.querySelector('.hero-content');
+        var stats = document.querySelector('.hero-stats');
+
+        if (shape) {
+          gsap.to(shape, {
+            yPercent: 10,
+            scale: 1.08,
+            ease: 'none',
+            scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true }
+          });
+        }
+
+        if (content) {
+          gsap.to(content, {
+            y: -80,
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: { trigger: hero, start: '20% top', end: '70% top', scrub: true }
+          });
+        }
+
+        if (stats) {
+          gsap.to(stats, {
+            y: -40,
+            opacity: 0,
+            ease: 'none',
+            scrollTrigger: { trigger: hero, start: '30% top', end: '80% top', scrub: true }
+          });
+        }
+
+        /* ── 3D Parallax on mouse move ── */
+        var isMobile = window.matchMedia('(max-width: 768px)').matches;
+        if (!isMobile) {
+          var heroShape = document.querySelector('.hero-shape');
+          var heroContent = document.querySelector('.hero-content');
+          var heroGlow = document.querySelector('.hero-glow');
+
+          hero.addEventListener('mousemove', function (e) {
+            var rect = hero.getBoundingClientRect();
+            var x = (e.clientX - rect.left) / rect.width - 0.5;
+            var y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            if (heroShape) {
+              heroShape.style.transform = 'translate(' + (x * -12) + 'px, ' + (y * -12) + 'px)';
+            }
+            if (heroContent) {
+              heroContent.style.transform = 'translate(' + (x * 15) + 'px, ' + (y * 10) + 'px)';
+            }
+            if (heroGlow) {
+              heroGlow.style.transform = 'translate(' + (x * 40) + 'px, ' + (y * 40) + 'px) scale(' + (1 + Math.abs(x) * 0.1) + ')';
+            }
+          });
+
+          hero.addEventListener('mouseleave', function () {
+            if (heroShape) heroShape.style.transform = '';
+            if (heroContent) heroContent.style.transform = '';
+            if (heroGlow) heroGlow.style.transform = '';
+          });
+        }
+
+        /* ── Magnetic button ── */
+        var cta = document.getElementById('heroCta');
+        if (cta && !isMobile) {
+          cta.addEventListener('mousemove', function (e) {
+            var rect = cta.getBoundingClientRect();
+            var x = e.clientX - rect.left - rect.width / 2;
+            var y = e.clientY - rect.top - rect.height / 2;
+            cta.style.transform = 'translate(' + (x * 0.15) + 'px, ' + (y * 0.15) + 'px)';
+          });
+          cta.addEventListener('mouseleave', function () {
+            cta.style.transform = '';
+          });
+        }
+
+        /* ── Scroll indicator fade ── */
+        var scrollEl = document.querySelector('.hero-scroll');
+        if (scrollEl) {
+          ScrollTrigger.create({
+            trigger: hero,
+            start: 'top top',
+            end: '30% top',
+            onUpdate: function (self) {
+              scrollEl.style.opacity = 1 - self.progress * 3;
+            }
+          });
+        }
+      });
     </script>
 
     <!-- Project assets -->
@@ -902,38 +1197,18 @@
     </section>
 
     <!-- About -->
-    <section id="about" class="py-14 lg:py-20">
+    <!-- Карта отгрузок -->
+    <section class="py-14 lg:py-20">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          <div>
-            <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">О
-              компании</span>
-            <h2 class="text-xl md:text-2xl font-bold text-gray-900 mb-4">Комплексное снабжение металлопрокатом — «КАВ
-              Сталь»</h2>
-            <div class="space-y-3 text-sm text-gray-600 leading-relaxed mb-6">
-              <p>ООО «КАВ Сталь» (ИНН 9719080724) — поставщик металлопроката и промышленных материалов по Москве и МО.
-                Работаем с проверенными производителями и поставщиками, предоставляем документы качества.</p>
-              <p>Поставляем арматуру, балку, трубы, листовой прокат, нержавейку и цветной металл. Работаем с юрлицами и
-                физлицами.</p>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <?php $stats = [
-                ['value' => '12 000+', 'label' => 'наименований'],
-                ['value' => '50+', 'label' => 'городов доставки'],
-              ];
-              foreach ($stats as $s): ?>
-                <div class="bg-white rounded-xl border border-gray-200 p-4 text-center">
-                  <div class="text-lg font-bold text-red-500"><?= $s['value'] ?></div>
-                  <div class="text-xs text-gray-500"><?= $s['label'] ?></div>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          </div>
-          <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm">
-            <iframe loading="lazy"
-              src="https://yandex.ru/map-widget/v1/?um=constructor%3A26fac0f930c91c623aafe2f3757b7adc63f0e9f8625105edda0659e463840e3e&source=constructor"
-              width="100%" height="380" frameborder="0" class="block" title="Карта проезда"></iframe>
-          </div>
+        <div class="text-center max-w-xl mx-auto mb-8">
+          <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">География
+            поставок</span>
+          <h2 class="text-xl md:text-2xl font-bold text-gray-900">Карта отгрузок по всей России</h2>
+        </div>
+        <div class="rounded-2xl overflow-hidden border border-gray-200 shadow-sm" style="height:420px;">
+          <iframe
+            src="https://yandex.ru/map-widget/v1/?um=constructor%3A5d7f9c69d82be5cfae8e60fc3a09dca546e89e06c8c576248c668b43aba603ae&amp;source=constructor"
+            width="1244" height="680" frameborder="0"></iframe>
         </div>
       </div>
     </section>

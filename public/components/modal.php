@@ -3,32 +3,33 @@
     position: fixed;
     inset: 0;
     z-index: 199;
-    background: rgba(0, 0, 0, 0.6);
-    display: none;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    background: rgba(0, 0, 0, 0);
+    visibility: hidden;
+    pointer-events: none;
+    transition: background 0.35s ease, visibility 0.35s;
   }
 
   #specOverlay.show {
-    display: block;
-    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    background: rgba(0, 0, 0, 0.55);
   }
 
   #specModal {
     position: fixed;
     inset: 0;
     z-index: 200;
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     padding: 16px;
-    opacity: 0;
-    transition: opacity 0.4s ease;
+    visibility: hidden;
+    pointer-events: none;
   }
 
   #specModal.show {
-    display: flex;
-    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
   }
 
   #specModal .modal-box {
@@ -39,6 +40,14 @@
     max-width: 480px;
     position: relative;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  #specModal.show .modal-box {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
   #specModal .modal-close {
