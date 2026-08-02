@@ -610,16 +610,16 @@
 
       <div class="hero-stats">
         <div class="hero-stat">
-          <div class="hero-stat-value" data-count="100" data-suffix="%">0%</div>
-          <div class="hero-stat-label">Документы качества</div>
+          <div class="hero-stat-value" data-count="80" data-suffix="" data-presuffix="Более "></div>
+          <div class="hero-stat-label">юридических и физических лиц доверили нам поставку металлопроката и комплектующих</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-value" data-count="500" data-suffix="+">0</div>
-          <div class="hero-stat-label">Клиентов</div>
+          <div class="hero-stat-value" data-count="7" data-suffix=" из 10" data-presuffix=""></div>
+          <div class="hero-stat-label">компаний делают повторный заказ</div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-value" data-count="1000" data-suffix="+">0</div>
-          <div class="hero-stat-label">Наименований в каталоге</div>
+          <div class="hero-stat-value" data-count="16000" data-suffix="" data-presuffix="Более "></div>
+          <div class="hero-stat-label">наименований металлопроката и комплектующих можем поставить</div>
         </div>
       </div>
     </section>
@@ -664,6 +664,7 @@
         document.querySelectorAll('.hero-stat-value').forEach(function (el) {
           var target = parseInt(el.getAttribute('data-count'), 10);
           var suffix = el.getAttribute('data-suffix') || '';
+          var presuffix = el.getAttribute('data-presuffix') || '';
           var obj = { val: 0 };
           gsap.to(obj, {
             val: target,
@@ -671,7 +672,7 @@
             delay: 1.8,
             ease: 'power2.out',
             onUpdate: function () {
-              el.textContent = Math.round(obj.val) + suffix;
+              el.textContent = presuffix + Math.round(obj.val) + suffix;
             }
           });
         });
@@ -879,7 +880,7 @@
     <!-- Stories -->
     <section class="pb-6 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <h3 class="text-lg font-bold text-gray-900 mb-3">Уникальное торговое предложение</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-3">Почему выбирают нас?</h3>
         <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-stretch">
           <?php
           $infoDir = __DIR__ . '/assets/images/info';
@@ -1431,22 +1432,13 @@
       <div class="news-container">
 
         <?php $stories = [
-          ['title' => 'Арматура А500С', 'slides' => [['title' => 'Арматура А500С', 'desc' => 'Свежая партия от ММК. Диаметр 10-40 мм', 'bg' => $img . 'АРМАТУРА.webp']]],
-          ['title' => 'Листовой прокат', 'slides' => [['title' => 'Листовой прокат', 'desc' => 'Сталь листовая ГК от 2 до 60 мм', 'bg' => $img . 'ЛИСТ.webp']]],
-          ['title' => 'Балка двутавровая', 'slides' => [['title' => 'Балка двутавровая', 'desc' => 'Балки №10-№40 ГОСТ 8239-89', 'bg' => $img . 'БАЛКА.webp']]],
-          ['title' => 'Швеллер', 'slides' => [['title' => 'Швеллер', 'desc' => 'Профильный прокат от 5 до 40', 'bg' => $img . 'ШВЕЛЛЕР.webp']]],
-          ['title' => 'Уголок стальной', 'slides' => [['title' => 'Уголок стальной', 'desc' => 'Равнополочный уголок 25-200 мм', 'bg' => $img . 'УГОЛОК.webp']]],
-          ['title' => 'Расчёт материалов под ключ', 'tagName' => 'Услуги', 'slides' => [['title' => 'Расчёт материалов под ключ', 'desc' => 'Считаем все материалы на объект под ключ', 'bg' => $info . '1.webp']]],
-          ['title' => 'Доставка в день заказа', 'tagName' => 'Услуги', 'slides' => [['title' => 'Доставка в день заказа', 'desc' => 'Привезём металлопрокат в день заказа', 'bg' => $info . '2.webp']]],
-          ['title' => 'Резка металлопроката по размеру', 'tagName' => 'Услуги', 'slides' => [['title' => 'Резка металлопроката по размеру', 'desc' => 'Нарежем металлопрокат точно под ваши размеры', 'bg' => $info . '3.webp']]],
-          ['title' => 'Счёт за 30 минут', 'tagName' => 'Услуги', 'slides' => [['title' => 'Счёт за 30 минут', 'desc' => 'Пришлём счёт до 20 позиций за 30 минут', 'bg' => $info . '4.webp']]],
-          ['title' => 'Всё одной машиной', 'tagName' => 'Услуги', 'slides' => [['title' => 'Всё одной машиной', 'desc' => 'Привезём металлопрокат и сопутствующие материалы одной машиной', 'bg' => $info . '5.webp']]],
+          ['title' => 'Поставка нержавеющих труб', 'slides' => [['title' => 'Поставка нержавеющих труб', 'desc' => 'Поставка нержавеющих труб и листового проката для предприятия атомной промышленности', 'bg' => $img . '1.webp']]],
         ]; ?>
 
         <div class="news-header">
           <div>
-            <span class="news-kicker">Новости компании</span>
-            <h2 class="section-title">Что нового</h2>
+            <span class="news-kicker">НАШИ ПОСТАВКИ</span>
+            <h2 class="section-title">Реализованные отгрузки</h2>
           </div>
           <div class="news-controls">
             <button id="newsSwiperPrev" class="news-arrow" aria-label="Предыдущая новость"><svg fill="none"
