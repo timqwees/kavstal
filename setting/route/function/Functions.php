@@ -670,7 +670,7 @@ class Functions
      * @param object $data Данные письма
      * @return void
      */
-    public static function sendMail(object $data, ?string $attachmentPath = null): void
+    public static function sendMail(object $data, array|string|null $attachmentPath = null): void
     {
         $phone = $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? '';
         $phone = trim(preg_replace('/[^0-9+]/', '', $phone));

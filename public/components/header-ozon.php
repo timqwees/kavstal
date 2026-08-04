@@ -243,12 +243,45 @@ $catalogSubcategories = $tree['subcategories'];
     </div>
 </header>
 
+<!-- Уведомление о волатильности рынка -->
+<style>
+    .market-alert {
+        background: #dc2626;
+        color: #fff;
+        overflow: hidden;
+        position: relative;
+    }
+    .market-alert-track {
+        display: flex;
+        width: max-content;
+        animation: market-alert-scroll 30s linear infinite;
+    }
+    .market-alert-track span {
+        flex-shrink: 0;
+        padding: 8px 0;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    @keyframes market-alert-scroll {
+        from { transform: translateX(-50%); }
+        to { transform: translateX(0); }
+    }
+</style>
+<div class="market-alert" role="status">
+    <div class="market-alert-track">
+        <?php for ($i = 0; $i < 4; $i++): ?><span>⚠ ВНИМАНИЕ!!! Цены и сроки поставки металлопроката могут меняться. Актуальную информацию уточняйте у менеджера &nbsp;&nbsp;•&nbsp;&nbsp;</span><?php endfor; ?>
+    </div>
+</div>
+
 </div>
 <!-- /Fixed header wrapper -->
 
-<!-- Spacer for fixed header: 48px top bar + 64px main + 40px nav = 152px on desktop, 56px on mobile -->
-<div style="height:56px" class="lg:hidden"></div>
-<div style="height:152px" class="hidden lg:block"></div>
+<!-- Spacer for fixed header: 48px top bar + 64px main + 40px nav = 152px (+28px alert) on desktop, 56px (+28px alert) on mobile -->
+<div style="height:84px" class="lg:hidden"></div>
+<div style="height:180px" class="hidden lg:block"></div>
 
 <!-- Mobile Bottom Bar -->
 <?php

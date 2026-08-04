@@ -146,25 +146,28 @@
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                             <span class="text-2xl font-bold text-green-600">1</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">Приемка на склад</h3>
-                        <p class="text-gray-600">Каждая партия металла проверяется на соответствие ГОСТ, проводится
-                            входной контроль качества</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Входной контроль</h3>
+                        <p class="text-gray-600">Каждая партия металлопроката проходит визуальный осмотр, контрольное
+                            взвешивание и замер толщины. Проверяем продукцию на соответствие заявленным характеристикам
+                            и отсутствие видимых дефектов.</p>
                     </div>
                     <div class="flex flex-col items-center text-center">
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                             <span class="text-2xl font-bold text-green-600">2</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">Хранение</h3>
-                        <p class="text-gray-600">Склад оборудован для правильного хранения металлопроката — защита от
-                            коррозии и механических повреждений</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Правильное хранение</h3>
+                        <p class="text-gray-600">Более 80% металлопроката хранится в крытых отапливаемых помещениях,
+                            что позволяет снизить риск образования коррозии и повреждения продукции при хранении.</p>
                     </div>
                     <div class="flex flex-col items-center text-center">
                         <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                             <span class="text-2xl font-bold text-green-600">3</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900 mb-3">Отгрузка</h3>
-                        <p class="text-gray-600">Перед отгрузкой каждая позиция проверяется менеджером на соответствие
-                            заказу</p>
+                        <h3 class="text-xl font-bold text-gray-900 mb-3">Тройной весовой контроль при отгрузке</h3>
+                        <p class="text-gray-600">При въезде автомобиль взвешивается на автомобильных весах, затем
+                            отдельно контролируется вес отгружаемого металлопроката. Перед выездом автомобиль проходит
+                            повторное взвешивание и финальный контроль отгрузки. Это позволяет исключить ошибки по весу,
+                            комплектности и качеству продукции.</p>
                     </div>
                 </div>
             </div>
@@ -180,7 +183,7 @@
                     <li class="flex items-start">
                         <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
                         <div>
-                            <span class="font-medium text-gray-900">Сертификат качества ГОСТ</span>
+                            <span class="font-medium text-gray-900">Сертификат качества ГОСТ/ТУ</span>
                             <p class="text-sm text-gray-500">Подтверждает соответствие продукции государственным
                                 стандартам</p>
                         </div>
@@ -189,15 +192,15 @@
                         <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
                         <div>
                             <span class="font-medium text-gray-900">Паспорт на продукцию</span>
-                            <p class="text-sm text-gray-500">Содержит технические характеристики, химический состав,
-                                марку стали</p>
+                            <p class="text-sm text-gray-500">Содержит технические характеристики изделия, из чего было
+                                произведено</p>
                         </div>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
                         <div>
-                            <span class="font-medium text-gray-900">Упаковочный лист</span>
-                            <p class="text-sm text-gray-500">Перечень всех позиций с весом и количеством в отгрузке</p>
+                            <span class="font-medium text-gray-900">Закрывающие документы</span>
+                            <p class="text-sm text-gray-500">УПД/ТТН, чек</p>
                         </div>
                     </li>
                 </ul>
@@ -209,15 +212,15 @@
                 <ul class="space-y-4">
                     <li class="flex items-start">
                         <i class="fas fa-check text-red-200 mt-1 mr-3"></i>
-                        <span>Гарантируем соответствие металла заявленным характеристикам и ГОСТ</span>
+                        <span>Гарантируем соответствие металла заявленным характеристикам и ГОСТ/ТУ</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-red-200 mt-1 mr-3"></i>
-                        <span>Соответствие заявленного веса фактическому — ±3% допустимое отклонение</span>
+                        <span>Соответствие заявленного веса фактическому — ±5% допустимое отклонение</span>
                     </li>
                     <li class="flex items-start">
                         <i class="fas fa-check text-red-200 mt-1 mr-3"></i>
-                        <span>Срок рассмотрения рекламации — до 3 рабочих дней</span>
+                        <span>Пришлем фото и видео металла перед выездом со склада для подтверждения качества</span>
                     </li>
                 </ul>
             </div>

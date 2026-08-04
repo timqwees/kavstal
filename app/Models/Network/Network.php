@@ -502,8 +502,16 @@ class Network extends Session
 
       $mail->msgHTML($data['body']);
 
-      if (!empty($data['attachment_path']) && file_exists($data['attachment_path'])) {
-          $mail->addAttachment($data['attachment_path']);
+      if (!empty($data['attachment_path'])) {
+          $attachments = is_array($data['attachment_path']) ? $data['attachment_path'] : [$data['attachment_path']];
+          foreach ($attachments as $att) {
+              if (is_array($att) && !empty($att['data'])) {
+                  // Вложение из буфера (без файла на диске)
+                  $mail->addStringAttachment($att['data'], $att['name'] ?? 'attachment');
+              } elseif ($att && file_exists($att)) {
+                  $mail->addAttachment($att);
+              }
+          }
       }
 
       //Отправка

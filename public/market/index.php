@@ -287,7 +287,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                     <!-- Left Sidebar: Filters -->
                     <aside class="hidden lg:block w-64 shrink-0">
                         <div class="sticky bg-white border border-zinc-200 rounded-xl p-3 space-y-3 overflow-y-auto"
-                            style="top:152px;max-height:calc(100vh - 152px)">
+                            style="top:180px;max-height:calc(100vh - 180px)">
 
                             <!-- Категория -->
                             <?php if (!empty($filterCategories)): ?>

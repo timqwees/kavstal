@@ -122,9 +122,8 @@
         <div class="text-center mb-16">
             <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">О компании КАВ СТАЛЬ</h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Поставщик металлопроката и промышленных материалов в Москве и Московской области.
-                Опыт команды в сфере снабжения позволяет решать задачи разного масштаба — от розничной заявки до
-                комплексной комплектации проектов.
+                Компания занимается комплексным снабжением предприятий металлопрокатом и промышленными
+                материалами. От одной позиции до полной комплектации проекта с доставкой по России.
             </p>
         </div>
 
@@ -132,11 +131,11 @@
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
                 <div class="text-4xl font-bold text-red-500 mb-2">500+</div>
-                <div class="text-gray-600">поставленных позиций</div>
+                <div class="text-gray-600">выполненных заказов</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
-                <div class="text-4xl font-bold text-red-500 mb-2">500+</div>
-                <div class="text-gray-600">наименований металла</div>
+                <div class="text-4xl font-bold text-red-500 mb-2">16000+</div>
+                <div class="text-gray-600">наименований доступных к отгрузке</div>
             </div>
             <div class="bg-white rounded-xl p-6 text-center shadow-md">
                 <div class="text-4xl font-bold text-red-500 mb-2">от 1 дня</div>

@@ -208,34 +208,54 @@
                             <tr class="border-b-2 border-red-200">
                                 <th class="text-left py-3 px-4 font-bold text-gray-900">Зона</th>
                                 <th class="text-left py-3 px-4 font-bold text-gray-900">Газель (до 1.5т)</th>
-                                <th class="text-left py-3 px-4 font-bold text-gray-900">Бортовой (до 5т)</th>
-                                <th class="text-left py-3 px-4 font-bold text-gray-900">Манипулятор (до 10т)</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-900">ГАЗ (до 3т)</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-900">Валдай (до 5т)</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-900">Валдай (до 10т)</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-900">Длинномер (до 20т)</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-900">Манипулятор (до 5тн)</th>
+                                <th class="text-left py-3 px-4 font-bold text-gray-900">Манипулятор (до 20тн)</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             <tr>
                                 <td class="py-3 px-4 text-gray-700">Москва (в пределах МКАД)</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">1 500 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">3 500 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">8 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 6 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 9 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 13 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 20 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 25 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 20 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 30 000 ₽</td>
                             </tr>
                             <tr>
                                 <td class="py-3 px-4 text-gray-700">До 10 км от МКАД</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">2 000 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">4 500 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">10 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 8 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 11 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 15 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 23 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 30 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 23 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 33 000 ₽</td>
                             </tr>
                             <tr>
                                 <td class="py-3 px-4 text-gray-700">10-30 км от МКАД</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">2 500 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">5 500 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">12 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 11 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 13 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 16 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 24 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 30 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 25 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 35 000 ₽</td>
                             </tr>
                             <tr>
                                 <td class="py-3 px-4 text-gray-700">30-50 км от МКАД</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">3 000 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">6 500 ₽</td>
-                                <td class="py-3 px-4 text-gray-900 font-medium">15 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 12 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 15 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 17 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 26 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 35 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 28 000 ₽</td>
+                                <td class="py-3 px-4 text-gray-900 font-medium">от 48 000 ₽</td>
                             </tr>
                         </tbody>
                     </table>
@@ -251,28 +271,25 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-file-invoice text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Безналичный расчет</h3>
+                    <p class="text-gray-600">Оплата по счету для юридических лиц, ИП. Работаем с НДС 22%.</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
                     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                         <i class="fas fa-money-bill-wave text-green-600 text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Наличные</h3>
-                    <p class="text-gray-600">Оплата наличными при получении товара на складе или водителю при доставке.
-                        Выдаем все необходимые документы.</p>
+                    <h3 class="text-xl font-bold text-gray-900 mb-3">Наличными</h3>
+                    <p class="text-gray-600">Оплата наличными в нашем офисе или на складе. Выдаем чек и накладную.</p>
                 </div>
                 <div class="bg-white rounded-xl shadow-md p-6">
                     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
                         <i class="fas fa-credit-card text-blue-600 text-2xl"></i>
                     </div>
                     <h3 class="text-xl font-bold text-gray-900 mb-3">Банковская карта</h3>
-                    <p class="text-gray-600">Оплата картой Visa, Mastercard, МИР на складе или через терминал у водителя
-                        при доставке.</p>
-                </div>
-                <div class="bg-white rounded-xl shadow-md p-6">
-                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mb-4">
-                        <i class="fas fa-file-invoice text-purple-600 text-2xl"></i>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Безналичный расчет</h3>
-                    <p class="text-gray-600">Оплата по счету для юридических лиц. Работаем с НДС и без НДС. Отсрочка
-                        платежа для постоянных клиентов.</p>
+                    <p class="text-gray-600">Оплата через терминал Вашей корпоративной или личной картой. Выдаем чек.</p>
                 </div>
             </div>
         </div>

@@ -215,7 +215,7 @@
       var btn = this.querySelector('button[type="submit"]');
       btn.disabled = true; btn.innerHTML = 'Отправка...';
       try {
-        var res = await fetch('/api/spec-upload', { method: 'POST', body: new FormData(this) });
+        var res = await fetch('/send/email', { method: 'POST', body: new FormData(this) });
         var data = await res.json();
         if (data.success) {
           this.style.display = 'none';

@@ -880,7 +880,7 @@
     <!-- Stories -->
     <section class="pb-6 overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
-        <h3 class="text-lg font-bold text-gray-900 mb-3">Почему выбирают нас?</h3>
+        <h3 class="text-lg font-bold text-gray-900 mb-3">Почему выбирают КАВ Сталь</h3>
         <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide items-stretch">
           <?php
           $infoDir = __DIR__ . '/assets/images/info';
@@ -1431,9 +1431,67 @@
     <section class="news-section">
       <div class="news-container">
 
-        <?php $stories = [
-          ['title' => 'Поставка нержавеющих труб', 'slides' => [['title' => 'Поставка нержавеющих труб', 'desc' => 'Поставка нержавеющих труб и листового проката для предприятия атомной промышленности', 'bg' => $img . '1.webp']]],
-        ]; ?>
+        <?php
+        /*
+         * НАСТРОЙКА ИСТОРИЙ «Реализованные отгрузки»
+         *
+         * Формат: ['title' => 'Заголовок', 'slides' => [...слайды...]]
+         *
+         * Слайд — один из вариантов:
+         *   '4.webp'                    — просто фото (файл в /public/assets/images/services/stories/)
+         *   ['video' => 'video.MP4']    — видео (файл в /public/assets/images/services/vides/)
+         *   ['bg' => '4.webp', 'video' => 'video.MP4'] — видео с собственной обложкой
+         *
+         * Несколько слайдов в одной истории = несколько фото/видео,
+         * листаются стрелками внутри модалки.
+         * tagName — необязательная метка на карточке (по умолчанию «Новость»).
+         */
+        $stories = [
+          [
+            'title' => 'Поставка нержавеющих труб и листового проката для предприятия атомной промышленности',
+            'desc'  => 'Поставка нержавеющих труб и листового проката для предприятия атомной промышленности',
+            'slides' => ['4.webp'],
+          ],
+          [
+            'title' => 'Поставка сортового и трубного проката для производства металлоконструкций',
+            'tagName' => 'Поставка',
+            'slides' => [['bg' => 'bg_2.png', 'video' => 'postavka_sortovogo.MP4']],
+          ],
+          [
+            'title' => 'Поставка арматуры для изготовления сварной сетки',
+            'tagName' => 'Поставка',
+            'slides' => [['bg' => 'bg_3.png', 'video' => 'postavka_armatury.MP4']],
+          ],
+          [
+            'title' => 'Поставка труб и отводов в ВУС изоляции для реконструкции трубопровода в Тульской области',
+            'tagName' => 'Поставка',
+            'slides' => ['2.jpeg', '3.jpeg'],
+          ],
+          [
+            'title' => 'Поставка труб для производства металлоконструкций',
+            'tagName' => 'Поставка',
+            'slides' => [['bg' => 'bg_4.png', 'video' => 'postavka_trub.MP4']],
+          ],
+        ];
+
+        // Нормализация: короткий формат -> полный (title/bg/video подставляются автоматически)
+        $stories = array_map(function ($s) use ($img, $vid) {
+          $s['slides'] = array_map(function ($slide) use ($img, $vid, $s) {
+            $item = [];
+            if (is_string($slide)) {
+              $item['bg'] = $img . $slide;
+            } else {
+              $item['bg'] = isset($slide['bg']) ? $img . $slide['bg'] : $img . '1.webp';
+              if (!empty($slide['video'])) {
+                $item['video'] = $vid . $slide['video'];
+              }
+            }
+            $item['title'] = $s['title'];
+            return $item;
+          }, $s['slides']);
+          return $s;
+        }, $stories);
+        ?>
 
         <div class="news-header">
           <div>
@@ -1561,6 +1619,51 @@
             object-fit: cover;
           }
 
+          .story-card-media2 {
+            position: absolute;
+            z-index: 1;
+            right: 10px;
+            bottom: 10px;
+            width: 42%;
+            aspect-ratio: 1 / 1;
+            border-radius: 9px;
+            overflow: hidden;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+          }
+
+          .story-card-media2 img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+
+          .story-card-count {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 999px;
+            background: rgba(20, 20, 20, 0.65);
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+          }
+
+          .story-card-count svg {
+            width: 12px;
+            height: 12px;
+          }
+
           .story-card-body {
             display: block;
             padding: 12px 8px 8px;
@@ -1631,15 +1734,37 @@
         </style>
         <div class="swiper newsSwiper">
           <div class="swiper-wrapper">
-            <?php foreach ($stories as $i => $s): ?>
+            <?php foreach ($stories as $i => $s):
+              $slidesCount = count($s['slides']);
+              $first = $s['slides'][0];
+              $hasVideo = !empty($first['video']);
+              $preview2 = $slidesCount > 1 && !empty($s['slides'][1]['bg']) ? $s['slides'][1]['bg'] : null;
+            ?>
               <div class="swiper-slide story-slide">
                 <button type="button" class="story-card" data-story-index="<?= $i ?>"
                   aria-label="<?= htmlspecialchars($s['title']) ?>">
                   <span class="story-card-media">
-                    <img src="<?= $s['slides'][0]['bg'] ?>" alt="<?= htmlspecialchars($s['title']) ?>" loading="lazy">
-                    <span class="story-card-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M8 5v14l11-7z" />
-                      </svg></span>
+                    <img src="<?= $first['bg'] ?>" alt="<?= htmlspecialchars($s['title']) ?>" loading="lazy">
+                    <?php if ($preview2): ?>
+                      <span class="story-card-media2">
+                        <img src="<?= $preview2 ?>" alt="" loading="lazy">
+                      </span>
+                    <?php endif; ?>
+                    <?php if ($slidesCount > 1): ?>
+                      <span class="story-card-count" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="3" width="18" height="18" rx="2" />
+                          <circle cx="8.5" cy="8.5" r="1.5" />
+                          <path d="M21 15l-5-5L5 21" />
+                        </svg>
+                        <?= $slidesCount ?>
+                      </span>
+                    <?php endif; ?>
+                    <?php if ($hasVideo): ?>
+                      <span class="story-card-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg></span>
+                    <?php endif; ?>
                   </span>
                   <span class="story-card-body">
                     <span class="story-card-cat"><?= htmlspecialchars($s['tagName'] ?? 'Новость') ?></span>
@@ -1653,117 +1778,146 @@
       </div>
     </section>
 
-    <!-- Calculator -->
-    <section id="calculator" class="py-14 lg:py-20 relative">
+    <!-- Загрузка спецификации -->
+    <section id="spec" class="py-14 lg:py-20 relative">
       <div class="absolute top-10 left-10 w-32 h-32 rounded-full bg-red-400 opacity-5 blur-3xl animate-pulse"></div>
       <div class="absolute bottom-20 right-20 w-40 h-40 rounded-full bg-red-500 opacity-5 blur-3xl animate-pulse"
         style="animation-delay:1s;"></div>
       <div class="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-red-300 opacity-5 blur-3xl animate-pulse"
         style="animation-delay:2s;"></div>
       <div class="max-w-7xl mx-auto px-4 lg:px-8 relative z-10">
-        <div class="text-center max-w-xl mx-auto mb-8">
+        <div class="text-center max-w-2xl mx-auto mb-8">
           <span
-            class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">Калькулятор</span>
-          <h2 class="text-xl md:text-2xl section-title">Рассчитайте стоимость онлайн</h2>
+            class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-3">Заявка</span>
+          <h2 class="text-xl md:text-2xl section-title">Загрузите Вашу заявку или полную спецификацию всего объекта
+          </h2>
+          <p class="text-gray-600 text-sm mt-3">Посчитаем все материалы под ключ</p>
         </div>
         <div class="max-w-4xl mx-auto">
           <div class="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">
-            <form method="POST" action="/send/email" class="ajax-form space-y-5" data-goal="calculator_request">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <form id="specForm" enctype="multipart/form-data" class="space-y-5">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
                 <div>
-                  <label for="metalName"
+                  <label for="specName"
                     class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
                       class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
                       viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
-                    </svg>Название металлопроката</label>
-                  <input type="text" name="тип_металлопроката" id="metalName"
-                    placeholder="Например, Арматура А500С 12 мм"
+                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>Имя</label>
+                  <input type="text" name="name" id="specName" placeholder="Ваше имя"
                     class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
                 </div>
                 <div>
-                  <label for="calculatorQuantity"
+                  <label for="specPhone"
                     class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
-                      class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5a2.25 2.25 0 012.25 2.25v.75H6v-.75A2.25 2.25 0 018.25 6z" />
-                    </svg>Количество</label>
-                  <input type="text" name="количество" id="calculatorQuantity"
-                    placeholder="Например, 2 тонны или 50 штук"
-                    class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
-                </div>
-                <div>
-                  <label for="delivery"
-                    class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
-                      class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
-                    </svg>Доставка</label>
-                  <select name="доставка" id="delivery"
-                    class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
-                    <option value="Самовывоз">Самовывоз</option>
-                    <option value="По Москве (в пределах МКАД)">По Москве (в пределах МКАД)</option>
-                    <option value="МО (до 50 км)">МО (до 50 км)</option>
-                    <option value="Дальняя доставка (от 50 км)">Дальняя доставка (от 50 км)</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="payment" class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
-                      class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
-                    </svg>Способ оплаты</label>
-                  <select name="способ_оплаты" id="payment"
-                    class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
-                    <option value="Наличные">Наличные</option>
-                    <option value="Безналичный расчёт">Безналичный расчёт</option>
-                    <option value="Картой при получении">Картой при получении</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="discount"
-                    class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
-                      class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
-                      viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>Объём / Скидка</label>
-                  <select name="скидка" id="discount"
-                    class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
-                    <option value="Розница">Розница</option>
-                    <option value="От 10 тонн">От 10 тонн</option>
-                    <option value="От 50 тонн">От 50 тонн</option>
-                    <option value="От 100 тонн">От 100 тонн</option>
-                    <option value="От 500 тонн">От 500 тонн</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
                       class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
                       viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round"
                         d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                    </svg>Ваш телефон</label>
-                  <input type="tel" name="телефон" data-type-phone placeholder="(___) ___-__-__"
+                    </svg>Телефон <span class="text-red-500">*</span></label>
+                  <input type="tel" name="phone" id="specPhone" required placeholder="(___) ___-__-__"
+                    class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
+                </div>
+                <div>
+                  <label for="specEmail"
+                    class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
+                      class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
+                      viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                    </svg>Почта <span class="text-red-500">*</span></label>
+                  <input type="email" name="email" id="specEmail" required placeholder="email@example.com"
                     class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition">
                 </div>
               </div>
-              <div class="absolute opacity-0 pointer-events-none" aria-hidden="true">
-                <input type="text" name="website" tabindex="-1" autocomplete="off">
+              <div>
+                <label for="specFile"
+                  class="flex flex-col items-center justify-center gap-2 w-full border-2 border-dashed border-gray-300 rounded-xl px-4 py-8 cursor-pointer transition hover:border-red-400 hover:bg-red-50/30 text-center">
+                  <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" stroke-width="1.5"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 16.5V9.75m0 0l3 3m-3-3l-3 3M6.75 19.5a4.5 4.5 0 01-1.41-8.775 5.25 5.25 0 0110.233-2.33 3 3 0 013.758 3.848A3.752 3.752 0 0118 19.5H6.75z" />
+                  </svg>
+                  <span class="text-sm font-medium text-gray-600" id="specFileLabel">Прикрепить файл
+                    (xlsx, xls, pdf, csv, doc, docx)</span>
+                  <span class="text-xs text-gray-400">Можно прикрепить несколько файлов</span>
+                  <input type="file" name="spec_file[]" id="specFile" multiple accept=".xlsx,.xls,.pdf,.csv,.doc,.docx"
+                    class="hidden">
+                </label>
+                <div id="specFileList" class="mt-2 space-y-1"></div>
               </div>
+              <div>
+                <label for="specComment"
+                  class="flex items-center gap-1.5 text-xs font-semibold text-gray-700 mb-1.5"><svg
+                    class="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+                  </svg>Комментарии</label>
+                <textarea name="comment" id="specComment" rows="3" placeholder="Дополнительная информация к заявке"
+                  class="w-full text-sm border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-400 bg-gray-50/50 transition"></textarea>
+              </div>
+              <div class="text-xs text-gray-500">Поле с телефоном и почтой обязательно для заполнения</div>
               <button type="submit"
                 class="w-full bg-gradient-to-r from-red-500 to-red-500 hover:from-red-500 hover:to-red-500 text-white py-3.5 rounded-xl text-sm font-semibold transition-all duration-200 shadow-md shadow-red-500/20">Отправить
-                запрос →</button>
+                заявку →</button>
+              <div id="specFormStatus" class="hidden text-center text-sm font-medium"></div>
             </form>
           </div>
         </div>
       </div>
     </section>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('specForm');
+        if (!form) return;
+        var fileInput = document.getElementById('specFile');
+        var fileList = document.getElementById('specFileList');
+        var label = document.getElementById('specFileLabel');
+        var status = document.getElementById('specFormStatus');
+
+        fileInput.addEventListener('change', function () {
+          var names = Array.from(this.files).map(function (f) { return f.name; });
+          label.textContent = names.length ? names.length + ' файл(а) прикреплено' : 'Прикрепить файл (xlsx, xls, pdf, csv, doc, docx)';
+          fileList.innerHTML = names.map(function (n) {
+            return '<div class="flex items-center gap-2 text-xs text-gray-600 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5">' +
+              '<svg class="w-3.5 h-3.5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>' +
+              '<span class="truncate">' + n + '</span></div>';
+          }).join('');
+        });
+
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          status.classList.add('hidden');
+          status.style.color = '';
+          var btn = form.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.textContent = 'Отправка...';
+          try {
+            var res = await fetch('/send/email', { method: 'POST', body: new FormData(form) });
+            var data = await res.json();
+            if (data.success) {
+              status.textContent = 'Заявка отправлена! Мы свяжемся с вами в ближайшее время';
+              status.style.color = '#16a34a';
+              form.reset();
+              label.textContent = 'Прикрепить файл (xlsx, xls, pdf, csv, doc, docx)';
+              fileList.innerHTML = '';
+            } else {
+              status.textContent = 'Ошибка: ' + (data.error || 'повторите попытку');
+              status.style.color = '#dc2626';
+            }
+          } catch (err) {
+            status.textContent = 'Ошибка соединения. Попробуйте позже.';
+            status.style.color = '#dc2626';
+          }
+          status.classList.remove('hidden');
+          btn.disabled = false;
+          btn.textContent = 'Отправить заявку →';
+        });
+      });
+    </script>
 
     <!-- Stories Modal -->
     <style>
@@ -1960,11 +2114,20 @@
           id="storyContainer" style="background: linear-gradient(160deg, #2b2b2b 0%, #1c1c1c 55%, #131313 100%);">
           <!-- Progress bars -->
           <div id="storyProgress" class="absolute top-0 left-0 right-0 z-30 story-progress"></div>
-          <!-- Top-right buttons: close -->
-          <div class="absolute right-3 z-30 flex items-center gap-2" style="top: 28px;">
+          <!-- Top-right buttons: sound (under close) -->
+          <div class="absolute right-3 z-30 flex flex-col items-center gap-2" style="top: 28px;">
             <button type="button" id="storyClose" class="story-ctrl-btn" aria-label="Закрыть">
               <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <button type="button" id="storySound" class="story-ctrl-btn" aria-label="Звук вкл/выкл">
+              <svg class="story-sound-on" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+              </svg>
+              <svg class="story-sound-off hidden" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                <path d="M22 8l-6 6m0-6l6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" />
               </svg>
             </button>
           </div>

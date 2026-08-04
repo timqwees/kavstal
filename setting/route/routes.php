@@ -734,40 +734,21 @@ Routes::post('/send/email', function () {
     session_write_close();
 
     set_time_limit(60);
-    Functions::sendMail((object) $_POST);
-});
-//==================================================================================================//SPEC UPLOAD
-Routes::post('/api/spec-upload', function () {
-    header('Content-Type: application/json; charset=utf-8');
-    $name = trim($_POST['name'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $comment = trim($_POST['comment'] ?? '');
-    if (!$name || !$phone) {
-        print json_encode(['success' => false, 'error' => 'Заполните имя и телефон']);
-        exit;
-    }
-    $uploadDir = dirname(__DIR__, 2) . '/public/uploads/specs';
-    if (!is_dir($uploadDir)) {
-        @mkdir($uploadDir, 0755, true);
-    }
-    $filePath = null;
-    if (!empty($_FILES['spec_file']) && $_FILES['spec_file']['error'] === UPLOAD_ERR_OK) {
-        $ext = pathinfo($_FILES['spec_file']['name'], PATHINFO_EXTENSION);
-        $safeName = 'spec_' . date('Ymd_His') . '_' . bin2hex(random_bytes(4)) . '.' . $ext;
-        $dest = $uploadDir . '/' . $safeName;
-        if (move_uploaded_file($_FILES['spec_file']['tmp_name'], $dest)) {
-            $filePath = $dest;
+
+    // Вложения (спецификация и другие файлы форм) — прикрепляем из временного буфера, на диск не сохраняем
+    $attachments = [];
+    if (!empty($_FILES['spec_file'])) {
+        $files = is_array($_FILES['spec_file']['name']) ? $_FILES['spec_file'] : ['name' => [$_FILES['spec_file']['name']], 'type' => [$_FILES['spec_file']['type']], 'tmp_name' => [$_FILES['spec_file']['tmp_name']], 'error' => [$_FILES['spec_file']['error']], 'size' => [$_FILES['spec_file']['size']]];
+        for ($i = 0; $i < count($files['name']); $i++) {
+            if ($files['error'][$i] !== UPLOAD_ERR_OK || empty($files['name'][$i])) continue;
+            $data = @file_get_contents($files['tmp_name'][$i]);
+            if ($data !== false) {
+                $attachments[] = ['name' => basename($files['name'][$i]), 'data' => $data];
+            }
         }
     }
-    $body = "Новая заявка со спецификацией\n\nИмя: $name\nТелефон: $phone\nEmail: $email\nКомментарий: $comment";
-    try {
-        $mailer = new \App\Controllers\MailController();
-        $mailer->onMail($_ENV['EMAIL'] ?? '', 'Заявка со спецификацией от ' . $name, nl2br($body), $filePath);
-    } catch (\Exception $e) {
-        error_log('Spec upload mail error: ' . $e->getMessage());
-    }
-    print json_encode(['success' => true]);
+
+    Functions::sendMail((object) $_POST, $attachments ?: null);
 });
 //==================================================================================================//FAVORITES PAGE
 Routes::get('/favorites', function () {
