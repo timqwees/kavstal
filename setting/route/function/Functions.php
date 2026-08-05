@@ -201,7 +201,6 @@ class Functions
             return $cached;
         }
 
-
         $data = [
             'canonical' => $canonical,
             'baseUrl' => $baseUrl,
@@ -540,6 +539,8 @@ class Functions
         $categories = [];
         $subcategories = [];
         $catSlugs = [];
+        $catCounts = [];
+        $subCounts = [];
         $baseUrl = self::site()['baseUrl'];
 
         if (is_dir($csvDir)) {
@@ -567,6 +568,8 @@ class Functions
                     }
                     $catSlug = $catSlugs[$catTitle];
                     $subSlug = $catSlug . '-' . self::slugify($subTitle);
+                    $catCounts[$catSlug] = ($catCounts[$catSlug] ?? 0) + 1;
+                    $subCounts[$catSlug][$subSlug] = ($subCounts[$catSlug][$subSlug] ?? 0) + 1;
                     if (isset($subcategories[$catSlug][$subSlug])) {
                         continue;
                     }
@@ -592,6 +595,17 @@ class Functions
         foreach ($subcategories as $catSlug => $subs) {
             $subFlat[$catSlug] = array_values($subs);
         }
+        foreach ($categories as &$cat) {
+            $cat['products'] = $catCounts[$cat['id']] ?? 0;
+        }
+        unset($cat);
+        foreach ($subFlat as $catSlug => &$subs) {
+            foreach ($subs as &$sub) {
+                $sub['products'] = $subCounts[$catSlug][$sub['id']] ?? 0;
+            }
+            unset($sub);
+        }
+        unset($subs);
 
         $result = ['categories' => $categories, 'subcategories' => $subFlat];
         self::cacheSet('catalog_tree', $result);

@@ -87,7 +87,7 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
         }
 
         PHPUnit::assertTrue(
-            $this->sent($notifiable, $notification, $callback)->count() > 0,
+            $this->sent($notifiable, $notification, $callback)->isNotEmpty(),
             "The expected [{$notification}] notification was not sent."
         );
     }
@@ -314,7 +314,7 @@ class NotificationFake implements Fake, NotificationDispatcher, NotificationFact
 
         foreach ($notifiables as $notifiable) {
             if (! $notification->id) {
-                $notification->id = (string) Str::uuid();
+                $notification->id = Str::uuid()->toString();
             }
 
             $notifiableChannels = $channels ?: $notification->via($notifiable);

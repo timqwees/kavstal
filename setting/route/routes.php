@@ -200,19 +200,18 @@ Routes::get('/contacts', function ($path = '/contacts.php') {
 function redirectOldKatalog(string $katalog, ?string $subcategory = null, ?string $name = null): ?string
 {
     $catDefaults = [
-        'sortovoy-prokat' => 'chernyy-metalloprokat',
-        'listovoy-prokat' => 'chernyy-metalloprokat',
-        'truby' => 'chernyy-metalloprokat',
+        // Старые «сборные» категории: сортовой/листовой прокат и трубы теперь —
+        // отдельные категории по видам (см. подкатегорийные переопределения ниже)
+        'sortovoy-prokat' => null,
         'metizy' => 'krepezh-i-metizy',
         'kachestvennye-stali' => 'kachestvennye-i-spetsialnye-stali',
         'inzhenernye-sistemy' => null,
-        'vodostochnaya-sistema' => 'krovelnye-i-fasadnye-materialy',
         'stroitelnye-materialy' => 'izdeliya-i-proektnye-pozitsii',
+        // Категории, которых больше нет (каждая категория = вид товара)
+        'chernyy-metalloprokat' => null,
+        'krovelnye-i-fasadnye-materialy' => null,
     ];
-    if (!array_key_exists($katalog, $catDefaults)) {
-        return null; // not an old slug
-    }
-    $defaultNew = $catDefaults[$katalog];
+    $defaultNew = $catDefaults[$katalog] ?? null;
     // Subcategory-level overrides for split categories
     if ($subcategory !== null) {
         $subOverrides = [
@@ -243,21 +242,27 @@ function redirectOldKatalog(string $katalog, ?string $subcategory = null, ?strin
             'sortovoy-prokat-stal-sort-nerzh-nikel-krug' => 'nerzhaveyushchaya-stal',
             'sortovoy-prokat-stal-sort-nerzh-nikel-kvadrat' => 'nerzhaveyushchaya-stal',
             'sortovoy-prokat-stal-sort-nerzh-nikel-shestigrannik' => 'nerzhaveyushchaya-stal',
+            // Сортовой прокат -> Арматура / Круг-квадрат-полоса / Уголок / Швеллер / Балки
+            'sortovoy-prokat-armatura' => 'armatura',
+            'sortovoy-prokat-katanka' => 'armatura',
+            'sortovoy-prokat-krug-g-k' => 'krug-kvadrat-polosa',
+            'sortovoy-prokat-kvadrat-g-k' => 'krug-kvadrat-polosa',
+            'sortovoy-prokat-polosa-g-k' => 'krug-kvadrat-polosa',
+            'sortovoy-prokat-ugolok' => 'ugolok',
+            'sortovoy-prokat-ugolok-nizkolegir' => 'ugolok',
+            'sortovoy-prokat-shveller' => 'shveller',
+            'sortovoy-prokat-shveller-gnutyy' => 'shveller',
+            'sortovoy-prokat-shveller-nizkolegir' => 'shveller',
+            'sortovoy-prokat-balki-dvutavrovye' => 'balki',
+            'sortovoy-prokat-balki-dvutavrovye-nizkoleg' => 'balki',
             // Листовой прокат -> Нержавеющая сталь
             'listovoy-prokat-list-nerzhaveyushchiy' => 'nerzhaveyushchaya-stal',
             'listovoy-prokat-stal-listovaya-nerzhav-bez-nikelya' => 'nerzhaveyushchaya-stal',
             'listovoy-prokat-stal-listovaya-nerzhav-nikelesod' => 'nerzhaveyushchaya-stal',
-            // Листовой прокат -> Кровельные и фасадные материалы
-            'listovoy-prokat-profnastil' => 'krovelnye-i-fasadnye-materialy',
-            'listovoy-prokat-profnastil-okrashennyy' => 'krovelnye-i-fasadnye-materialy',
-            'listovoy-prokat-profnastil-otsinkovannyy' => 'krovelnye-i-fasadnye-materialy',
-            // Трубы -> Нержавеющая сталь
-            'truby-truby-nerzhav-besshovnye' => 'nerzhaveyushchaya-stal',
-            'truby-truby-nerzhav-el-svarnye' => 'nerzhaveyushchaya-stal',
-            // Трубы -> Цветные металлы
-            'truby-alyuminievaya-truba' => 'tsvetnye-metally',
-            'truby-dyuralevaya-truba' => 'tsvetnye-metally',
-            'truby-latunnaya-truba' => 'tsvetnye-metally',
+            // Листовой прокат -> Профнастил
+            'listovoy-prokat-profnastil' => 'profnastil',
+            'listovoy-prokat-profnastil-okrashennyy' => 'profnastil',
+            'listovoy-prokat-profnastil-otsinkovannyy' => 'profnastil',
             // Метизы -> Качественные и специальные стали
             'metizy-lenta-iz-pretsiz-splavov' => 'kachestvennye-i-spetsialnye-stali',
             'metizy-lenta-nikhromovaya' => 'kachestvennye-i-spetsialnye-stali',
@@ -271,6 +276,42 @@ function redirectOldKatalog(string $katalog, ?string $subcategory = null, ?strin
         if (isset($subOverrides[$overrideKey])) {
             $defaultNew = $subOverrides[$overrideKey];
         }
+        // Переименование подкатегорий внутри той же категории (старый slug -> новый)
+        $subRenames = [
+            // Профнастил: марки (С8, С21, Н60...) -> виды (оцинкованный / окрашенный)
+            'profnastil-profnastil-okrashennyy-n60' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-n75' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-ns35' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-ns44' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-s10' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-s20' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-s21' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-okrashennyy-s8' => 'profnastil-profnastil-okrashennyy',
+            'profnastil-profnastil-otsinkovannyy-n114' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-n57' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-n60' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-n75' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-ns35' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-ns44' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-s10' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-s20' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-s21' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-otsinkovannyy-s8' => 'profnastil-profnastil-otsinkovannyy',
+            'profnastil-profnastil-s8' => 'profnastil-profnastil-otsinkovannyy',
+        ];
+        if (isset($subRenames[$overrideKey])) {
+            http_response_code(301);
+            $newSub = preg_replace('/^' . preg_quote($katalog . '-', '/') . '/', '', $subRenames[$overrideKey], 1);
+            $path = '/market/katalog/' . $katalog . '/' . $newSub;
+            if ($name !== null) {
+                $path .= '/' . $name;
+            }
+            header('Location: ' . $path);
+            exit;
+        }
+    }
+    if (!$defaultNew && !array_key_exists($katalog, $catDefaults)) {
+        return null; // not an old slug — реальная страница
     }
     http_response_code(301);
     if ($defaultNew) {
@@ -626,7 +667,7 @@ Routes::file('/file/{path:.*}');
 //==================================================================================================//301 REDIRECTS (старые страницы)
 Routes::get('/pages/list/list.php', function () {
     http_response_code(301);
-    header('Location: /market/katalog/chernyy-metalloprokat');
+    header('Location: /market/katalog/listovoy-prokat');
     exit;
 });
 Routes::get('/pages/nerga_metal/nerga_metal.php', function () {

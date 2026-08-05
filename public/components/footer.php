@@ -80,8 +80,8 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
       <div>
         <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Продукция</h4>
         <ul class="space-y-2">
-          <li><a href="/market/katalog/chernyy-metalloprokat"
-              class="text-sm text-gray-600 hover:text-red-600 transition-colors">Чёрный металлопрокат</a></li>
+          <li><a href="/market/katalog/truby"
+              class="text-sm text-gray-600 hover:text-red-600 transition-colors">Трубы</a></li>
           <li><a href="/market/katalog/nerzhaveyushchaya-stal"
               class="text-sm text-gray-600 hover:text-red-600 transition-colors">Нержавеющая сталь</a></li>
           <li><a href="/market/katalog/tsvetnye-metally"

@@ -902,13 +902,13 @@
     <!-- Catalog -->
     <?php
     $catsData = Setting\route\function\Functions::getCatalogCards();
-    $cats = $catsData['list'];
+    $allCats = $catsData['list'];
     $allProducts = $catsData['all'];
     // Для главной страницы отдаём сбалансированную выборку (по категориям),
     // а не весь каталог — это сокращает HTML с ~9 МБ до десятков КБ.
     $homeProducts = [];
     $perCat = 6;
-    foreach ($cats as $c) {
+    foreach ($allCats as $c) {
       $subset = array_filter($allProducts, function ($p) use ($c) {
         return ($p['cat'] ?? '') === $c;
       });
@@ -917,6 +917,11 @@
     if (count($homeProducts) < 8) {
       $homeProducts = array_merge($homeProducts, array_slice($allProducts, 0, 8 - count($homeProducts)));
     }
+    // Показываем в фильтрах только категории, в которых реально есть товары.
+    $cats = array_values(array_unique(array_filter(array_map(function ($p) {
+      return $p['cat'] ?? '';
+    }, $homeProducts))));
+    $displayProducts = $homeProducts;
     ?>
     <section class="py-12 lg:py-16" itemscope itemtype="https://schema.org/CollectionPage">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
@@ -934,12 +939,9 @@
           <?php endforeach; ?>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-4" id="catalog-grid">
+        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3" id="catalog-grid">
           <?php
-          $initialProducts = $homeProducts;
-          shuffle($initialProducts);
-          $initialProducts = array_slice($initialProducts, 0, 8);
-          foreach ($initialProducts as $p):
+          foreach (array_slice($displayProducts, 0, 5) as $p):
             $units = $p['units'] ?? [];
             $firstUnit = array_key_first($units);
             $firstPrice = $firstUnit ? number_format($units[$firstUnit], 0, '', ' ') : '0';
@@ -947,7 +949,8 @@
             ?>
             <div
               class="border border-gray-200 hover:border-gray-300 transition-all duration-200 rounded-xl p-3 flex flex-col bg-white"
-              itemscope itemtype="https://schema.org/Product">
+              itemscope itemtype="https://schema.org/Product"
+              data-cat="<?= htmlspecialchars($p['cat'] ?? '') ?>">
               <meta itemprop="productID" content="<?= htmlspecialchars($p['id'] ?? '') ?>">
               <div class="flex items-start justify-between gap-2 mb-2">
                 <span
@@ -1037,7 +1040,140 @@
       </div>
     </section>
 
-    <script>window.__products = <?= json_encode($homeProducts, JSON_UNESCAPED_UNICODE) ?>;</script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        var grid = document.getElementById('catalog-grid');
+        if (!grid) return;
+        var btns = Array.prototype.slice.call(document.querySelectorAll('#catalog-filters [data-cat]'));
+        var cards = Array.prototype.slice.call(grid.querySelectorAll('[data-cat]'));
+        var ACT = 'inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium transition-colors bg-red-500 text-white border border-red-500';
+        var DEF = 'inline-flex items-center px-4 py-1.5 rounded-full text-xs font-medium transition-colors border border-gray-200 bg-white text-gray-600 hover:border-red-500 hover:text-red-500';
+        btns.forEach(function (b) {
+          b.addEventListener('click', function () {
+            var cat = b.getAttribute('data-cat');
+            var visible = 0;
+            cards.forEach(function (c) {
+              var show = (cat === '' || c.getAttribute('data-cat') === cat);
+              c.style.display = show ? '' : 'none';
+              if (show) visible++;
+            });
+            btns.forEach(function (x) { x.className = (x === b) ? ACT : DEF; });
+            var empty = grid.querySelector('.col-span-full');
+            if (!visible) {
+              if (!empty) {
+                var el = document.createElement('div');
+                el.className = 'col-span-full text-center py-10 text-gray-400 text-sm';
+                el.textContent = 'Товары не найдены';
+                grid.appendChild(el);
+              }
+            } else if (empty) {
+              empty.remove();
+            }
+          });
+        });
+      });
+    </script>
+
+    <!-- Популярные разделы -->
+    <?php
+    $treeData = \Setting\route\function\Functions::getCatalogTree();
+    $catTreeCategories = $treeData['categories'];
+    $catTreeSubcategories = $treeData['subcategories'];
+    $catIconMap = [
+        'armatura' => '/public/assets/images/icons/product_icons/арматура.webp',
+        'balki' => '/public/assets/images/icons/product_icons/балки.webp',
+        'truby' => '/public/assets/images/icons/product_icons/трубы.webp',
+        'ugolok' => '/public/assets/images/icons/product_icons/угол.webp',
+        'setka' => '/public/assets/images/icons/product_icons/сетка.webp',
+        'shveller' => '/public/assets/images/icons/product_icons/швеллер.webp',
+        'profnastil' => '/public/assets/images/icons/product_icons/профнастил.webp',
+        'provoloka' => '/public/assets/images/icons/product_icons/проволка.webp',
+        'vodostochnaya-sistema' => '/public/assets/images/icons/product_icons/водосточнаясистема.webp',
+        'krepezh-i-metizy' => '/public/assets/images/icons/product_icons/метизы.webp',
+        'tsvetnye-metally' => '/public/assets/images/icons/product_icons/цветныеметаллы.webp',
+        'detali-truboprovodov' => '/public/assets/images/icons/product_icons/деталитрубопровода.webp',
+        'polimery-i-tekhnicheskie-materialy' => '/public/assets/images/icons/product_icons/полимеры.webp',
+        'truboprovodnaya-armatura' => '/public/assets/images/icons/product_icons/трубопроводнаяарматура.webp',
+        'listovoy-prokat' => '/public/assets/images/icons/product_icons/листовойпрокат.webp',
+        'nerzhaveyushchaya-stal' => '/public/assets/images/icons/product_icons/нержавеющяя сталь.webp',
+        'krug-kvadrat-polosa' => '/public/assets/images/icons/product_icons/кругполосаквадрат.jpg',
+        'izdeliya-i-proektnye-pozitsii' => '/public/assets/images/icons/product_icons/изделияпроектныепозицииоптом.png',
+        'kachestvennye-i-spetsialnye-stali' => '/public/assets/images/icons/product_icons/качественныестали.jpg',
+    ];
+    ?>
+    <section class="py-10 lg:py-14">
+      <div class="max-w-7xl mx-auto px-4 lg:px-8">
+        <div class="flex items-center justify-between mb-2">
+          <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full">Каталог</span>
+        </div>
+        <div class="flex items-end justify-between mb-6">
+          <div>
+            <h2 class="section-title">Каталог по разделам</h2>
+            <p class="text-gray-500 text-sm mt-1">Выберите нужный раздел и найдите подходящий металлопрокат</p>
+          </div>
+          <a href="/market" class="text-sm font-medium text-red-500 hover:underline hidden sm:block">Все разделы →</a>
+        </div>
+        <div class="relative lg:hidden">
+          <div class="flex gap-3 overflow-x-auto pb-3 pl-2 pr-4 -mx-4 sm:flex-wrap sm:overflow-visible sm:pb-0 sm:mx-0 sm:px-0" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none;" id="cat-slider-home">
+            <?php foreach ($catTreeCategories as $cat):
+              $catSlug = $cat['id'];
+              $catSubs = $catTreeSubcategories[$catSlug] ?? [];
+              $catCount = (int)($cat['products'] ?? 0);
+            ?>
+              <a href="/market/katalog/<?= htmlspecialchars($catSlug) ?>"
+                class="group relative flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-3 hover:border-red-300 hover:shadow-md transition-all duration-200 shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[calc(50%_-_6px)] sm:max-w-none sm:shrink md:w-[calc(33.333%_-_8px)]">
+                <span class="absolute top-2.5 right-2.5 w-5 h-5 rounded-full bg-zinc-100 text-zinc-400 group-hover:bg-red-500 group-hover:text-white flex items-center justify-center transition-all duration-200">
+                  <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+                </span>
+                <div class="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
+                  <?php if (!empty($catIconMap[$catSlug])): ?>
+                    <img src="<?= htmlspecialchars($catIconMap[$catSlug]) ?>" alt="<?= htmlspecialchars($cat['name']) ?>"
+                      class="w-10 h-10 object-contain" loading="lazy">
+                  <?php else: ?>
+                    <i class="fas fa-cube text-zinc-300 text-base"></i>
+                  <?php endif; ?>
+                </div>
+                <div class="min-w-0">
+                  <span class="text-[13px] font-semibold text-zinc-800 group-hover:text-red-500 transition-colors leading-tight block truncate"><?= htmlspecialchars($cat['name']) ?></span>
+                  <span class="text-[11px] text-zinc-400 leading-tight"><?= $catCount ?> <?= $catCount === 1 ? 'товар' : ($catCount < 5 ? 'товара' : 'товаров') ?></span>
+                </div>
+              </a>
+            <?php endforeach; ?>
+          </div>
+          <style>#cat-slider-home::-webkit-scrollbar{display:none}</style>
+          <div class="pointer-events-none absolute right-0 top-0 bottom-3 w-8 bg-gradient-to-l from-white rounded-r-2xl"></div>
+        </div>
+        <p class="lg:hidden mt-2 text-center text-xs text-zinc-400 select-none">Листайте вправо →</p>
+        <style>#cat-desktop-home{display:none}</style>
+        <div id="cat-desktop-home" class="gap-3">
+          <?php foreach ($catTreeCategories as $cat):
+            $catSlug = $cat['id'];
+            $catSubs = $catTreeSubcategories[$catSlug] ?? [];
+            $catCount = (int)($cat['products'] ?? 0);
+          ?>
+            <a href="/market/katalog/<?= htmlspecialchars($catSlug) ?>"
+              class="group relative flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-4 hover:border-red-300 hover:shadow-md transition-all duration-200">
+              <span class="absolute top-3 right-3 w-6 h-6 rounded-full bg-zinc-100 text-zinc-400 group-hover:bg-red-500 group-hover:text-white flex items-center justify-center transition-all duration-200">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              </span>
+              <div class="w-16 h-16 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
+                <?php if (!empty($catIconMap[$catSlug])): ?>
+                  <img src="<?= htmlspecialchars($catIconMap[$catSlug]) ?>" alt="<?= htmlspecialchars($cat['name']) ?>"
+                    class="w-11 h-11 object-contain" loading="lazy">
+                <?php else: ?>
+                  <i class="fas fa-cube text-zinc-300 text-lg"></i>
+                <?php endif; ?>
+              </div>
+              <div class="min-w-0">
+                <span class="text-sm font-semibold text-zinc-800 group-hover:text-red-500 transition-colors leading-tight block truncate"><?= htmlspecialchars($cat['name']) ?></span>
+                <span class="text-xs text-zinc-400 leading-tight"><?= $catCount ?> <?= $catCount === 1 ? 'товар' : ($catCount < 5 ? 'товара' : 'товаров') ?></span>
+              </div>
+            </a>
+          <?php endforeach; ?>
+        </div>
+      </div>
+      <style>@media (min-width: 1024px) { #cat-desktop-home { display: grid !important; grid-template-columns: repeat(5, 1fr); } }</style>
+    </section>
 
     <!-- CTA Banner -->
     <div class="max-w-7xl mx-auto px-4 lg:px-8">
@@ -2225,7 +2361,6 @@
   <script defer src="/public/assets/scripts/components/lazyIMG.min.js"></script>
   <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
   <script defer src="/public/assets/scripts/main/switchUnit.min.js"></script>
-  <script defer src="/public/assets/scripts/main/catalog-home.min.js"></script>
 
   <script>
     window.__storiesData = <?php echo json_encode($stories ?? []); ?>;
