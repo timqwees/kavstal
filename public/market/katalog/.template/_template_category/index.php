@@ -1445,27 +1445,6 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
 
     </main>
 
-    <!-- Фото работ -->
-    <section class="max-w-7xl mx-auto px-4 lg:px-8 py-8" aria-label="Фото работ">
-        <h2 class="section-title mb-4">Фото работ</h2>
-        <div class="swiper works-swiper relative rounded-xl overflow-hidden">
-            <div class="swiper-wrapper">
-                <?php
-                $workPhotos = [
-                    '/public/assets/images/bgpage/market.png',
-                ];
-                foreach ($workPhotos as $photo): ?>
-                    <div class="swiper-slide">
-                        <img src="<?= $photo ?>" alt="Фото работы" class="w-full h-64 object-cover rounded-xl" loading="lazy">
-                    </div>
-                <?php endforeach; ?>
-            </div>
-            <div class="swiper-button-next !text-white !bg-black/30 !w-10 !h-10 !rounded-full after:!text-sm"></div>
-            <div class="swiper-button-prev !text-white !bg-black/30 !w-10 !h-10 !rounded-full after:!text-sm"></div>
-            <div class="swiper-pagination !bottom-3"></div>
-        </div>
-    </section>
-
     <!-- SEO-описание категории (для охвата поисковых запросов по металлопрокату) -->
     <section class="max-w-7xl mx-auto px-4 lg:px-8 py-10" aria-label="Описание раздела">
         <?php
