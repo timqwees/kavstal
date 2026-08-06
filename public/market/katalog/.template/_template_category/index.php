@@ -1719,23 +1719,6 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                 });
             });
 
-            // Works Swiper init
-            var worksSwiper = document.querySelector('.works-swiper');
-            if (worksSwiper) {
-                new Swiper(worksSwiper, {
-                    loop: true,
-                    slidesPerView: 1,
-                    spaceBetween: 12,
-                    pagination: { el: '.works-swiper .swiper-pagination', clickable: true },
-                    navigation: { nextEl: '.works-swiper .swiper-button-next', prevEl: '.works-swiper .swiper-button-prev' },
-                    autoplay: { delay: 5000, disableOnInteraction: false },
-                    breakpoints: {
-                        640: { slidesPerView: 2 },
-                        1024: { slidesPerView: 3 }
-                    }
-                });
-            }
-
             // Filter: collapsible groups (accordion)
             document.querySelectorAll('.filter-group-toggle').forEach(function (btn) {
                 btn.addEventListener('click', function () {
