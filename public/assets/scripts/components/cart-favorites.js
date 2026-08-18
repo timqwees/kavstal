@@ -71,11 +71,11 @@
     }
 
     function cartClickHandler(){
-        var card = this.closest('[itemscope]');
+        var card = this.closest('.product-card');
         var pid = this.getAttribute('data-pid');
-        var unit = this.getAttribute('data-unit');
-        var row = card ? card.querySelector('.hidden-cart-row') : null;
-        var qtyInput = row ? row.querySelector('.cart-qty') : null;
+        var unitSelect = card ? card.querySelector('.cart-unit') : null;
+        var unit = unitSelect ? unitSelect.value : this.getAttribute('data-unit');
+        var qtyInput = card ? card.querySelector('.cart-qty') : null;
         var qty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
         var btn = this;
         var wasInCart = btn.classList.contains('in-cart');
@@ -116,11 +116,31 @@
         });
     }
 
+    function qtyBtnHandler(){
+        var btn = this;
+        var input = btn.closest('.product-card') ? btn.parentElement.querySelector('.cart-qty') : null;
+        if(!input) return;
+        var val = parseFloat(input.value) || 1;
+        if(btn.getAttribute('data-dir') === 'minus' && val > 1){
+            input.value = val - 1;
+        } else if(btn.getAttribute('data-dir') === 'plus'){
+            input.value = val + 1;
+        }
+    }
+
+    function initQtyBtns(){
+        document.querySelectorAll('.qty-btn').forEach(function(btn){
+            btn.removeEventListener('click', qtyBtnHandler);
+            btn.addEventListener('click', qtyBtnHandler);
+        });
+    }
+
     function init(){
         updateCartCount();
         restoreCartStates();
         initFavBtns();
         initCartBtns();
+        initQtyBtns();
     }
 
     if(document.readyState === 'loading'){
@@ -129,5 +149,5 @@
         init();
     }
 
-    window.kavstalCartFav = { init: init, initFavBtns: initFavBtns, initCartBtns: initCartBtns };
+    window.kavstalCartFav = { init: init, initFavBtns: initFavBtns, initCartBtns: initCartBtns, initQtyBtns: initQtyBtns };
 })();

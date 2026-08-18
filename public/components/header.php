@@ -12,10 +12,9 @@
             <div class="hidden lg:flex items-center space-x-8">
                 <a href="/#catalog" class="py-6 text-gray-600 hover:text-red-500 transition">Каталог</a>
                 <a href="/market" class="py-6 text-gray-600 hover:text-red-500 transition">Купить металл</a>
-                <a href="/#calculator" class="py-6 text-gray-600 hover:text-red-500 transition">Калькулятор</a>
-                <a href="/#prices" class="py-6 text-gray-600 hover:text-red-500 transition">Цены</a>
-                <a href="/#about" class="py-6 text-gray-600 hover:text-red-500 transition">О компании</a>
-                <a href="/#contacts" class="py-6 text-gray-600 hover:text-red-500 transition">Контакты</a>
+                <a href="/market" class="py-6 text-gray-600 hover:text-red-500 transition">Цены</a>
+                <a href="/about" class="py-6 text-gray-600 hover:text-red-500 transition">О компании</a>
+                <a href="/contacts" class="py-6 text-gray-600 hover:text-red-500 transition">Контакты</a>
             </div>
 
             <!-- Desktop Contact -->
@@ -78,20 +77,16 @@
                 металл
                 <i class="fa fa-arrow-right"></i>
             </a>
-            <a href="/#calculator"
-                class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Калькулятор
-                <i class="fa fa-arrow-right"></i>
-            </a>
-            <a href="/#prices"
+            <a href="/market"
                 class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Цены
                 <i class="fa fa-arrow-right"></i>
             </a>
-            <a href="/#about"
+            <a href="/about"
                 class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">О
                 компании
                 <i class="fa fa-arrow-right"></i>
             </a>
-            <a href="/#contacts"
+            <a href="/contacts"
                 class="flex justify-between items-center py-3 px-4 text-gray-700 hover:bg-red-50 hover:text-red-500 rounded-lg transition">Контакты
                 <i class="fa fa-arrow-right"></i>
             </a>

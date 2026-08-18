@@ -613,7 +613,7 @@ Routes::get('/opensearch.xml', function () {
     $baseUrl = Functions::site()['baseUrl'];
     header('Content-Type: application/xml; charset=utf-8');
     echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-    echo '<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">' . "\n";
+    echo '<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">' . "\n";
     echo '  <ShortName>КАВ СТАЛЬ</ShortName>' . "\n";
     echo '  <Description>Поиск металлопроката на сайте КАВ СТАЛЬ</Description>' . "\n";
     echo '  <InputEncoding>UTF-8</InputEncoding>' . "\n";

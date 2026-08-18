@@ -71,7 +71,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
                                     data-unit="<?= htmlspecialchars($item['unit']) ?>">
                                     <div class="flex items-center gap-4">
                                         <div class="w-20 h-20 bg-gray-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <?php if (!empty($item['image']) && $item['image'] !== '/public/assets/images/no-image.svg'): ?>
+                                            <?php if (!empty($item['image']) && $item['image'] !== '/public/assets/images/unknown/unknown.png'): ?>
                                                     <img src="<?= htmlspecialchars($item['image']) ?>"
                                                         alt="<?= htmlspecialchars($item['product_name']) ?>"
                                                         class="max-w-full max-h-full object-contain">

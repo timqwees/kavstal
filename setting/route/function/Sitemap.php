@@ -134,7 +134,7 @@ class Sitemap
         }
 
         // Блог: список и статьи
-        $blogFile = __DIR__ . '/../../public/blog/data/articles.json';
+        $blogFile = __DIR__ . '/../../../public/blog/data/articles.json';
         if (file_exists($blogFile)) {
             $blogArticles = json_decode(file_get_contents($blogFile), true) ?? [];
             $urls[] = [

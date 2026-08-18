@@ -154,7 +154,7 @@ $catalogSubcategories = $tree['subcategories'];
                         <?php $subSlug = $sub['categories']['id'] ?? ''; ?>
                         <?php $parentId = $sub['categories']['parent_id'] ?? ''; ?>
                         <?php $subImages = $sub['images'] ?? []; ?>
-                        <?php $img = $subImages[0] ?? ''; ?>
+                        <?php $img = explode(';', $subImages[0] ?? '')[0]; ?>
                         <a href="/market/katalog/<?= htmlspecialchars($parentId) ?>/<?= htmlspecialchars($subSlug) ?>"
                           class="ozon-mega-subcategory">
                           <?php if ($img): ?>

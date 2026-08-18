@@ -6,8 +6,8 @@ $_cacheFile = '';
 $katalog = $katalog ?? '';
 if (!$_noCache) {
     $_cacheKey = 'product_' . md5($_SERVER['REQUEST_URI'] ?? '');
-    $_cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $_cacheKey . '.html';
-    if (file_exists($_cacheFile) && (time() - filemtime($_cacheFile)) < 300) {
+    $_cacheFile = __DIR__ . '/../../../../app/Storage/cache/html/' . $_cacheKey . '.html';
+    if (file_exists($_cacheFile) && (time() - filemtime($_cacheFile)) < 3600) {
         readfile($_cacheFile);
         return;
     }
@@ -129,7 +129,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     $parentId = $product['categories']['parent_id'] ?? null;
 
     // Загружаем товары один раз для хлебных крошек и похожих товаров
-    $allProducts = Setting\route\function\Functions::listProducts();
+    $allProducts = Setting\route\function\Functions::getMarketProducts();
 
     if ($parentId && $categoryId) {
         $parentCategory = null;
@@ -574,7 +574,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             </svg>
 
             <?php
-            $allProducts = Setting\route\function\Functions::listProducts();
+            $allProducts = Setting\route\function\Functions::getMarketProducts();
             $parentTitle = 'Каталог';
             $parentSlug = $katalog;
             foreach ($allProducts as $p) {
@@ -1078,52 +1078,12 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     <div class="swiper similar-slider" style="padding-bottom: 28px;">
                         <div class="swiper-wrapper">
                             <?php foreach ($similarProducts as $item):
-                                $itemUnit = array_key_first($item['units'] ?? []);
-                                $itemPrice = ($itemUnit !== null && is_numeric($item['units'][$itemUnit] ?? null)) ? (float) $item['units'][$itemUnit] : 0;
-                                $itemSpecs = [];
-                                if (!empty($item['specs']) && is_array($item['specs'])) {
-                                    $specCount = 0;
-                                    foreach ($item['specs'] as $sk => $sv) {
-                                        if ($specCount >= 2)
-                                            break;
-                                        $label = is_array($sv) ? ($sv['label'] ?? $sk) : $sk;
-                                        $value = is_array($sv) ? ($sv['value'] ?? $sv) : $sv;
-                                        if (is_string($value) && $value !== '') {
-                                            $itemSpecs[] = htmlspecialchars($value);
-                                            $specCount++;
-                                        }
-                                    }
-                                }
+                                $product = $item;
+                                $idx = $itemIdx = 0;
+                                $cardOpts = ['filter' => false, 'qty' => false, 'swiper' => false, 'itemscope' => false];
                                 ?>
                                     <div class="swiper-slide">
-                                        <a href="<?= htmlspecialchars($item['seo']['canonicalUrl'] ?? '#') ?>"
-                                            class="group block border border-zinc-100 rounded-xl overflow-hidden hover:shadow-lg hover:border-zinc-200 transition-all duration-200 similar-card bg-white">
-                                            <div class="bg-zinc-50 overflow-hidden flex items-center justify-center p-4"
-                                                style="aspect-ratio: 1;">
-                                                <img src="<?= htmlspecialchars($item['images'][0] ?? $site['baseUrl'] . '/public/assets/images/unknown/unknown.png') ?>"
-                                                    alt="<?= htmlspecialchars($item['name'] ?? '') ?>" width="200" height="200"
-                                                    class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                                                    loading="lazy">
-                                            </div>
-                                            <div class="p-3 border-t border-zinc-50">
-                                                <p class="text-sm font-medium text-zinc-900 line-clamp-2 leading-tight min-h-[2.5em]">
-                                                    <?= htmlspecialchars($item['name'] ?? '') ?>
-                                                </p>
-                                                <?php if (!empty($itemSpecs)): ?>
-                                                        <div class="flex flex-wrap gap-1 mt-1.5">
-                                                            <?php foreach ($itemSpecs as $sv): ?>
-                                                                    <span
-                                                                        class="text-[10px] px-1.5 py-0.5 bg-zinc-100 text-zinc-500 rounded"><?= $sv ?></span>
-                                                            <?php endforeach; ?>
-                                                        </div>
-                                                <?php endif; ?>
-                                                <?php if ($itemPrice > 0): ?>
-                                                        <p class="text-sm font-bold text-red-500 mt-2">
-                                                            от <?= number_format($itemPrice, 0, '', ' ') ?> ₽
-                                                        </p>
-                                                <?php endif; ?>
-                                            </div>
-                                        </a>
+                                        <?php include __DIR__ . '/../../../components/product_card.php'; ?>
                                     </div>
                             <?php endforeach; ?>
                         </div>

@@ -1654,13 +1654,15 @@ body {
 /* ==========================================================================
    LIST VIEW - Карточки горизонтально
    ========================================================================== */
-#products-container.list-view {
+#products-container.list-view,
+#product-grid.list-view {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-#products-container.list-view .product-card {
+#products-container.list-view .product-card,
+#product-grid.list-view .product-card {
     flex-direction: row;
     max-width: none;
     width: 100%;
@@ -1668,7 +1670,8 @@ body {
     gap: 12px;
 }
 
-#products-container.list-view .product-card {
+#products-container.list-view .product-card,
+#product-grid.list-view .product-card {
     flex-direction: row;
     max-width: none;
     width: 100%;
@@ -1677,7 +1680,8 @@ body {
     position: relative;
 }
 
-#products-container.list-view .product-card>.flex.items-start.justify-between {
+#products-container.list-view .product-card>.flex.items-start.justify-between,
+#product-grid.list-view .product-card>.flex.items-start.justify-between {
     display: flex;
     position: absolute;
     top: 8px;
@@ -1689,7 +1693,8 @@ body {
     aspect-ratio: 1;
 }
 
-#products-container.list-view .product-card .card-image {
+#products-container.list-view .product-card .card-image,
+#product-grid.list-view .product-card .card-image {
     width: 160px;
     min-width: 160px;
     height: 140px;
@@ -1697,7 +1702,8 @@ body {
     margin-bottom: 0 !important;
 }
 
-#products-container.list-view .product-card .card-body {
+#products-container.list-view .product-card .card-body,
+#product-grid.list-view .product-card .card-body {
     flex: 1;
     min-width: 0;
     padding-top: 0;
@@ -2696,5 +2702,14 @@ body {
     select {
         font-size: 16px !important;
         min-height: 48px !important;
+    }
+}
+/* Sticky filter offset below fixed header (top bar 48px + main 64px + nav 40px = 152px) */
+@media (min-width: 1024px) {
+    .lg\:top-\[196px\] {
+        top: 196px;
+    }
+    .lg\:max-h-\[calc\(100vh-12\.5rem\)\] {
+        max-height: calc(100vh - 12.5rem);
     }
 }

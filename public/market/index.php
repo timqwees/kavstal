@@ -88,7 +88,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
 <body class="pb-20 lg:pb-0">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:bg-red-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Перейти к основному содержанию</a>
 
-    <?php include './public/components/header-ozon.php'; ?>
+    <?php include './public/components/header-market.php'; ?>
 
     <!-- ===================== MAIN CONTENT ===================== -->
     <main>
@@ -386,8 +386,8 @@ $noindexMarket = $hasFilters || $marketPage > 1;
 
                 <div class="flex gap-6 max-w-7xl mx-auto">
                     <!-- Left Sidebar: Filters -->
-                    <aside class="hidden lg:block w-64 shrink-0">
-                        <div class="lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto space-y-5 pr-1">
+                    <aside class="hidden lg:block w-64 shrink-0 self-start">
+                        <div class="lg:sticky lg:top-[196px] lg:max-h-[calc(100vh-12.5rem)] lg:overflow-y-auto space-y-5 pr-1">
 
                             <form method="get" action="/market" id="filter-form" class="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
                                 <?php foreach ($_GET as $fk => $fv): ?>
@@ -458,7 +458,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                         <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                             <?php $i = 0; foreach ($filterMarkas as $val => $cnt): $i++; ?>
                                             <label class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                                <input type="checkbox" name="marka[]" value="<?= htmlspecialchars($val) ?>"
+                                                <input type="radio" name="marka" value="<?= htmlspecialchars($val) ?>"
                                                     <?= in_array($val, $fMarka, true) ? 'checked' : '' ?>
                                                     onchange="this.form.submit()"
                                                     class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -490,7 +490,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                         <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                             <?php $i = 0; foreach ($filterGosts as $val => $cnt): $i++; ?>
                                             <label class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                                <input type="checkbox" name="gost[]" value="<?= htmlspecialchars($val) ?>"
+                                                <input type="radio" name="gost" value="<?= htmlspecialchars($val) ?>"
                                                     <?= in_array($val, $fGost, true) ? 'checked' : '' ?>
                                                     onchange="this.form.submit()"
                                                     class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -522,7 +522,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                         <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                             <?php $i = 0; foreach ($filterSizes as $val => $cnt): $i++; ?>
                                             <label class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                                <input type="checkbox" name="size[]" value="<?= htmlspecialchars($val) ?>"
+                                                <input type="radio" name="size" value="<?= htmlspecialchars($val) ?>"
                                                     <?= in_array($val, $fSize, true) ? 'checked' : '' ?>
                                                     onchange="this.form.submit()"
                                                     class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -559,64 +559,9 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                     <div id="products-container" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5" itemscope itemtype="https://schema.org/ItemList">
                     <?php if (!empty($pageProducts)): ?>
                             <?php foreach ($pageProducts as $idx => $product):
-                                $canonicalUrl = $product['seo']['canonicalUrl'] ?? '#';
-                                $units = $product['units'] ?? [];
-                                $firstUnit = array_key_first($units);
-                                $firstPrice = $firstUnit ? number_format($units[$firstUnit], 0, '', ' ') : '0';
-                                $productImages = $product['images'] ?? [];
-                                if (empty($productImages))
-                                    $productImages = [$site['baseUrl'] . '/public/assets/images/unknown/unknown.png'];
-                                $specLabels = ['Марка', 'Размер', 'ГОСТ', 'диаметр'];
-                                $inStock = $product['in_stock'] ?? false;
+                                $cardOpts = ['filter' => false, 'qty' => true, 'swiper' => false, 'itemscope' => true];
                                 ?>
-                                <div itemscope itemtype="https://schema.org/Product" class="product-card border border-zinc-200 hover:border-zinc-300 transition-all duration-200 rounded-xl p-3 flex flex-col w-full">
-                                    <meta itemprop="category" content="Строительные материалы">
-                                    <meta itemprop="productID" content="<?php echo htmlspecialchars($product['id']); ?>">
-                                    <div class="flex items-start justify-between gap-2 mb-2">
-                                        <span class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold flex-shrink-0 leading-relaxed"><?php echo !empty($product['badge']) ? htmlspecialchars($product['badge']) : 'Новинка'; ?></span>
-                                        <button type="button" class="add-to-fav-btn w-7 h-7 rounded-md border border-zinc-200 flex items-center justify-center shrink-0 hover:border-zinc-400 hover:bg-zinc-50 transition-colors" data-pid="<?= htmlspecialchars($product['id'] ?? '') ?>" title="В избранное">
-                                            <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z" stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                    <a href="<?php echo htmlspecialchars($canonicalUrl); ?>" class="card-image flex items-center justify-center h-[120px] mb-3 rounded-lg overflow-hidden">
-                                        <img src="<?php echo htmlspecialchars($productImages[0]); ?>" alt="<?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?>" width="120" height="120" class="max-h-full max-w-full object-contain" <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> />
-                                    </a>
-                                    <div class="card-body flex-1 flex flex-col min-w-0">
-                                        <a href="<?php echo htmlspecialchars($canonicalUrl); ?>" class="text-[13px] font-semibold text-neutral-800 hover:text-red-500 transition-colors line-clamp-2 leading-snug mb-2 block min-h-[36px]"><?php echo htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар'); ?></a>
-                                        <?php if (!empty($product['specs']) && is_array($product['specs'])): ?>
-                                            <div class="flex flex-wrap gap-1 mb-2">
-                                                <?php foreach ($specLabels as $label):
-                                                    $val = $product['specs'][$label] ?? null;
-                                                    if ($val && $val !== ''): ?>
-                                                        <span class="text-[10px] text-neutral-500 bg-neutral-50 border border-neutral-100 px-1.5 py-0.5 rounded-md font-medium"><?= htmlspecialchars($label) ?>: <strong class="text-neutral-700"><?= htmlspecialchars($val) ?></strong></span>
-                                                    <?php endif; endforeach; ?>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="mt-auto">
-                                            <div class="flex items-center gap-1.5 mb-2">
-                                                <span class="inline-block w-1.5 h-1.5 rounded-full <?= $inStock ? 'bg-emerald-500' : 'bg-zinc-300' ?>"></span>
-                                                <span class="text-[11px] font-medium <?= $inStock ? 'text-amber-600' : 'text-zinc-400' ?>"><?= $inStock ? 'Уточняйте наличие' : 'Под заказ' ?></span>
-                                            </div>
-                                            <div class="flex items-end justify-between gap-2">
-                                                <div itemprop="offers" itemscope itemtype="https://schema.org/Offer" class="min-w-0">
-                                                    <meta itemprop="priceCurrency" content="RUB">
-                                                    <meta itemprop="availability" content="<?= $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' ?>">
-                                                    <div itemprop="price" content="<?php echo $firstPrice; ?>" class="price-display text-[15px] font-bold text-neutral-900 leading-tight"><?php echo $firstPrice; ?> ₽</div>
-                                                    <div class="flex gap-0.5 mt-1">
-                                                        <?php foreach ($units as $unit => $price): ?>
-                                                            <button type="button" class="text-[9px] px-1.5 py-0.5 rounded font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-500' : 'bg-neutral-100 text-neutral-500 hover:bg-red-50 hover:text-red-500' ?>" data-unit="<?php echo htmlspecialchars($unit); ?>" data-price="<?php echo htmlspecialchars($price); ?>" onclick="switchUnit(this)"><?php echo htmlspecialchars($unit); ?></button>
-                                                        <?php endforeach; ?>
-                                                    </div>
-                                                </div>
-                                                <button type="button" class="add-to-cart-btn w-8 h-8 rounded-full bg-red-500 hover:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors" data-pid="<?= htmlspecialchars($product['id'] ?? '') ?>" data-unit="<?= htmlspecialchars($firstUnit ?? '') ?>" title="В заявку">
-                                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <?php include __DIR__ . '/../components/product_card.php'; ?>
                             <?php endforeach; ?>
                     <?php else: ?>
                             <div class="flex flex-col items-center justify-center py-16 text-center w-full min-w-[300px]">

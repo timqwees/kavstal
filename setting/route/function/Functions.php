@@ -16,7 +16,8 @@ class Functions
     private static ?array $_productsCache = null;
     private static ?array $_randomProductsCache = null;
     private static int $_productsCacheTime = 0;
-    private static int $_cacheTtl = 300; // 5 минут
+    private static ?array $_marketProductsCache = null;
+    private static int $_cacheTtl = 3600; // 1 час
 
     // Файловый кэш (между запросами)
     private static string $_cacheDir = __DIR__ . '/../../../app/Storage/cache';
@@ -105,11 +106,12 @@ class Functions
      */
     public static function showProduct(string $productID, ?string $table = null): array
     {
-        // Используем файловый кэш полного списка продуктов для быстрого поиска
-        $allProducts = self::getProductsFull();
-        foreach ($allProducts as $product) {
-            if (($product['id'] ?? '') === $productID) {
-                return $product;
+        // Быстрый путь: лёгкий кэш каталога (JSON ~17MB) — без парсинга всех CSV
+        if ($table === null) {
+            foreach (self::getMarketProducts() as $product) {
+                if (($product['id'] ?? '') === $productID) {
+                    return $product;
+                }
             }
         }
 
@@ -577,6 +579,7 @@ class Functions
                     if (preg_match('#^https?://[^/]+(/.*)$#u', $photo, $m)) {
                         $photo = $m[1];
                     }
+                    $photo = self::normalizeNfc($photo);
                     $img = ($photo !== '' && strpos($photo, 'unknown.png') === false)
                         ? $photo
                         : $baseUrl . '/public/assets/images/unknown/unknown.png';
@@ -621,8 +624,14 @@ class Functions
      */
     public static function getMarketProducts(): array
     {
+        // Внутрипроцессный кэш — один json_decode за запрос (JSON ~20MB)
+        if (self::$_marketProductsCache !== null) {
+            return self::$_marketProductsCache;
+        }
+
         $cached = self::cacheGet('market_products', self::$_cacheTtl);
         if ($cached !== null) {
+            self::$_marketProductsCache = $cached;
             return $cached;
         }
 
@@ -645,13 +654,19 @@ class Functions
                 'images' => $item['images'] ?? [],
                 'description' => $item['description'] ?? '',
                 'in_stock' => $item['in_stock'] ?? false,
-                'seo' => ['canonicalUrl' => $item['seo']['canonicalUrl'] ?? ''],
+                'seo' => [
+                    'canonicalUrl' => $item['seo']['canonicalUrl'] ?? '',
+                    'metaTitle' => $item['seo']['metaTitle'] ?? '',
+                    'metaDescription' => $item['seo']['metaDescription'] ?? '',
+                    'keywords' => $item['seo']['keywords'] ?? [],
+                ],
                 '_table' => $item['_table'] ?? null,
                 'keywords' => !empty($keywords) ? implode(' ', $keywords) : '',
             ];
         }
 
         self::cacheSet('market_products', $light);
+        self::$_marketProductsCache = $light;
         return $light;
     }
 
@@ -775,6 +790,20 @@ class Functions
         } catch (\Throwable $e) {
             error_log('Bitrix24 exception: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * NFC-нормализация строки (собирает разложенные символы й/ё и др.)
+     * Необходима из-за различия форм Unicode: пути в CSV хранятся в NFD
+     * (так их пишет macOS), а на Linux-сервере файлы лежат в NFC.
+     */
+    private static function normalizeNfc(string $value): string
+    {
+        if ($value === '' || !function_exists('normalizer_normalize')) {
+            return $value;
+        }
+        $normalized = normalizer_normalize($value, \Normalizer::FORM_C);
+        return $normalized === false ? $value : $normalized;
     }
 
     private static function getCsvDir(): string
@@ -906,9 +935,11 @@ class Functions
             if (preg_match('#^https?://[^/]+(/.*)$#u', $local, $m)) {
                 $local = $m[1];
             }
+            // NFC-нормализация: файлы на Linux лежат в собранной форме (й, ё), а пути из CSV — в разложенной
+            $localNfc = self::normalizeNfc($local);
             // подставляем актуальный BASE_URL (без хардкода домена из CSV)
-            $img = $baseUrl . $local;
-            if ($local !== '' && $local[0] === '/' && !file_exists($root . $local)) {
+            $img = $baseUrl . $localNfc;
+            if ($localNfc !== '' && $localNfc[0] === '/' && !file_exists($root . $localNfc)) {
                 $img = $unknownImg;
             }
         }

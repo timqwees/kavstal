@@ -152,7 +152,7 @@ class Cart
                 'price' => (float)$row['price'],
                 'quantity' => (float)$row['quantity'],
                 'subtotal' => round((float)$row['price'] * (float)$row['quantity'], 2),
-                'image' => $product['images'][0] ?? '/public/assets/images/no-image.svg',
+                'image' => $product['images'][0] ?? '/public/assets/images/unknown/unknown.png',
                 'specs' => $product['specs'] ?? [],
                 'product_url' => !empty($product['categories']['parent_id']) && !empty($product['categories']['id'])
                     ? "/market/katalog/{$product['categories']['parent_id']}/{$product['categories']['id']}/{$row['product_id']}"

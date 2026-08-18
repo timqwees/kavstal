@@ -104,7 +104,7 @@
   <main id="main-content">
 
     <!-- Breadcrumb -->
-    <nav class="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
+    <nav class="mt-2 bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
       <div class="max-w-7xl mx-auto px-4 lg:px-8 py-2 flex items-center text-sm text-gray-500">
         <a href="/" class="hover:text-red-500 transition-colors" aria-label="Главная"><svg class="w-4 h-4 inline"
             fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -849,9 +849,9 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <?php
           $heroCards = [
-            ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/services/products/АРМАТУРА.webp'],
-            ['label' => 'Каталог', 'title' => 'Труба профильная', 'subtitle' => 'от 58 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/truby', 'img' => '/public/assets/images/services/products/ТРУБА.webp'],
-            ['label' => 'Каталог', 'title' => 'Лист горячекатаный', 'subtitle' => 'от 51 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/listovoy-prokat', 'img' => '/public/assets/images/services/products/ЛИСТ.webp'],
+            ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/products/Арматура/Арматура/арматура_гладкая.webp'],
+            ['label' => 'Каталог', 'title' => 'Труба профильная', 'subtitle' => 'от 58 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/truby', 'img' => '/public/assets/images/products/Трубы/ТРУБЫ_ЭЛЕКТРОСВАРНЫЕ/труба_электросварная.webp'],
+            ['label' => 'Каталог', 'title' => 'Лист горячекатаный', 'subtitle' => 'от 51 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/listovoy-prokat', 'img' => '/public/assets/images/products/Листовой_прокат/СТАЛЬ_ЛИСТ_Г_К_КОНСТРУКЦИОННАЯ/лист.webp'],
           ];
           foreach ($heroCards as $i => $c):
             $hd = @getimagesize(__DIR__ . $c['img']);
@@ -960,7 +960,7 @@
         'kachestvennye-i-spetsialnye-stali' => '/public/assets/images/icons/product_icons/качественныестали.jpg',
     ];
     ?>
-    <section class="py-10 lg:py-14">
+    <section id="catalog" class="py-10 lg:py-14">
       <div class="max-w-7xl mx-auto px-4 lg:px-8">
         <div class="flex items-center justify-between mb-2">
           <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full">Каталог</span>

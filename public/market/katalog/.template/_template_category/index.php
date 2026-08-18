@@ -1,18 +1,18 @@
 <?php
 // HTML-кэш для страниц без фильтров/пагинации
 $cacheKey = '';
-$_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['diameter']) || !empty($_GET['ral']) || !empty($_GET['stock']) || !empty($_GET['price_from']) || !empty($_GET['price_to']) || !empty($_GET['sort']) || !empty($_GET['page']);
+$_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['diameter']) || !empty($_GET['ral']) || !empty($_GET['color']) || !empty($_GET['stock']) || !empty($_GET['price_from']) || !empty($_GET['price_to']) || !empty($_GET['sort']) || !empty($_GET['page']);
 if (!$_noCache) {
     $cacheKey = 'katalog_' . md5($_SERVER['REQUEST_URI'] ?? '');
     $cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $cacheKey . '.html';
-    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 300) {
+    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) {
         readfile($cacheFile);
         return;
     }
     ob_start();
 }
 
-$allProducts = Setting\route\function\Functions::listProducts();
+$allProducts = Setting\route\function\Functions::getMarketProducts();
 $site = Setting\route\function\Functions::site();
 
 $subAliases = require __DIR__ . '/../../../../../setting/config/subcategory_aliases.php';
@@ -59,6 +59,20 @@ $priceOf = function ($p): float {
         return 0.0;
     return (float) ($units[array_key_first($units)] ?? 0);
 };
+$ralNames = [
+    '1000' => 'зеленовато-бежевый', '1001' => 'бежевый', '1002' => 'жёлтый', '1003' => 'сигнальный жёлтый', '1004' => 'золотисто-жёлтый', '1005' => 'медово-жёлтый', '1006' => 'кукурузный', '1007' => 'жёлтый', '1011' => 'коричнево-бежевый', '1012' => 'лимонно-жёлтый', '1013' => 'жемчужно-белый', '1014' => 'слоновая кость', '1015' => 'светлая слоновая кость', '1016' => 'серно-жёлтый', '1017' => 'шафраново-жёлтый', '1018' => 'цинково-жёлтый', '1019' => 'серо-бежевый', '1020' => 'оливково-жёлтый', '1021' => 'рапсово-жёлтый', '1023' => 'транспортный жёлтый', '1024' => 'охра жёлтая', '1027' => 'дынно-жёлтый', '1028' => 'желто-золотой', '1032' => 'желтый ракитник', '1033' => 'георгиново-жёлтый', '1034' => 'пастельно-жёлтый', '1035' => 'перламутрово-бежевый', '1036' => 'перламутрово-золотой', '1037' => 'солнечно-жёлтый',
+    '2000' => 'жёлто-оранжевый', '2001' => 'красно-оранжевый', '2002' => 'кроваво-красный', '2003' => 'пастельно-оранжевый', '2004' => 'чисто-оранжевый', '2005' => 'люминесцентный ярко-оранжевый', '2007' => 'люминесцентный ярко-красный', '2008' => 'ярко-красно-оранжевый', '2009' => 'транспортный оранжевый', '2010' => 'сигнальный оранжевый', '2011' => 'глубокий оранжевый', '2012' => 'лососёво-оранжевый', '2013' => 'перламутрово-оранжевый',
+    '3000' => 'огненно-красный', '3001' => 'сигнальный красный', '3002' => 'карминно-красный', '3003' => 'рубиново-красный', '3004' => 'пурпурно-красный', '3005' => 'вишнёвый', '3007' => 'чёрно-красный', '3009' => 'оксид красный', '3011' => 'коричнево-красный', '3012' => 'бежево-красный', '3013' => 'томатно-красный', '3014' => 'античный розовый', '3015' => 'светло-розовый', '3016' => 'кораллово-красный', '3017' => 'розовый антик', '3018' => 'клубнично-красный', '3020' => 'транспортный красный', '3022' => 'лососёво-красный', '3024' => 'люминесцентный красный', '3026' => 'люминесцентный ярко-красный', '3027' => 'малиново-красный', '3028' => 'чистый красный', '3031' => 'ориент красный', '3032' => 'рубиновый перламутровый', '3033' => 'перламутрово-розовый',
+    '4001' => 'красно-сиреневый', '4002' => 'красно-фиолетовый', '4003' => 'вересково-фиолетовый', '4004' => 'бордово-фиолетовый', '4005' => 'сине-сиреневый', '4006' => 'транспортный пурпурный', '4007' => 'пурпурно-фиолетовый', '4008' => 'сигнальный фиолетовый', '4009' => 'пастельно-фиолетовый', '4010' => 'телемагента', '4011' => 'перламутрово-фиолетовый', '4012' => 'перламутровый ежевичный',
+    '5000' => 'фиолетово-синий', '5001' => 'зелёно-синий', '5002' => 'ультрамариново-синий', '5003' => 'сапфирово-синий', '5004' => 'чёрно-синий', '5005' => 'сигнально синий', '5007' => 'бриллиантово-синий', '5008' => 'серо-синий', '5009' => 'лазурно-синий', '5010' => 'горечавково-синий', '5011' => 'стально-синий', '5012' => 'светло-синий', '5013' => 'кобальтово-синий', '5014' => 'голубино-синий', '5015' => 'небесно-синий', '5017' => 'транспортный синий', '5018' => 'бирюзово-синий', '5019' => 'капри синий', '5020' => 'океанская синь', '5021' => 'водная синь', '5022' => 'ночной синий', '5023' => 'отдалённо-синий', '5024' => 'пастельно-синий', '5025' => 'перламутровый горечавково-синий', '5026' => 'перламутровый ночной синий',
+    '6000' => 'патиново-зелёный', '6001' => 'изумрудно-зелёный', '6002' => 'лиственно-зелёный', '6003' => 'оливково-зелёный', '6004' => 'сине-зелёный', '6005' => 'зелёный мох', '6006' => 'серо-оливковый', '6007' => 'бутылочно-зелёный', '6008' => 'коричнево-зелёный', '6009' => 'пихтовый зелёный', '6010' => 'травяной зелёный', '6011' => 'резедово-зелёный', '6012' => 'чёрно-зелёный', '6013' => 'тростниково-зелёный', '6014' => 'жёлто-оливковый', '6015' => 'чёрно-оливковый', '6016' => 'бирюзово-зелёный', '6017' => 'майский зелёный', '6018' => 'жёлто-зелёный', '6019' => 'светло-зелёный', '6020' => 'хромовый зелёный', '6021' => 'бледно-зелёный', '6022' => 'оливковый', '6024' => 'транспортный зелёный', '6025' => 'папоротниково-зелёный', '6026' => 'опаловый зелёный', '6027' => 'светло-зелёный', '6028' => 'сосновый зелёный', '6029' => 'мятно-зелёный', '6032' => 'сигнальный зелёный', '6033' => 'перламутрово-мятный', '6034' => 'перламутровый бирюзовый', '6035' => 'перламутрово-зелёный', '6036' => 'перламутровый опаловый зелёный', '6037' => 'чисто-зелёный', '6038' => 'люминесцентный зелёный',
+    '7000' => 'серо-беличий', '7001' => 'серебристо-серый', '7002' => 'оливково-серый', '7003' => 'серый мох', '7004' => 'сигнально серый', '7005' => 'мышино-серый', '7006' => 'бежево-серый', '7008' => 'серое хаки', '7009' => 'зеленовато-серый', '7010' => 'брезентово-серый', '7011' => 'стально-серый', '7012' => 'базальтово-серый', '7013' => 'коричнево-серый', '7015' => 'сланцево-серый', '7016' => 'антрацитово-серый', '7021' => 'чёрно-серый', '7022' => 'умбра серая', '7023' => 'серый бетон', '7024' => 'графитово серый', '7026' => 'гранитово-серый', '7030' => 'каменно-серый', '7031' => 'сине-серый', '7032' => 'галечный серый', '7033' => 'цементно-серый', '7034' => 'жёлто-серый', '7035' => 'светло-серый', '7036' => 'платиново-серый', '7037' => 'пыльно-серый', '7038' => 'агатово-серый', '7039' => 'кварцевый серый', '7040' => 'серое окно', '7042' => 'транспортный серый A', '7043' => 'транспортный серый B', '7044' => 'тёмно-серый', '7045' => 'телемагента 1', '7046' => 'телемагента 2', '7047' => 'телемагента 4', '7048' => 'перламутровый мышино-серый',
+    '8000' => 'зеленовато-коричневый', '8001' => 'охра коричневая', '8002' => 'сигнальный коричневый', '8003' => 'глиняный коричневый', '8004' => 'медно-коричневый', '8007' => 'олень коричневый', '8008' => 'оливково-коричневый', '8011' => 'орехово-коричневый', '8012' => 'красно-коричневый', '8014' => 'сепия коричневый', '8015' => 'каштаново-коричневый', '8016' => 'махагон коричневый', '8017' => 'шоколадно-коричневый', '8019' => 'серо-коричневый', '8022' => 'чёрно-коричневый', '8023' => 'оранжево-коричневый', '8024' => 'бежево-коричневый', '8025' => 'бледно-коричневый', '8028' => 'терракотовый', '8029' => 'медно-красный',
+    '9001' => 'кремово-белый', '9002' => 'серо-белый', '9003' => 'сигнально-белый', '9004' => 'чёрный', '9005' => 'глубокий чёрный', '9006' => 'бело-алюминиевый', '9007' => 'серо-алюминиевый', '9010' => 'чисто-белый', '9011' => 'графитно-чёрный', '9016' => 'транспортный белый', '9017' => 'транспортный чёрный', '9018' => 'папирусно-белый', '9022' => 'перламутровый светло-серый', '9023' => 'перламутровый тёмно-серый',
+];
+$ralColorSwatch = fn(string $code): string => match ($code) {
+    '3005' => '#6F2C2C', '5005' => '#20529B', '6005' => '#264B2C', '7004' => '#96969A', '7024' => '#44454A', '8017' => '#3E2A22', '9003' => '#F4F6F5', '5021' => '#006A74', '1015' => '#E6D2B5', '1018' => '#FCA50C', '7016' => '#383E42', '9005' => '#0A0A0A', '3011' => '#7E292C', default => '#B9B9CC',
+};
 $ralOf = function ($p): string {
     $specs = $p['specs'] ?? [];
     $brand = (string) ($specs['Марка'] ?? '');
@@ -68,6 +82,22 @@ $ralOf = function ($p): string {
     if (preg_match('/\bRAL\s*(\d{4})\b/i', $name, $m))
         return 'RAL ' . $m[1];
     return '';
+};
+$colorOf = function ($p) use ($ralNames): string {
+    $specs = $p['specs'] ?? [];
+    $brand = (string) ($specs['Марка'] ?? '');
+    $name = (string) ($p['name'] ?? '');
+    $sub = (string) ($p['categories']['subcategory_title'] ?? '');
+    if (preg_match('/\bRAL\s*(\d{4})\b/i', $brand . ' ' . $name, $m))
+        return $ralNames[$m[1]] ?? 'RAL ' . $m[1];
+    if (preg_match('/оцинк|цинк/i', $sub . ' ' . $name))
+        return 'оцинкованный';
+    if (preg_match('/\bW\d{3}\b/i', $name, $m))
+        return $m[0];
+    return '';
+};
+$colorSwatchOf = fn(string $colorName): string => match ($colorName) {
+    'оцинкованный' => '#B8B8B8', 'вишнёвый' => '#6F2C2C', 'сигнально синий' => '#20529B', 'зелёный мох' => '#264B2C', 'сигнально серый' => '#96969A', 'графитово серый' => '#44454A', 'шоколадно-коричневый' => '#3E2A22', 'сигнально-белый' => '#F4F6F5', 'водная синь' => '#006A74', 'светлая слоновая кость' => '#E6D2B5', 'цинково-жёлтый' => '#FCA50C', 'слоновая кость' => '#E6D2B5', 'бело-алюминиевый' => '#DFE1E3', 'транспортный белый' => '#F2F3F4', 'коричнево-зелёный' => '#4F4030', 'коричнево-красный' => '#7E292C', 'медно-коричневый' => '#8E4E3A', 'огненно-красный' => '#AF2E23', 'лиственно-зелёный' => '#2D572C', 'ультрамариново-синий' => '#1F3F7A', default => '#B9B9CC',
 };
 
 // --- Границы цен для слайдера (по всем товарам категории, без фильтров) ---
@@ -92,7 +122,7 @@ $priceScale = [$priceMin, $priceMin + $priceStep, $priceMin + 2 * $priceStep, $p
 // --- Разбор GET-фильтров ---
 $strArr = function ($v): array {
     if (!is_array($v))
-        return [];
+        $v = [$v];
     $out = [];
     foreach ($v as $x) {
         $x = trim((string) $x);
@@ -106,16 +136,17 @@ $fSize = $strArr($_GET['size'] ?? []);
 $fGost = $strArr($_GET['gost'] ?? []);
 $fDiam = $strArr($_GET['diameter'] ?? []);
 $fRal = $strArr($_GET['ral'] ?? []);
+$fColor = $strArr($_GET['color'] ?? []);
 $fStock = !empty($_GET['stock']);
 $fPriceFrom = (isset($_GET['price_from']) && is_numeric($_GET['price_from'])) ? (float) $_GET['price_from'] : null;
 $fPriceTo = (isset($_GET['price_to']) && is_numeric($_GET['price_to'])) ? (float) $_GET['price_to'] : null;
 $fSort = trim((string) ($_GET['sort'] ?? ''));
 
-$filterActive = $fMarka || $fSize || $fGost || $fDiam || $fRal || $fStock || $fPriceFrom !== null || $fPriceTo !== null;
+$filterActive = $fMarka || $fSize || $fGost || $fDiam || $fRal || $fColor || $fStock || $fPriceFrom !== null || $fPriceTo !== null;
 
 // --- Применение фильтров к товарам категории ---
 if ($filterActive) {
-    $allCategoryProducts = array_values(array_filter($allCategoryProducts, function ($p) use ($fMarka, $fSize, $fGost, $fDiam, $fRal, $fStock, $fPriceFrom, $fPriceTo, $priceOf, $ralOf) {
+    $allCategoryProducts = array_values(array_filter($allCategoryProducts, function ($p) use ($fMarka, $fSize, $fGost, $fDiam, $fRal, $fColor, $fStock, $fPriceFrom, $fPriceTo, $priceOf, $ralOf, $colorOf) {
         $specs = $p['specs'] ?? [];
         $brand = (string) ($specs['Марка'] ?? '');
         $razmer = (string) ($specs['Размер'] ?? '');
@@ -130,6 +161,8 @@ if ($filterActive) {
         if ($fDiam && !in_array($diam, $fDiam, true))
             return false;
         if ($fRal && !in_array($ralOf($p), $fRal, true))
+            return false;
+        if ($fColor && !in_array($colorOf($p), $fColor, true))
             return false;
         if ($fStock && empty($p['in_stock']))
             return false;
@@ -188,11 +221,14 @@ $gostCounts = $countBy($allCategoryProducts, function ($p) {
     return $v;
 });
 $ralCounts = $countBy($allCategoryProducts, $ralOf);
+$colorCounts = $countBy($allCategoryProducts, $colorOf);
 $allDiameters = [];
 $allBrands = array_keys($markaCounts);
 $allRals = array_keys($ralCounts);
+$allColors = array_keys($colorCounts);
 sort($allBrands, SORT_STRING);
 sort($allRals, SORT_NATURAL);
+sort($allColors, SORT_NATURAL);
 
 $categoryTree = [];
 foreach ($allProducts as $p) {
@@ -226,6 +262,8 @@ if ($fGost)
     $activeFilterParams['gost'] = $fGost;
 if ($fRal)
     $activeFilterParams['ral'] = $fRal;
+if ($fColor)
+    $activeFilterParams['color'] = $fColor;
 if ($fStock)
     $activeFilterParams['stock'] = '1';
 if ($fPriceFrom !== null)
@@ -356,7 +394,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
 
 <body class="bg-zinc-50">
 
-    <?php include_once './public/components/header-shared.php'; ?>
+    <?php include_once './public/components/header-market.php'; ?>
 
     <main class="max-w-7xl mx-auto pl-2 pr-4 lg:px-4 pt-4 pb-12 lg:pt-6">
 
@@ -636,7 +674,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                     }
                 ?>
                 <a href="<?= htmlspecialchars($subUrl) ?>"
-                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-3 hover:border-red-300 hover:shadow-md transition-all duration-200 group shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[calc(50%_-_6px)] sm:max-w-none sm:shrink md:w-[calc(33.333%_-_8px)]">
+                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-3 hover:border-red-300 hover:shadow-md transition-all duration-200 group shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[calc(50%_-_6px)] sm:max-w-none sm:shrink md:w-[calc(33.333%_-_8px)] min-w-0">
                     <div class="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
                         <?php if ($subImg): ?>
                             <img src="<?= htmlspecialchars($subImg) ?>" alt="<?= htmlspecialchars($sub['name']) ?>"
@@ -675,7 +713,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                     }
                 ?>
                 <a href="<?= htmlspecialchars($subUrl) ?>"
-                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-4 hover:border-red-300 hover:shadow-md transition-all duration-200 group">
+                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-4 hover:border-red-300 hover:shadow-md transition-all duration-200 group min-w-0">
                     <div class="w-16 h-16 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
                         <?php if ($subImg): ?>
                             <img src="<?= htmlspecialchars($subImg) ?>" alt="<?= htmlspecialchars($sub['name']) ?>"
@@ -697,7 +735,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                 <?php endforeach; ?>
             </div>
         </div>
-        <style>@media (min-width: 1024px) { #sub-desktop { display: grid !important; grid-template-columns: repeat(5, 1fr); } }</style>
+        <style>@media (min-width: 1024px) { #sub-desktop { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)); } }</style>
         <?php endif; endif; ?>
 
         <!-- SmartSEO Tags (filter chips by characteristics) -->
@@ -736,20 +774,11 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
         <div class="flex flex-col lg:flex-row gap-6 lg:gap-8">
 
             <!-- Left Sidebar -->
-            <aside class="w-full lg:w-64 shrink-0">
-                <div class="lg:sticky lg:top-20 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto space-y-5 pr-1">
+            <aside class="w-full lg:w-64 shrink-0 self-start">
+                <div class="lg:sticky lg:top-[196px] lg:max-h-[calc(100vh-12.5rem)] lg:overflow-y-auto space-y-5 pr-1">
 
                     <!-- Filters (server-side) -->
                     <form method="get" action="<?= htmlspecialchars($basePageUrl) ?>" id="filter-form" class="bg-white rounded-2xl border border-zinc-200 overflow-hidden">
-                        <?php foreach ($activeFilterParams as $fk => $fv): ?>
-                            <?php if ($fk === 'sort')
-                                continue; ?>
-                            <?php if (is_array($fv)): foreach ($fv as $fvv): ?>
-                                <input type="hidden" name="<?= htmlspecialchars($fk) ?>[]" value="<?= htmlspecialchars($fvv) ?>">
-                            <?php endforeach; else: ?>
-                                <input type="hidden" name="<?= htmlspecialchars($fk) ?>" value="<?= htmlspecialchars((string) $fv) ?>">
-                            <?php endif; ?>
-                        <?php endforeach; ?>
 
                         <div class="flex items-center justify-between px-4 pt-4 pb-3 border-b border-zinc-100">
                             <span class="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Фильтры</span>
@@ -817,7 +846,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                     <?php $i = 0; foreach ($sizeCounts as $val => $cnt): $i++; ?>
                                     <label
                                         class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                        <input type="checkbox" name="size[]" value="<?= htmlspecialchars($val) ?>"
+                                        <input type="radio" name="size" value="<?= htmlspecialchars($val) ?>"
                                             <?= in_array($val, $fSize, true) ? 'checked' : '' ?>
                                             onchange="this.form.submit()"
                                             class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -856,7 +885,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                     <?php $i = 0; foreach ($diamCounts as $val => $cnt): $i++; ?>
                                     <label
                                         class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                        <input type="checkbox" name="diameter[]" value="<?= htmlspecialchars($val) ?>"
+                                        <input type="radio" name="diameter" value="<?= htmlspecialchars($val) ?>"
                                             <?= in_array($val, $fDiam, true) ? 'checked' : '' ?>
                                             onchange="this.form.submit()"
                                             class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -895,7 +924,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                     <?php $i = 0; foreach ($markaCounts as $val => $cnt): $i++; ?>
                                     <label
                                         class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                        <input type="checkbox" name="marka[]" value="<?= htmlspecialchars($val) ?>"
+                                        <input type="radio" name="marka" value="<?= htmlspecialchars($val) ?>"
                                             <?= in_array($val, $fMarka, true) ? 'checked' : '' ?>
                                             onchange="this.form.submit()"
                                             class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -934,7 +963,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                     <?php $i = 0; foreach ($gostCounts as $val => $cnt): $i++; ?>
                                     <label
                                         class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                        <input type="checkbox" name="gost[]" value="<?= htmlspecialchars($val) ?>"
+                                        <input type="radio" name="gost" value="<?= htmlspecialchars($val) ?>"
                                             <?= in_array($val, $fGost, true) ? 'checked' : '' ?>
                                             onchange="this.form.submit()"
                                             class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
@@ -954,27 +983,12 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                         </div>
                         <?php endif; ?>
 
-                        <!-- Filter: RAL color -->
-                        <?php if (!empty($ralCounts)):
-                            $ralNames = [
-                                '1000' => 'зеленовато-бежевый', '1001' => 'бежевый', '1002' => 'жёлтый', '1003' => 'сигнальный жёлтый', '1004' => 'золотисто-жёлтый', '1005' => 'медово-жёлтый', '1006' => 'кукурузный', '1007' => 'жёлтый', '1011' => 'коричнево-бежевый', '1012' => 'лимонно-жёлтый', '1013' => 'жемчужно-белый', '1014' => 'слоновая кость', '1015' => 'светлая слоновая кость', '1016' => 'серно-жёлтый', '1017' => 'шафраново-жёлтый', '1018' => 'цинково-жёлтый', '1019' => 'серо-бежевый', '1020' => 'оливково-жёлтый', '1021' => 'рапсово-жёлтый', '1023' => 'транспортный жёлтый', '1024' => 'охра жёлтая', '1027' => 'дынно-жёлтый', '1028' => 'желто-золотой', '1032' => 'желтый ракитник', '1033' => 'георгиново-жёлтый', '1034' => 'пастельно-жёлтый', '1035' => 'перламутрово-бежевый', '1036' => 'перламутрово-золотой', '1037' => 'солнечно-жёлтый',
-                                '2000' => 'жёлто-оранжевый', '2001' => 'красно-оранжевый', '2002' => 'кроваво-красный', '2003' => 'пастельно-оранжевый', '2004' => 'чисто-оранжевый', '2005' => 'люминесцентный ярко-оранжевый', '2007' => 'люминесцентный ярко-красный', '2008' => 'ярко-красно-оранжевый', '2009' => 'транспортный оранжевый', '2010' => 'сигнальный оранжевый', '2011' => 'глубокий оранжевый', '2012' => 'лососёво-оранжевый', '2013' => 'перламутрово-оранжевый',
-                                '3000' => 'огненно-красный', '3001' => 'сигнальный красный', '3002' => 'карминно-красный', '3003' => 'рубиново-красный', '3004' => 'пурпурно-красный', '3005' => 'вишнёвый', '3007' => 'чёрно-красный', '3009' => 'оксид красный', '3011' => 'коричнево-красный', '3012' => 'бежево-красный', '3013' => 'томатно-красный', '3014' => 'античный розовый', '3015' => 'светло-розовый', '3016' => 'кораллово-красный', '3017' => 'розовый антик', '3018' => 'клубнично-красный', '3020' => 'транспортный красный', '3022' => 'лососёво-красный', '3024' => 'люминесцентный красный', '3026' => 'люминесцентный ярко-красный', '3027' => 'малиново-красный', '3028' => 'чистый красный', '3031' => 'ориент красный', '3032' => 'рубиновый перламутровый', '3033' => 'перламутрово-розовый',
-                                '4001' => 'красно-сиреневый', '4002' => 'красно-фиолетовый', '4003' => 'вересково-фиолетовый', '4004' => 'бордово-фиолетовый', '4005' => 'сине-сиреневый', '4006' => 'транспортный пурпурный', '4007' => 'пурпурно-фиолетовый', '4008' => 'сигнальный фиолетовый', '4009' => 'пастельно-фиолетовый', '4010' => 'телемагента', '4011' => 'перламутрово-фиолетовый', '4012' => 'перламутровый ежевичный',
-                                '5000' => 'фиолетово-синий', '5001' => 'зелёно-синий', '5002' => 'ультрамариново-синий', '5003' => 'сапфирово-синий', '5004' => 'чёрно-синий', '5005' => 'сигнально синий', '5007' => 'бриллиантово-синий', '5008' => 'серо-синий', '5009' => 'лазурно-синий', '5010' => 'горечавково-синий', '5011' => 'стально-синий', '5012' => 'светло-синий', '5013' => 'кобальтово-синий', '5014' => 'голубино-синий', '5015' => 'небесно-синий', '5017' => 'транспортный синий', '5018' => 'бирюзово-синий', '5019' => 'капри синий', '5020' => 'океанская синь', '5021' => 'водная синь', '5022' => 'ночной синий', '5023' => 'отдалённо-синий', '5024' => 'пастельно-синий', '5025' => 'перламутровый горечавково-синий', '5026' => 'перламутровый ночной синий',
-                                '6000' => 'патиново-зелёный', '6001' => 'изумрудно-зелёный', '6002' => 'лиственно-зелёный', '6003' => 'оливково-зелёный', '6004' => 'сине-зелёный', '6005' => 'зелёный мох', '6006' => 'серо-оливковый', '6007' => 'бутылочно-зелёный', '6008' => 'коричнево-зелёный', '6009' => 'пихтовый зелёный', '6010' => 'травяной зелёный', '6011' => 'резедово-зелёный', '6012' => 'чёрно-зелёный', '6013' => 'тростниково-зелёный', '6014' => 'жёлто-оливковый', '6015' => 'чёрно-оливковый', '6016' => 'бирюзово-зелёный', '6017' => 'майский зелёный', '6018' => 'жёлто-зелёный', '6019' => 'светло-зелёный', '6020' => 'хромовый зелёный', '6021' => 'бледно-зелёный', '6022' => 'оливковый', '6024' => 'транспортный зелёный', '6025' => 'папоротниково-зелёный', '6026' => 'опаловый зелёный', '6027' => 'светло-зелёный', '6028' => 'сосновый зелёный', '6029' => 'мятно-зелёный', '6032' => 'сигнальный зелёный', '6033' => 'перламутрово-мятный', '6034' => 'перламутровый бирюзовый', '6035' => 'перламутрово-зелёный', '6036' => 'перламутровый опаловый зелёный', '6037' => 'чисто-зелёный', '6038' => 'люминесцентный зелёный',
-                                '7000' => 'серо-беличий', '7001' => 'серебристо-серый', '7002' => 'оливково-серый', '7003' => 'серый мох', '7004' => 'сигнально серый', '7005' => 'мышино-серый', '7006' => 'бежево-серый', '7008' => 'серое хаки', '7009' => 'зеленовато-серый', '7010' => 'брезентово-серый', '7011' => 'стально-серый', '7012' => 'базальтово-серый', '7013' => 'коричнево-серый', '7015' => 'сланцево-серый', '7016' => 'антрацитово-серый', '7021' => 'чёрно-серый', '7022' => 'умбра серая', '7023' => 'серый бетон', '7024' => 'графитово серый', '7026' => 'гранитово-серый', '7030' => 'каменно-серый', '7031' => 'сине-серый', '7032' => 'галечный серый', '7033' => 'цементно-серый', '7034' => 'жёлто-серый', '7035' => 'светло-серый', '7036' => 'платиново-серый', '7037' => 'пыльно-серый', '7038' => 'агатово-серый', '7039' => 'кварцевый серый', '7040' => 'серое окно', '7042' => 'транспортный серый A', '7043' => 'транспортный серый B', '7044' => 'тёмно-серый', '7045' => 'телемагента 1', '7046' => 'телемагента 2', '7047' => 'телемагента 4', '7048' => 'перламутровый мышино-серый',
-                                '8000' => 'зеленовато-коричневый', '8001' => 'охра коричневая', '8002' => 'сигнальный коричневый', '8003' => 'глиняный коричневый', '8004' => 'медно-коричневый', '8007' => 'олень коричневый', '8008' => 'оливково-коричневый', '8011' => 'орехово-коричневый', '8012' => 'красно-коричневый', '8014' => 'сепия коричневый', '8015' => 'каштаново-коричневый', '8016' => 'махагон коричневый', '8017' => 'шоколадно-коричневый', '8019' => 'серо-коричневый', '8022' => 'чёрно-коричневый', '8023' => 'оранжево-коричневый', '8024' => 'бежево-коричневый', '8025' => 'бледно-коричневый', '8028' => 'терракотовый', '8029' => 'медно-красный',
-                                '9001' => 'кремово-белый', '9002' => 'серо-белый', '9003' => 'сигнально-белый', '9004' => 'чёрный', '9005' => 'глубокий чёрный', '9006' => 'бело-алюминиевый', '9007' => 'серо-алюминиевый', '9010' => 'чисто-белый', '9011' => 'графитно-чёрный', '9016' => 'транспортный белый', '9017' => 'транспортный чёрный', '9018' => 'папирусно-белый', '9022' => 'перламутровый светло-серый', '9023' => 'перламутровый тёмно-серый',
-                            ];
-                            $ralColorSwatch = fn(string $code): string => match ($code) {
-                                '3005' => '#6F2C2C', '5005' => '#20529B', '6005' => '#264B2C', '7004' => '#96969A', '7024' => '#44454A', '8017' => '#3E2A22', '9003' => '#F4F6F5', '5021' => '#006A74', '1015' => '#E6D2B5', '1018' => '#FCA50C', '7016' => '#383E42', '9005' => '#0A0A0A', '3011' => '#7E292C', default => '#B9B9CC',
-                            };
-                        ?>
+                        <!-- Filter: RAL code -->
+                        <?php if (!empty($ralCounts)): ?>
                         <div class="filter-group border-b border-zinc-100">
                             <button type="button"
                                 class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-zinc-50">
-                                <span class="text-sm font-medium text-zinc-700">Цвет RAL</span>
+                                <span class="text-sm font-medium text-zinc-700">RAL</span>
                                 <i
                                     class="fas fa-chevron-down filter-group-arrow text-[10px] text-zinc-300 transition-transform duration-200 <?= !empty($fRal) ? '' : 'rotate-180' ?>"></i>
                             </button>
@@ -987,18 +1001,17 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                 <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                     <?php $i = 0; foreach ($ralCounts as $val => $cnt):
                                         $ralCode = substr($val, 4);
-                                        $ralLabel = ($ralNames[$ralCode] ?? '') ? $val . ' ' . $ralNames[$ralCode] : $val;
                                         $i++; ?>
                                     <label
                                         class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
-                                        <input type="checkbox" name="ral[]" value="<?= htmlspecialchars($val) ?>"
+                                        <input type="radio" name="ral" value="<?= htmlspecialchars($val) ?>"
                                             <?= in_array($val, $fRal, true) ? 'checked' : '' ?>
                                             onchange="this.form.submit()"
                                             class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
                                         <span class="w-4 h-4 rounded-full border border-zinc-300 shrink-0"
                                             style="background-color: <?= $ralColorSwatch($ralCode) ?>"></span>
                                         <span
-                                            class="text-sm text-zinc-600 group-hover:text-zinc-900 transition truncate"><?= htmlspecialchars($ralLabel) ?></span>
+                                            class="text-sm text-zinc-600 group-hover:text-zinc-900 transition truncate"><?= htmlspecialchars($val) ?></span>
                                         <span
                                             class="ml-auto text-[11px] text-zinc-400 shrink-0"><?= $cnt ?></span>
                                     </label>
@@ -1006,6 +1019,48 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                 </div>
                                 <p class="hidden text-xs text-zinc-400 px-2 py-1.5" data-filter-empty>Ничего не найдено</p>
                                 <?php if (count($ralCounts) > 5): ?>
+                                <button type="button"
+                                    class="filter-more-btn mt-2.5 text-xs font-medium text-zinc-500 hover:text-red-500 transition">+ Еще</button>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- Filter: Color name (без RAL-подписей) -->
+                        <?php if (!empty($colorCounts)): ?>
+                        <div class="filter-group border-b border-zinc-100">
+                            <button type="button"
+                                class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-zinc-50">
+                                <span class="text-sm font-medium text-zinc-700">Цвет</span>
+                                <i
+                                    class="fas fa-chevron-down filter-group-arrow text-[10px] text-zinc-300 transition-transform duration-200 <?= !empty($fColor) ? '' : 'rotate-180' ?>"></i>
+                            </button>
+                            <div class="filter-group-body px-4 pt-1.5 pb-4 <?= !empty($fColor) ? '' : 'hidden' ?>">
+                                <div class="relative mb-2.5">
+                                    <i class="fas fa-search absolute left-2.5 top-1/2 -translate-y-1/2 text-[10px] text-zinc-400 pointer-events-none"></i>
+                                    <input type="text" placeholder="Поиск…" data-filter-input
+                                        class="w-full text-xs bg-zinc-50 border border-zinc-200 rounded-md pl-7 pr-2 py-2 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-red-400 focus:bg-white transition">
+                                </div>
+                                <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
+                                    <?php $i = 0; foreach ($colorCounts as $val => $cnt):
+                                        $i++; ?>
+                                    <label
+                                        class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
+                                        <input type="radio" name="color" value="<?= htmlspecialchars($val) ?>"
+                                            <?= in_array($val, $fColor, true) ? 'checked' : '' ?>
+                                            onchange="this.form.submit()"
+                                            class="w-4 h-4 accent-red-500 cursor-pointer shrink-0">
+                                        <span class="w-4 h-4 rounded-full border border-zinc-300 shrink-0"
+                                            style="background-color: <?= $colorSwatchOf($val) ?>"></span>
+                                        <span
+                                            class="text-sm text-zinc-600 group-hover:text-zinc-900 transition truncate"><?= htmlspecialchars($val) ?></span>
+                                        <span
+                                            class="ml-auto text-[11px] text-zinc-400 shrink-0"><?= $cnt ?></span>
+                                    </label>
+                                    <?php endforeach; ?>
+                                </div>
+                                <p class="hidden text-xs text-zinc-400 px-2 py-1.5" data-filter-empty>Ничего не найдено</p>
+                                <?php if (count($colorCounts) > 5): ?>
                                 <button type="button"
                                     class="filter-more-btn mt-2.5 text-xs font-medium text-zinc-500 hover:text-red-500 transition">+ Еще</button>
                                 <?php endif; ?>
@@ -1033,6 +1088,15 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                 <!-- Toolbar -->
                 <div class="flex items-center justify-between gap-3 mb-5 px-1 py-1">
                     <div class="flex items-center gap-3">
+                        <?php if ($filterActive || !empty($fSort)): ?>
+                            <a href="<?= htmlspecialchars($basePageUrl) ?>"
+                                class="inline-flex items-center gap-1.5 text-xs font-medium text-red-500 bg-red-50 border border-red-100 hover:bg-red-100 transition-colors rounded-lg px-3 py-2">
+                                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18 18 6M6 6l12 12" />
+                                </svg>
+                                Сбросить фильтры
+                            </a>
+                        <?php endif; ?>
                         <p class="text-sm text-zinc-500">
                             Найдено: <span class="font-semibold text-zinc-800"
                                 id="visibleCount"><?= $totalItems ?></span> товаров
@@ -1082,190 +1146,10 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                 <?php if (!empty($pageProducts)): ?>
                         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5">
                             <?php foreach ($pageProducts as $idx => $item):
-                                $productImages = $item['images'] ?? [];
-                                if (empty($productImages))
-                                    $productImages = [$site['baseUrl'] . '/public/assets/images/unknown/unknown.png'];
-                                $specs = $item['specs'] ?? [];
-                                $units = $item['units'] ?? [];
-                                $inStock = $item['in_stock'] ?? false;
-                                $canonicalUrl = $item['seo']['canonicalUrl'] ?? '#';
-                                $productUrl = htmlspecialchars($canonicalUrl);
-                                $productName = htmlspecialchars($item['name'] ?? $item['title'] ?? 'Товар');
-                                $firstUnit = !empty($units) ? array_key_first($units) : '';
-                                $firstPrice = !empty($units) ? $units[$firstUnit] : 0;
-
-                                $diameter = $specs['диаметр'] ?? '';
-                                $brand = $specs['Марка'] ?? $specs['марка'] ?? '';
-                                $gost = $specs['ГОСТ'] ?? $specs['гост'] ?? '';
-                                $razmer = $specs['Размер'] ?? '';
-                                $ral = '';
-                                if (preg_match('/\bRAL\s*(\d{4})\b/i', (string) $brand, $mRal)) {
-                                    $ral = 'RAL ' . $mRal[1];
-                                } elseif (preg_match('/\bRAL\s*(\d{4})\b/i', (string) ($item['name'] ?? $item['title'] ?? ''), $mRal2)) {
-                                    $ral = 'RAL ' . $mRal2[1];
-                                }
+                                $product = $item;
+                                $cardOpts = ['filter' => true, 'qty' => true, 'swiper' => true, 'itemscope' => false];
                                 ?>
-                                    <div class="product-card bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 transition-all duration-200 flex flex-col w-full"
-                                        data-diameter="<?= htmlspecialchars($diameter) ?>" data-brand="<?= htmlspecialchars($brand) ?>"
-                                        data-gost="<?= htmlspecialchars($gost) ?>" data-ral="<?= htmlspecialchars($ral) ?>">
-
-                                        <!-- Header: Badge + Fav -->
-                                        <div class="flex items-start justify-between gap-2 p-3 pb-0">
-                                            <span
-                                                class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold leading-relaxed">
-                                                <?= $inStock ? 'Уточняйте наличие' : 'Под заказ' ?>
-                                            </span>
-                                            <button type="button"
-                                                class="add-to-fav-btn w-7 h-7 rounded-md border border-zinc-200 flex items-center justify-center shrink-0 hover:border-zinc-400 hover:bg-zinc-50 transition-colors"
-                                                data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>" title="В избранное">
-                                                <svg width="13" height="11" viewBox="0 0 13 11" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path
-                                                        d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z"
-                                                        stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round"
-                                                        stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
-                                        </div>
-
-                                        <!-- Image -->
-                                        <a href="<?= $productUrl ?>"
-                                            class="product-card-image flex items-center justify-center h-[140px] mx-3 mt-3 mb-2 rounded-lg overflow-hidden bg-zinc-50">
-                                            <?php if (count($productImages) > 1): ?>
-                                                    <div class="swiper product-swiper w-full h-full"
-                                                        data-product-id="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                                        <div class="swiper-wrapper">
-                                                            <?php foreach ($productImages as $imgIdx => $imgUrl): ?>
-                                                                    <div class="swiper-slide flex justify-center items-center">
-                                                                        <img <?= $idx === 0 && $imgIdx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
-                                                                            src="<?= htmlspecialchars($imgUrl) ?>"
-                                                                            alt="<?= $productName ?> - фото <?= $imgIdx + 1 ?>" width="140" height="140"
-                                                                            class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
-                                                                    </div>
-                                                            <?php endforeach; ?>
-                                                        </div>
-                                                    </div>
-                                            <?php else: ?>
-                                                    <img <?= $idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?>
-                                                        src="<?= htmlspecialchars($productImages[0]) ?>" alt="<?= $productName ?>" width="140"
-                                                        height="140"
-                                                        class="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300">
-                                            <?php endif; ?>
-                                        </a>
-
-                                        <!-- Info -->
-                                        <div class="card-body flex-1 flex flex-col min-w-0 px-3 pb-3">
-                                            <a href="<?= $productUrl ?>">
-                                                <h3
-                                                    class="text-[13px] font-semibold text-zinc-800 hover:text-red-500 transition-colors line-clamp-2 leading-snug mb-2 block min-h-[36px]">
-                                                    <?= $productName ?></h3>
-                                            </a>
-
-                                            <!-- Specs -->
-                                            <div class="flex flex-wrap gap-1 mb-2">
-                                                <?php if ($brand): ?>
-                                                        <span
-                                                            class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">Марка:
-                                                            <strong class="text-zinc-700"><?= htmlspecialchars($brand) ?></strong></span>
-                                                <?php endif; ?>
-                                                <?php if ($razmer): ?>
-                                                        <span
-                                                            class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">Размер:
-                                                            <strong class="text-zinc-700"><?= htmlspecialchars($razmer) ?></strong></span>
-                                                <?php endif; ?>
-                                                <?php if ($gost): ?>
-                                                        <span
-                                                            class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">ГОСТ:
-                                                            <strong class="text-zinc-700"><?= htmlspecialchars($gost) ?></strong></span>
-                                                <?php endif; ?>
-                                                <?php if ($diameter): ?>
-                                                        <span
-                                                            class="text-[10px] text-zinc-500 bg-zinc-50 border border-zinc-100 px-1.5 py-0.5 rounded-md font-medium">Ø:
-                                                            <strong class="text-zinc-700"><?= htmlspecialchars($diameter) ?></strong></span>
-                                                <?php endif; ?>
-                                            </div>
-
-                                            <!-- Price & Cart -->
-                                            <div class="mt-auto">
-                                                <?php if (!empty($units)): ?>
-                                                        <div itemprop="offers" itemscope itemtype="https://schema.org/Offer" class="mb-2">
-                                                            <meta itemprop="priceCurrency" content="RUB">
-                                                            <meta itemprop="availability"
-                                                                content="<?= $inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock' ?>">
-                                                            <div class="flex items-baseline gap-2">
-                                                                <div itemprop="price" content="<?= number_format($firstPrice, 0, '', '') ?>"
-                                                                    class="price-display text-[15px] font-bold text-zinc-900 leading-tight">
-                                                                    <?= number_format($firstPrice, 0, '', ' ') ?> <span
-                                                                        class="text-[11px] font-normal text-zinc-400">₽</span>
-                                                                </div>
-                                                            </div>
-                                                            <div class="flex gap-0.5 mt-1">
-                                                                <?php foreach ($units as $unit => $price): ?>
-                                                                        <button type="button"
-                                                                            class="unit-btn text-[9px] px-1.5 py-0.5 rounded font-medium transition-all <?= $unit === $firstUnit ? 'bg-red-100 text-red-500' : 'bg-zinc-100 text-zinc-500 hover:bg-red-50 hover:text-red-500' ?>"
-                                                                            data-unit="<?= htmlspecialchars($unit) ?>"
-                                                                            data-price="<?= htmlspecialchars($price) ?>">
-                                                                            <?= htmlspecialchars($unit) ?>
-                                                                        </button>
-                                                                <?php endforeach; ?>
-                                                            </div>
-                                                        </div>
-                                                <?php else: ?>
-                                                        <div class="text-[13px] text-zinc-400 mb-2">Цена по запросу</div>
-                                                <?php endif; ?>
-
-                                                <!-- Add to Cart -->
-                                                <div class="flex items-center gap-2"
-                                                    data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                                    <div class="flex items-center border border-zinc-200 rounded-lg overflow-hidden">
-                                                        <button type="button"
-                                                            class="qty-btn w-6 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 transition border-r border-zinc-200 bg-transparent cursor-pointer"
-                                                            data-dir="minus">
-                                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3"
-                                                                viewBox="0 0 24 24">
-                                                                <line x1="5" y1="12" x2="19" y2="12" />
-                                                            </svg>
-                                                        </button>
-                                                        <input type="number" value="1" min="1"
-                                                            class="cart-qty w-9 h-7 text-center text-[11px] border-0 focus:outline-none focus:ring-0"
-                                                            data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                                        <button type="button"
-                                                            class="qty-btn w-6 h-7 flex items-center justify-center text-zinc-400 hover:text-zinc-700 hover:bg-zinc-50 transition border-l border-zinc-200 bg-transparent cursor-pointer"
-                                                            data-dir="plus">
-                                                            <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="3"
-                                                                viewBox="0 0 24 24">
-                                                                <line x1="12" y1="5" x2="12" y2="19" />
-                                                                <line x1="5" y1="12" x2="19" y2="12" />
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                    <?php if (count($units) > 1): ?>
-                                                            <select
-                                                                class="cart-unit h-7 px-1.5 border border-zinc-200 rounded-lg text-[10px] bg-white focus:outline-none focus:border-red-400"
-                                                                data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>">
-                                                                <?php foreach ($units as $u => $p): ?>
-                                                                        <option value="<?= htmlspecialchars($u) ?>" <?= $u === $firstUnit ? 'selected' : '' ?>><?= htmlspecialchars($u) ?></option>
-                                                                <?php endforeach; ?>
-                                                            </select>
-                                                    <?php else: ?>
-                                                            <span
-                                                                class="text-[10px] text-zinc-400 w-7 shrink-0 text-center"><?= htmlspecialchars($firstUnit) ?></span>
-                                                    <?php endif; ?>
-                                                    <button type="button"
-                                                        class="add-to-cart-btn w-8 h-7 rounded-lg bg-red-500 hover:bg-red-500 active:bg-red-500 text-white flex items-center justify-center shrink-0 transition-colors"
-                                                        data-pid="<?= htmlspecialchars($item['id'] ?? '') ?>"
-                                                        data-unit="<?= htmlspecialchars($firstUnit) ?>" title="В заявку">
-                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
-                                                            viewBox="0 0 24 24">
-                                                            <circle cx="9" cy="21" r="1" />
-                                                            <circle cx="20" cy="21" r="1" />
-                                                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                                                        </svg>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <?php include __DIR__ . '/../../../../components/product_card.php'; ?>
                             <?php endforeach; ?>
                         </div>
 
@@ -1374,7 +1258,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                     }
                 ?>
                 <a href="<?= htmlspecialchars($relUrl) ?>"
-                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-3 hover:border-red-300 hover:shadow-md transition-all duration-200 group shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[calc(50%_-_6px)] sm:max-w-none sm:shrink md:w-[calc(33.333%_-_8px)]">
+                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-3 hover:border-red-300 hover:shadow-md transition-all duration-200 group shrink-0 snap-start w-[72vw] max-w-[280px] sm:w-[calc(50%_-_6px)] sm:max-w-none sm:shrink md:w-[calc(33.333%_-_8px)] min-w-0">
                     <div class="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
                         <?php if ($relImg): ?>
                             <img src="<?= htmlspecialchars($relImg) ?>" alt="<?= htmlspecialchars($rel['name']) ?>"
@@ -1418,7 +1302,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                     }
                 ?>
                 <a href="<?= htmlspecialchars($relUrl) ?>"
-                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-4 hover:border-red-300 hover:shadow-md transition-all duration-200 group">
+                    class="flex items-center gap-3 bg-white border border-zinc-200 rounded-2xl p-4 hover:border-red-300 hover:shadow-md transition-all duration-200 group min-w-0">
                     <div class="w-14 h-14 rounded-xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 overflow-hidden group-hover:bg-red-50 group-hover:border-red-100 transition-colors">
                         <?php if ($relImg): ?>
                             <img src="<?= htmlspecialchars($relImg) ?>" alt="<?= htmlspecialchars($rel['name']) ?>"
@@ -1440,7 +1324,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                 <?php endforeach; ?>
             </div>
         </div>
-        <style>@media (min-width: 1024px) { #assort-desktop { display: grid !important; grid-template-columns: repeat(5, 1fr); } }</style>
+        <style>@media (min-width: 1024px) { #assort-desktop { display: grid !important; grid-template-columns: repeat(5, minmax(0, 1fr)); } }</style>
         <?php endif; endif; ?>
 
     </main>
@@ -1514,7 +1398,6 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
     <?php include_once './public/components/footer.php'; ?>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
 
     <script>
         function updateCartCount() {
@@ -1537,128 +1420,6 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
         document.addEventListener('DOMContentLoaded', function () {
             updateCartCount();
 
-            fetch('/api/cart/products').then(function (r) { return r.json(); }).then(function (d) {
-                var ids = d.products || [];
-                if (!ids.length) return;
-                document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
-                    var pid = btn.getAttribute('data-pid');
-                    if (ids.indexOf(pid) !== -1) {
-                        btn.innerHTML = '<i class="fas fa-plus"></i>';
-                        btn.classList.add('bg-green-600', 'in-cart');
-                    }
-                });
-            });
-
-            fetch('/api/favorites/products').then(function (r) { return r.json(); }).then(function (d) {
-                var ids = d.products || [];
-                if (!ids.length) return;
-                document.querySelectorAll('.add-to-fav-btn').forEach(function (btn) {
-                    var pid = btn.getAttribute('data-pid');
-                    if (ids.indexOf(pid) !== -1) {
-                        btn.querySelector('svg path').setAttribute('fill', '#ef4444');
-                        btn.querySelector('svg path').setAttribute('stroke', '#ef4444');
-                        btn.classList.add('in-fav');
-                    }
-                });
-            });
-
-            // Cart buttons
-            document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var card = this.closest('[data-pid]');
-                    var pid = this.dataset.pid;
-                    var qtyInput = card ? card.querySelector('.cart-qty') : null;
-                    var unitSelect = card ? card.querySelector('.cart-unit') : null;
-                    var qty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
-                    var unit = unitSelect ? unitSelect.value : this.dataset.unit;
-                    var wasInCart = this.classList.contains('in-cart');
-                    var originalCart = '<i class="fas fa-shopping-cart text-[10px]"></i> В заявку';
-                    var originalInCart = '<i class="fas fa-plus"></i>';
-
-                    this.disabled = true;
-                    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-
-                    addToCart(pid, qty, unit).then(function (r) {
-                        if (r.success) {
-                            btn.innerHTML = '<i class="fas fa-plus"></i>';
-                            btn.classList.add('bg-green-600', 'in-cart');
-                            setTimeout(function () { btn.disabled = false; btn.innerHTML = originalInCart; }, 1500);
-                            updateCartCount();
-                        } else {
-                            btn.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                            setTimeout(function () { btn.disabled = false; btn.innerHTML = wasInCart ? originalInCart : originalCart; }, 2000);
-                        }
-                    }).catch(function () {
-                        btn.innerHTML = '<i class="fas fa-exclamation-circle"></i>';
-                        setTimeout(function () { btn.disabled = false; btn.innerHTML = wasInCart ? originalInCart : originalCart; }, 2000);
-                    });
-                });
-            });
-
-            // Favorites buttons
-            document.querySelectorAll('.add-to-fav-btn').forEach(function (btn) {
-                btn.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    var pid = this.dataset.pid;
-                    var self = this;
-                    var path = self.querySelector('svg path');
-                    var wasFav = self.classList.contains('in-fav');
-                    var fd = new URLSearchParams();
-                    fd.append('product_id', pid);
-
-                    fetch('/api/favorites/toggle', { method: 'POST', body: fd })
-                        .then(function (r) { return r.json(); })
-                        .then(function (r) {
-                            if (r.success) {
-                                if (wasFav) {
-                                    self.classList.remove('in-fav');
-                                    path.setAttribute('fill', 'none');
-                                    path.setAttribute('stroke', '#a1a1aa');
-                                } else {
-                                    self.classList.add('in-fav');
-                                    path.setAttribute('fill', '#ef4444');
-                                    path.setAttribute('stroke', '#ef4444');
-                                }
-                                if (typeof r.count !== 'undefined') {
-                                    var badge = document.getElementById('favCountBadge');
-                                    if (badge) {
-                                        badge.textContent = r.count;
-                                        badge.style.display = r.count > 0 ? 'flex' : 'none';
-                                    }
-                                }
-                            }
-                        });
-                });
-            });
-
-            // Unit switching
-            document.querySelectorAll('.unit-btn').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var parent = this.parentElement;
-                    parent.querySelectorAll('.unit-btn').forEach(function (b) {
-                        b.classList.remove('bg-red-100', 'text-red-500');
-                        b.classList.add('bg-zinc-100', 'text-zinc-500');
-                    });
-                    this.classList.remove('bg-zinc-100', 'text-zinc-500');
-                    this.classList.add('bg-red-100', 'text-red-500');
-
-                    var card = this.closest('.product-card');
-                    if (card) {
-                        var pd = card.querySelector('.price-display');
-                        if (pd) pd.innerHTML = Math.round(parseFloat(this.dataset.price)).toLocaleString('ru-RU') + ' <span class="text-sm font-normal text-zinc-500">₽</span>';
-                    }
-
-                    var cardOuter = this.closest('[data-pid]');
-                    if (cardOuter) {
-                        var unitSelect = cardOuter.querySelector('.cart-unit');
-                        if (unitSelect) unitSelect.value = this.dataset.unit;
-                        var cartBtn = cardOuter.querySelector('.add-to-cart-btn');
-                        if (cartBtn) cartBtn.dataset.unit = this.dataset.unit;
-                    }
-                });
-            });
-
             // Grid / List view toggle
             var gv = document.getElementById('grid-view');
             var lv = document.getElementById('list-view');
@@ -1671,44 +1432,17 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                     other.classList.add('border', 'border-zinc-200', 'text-zinc-600');
                 }
                 gv.addEventListener('click', function () {
+                    pg.classList.remove('list-view');
                     pg.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-5';
-                    pg.querySelectorAll('.product-card').forEach(function (c) {
-                        c.classList.remove('flex-row');
-                        var img = c.querySelector('.product-card-image');
-                        img.classList.remove('w-36', 'shrink-0', 'm-3', 'mb-2');
-                        img.classList.add('h-[140px]', 'mx-3', 'mt-3', 'mb-2');
-                        var header = c.querySelector('.flex.items-start');
-                        if (header) header.classList.remove('hidden');
-                    });
                     setActive(gv, lv);
                 });
                 lv.addEventListener('click', function () {
-                    pg.className = 'flex flex-col gap-3';
-                    pg.querySelectorAll('.product-card').forEach(function (c) {
-                        c.classList.add('flex-row');
-                        var img = c.querySelector('.product-card-image');
-                        img.classList.remove('h-[140px]', 'mx-3', 'mt-3', 'mb-2');
-                        img.classList.add('w-36', 'shrink-0', 'm-3');
-                        var header = c.querySelector('.flex.items-start');
-                        if (header) header.classList.add('hidden');
-                    });
+                    pg.classList.remove('grid', 'grid-cols-1', 'sm:grid-cols-2', 'lg:grid-cols-3', 'xl:grid-cols-4', 'gap-4', 'lg:gap-5');
+                    pg.classList.add('list-view');
+                    pg.className = 'flex flex-col gap-3 list-view';
                     setActive(lv, gv);
                 });
             }
-
-            // Qty buttons
-            document.querySelectorAll('.qty-btn').forEach(function (btn) {
-                btn.addEventListener('click', function () {
-                    var input = this.parentElement.querySelector('.cart-qty');
-                    if (!input) return;
-                    var val = parseFloat(input.value) || 1;
-                    if (this.dataset.dir === 'minus' && val > 1) {
-                        input.value = val - 1;
-                    } else if (this.dataset.dir === 'plus') {
-                        input.value = val + 1;
-                    }
-                });
-            });
 
             // Product Swiper init
             document.querySelectorAll('.product-swiper').forEach(function (swiperEl) {
