@@ -31,25 +31,36 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <?= htmlspecialchars($product['seo']['metaTitle'] ?? ($product['name'] . ' купить в Москве — характеристики, ГОСТ | КАВ СТАЛЬ')) ?>
-    </title>
-    <meta name="description"
-        content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? ($product['name'] . ' — цена, характеристики, марка стали, ГОСТ. Уточняйте наличие и условия поставки у менеджера.')) ?>">
-    <meta name="keywords"
-        content="<?= htmlspecialchars($product['name'] ?? $product['title'] ?? 'Товар') ?>, <?= htmlspecialchars($product['title'] ?? '') ?>, купить <?= htmlspecialchars($product['categories']['title'] ?? 'металлопрокат') ?>, <?= htmlspecialchars($product['categories']['title'] ?? '') ?>, металлопрокат москва, сортовой прокат, купить арматуру, доставка металлопроката">
-    <link rel="canonical"
-        href="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
+    <?php
+    $isCategory = ($product['badge'] ?? '') === 'Категория';
+    $isSubcategory = ($product['badge'] ?? '') === 'Подкатегория';
+    $isListingPage = $isCategory || $isSubcategory;
+
+    if ($isListingPage) {
+        $defaultTitle = ($product['name'] ?? $product['title']) . ' — каталог металлопроката | КАВ СТАЛЬ';
+        $defaultDescription = ($product['name'] ?? $product['title']) . ' — каталог продукции. Цены, характеристики, ГОСТ. Доставка по Москве и МО. Самовывоз.';
+        $defaultKeywords = ($product['name'] ?? $product['title']) . ', каталог, металлопрокат, купить, цены, доставка Москва';
+        $ogType = 'website';
+        $ogImage = '/public/assets/images/bgpage/market.png';
+    } else {
+        $defaultTitle = ($product['name'] ?? $product['title']) . ' купить в Москве — характеристики, ГОСТ | КАВ СТАЛЬ';
+        $defaultDescription = ($product['name'] ?? $product['title']) . ' — цена, характеристики, марка стали, ГОСТ. Уточняйте наличие и условия поставки у менеджера.';
+        $defaultKeywords = ($product['name'] ?? $product['title'] ?? 'Товар') . ', ' . ($product['title'] ?? '') . ', купить ' . ($product['categories']['title'] ?? 'металлопрокат') . ', ' . ($product['categories']['title'] ?? '') . ', металлопрокат москва, сортовой прокат, купить арматуру, доставка металлопроката';
+        $ogType = 'product';
+        $ogImage = '/public/assets/images/bgpage/product.png';
+    }
+    ?>
+    <title><?= htmlspecialchars($product['seo']['metaTitle'] ?? $defaultTitle) ?></title>
+    <meta name="description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? $defaultDescription) ?>">
+    <meta name="keywords" content="<?= htmlspecialchars($product['seo']['keywords'] ?? $defaultKeywords) ?>">
+    <link rel="canonical" href="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
 
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title"
-        content="<?= htmlspecialchars($product['seo']['metaTitle'] ?? ($product['name'] . ' | Купить в Москве | КАВ СТАЛЬ')) ?>">
-    <meta property="og:description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? '') ?>">
-    <meta property="og:type" content="product">
-    <meta property="og:url"
-        content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
-    <meta property="og:image"
-        content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['images'][0] ?? '/public/assets/images/bgpage/product.png') ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($product['seo']['metaTitle'] ?? $defaultTitle) ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? $defaultDescription) ?>">
+    <meta property="og:type" content="<?= $ogType ?>">
+    <meta property="og:url" content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
+    <meta property="og:image" content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['images'][0] ?? $ogImage) ?>">
     <meta property="og:image:width" content="800">
     <meta property="og:image:height" content="600">
     <meta property="og:site_name" content="<?= htmlspecialchars($site['company'] ?? 'КАВ СТАЛЬ') ?>">
@@ -57,11 +68,9 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title"
-        content="<?= htmlspecialchars($product['seo']['metaTitle'] ?? ($product['name'] . ' | Купить в Москве | КАВ СТАЛЬ')) ?>">
-    <meta name="twitter:description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? '') ?>">
-    <meta name="twitter:image"
-        content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['images'][0] ?? '/public/assets/images/bgpage/product.png') ?>">
+    <meta name="twitter:title" content="<?= htmlspecialchars($product['seo']['metaTitle'] ?? $defaultTitle) ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? $defaultDescription) ?>">
+    <meta name="twitter:image" content="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['images'][0] ?? $ogImage) ?>">
 
     <!-- Additional SEO Meta Tags -->
     <meta name="robots" content="index, follow">
@@ -185,80 +194,113 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     </script>
 
     <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "Product",
-            "@id": <?= json_encode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/') . '#product', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-            "name": "<?= htmlspecialchars($product['name'] ?? $product['title']) ?>",
-            "description": "<?= htmlspecialchars($product['description']) ?>",
-            "image": <?= json_encode($product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/bgpage/product.png', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-            "url": <?= json_encode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-            "sku": "<?= htmlspecialchars(mb_strlen($product['id'] ?? $productID) > 50 ? md5($product['id'] ?? $productID) : ($product['id'] ?? $productID)) ?>",
-            "mpn": "<?= htmlspecialchars($product['id'] ?? $productID) ?>",
-            "brand": {
-                "@type": "Brand",
-                "name": "<?= htmlspecialchars($site['company']) ?>"
-            }
-            ,
-            "offers": {
-                "@type": "Offer",
-                "url": <?= json_encode($site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'), JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-                "price": "<?= number_format($product['units'][array_key_first($product['units'])], 0, '', '') ?>",
-                "priceCurrency": "RUB",
-                "availability": "<?= $product['in_stock'] ? 'https://schema.org/PreOrder' : 'https://schema.org/OutOfStock' ?>",
-                "seller": {
-                    "@type": "Organization",
-                    "name": "<?= htmlspecialchars($site['company']) ?>",
-                    "telephone": "<?= htmlspecialchars($site['phone']) ?>",
-                    "email": "<?= htmlspecialchars($site['email']) ?>",
-                    "image": <?= json_encode($site['baseUrl'] . '/public/assets/images/icons/favicon/favicon.svg', JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>,
-                    "address": {
-                        "@type": "PostalAddress",
-                        "streetAddress": "Семёновская площадь, 7",
-                        "addressLocality": "Москва",
-                        "addressRegion": "Московская область",
-                        "postalCode": "115035",
-                        "addressCountry": "RU"
-                    }
-                },
-                "shippingDetails": {
-                    "@type": "OfferShippingDetails",
-                    "deliveryTime": {
-                        "@type": "ShippingDeliveryTime",
-                        "handlingTime": {
-                            "@type": "QuantitativeValue",
-                            "minValue": "0",
-                            "maxValue": "1",
-                            "unitCode": "DAY"
-                        },
-                        "transitTime": {
-                            "@type": "QuantitativeValue",
-                            "minValue": "0",
-                            "maxValue": "3",
-                            "unitCode": "DAY"
-                        }
-                    },
-                    "shippingRate": {
-                        "@type": "MonetaryAmount",
-                        "value": "0",
-                        "currency": "RUB"
-                    },
-                    "shippingDestination": {
-                        "@type": "DefinedRegion",
-                        "addressCountry": "RU"
-                    }
-                },
-                "hasMerchantReturnPolicy": {
-                    "@type": "MerchantReturnPolicy",
-                    "applicableCountry": "RU",
-                    "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
-                    "merchantReturnDays": "14",
-                    "returnMethod": "https://schema.org/ReturnByMail",
-                    "returnFees": "https://schema.org/FreeReturn",
-                    "refundType": "https://schema.org/FullRefund"
-                }
-            }
+        <?php
+        $isCategory = ($product['badge'] ?? '') === 'Категория';
+        $isSubcategory = ($product['badge'] ?? '') === 'Подкатегория';
+        $isListingPage = $isCategory || $isSubcategory;
+
+        if ($isListingPage) {
+            // CollectionPage schema for category/subcategory pages
+            $schema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'CollectionPage',
+                '@id' => $site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/') . '#collection',
+                'name' => $product['name'] ?? $product['title'],
+                'description' => $product['description'] ?? '',
+                'url' => $site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'),
+                'image' => $product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/bgpage/market.png',
+                'mainEntity' => [
+                    '@type' => 'ItemList',
+                    'name' => $product['name'] ?? $product['title'],
+                    'description' => $product['description'] ?? '',
+                    'numberOfItems' => 0,
+                    'itemListElement' => []
+                ],
+                'publisher' => [
+                    '@type' => 'Organization',
+                    'name' => $site['company'],
+                    'url' => $site['baseUrl'],
+                    'logo' => $site['baseUrl'] . '/public/assets/images/icons/favicon/favicon.svg'
+                ]
+            ];
+        } else {
+            // Product schema for actual products
+            $schema = [
+                '@context' => 'https://schema.org',
+                '@type' => 'Product',
+                '@id' => $site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/') . '#product',
+                'name' => $product['name'] ?? $product['title'],
+                'description' => $product['description'] ?? '',
+                'image' => $product['images'][0] ?? $site['baseUrl'] . '/public/assets/images/bgpage/product.png',
+                'url' => $site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'),
+                'sku' => mb_strlen($product['id'] ?? $productID) > 50 ? md5($product['id'] ?? $productID) : ($product['id'] ?? $productID),
+                'mpn' => $product['id'] ?? $productID,
+                'brand' => [
+                    '@type' => 'Brand',
+                    'name' => $site['company']
+                ],
+                'offers' => [
+                    '@type' => 'Offer',
+                    'url' => $site['baseUrl'] . ($product['seo']['canonicalUrl'] ?? '/'),
+                    'price' => number_format($product['units'][array_key_first($product['units'])], 0, '', ''),
+                    'priceCurrency' => 'RUB',
+                    'availability' => $product['in_stock'] ? 'https://schema.org/PreOrder' : 'https://schema.org/OutOfStock',
+                    'seller' => [
+                        '@type' => 'Organization',
+                        'name' => $site['company'],
+                        'telephone' => $site['phone'],
+                        'email' => $site['email'],
+                        'image' => $site['baseUrl'] . '/public/assets/images/icons/favicon/favicon.svg',
+                        'address' => [
+                            '@type' => 'PostalAddress',
+                            'streetAddress' => 'Семёновская площадь, 7',
+                            'addressLocality' => 'Москва',
+                            'addressRegion' => 'Московская область',
+                            'postalCode' => '115035',
+                            'addressCountry' => 'RU'
+                        ]
+                    ],
+                    'shippingDetails' => [
+                        '@type' => 'OfferShippingDetails',
+                        'deliveryTime' => [
+                            '@type' => 'ShippingDeliveryTime',
+                            'handlingTime' => [
+                                '@type' => 'QuantitativeValue',
+                                'minValue' => '0',
+                                'maxValue' => '1',
+                                'unitCode' => 'DAY'
+                            ],
+                            'transitTime' => [
+                                '@type' => 'QuantitativeValue',
+                                'minValue' => '0',
+                                'maxValue' => '3',
+                                'unitCode' => 'DAY'
+                            ]
+                        ],
+                        'shippingRate' => [
+                            '@type' => 'MonetaryAmount',
+                            'value' => '0',
+                            'currency' => 'RUB'
+                        ],
+                        'shippingDestination' => [
+                            '@type' => 'DefinedRegion',
+                            'addressCountry' => 'RU'
+                        ]
+                    ],
+                    'hasMerchantReturnPolicy' => [
+                        '@type' => 'MerchantReturnPolicy',
+                        'applicableCountry' => 'RU',
+                        'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+                        'merchantReturnDays' => '14',
+                        'returnMethod' => 'https://schema.org/ReturnByMail',
+                        'returnFees' => 'https://schema.org/FreeReturn',
+                        'refundType' => 'https://schema.org/FullRefund'
+                    ]
+                ]
+            ];
         }
+        echo json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        ?>
     </script>
 
     <!-- Font Awesome -->
