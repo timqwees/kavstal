@@ -141,11 +141,14 @@ class Functions
         }
 
         if (!$product && file_exists('./setting/config/product.json')) {
-            $productsData = json_decode(file_get_contents('./setting/config/product.json'), true);
-            foreach (($productsData['products'] ?? []) as $data) {
-                if (($data['id'] ?? null) === $productID) {
-                    $product = $data;
-                    break;
+            $json = file_get_contents('./setting/config/product.json');
+            if ($json !== false) {
+                $productsData = json_decode($json, true);
+                foreach (($productsData['products'] ?? []) as $data) {
+                    if (($data['id'] ?? null) === $productID) {
+                        $product = $data;
+                        break;
+                    }
                 }
             }
         }
@@ -185,8 +188,15 @@ class Functions
         $cached = self::cacheGet('site_data', self::$_cacheTtl);
         // baseUrl/canonical зависят от окружения (Host) — не берём из кэша, чтобы при смене
         // хоста (прокси/кэш от другого окружения) не отдавать неверный домен.
-        $host = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
-        $host = preg_replace('/^https?:\/\//i', '', $host);
+        $rawHost = $_SERVER['HTTP_X_FORWARDED_HOST'] ?? $_SERVER['HTTP_HOST'] ?? 'www.kavstal.ru';
+        if (is_array($rawHost)) {
+            $rawHost = (string) ($rawHost[0] ?? '');
+        }
+        $host = trim((string) $rawHost);
+        if ($host === '') {
+            $host = 'www.kavstal.ru';
+        }
+        $host = preg_replace('/^https?:\/\//i', '', $host) ?? $host;
         $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
             || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https';
         // Прод/прокси: всегда https + www.kavstal.ru (игнорируем неверный backend-хост)
@@ -291,7 +301,7 @@ class Functions
             foreach ($tables as $tableName) {
                 $rows = self::readCsvTable($csvDir . '/' . $tableName . '.csv');
                 foreach ($rows as $rowIdx => $row) {
-                    $product = self::normalizeProductRow($row, $tableName, $rowIdx + 1);
+                    $product = self::normalizeProductRow($row, $tableName, (int) $rowIdx + 1);
                     $product['_table'] = $tableName;
                     $products[] = $product;
 
@@ -421,8 +431,11 @@ class Functions
         }
 
         if (file_exists('./setting/config/product.json')) {
-            $productsData = json_decode(file_get_contents('./setting/config/product.json'), true);
-            return (array) ($productsData['products'] ?? []);
+            $json = file_get_contents('./setting/config/product.json');
+            if ($json !== false) {
+                $productsData = json_decode($json, true);
+                return (array) ($productsData['products'] ?? []);
+            }
         }
 
         return [];
@@ -704,8 +717,11 @@ class Functions
      */
     public static function sendMail(object $data, array|string|null $attachmentPath = null): void
     {
-        $phone = $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? '';
-        $phone = trim(preg_replace('/[^0-9+]/', '', $phone));
+        $rawPhone = $data->телефн ?? $data->телефон ?? $data->теефон ?? $data->phone ?? '';
+        if (is_array($rawPhone)) {
+            $rawPhone = implode(', ', $rawPhone);
+        }
+        $phone = trim(preg_replace('/[^0-9+]/', '', (string) $rawPhone) ?? '');
         if ($phone === '') {
             return;
         }
@@ -713,7 +729,7 @@ class Functions
         $message = "<strong>Информация:</strong>";
         foreach ($data as $key => $value) {
             $val = is_array($value) ? implode(', ', $value) : (string) $value;
-            $message .= "<hr>" . ucfirst($key) . ': ' . $val;
+            $message .= "<hr>" . ucfirst((string) $key) . ': ' . $val;
         }
         try {
             (new MailController())->onMail($_ENV['EMAIL_TO'] ?? 'zakaz@kavstal.ru', 'Заявление с сайта', $message, $attachmentPath);
@@ -767,7 +783,7 @@ class Functions
             'fields' => [
                 'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
                 'CATEGORY_ID' => 5,
-                'STAGE_ID' => 0,
+                'STAGE_ID' => 'C5:NEW',
                 'COMMENTS' => $info,
             ]
         ]);
@@ -788,7 +804,9 @@ class Functions
             if ($curlError) {
                 error_log("Bitrix24 curl error: {$curlError}");
             } elseif ($httpCode !== 200) {
-                error_log("Bitrix24 HTTP {$httpCode}: " . mb_substr($response, 0, 500));
+                error_log("Bitrix24 HTTP {$httpCode}: " . mb_substr(is_string($response) ? $response : '', 0, 500));
+            } elseif (!is_string($response)) {
+                error_log('Bitrix24: unexpected non-string response');
             } else {
                 $result = json_decode($response, true);
                 if (!empty($result['error'])) {
@@ -992,8 +1010,9 @@ class Functions
 
         // Собираем specs из колонок вида spec_Название
         foreach ($row as $key => $value) {
-            if (str_starts_with($key, 'spec_') && $value !== '' && $value !== null) {
-                $specName = substr($key, 5); // Убираем префикс "spec_"
+            $keyStr = (string) $key;
+            if (str_starts_with($keyStr, 'spec_') && $value !== '' && $value !== null) {
+                $specName = substr($keyStr, 5); // Убираем префикс "spec_"
                 if (!isset($specs[$specName])) {
                     $specs[$specName] = $value;
                 }
@@ -1107,8 +1126,12 @@ class Functions
             }
 
             $content = file_get_contents($templateIndex);
+            if ($content === false) {
+                $result['errors'][] = "Failed to read: $templateIndex";
+                continue;
+            }
             // Заменяем productID в шаблоне
-            $content = preg_replace("/\\\$productID\s*=\s*['\"][^'\"]*['\"];/", "\$productID = '$productId';", $content);
+            $content = preg_replace("/\\\$productID\s*=\s*['\"][^'\"]*['\"];/", "\$productID = '$productId';", $content) ?? $content;
 
             if (file_put_contents($targetIndex, $content) === false) {
                 $result['errors'][] = "Failed to write: $targetIndex";
@@ -1291,7 +1314,7 @@ class Functions
                 $icon = 'fa-box';
                 $categoryTitle = mb_strtolower($product['categories']['title'] ?? '');
                 foreach ($categoryIcons as $keyword => $faIcon) {
-                    if (mb_stripos($categoryTitle, $keyword) !== false) {
+                    if (mb_stripos($categoryTitle, (string) $keyword) !== false) {
                         $icon = $faIcon;
                         break;
                     }
@@ -1339,6 +1362,9 @@ class Functions
         }
 
         $files = glob($csvDir . '/*.csv');
+        if ($files === false) {
+            return [];
+        }
         shuffle($files); // Перемешиваем файлы для случайности
 
         foreach ($files as $file) {
@@ -1370,7 +1396,7 @@ class Functions
                 $icon = 'fa-box';
                 $categoryTitle = mb_strtolower($product['categories']['title'] ?? '');
                 foreach ($categoryIcons as $keyword => $faIcon) {
-                    if (mb_stripos($categoryTitle, $keyword) !== false) {
+                    if (mb_stripos($categoryTitle, (string) $keyword) !== false) {
                         $icon = $faIcon;
                         break;
                     }
