@@ -299,7 +299,7 @@ $catalogSubcategories = $tree['subcategories'];
           <div class="leading-tight">
             <a href="mailto:<?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?>"
               class="text-[13px] font-medium text-gray-900 hover:text-red-500 transition-colors whitespace-nowrap"><?= htmlspecialchars($site['email'] ?? 'zakaz@kavstal.ru') ?></a>
-            <div class="text-[10px] text-gray-400 whitespace-nowrap">
+            <div class="text-xs text-gray-400 whitespace-nowrap">
               <?= htmlspecialchars($site['workingHours'] ?? 'пн-пт 09:00 - 18:00') ?>
             </div>
           </div>
@@ -317,7 +317,7 @@ $catalogSubcategories = $tree['subcategories'];
           <div class="leading-tight">
             <a href="tel:<?= htmlspecialchars($phone_clean) ?>"
               class="text-[13px] font-medium text-gray-900 hover:text-red-500 transition-colors whitespace-nowrap"><?= htmlspecialchars($site['phone']) ?></a>
-            <div class="text-[10px] text-gray-400">Заказать звонок</div>
+            <div class="text-xs text-gray-400">Заказать звонок</div>
           </div>
         </div>
 
@@ -351,7 +351,7 @@ $catalogSubcategories = $tree['subcategories'];
               d="M9.925 5.371a1 1 0 1 0-1.858-.742L6.317 9h-1.2c-1.076 0-1.614 0-1.913.346-.3.346-.222.878-.067 1.942l.271 1.864c.475 3.265.902 4.898 2.03 5.873s2.778.975 6.08.975h.96c3.302 0 4.953 0 6.08-.975 1.128-.975 1.559-2.608 2.034-5.873l.271-1.864c.155-1.064.233-1.596-.067-1.942S19.96 9 18.883 9h-1.205l-1.75-4.371a1 1 0 0 0-1.857.742L15.523 9h-7.05zM10.997 14v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 2 0M14 13a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1" />
           </svg>
           <span
-            class="cart-count-badge absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1"
+            class="cart-count-badge absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1"
             style="display:none"><?= $cartCount ?></span>
         </a>
 
@@ -363,7 +363,7 @@ $catalogSubcategories = $tree['subcategories'];
               d="M3 10.163C3 7.262 5.13 5 8 5c1.929 0 3.244 1.102 4 2.066C12.756 6.102 14.071 5 16 5c2.87 0 5 2.264 5 5.163 0 4.561-4.568 7.856-8.243 9.66a1.71 1.71 0 0 1-1.514 0C7.568 18.02 3 14.724 3 10.163" />
           </svg>
           <span id="favCountBadge"
-            class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1"
+            class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs font-bold rounded-full min-w-[16px] h-4 items-center justify-center px-1"
             style="display:none"></span>
         </a>
 
@@ -558,7 +558,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
           <circle cx="20" cy="21" r="1" />
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
         </svg>
-        Заявка <span class="cart-count-badge ml-1 text-[11px]" style="display:none"></span>
+        Заявка <span class="cart-count-badge ml-1 text-xs" style="display:none"></span>
       </a>
       <a href="/orders"
         class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium <?= $drawerCls(['/orders']) ?> transition-colors">
@@ -605,7 +605,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
 <div
   class="lg:hidden fixed bottom-0 left-0 right-0 z-[99] bg-white border-t border-gray-200 flex justify-around py-1.5">
   <a href="/"
-    class="flex flex-col items-center gap-0.5 no-underline text-[10px] font-medium py-1 px-3 <?= $bnmCls('/') ?>">
+    class="flex flex-col items-center gap-0.5 no-underline text-xs font-medium py-1 px-3 <?= $bnmCls('/') ?>">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
@@ -613,7 +613,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
     Главная
   </a>
   <a href="/market"
-    class="flex flex-col items-center gap-0.5 no-underline text-[10px] font-medium py-1 px-3 <?= $bnmCls(['/market']) ?>">
+    class="flex flex-col items-center gap-0.5 no-underline text-xs font-medium py-1 px-3 <?= $bnmCls(['/market']) ?>">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <rect x="2" y="7" width="20" height="15" rx="2" />
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
@@ -621,7 +621,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
     Каталог
   </a>
   <a href="/favorites"
-    class="flex flex-col items-center gap-0.5 no-underline text-[10px] font-medium py-1 px-3 <?= $bnmCls(['/favorites']) ?>">
+    class="flex flex-col items-center gap-0.5 no-underline text-xs font-medium py-1 px-3 <?= $bnmCls(['/favorites']) ?>">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path
         d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -629,7 +629,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
     Избранное
   </a>
   <a href="/cart"
-    class="relative flex flex-col items-center gap-0.5 no-underline text-[10px] font-medium py-1 px-3 <?= $bnmCls(['/cart']) ?>">
+    class="relative flex flex-col items-center gap-0.5 no-underline text-xs font-medium py-1 px-3 <?= $bnmCls(['/cart']) ?>">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <circle cx="9" cy="21" r="1" />
       <circle cx="20" cy="21" r="1" />
@@ -641,7 +641,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
     Заявка
   </a>
   <a href="/orders"
-    class="flex flex-col items-center gap-0.5 no-underline text-[10px] font-medium py-1 px-3 <?= $bnmCls(['/orders']) ?>">
+    class="flex flex-col items-center gap-0.5 no-underline text-xs font-medium py-1 px-3 <?= $bnmCls(['/orders']) ?>">
     <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <path
         d="M14.692 5.694c.368-.205.365-.469-.009-.664C13.367 4.343 12.708 4 12 4s-1.367.343-2.683 1.03l-2 1.044c-1.614.842-2.42 1.263-2.869 2.02C4 8.85 4 9.79 4 11.673v1.652c0 1.883 0 2.824.448 3.58s1.255 1.178 2.869 2.02l2 1.044C10.633 20.657 11.292 21 12 21s1.367-.343 2.683-1.03l2-1.044c1.614-.842 2.42-1.263 2.869-2.02.448-.756.448-1.697.448-3.58v-1.652c0-1.883 0-2.824-.448-3.58-.329-.556-.851-.93-1.744-1.423-.367-.203-.389-.204-.763.004L11 10c-.344.19-.739.394-.91.77-.09.197-.09.375-.09.73V14a1 1 0 0 1-2 0v-4a1 1 0 0 1 .514-.874z" />

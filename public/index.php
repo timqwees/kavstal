@@ -863,7 +863,7 @@
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4 text-white z-10">
                   <span
-                    class="inline-block bg-red-500 text-white text-[11px] font-semibold px-2 py-0.5 rounded-md mb-1.5"><?= $c['label'] ?></span>
+                    class="inline-block bg-red-500 text-white text-xs font-semibold px-2 py-0.5 rounded-md mb-1.5"><?= $c['label'] ?></span>
                   <div class="text-lg font-bold group-hover:underline"><?= $c['title'] ?></div>
                   <div class="text-xs text-white/80"><?= $c['subtitle'] ?></div>
                 </div>
@@ -991,7 +991,7 @@
                 </div>
                 <div class="min-w-0">
                   <span class="text-[13px] font-semibold text-zinc-800 group-hover:text-red-500 transition-colors leading-tight block truncate"><?= htmlspecialchars($cat['name']) ?></span>
-                  <span class="text-[11px] text-zinc-400 leading-tight"><?= $catCount ?> <?= $catCount === 1 ? 'товар' : ($catCount < 5 ? 'товара' : 'товаров') ?></span>
+                  <span class="text-xs text-zinc-400 leading-tight"><?= $catCount ?> <?= $catCount === 1 ? 'товар' : ($catCount < 5 ? 'товара' : 'товаров') ?></span>
                 </div>
               </a>
             <?php endforeach; ?>
@@ -1091,7 +1091,7 @@
 
       .video-kicker {
         display: block;
-        font-size: 11px;
+        font-size: 12px;
         font-weight: 500;
         letter-spacing: 0.14em;
         text-transform: uppercase;
@@ -1509,7 +1509,7 @@
 
           .news-kicker {
             display: block;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 500;
             letter-spacing: 0.14em;
             text-transform: uppercase;
@@ -1644,7 +1644,7 @@
             border-radius: 999px;
             background: rgba(20, 20, 20, 0.65);
             color: #fff;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             line-height: 1;
             pointer-events: none;
@@ -1663,7 +1663,7 @@
 
           .story-card-cat {
             display: block;
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 500;
             letter-spacing: 0.12em;
             text-transform: uppercase;

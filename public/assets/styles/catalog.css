@@ -229,7 +229,7 @@ body {
 }
 
 .ozon-header-action span {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-secondary);
     white-space: nowrap;
 }
@@ -241,7 +241,7 @@ body {
     right: 8px;
     background: var(--primary) !important;
     color: white !important;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     min-width: 18px;
     height: 18px;
@@ -1873,7 +1873,7 @@ body {
 }
 
 .ozon-filter-title {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -1913,7 +1913,7 @@ body {
 
 .ozon-filter-count {
     color: var(--text-tertiary);
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .ozon-filter-reset {
@@ -2063,7 +2063,7 @@ body {
 }
 
 .ozon-showcase-subcount {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-tertiary);
     margin-top: 2px;
 }
@@ -2286,7 +2286,7 @@ body {
 }
 
 .ozon-product-spec {
-    font-size: 11px;
+    font-size: 12px;
     padding: 2px 8px;
     background: var(--bg-input);
     border-radius: 4px;

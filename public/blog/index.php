@@ -226,14 +226,14 @@ function estimateReadTime(string $content): int {
             position: absolute; top: 10px; right: 10px;
             padding: 3px 8px; border-radius: 6px;
             background: rgba(255,255,255,0.92); backdrop-filter: blur(4px);
-            font-size: 11px; font-weight: 500; color: #6b7280;
+            font-size: 12px; font-weight: 500; color: #6b7280;
         }
 
         .article-card__readtime {
             position: absolute; bottom: 10px; left: 10px;
             padding: 3px 8px; border-radius: 6px;
             background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
-            font-size: 11px; font-weight: 600; color: #fff;
+            font-size: 12px; font-weight: 600; color: #fff;
             display: flex; align-items: center; gap: 4px;
         }
         .article-card__readtime svg { width: 11px; height: 11px; }
@@ -246,7 +246,7 @@ function estimateReadTime(string $content): int {
             display: inline-block; align-self: flex-start;
             padding: 2px 8px; border-radius: 6px;
             background: #f5f5f5; color: #6b7280;
-            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            font-size: 12px; font-weight: 600; text-transform: uppercase;
             letter-spacing: 0.03em; margin-bottom: 8px;
         }
         .article-card__title {
@@ -267,7 +267,7 @@ function estimateReadTime(string $content): int {
         .article-card__tag {
             padding: 2px 6px; border-radius: 4px;
             background: #f9fafb; color: #9ca3af;
-            font-size: 11px; font-weight: 500;
+            font-size: 12px; font-weight: 500;
         }
         .article-card__footer {
             display: flex; align-items: center; justify-content: space-between;
@@ -278,7 +278,7 @@ function estimateReadTime(string $content): int {
             width: 24px; height: 24px; border-radius: 50%;
             background: #dc2626; color: #fff;
             display: flex; align-items: center; justify-content: center;
-            font-size: 10px; font-weight: 700; flex-shrink: 0;
+            font-size: 12px; font-weight: 700; flex-shrink: 0;
         }
         .article-card__author-name { font-size: 12px; color: #6b7280; }
         .article-card__read {
@@ -311,7 +311,7 @@ function estimateReadTime(string $content): int {
             position: absolute; top: 14px; left: 14px;
             padding: 5px 12px; border-radius: 8px;
             background: #dc2626; color: #fff;
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
             letter-spacing: 0.05em; box-shadow: 0 2px 8px rgba(220,38,38,0.35);
         }
         .featured-card__body {

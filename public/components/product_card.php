@@ -54,7 +54,7 @@ if (preg_match('/\bRAL\s*(\d{4})\b/i', (string) $cardBrand, $mRal1)) {
         <span class="bg-red-500 text-white text-[11px] px-2 py-0.5 rounded-md font-semibold flex-shrink-0 leading-relaxed">
             <?= !empty($product['badge']) ? htmlspecialchars($product['badge']) : ($cardInStock ? 'Уточняйте наличие' : 'Под заказ') ?>
         </span>
-        <button type="button" class="add-to-fav-btn w-7 h-7 rounded-md border border-zinc-200 flex items-center justify-center shrink-0 hover:border-zinc-400 hover:bg-zinc-50 transition-colors" data-pid="<?= $cardPid ?>" title="В избранное">
+        <button type="button" class="add-to-fav-btn min-h-[44px] min-w-[44px] w-7 h-7 rounded-md border border-zinc-200 flex items-center justify-center shrink-0 hover:border-zinc-400 hover:bg-zinc-50 transition-colors" data-pid="<?= $cardPid ?>" title="В избранное">
             <svg width="13" height="11" viewBox="0 0 13 11" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6.5 10.01l-5.657 3.14a.584.584 0 0 1-.779-.205.54.54 0 0 1-.076-.277V3.61c0-.295.12-.577.335-.786A1.16 1.16 0 0 1 1.843 2.5c.922 0 1.823.435 2.657 1.268a.88.88 0 0 1 .082 1.067c-.47.722-1.285 1.333-2.018 1.626a.88.88 0 0 1-1.134 0L6.5 1.01V10.01z" stroke="#a1a1aa" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>

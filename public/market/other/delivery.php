@@ -147,7 +147,7 @@
                         любой город России. Сроки и стоимость рассчитываем индивидуально.</p>
                     <a href="/delivery-map"
                         class="group inline-flex items-center justify-center gap-3 bg-white text-red-600 px-8 py-4 rounded-xl font-extrabold text-lg shadow-2xl transition-all duration-300 ease-out hover:bg-red-50"
-                        style="min-width: 340px;">
+                        style="min-width: 280px;">
                         <i class="fas fa-map-marked-alt text-xl"></i>
                         <span>Карта отгрузок по всей России</span>
                         <i class="fas fa-arrow-right transition-transform duration-300 group-hover:scale-110"></i>

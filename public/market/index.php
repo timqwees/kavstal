@@ -121,12 +121,12 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                         <h1 class="mt-3 text-xl font-bold text-zinc-900 sm:text-2xl">Металлопрокат</h1>
                     </div>
                     <div class="flex items-center gap-1 bg-zinc-100 rounded-lg p-0.5">
-                            <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-500 p-2 shadow-sm transition-colors" title="Сетка">
+                            <button id="grid-view" class="flex items-center justify-center rounded-md bg-white text-red-500 p-3 min-h-[44px] min-w-[44px] shadow-sm transition-colors" title="Сетка">
                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.143 4H4.857A.857.857 0 0 0 4 4.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 10 9.143V4.857A.857.857 0 0 0 9.143 4Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286A.857.857 0 0 0 20 9.143V4.857A.857.857 0 0 0 19.143 4Zm-10 10H4.857a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286A.857.857 0 0 0 9.143 14Zm10 0h-4.286a.857.857 0 0 0-.857.857v4.286c0 .473.384.857.857.857h4.286a.857.857 0 0 0 .857-.857v-4.286a.857.857 0 0 0-.857-.857Z" />
                                 </svg>
                             </button>
-                            <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-2 text-zinc-600 hover:text-red-500 transition-colors" title="Список">
+                            <button id="list-view" class="flex items-center justify-center rounded-md border border-zinc-200 bg-white p-3 min-h-[44px] min-w-[44px] text-zinc-600 hover:text-red-500 transition-colors" title="Список">
                                 <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
                                 </svg>
@@ -408,7 +408,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
 
                                 <!-- Filter: Цена -->
                                 <div class="filter-group border-b border-zinc-100">
-                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-zinc-50">
+                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3.5 min-h-[48px] text-left transition hover:bg-zinc-50">
                                         <span class="text-sm font-medium text-zinc-700">Цена</span>
                                         <i class="fas fa-chevron-down filter-group-arrow text-[10px] text-zinc-300 transition-transform duration-200"></i>
                                     </button>
@@ -445,7 +445,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                 <!-- Filter: Марка стали -->
                                 <?php if (!empty($filterMarkas)): ?>
                                 <div class="filter-group border-b border-zinc-100">
-                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-zinc-50">
+                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3.5 min-h-[48px] text-left transition hover:bg-zinc-50">
                                         <span class="text-sm font-medium text-zinc-700">Марка стали</span>
                                         <i class="fas fa-chevron-down filter-group-arrow text-[10px] text-zinc-300 transition-transform duration-200 <?= empty($fMarka) ? 'rotate-180' : '' ?>"></i>
                                     </button>
@@ -456,7 +456,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                         </div>
                                         <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                             <?php $i = 0; foreach ($filterMarkas as $val => $cnt): $i++; ?>
-                                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
+                                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-3 min-h-[44px] rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
                                                 <input type="radio" name="marka" value="<?= htmlspecialchars($val) ?>"
                                                     <?= in_array($val, $fMarka, true) ? 'checked' : '' ?>
                                                     onchange="this.form.submit()"
@@ -477,7 +477,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                 <!-- Filter: ГОСТ -->
                                 <?php if (!empty($filterGosts)): ?>
                                 <div class="filter-group border-b border-zinc-100">
-                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-zinc-50">
+                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3.5 min-h-[48px] text-left transition hover:bg-zinc-50">
                                         <span class="text-sm font-medium text-zinc-700">ГОСТ</span>
                                         <i class="fas fa-chevron-down filter-group-arrow text-[10px] text-zinc-300 transition-transform duration-200 <?= empty($fGost) ? 'rotate-180' : '' ?>"></i>
                                     </button>
@@ -488,7 +488,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                         </div>
                                         <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                             <?php $i = 0; foreach ($filterGosts as $val => $cnt): $i++; ?>
-                                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
+                                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-3 min-h-[44px] rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
                                                 <input type="radio" name="gost" value="<?= htmlspecialchars($val) ?>"
                                                     <?= in_array($val, $fGost, true) ? 'checked' : '' ?>
                                                     onchange="this.form.submit()"
@@ -509,7 +509,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                 <!-- Filter: Размер -->
                                 <?php if (!empty($filterSizes)): ?>
                                 <div class="filter-group border-b border-zinc-100">
-                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3 text-left transition hover:bg-zinc-50">
+                                    <button type="button" class="filter-group-toggle w-full flex items-center justify-between gap-2 px-4 py-3.5 min-h-[48px] text-left transition hover:bg-zinc-50">
                                         <span class="text-sm font-medium text-zinc-700">Размер</span>
                                         <i class="fas fa-chevron-down filter-group-arrow text-[10px] text-zinc-300 transition-transform duration-200 <?= empty($fSize) ? 'rotate-180' : '' ?>"></i>
                                     </button>
@@ -520,7 +520,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                                         </div>
                                         <div class="space-y-1 max-h-60 overflow-y-auto pr-1.5">
                                             <?php $i = 0; foreach ($filterSizes as $val => $cnt): $i++; ?>
-                                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-2 rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
+                                            <label class="flex items-center gap-2 cursor-pointer group px-2 py-3 min-h-[44px] rounded-md hover:bg-zinc-50 transition <?= $i > 5 ? 'filter-extra hidden' : '' ?>">
                                                 <input type="radio" name="size" value="<?= htmlspecialchars($val) ?>"
                                                     <?= in_array($val, $fSize, true) ? 'checked' : '' ?>
                                                     onchange="this.form.submit()"

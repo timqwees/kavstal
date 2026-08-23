@@ -191,13 +191,28 @@
 
 <script>
   (function () {
+    // Mobile: не показываем автоматически (Google Mobile interstitial penalty)
+    var isMobile = window.matchMedia('(max-width: 767px)').matches;
     var shown = sessionStorage.getItem('specModalShown');
-    if (!shown) {
+    if (!shown && !isMobile) {
       setTimeout(function () {
-        document.getElementById('specOverlay').classList.add('show');
-        document.getElementById('specModal').classList.add('show');
+        // повторно проверяем, что пользователь не на мобильном (поворот экрана)
+        if (window.matchMedia('(max-width: 767px)').matches) return;
+        var o = document.getElementById('specOverlay'), m = document.getElementById('specModal');
+        if (o && m) { o.classList.add('show'); m.classList.add('show'); }
         sessionStorage.setItem('specModalShown', '1');
-      }, 15000);
+      }, 30000);
+    } else if (!shown && isMobile) {
+      // На мобильных показываем только по клику/скроллу 70%, не автоматом
+      var fired = false;
+      function tryShow() {
+        if (fired) return;
+        if (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) > 0.7) {
+          fired = true;
+          window.removeEventListener('scroll', tryShow);
+        }
+      }
+      window.addEventListener('scroll', tryShow, {passive:true});
     }
     function hide() {
       document.getElementById('specOverlay').classList.remove('show');
