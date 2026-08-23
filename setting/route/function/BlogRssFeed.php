@@ -11,7 +11,8 @@ class BlogRssFeed
         $articles = [];
 
         if (file_exists($blogFile)) {
-            $articles = json_decode(file_get_contents($blogFile), true) ?? [];
+            $raw = @file_get_contents($blogFile);
+            $articles = is_string($raw) ? (json_decode($raw, true) ?? []) : [];
         }
 
         // Сортируем по дате (новые сверху)
@@ -41,7 +42,8 @@ class BlogRssFeed
             $rawImg = $article['image'] ?? '/public/assets/images/bgpage/product.png';
             $img = (str_starts_with($rawImg, 'http://') || str_starts_with($rawImg, 'https://')) ? $rawImg : $site['baseUrl'] . $rawImg;
 
-            $pubDate = !empty($article['created_at']) ? date('r', strtotime($article['created_at'])) : date('r');
+            $ts = !empty($article['created_at']) ? strtotime((string)$article['created_at']) : false;
+            $pubDate = $ts !== false ? date('r', $ts) : date('r');
             $title = htmlspecialchars($article['title'] ?? '');
             $description = htmlspecialchars($article['excerpt'] ?? '');
             $category = htmlspecialchars($article['category'] ?? 'Статья');
@@ -64,7 +66,8 @@ class BlogRssFeed
                         $items = explode("\n", $block);
                         $fullContentHtml .= '<ul>';
                         foreach ($items as $li) {
-                            $li = trim(preg_replace('/^[-*]\s+/u', '', $li));
+                            $clean = preg_replace('/^[-*]\s+/u', '', (string)$li);
+                            $li = trim($clean ?? '');
                             if ($li !== '') $fullContentHtml .= '<li>' . htmlspecialchars($li) . '</li>';
                         }
                         $fullContentHtml .= '</ul>';

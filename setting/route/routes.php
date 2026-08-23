@@ -13,9 +13,10 @@ use App\Models\Order\Order;
 function splitQueryIntoWords(string $text): array
 {
     $text = mb_strtolower($text);
-    $text = preg_replace('/[^а-яёa-z0-9\\s]/u', ' ', $text);
-    $text = preg_replace('/\\s+/', ' ', trim($text));
-    return preg_split('/\\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+    $text = preg_replace('/[^а-яёa-z0-9\\s]/u', ' ', $text) ?? '';
+    $text = preg_replace('/\\s+/', ' ', trim($text)) ?? '';
+    $res = preg_split('/\\s+/', $text, -1, PREG_SPLIT_NO_EMPTY);
+    return $res !== false ? $res : [];
 }
 
 function russianToLatin(string $text): string
@@ -50,9 +51,10 @@ function latinToRussian(string $text): string
     ];
     $result = mb_strtolower($text);
     foreach ($map as $lat => $rus) {
-        $result = str_replace($lat, $rus, $result);
+        $result = str_replace((string)$lat, (string)$rus, $result);
     }
-    $result = preg_replace('/[^а-яёa-z]/u', '', $result);
+    $result = preg_replace('/[^а-яёa-z]/u', '', $result) ?? '';
+    /** @var array<string,string> $singleMap */
     $result = str_replace(array_keys($singleMap), array_values($singleMap), $result);
     return $result;
 }
