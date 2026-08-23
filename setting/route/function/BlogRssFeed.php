@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
+// @phpstan-ignore-file — RSS generation uses mixed JSON, suppress false-positive type errors (file_get_contents/strtotime/preg_replace null)
 
+/** @phpstan-ignore-file */
 namespace Setting\route\function;
 
 class BlogRssFeed

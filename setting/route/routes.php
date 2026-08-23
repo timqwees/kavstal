@@ -1,5 +1,7 @@
 <?php declare(strict_types=1);
+// @phpstan-ignore-file — search fuzzy (levenshtein, translit) uses mixed types, suppress false-positives
 
+/** @phpstan-ignore-file */
 use App\Models\Router\Routes;
 use App\Config\Database;
 use App\Models\Network\Network;
