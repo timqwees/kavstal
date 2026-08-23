@@ -7,8 +7,8 @@ $site = Setting\route\function\Functions::site();
 // 404 для неизвестного товара (Unknown / legacy Uknown) — до кэша, чтобы не отдавать закэшированный 200
 if (!empty($product['_not_found']) || ($product['title'] ?? '') === 'Uknown' || ($product['title'] ?? '') === 'Unknown') {
     http_response_code(404);
-    // Удаляем битый кэш если есть
-    $_tmpKey = 'product_' . md5($_SERVER['REQUEST_URI'] ?? '');
+    // Удаляем битый кэш если есть (с учётом хоста)
+    $_tmpKey = 'product_' . md5(($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''));
     $_tmpFile = __DIR__ . '/../../../../app/Storage/cache/html/' . $_tmpKey . '.html';
     if (is_file($_tmpFile)) @unlink($_tmpFile);
     if (ob_get_level()) { ob_end_clean(); }
@@ -16,13 +16,13 @@ if (!empty($product['_not_found']) || ($product['title'] ?? '') === 'Uknown' || 
     include dirname(__DIR__, 4) . '/app/Models/Router/view/404/404.html';
     return;
 }
-// HTML-кэш для страниц товаров (только для найденных)
+// HTML-кэш для страниц товаров (только для найденных) — ключ с хостом, чтобы 127.0.0.1 не отдавал кэш для www
 $_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']);
 $_cacheKey = '';
 $_cacheFile = '';
 $katalog = $katalog ?? '';
 if (!$_noCache) {
-    $_cacheKey = 'product_' . md5($_SERVER['REQUEST_URI'] ?? '');
+    $_cacheKey = 'product_' . md5(($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''));
     $_cacheFile = __DIR__ . '/../../../../app/Storage/cache/html/' . $_cacheKey . '.html';
     if (file_exists($_cacheFile) && (time() - filemtime($_cacheFile)) < 3600) {
         // ETag / Last-Modified для кэша

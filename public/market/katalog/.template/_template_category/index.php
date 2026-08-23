@@ -1,9 +1,9 @@
 <?php
-// HTML-кэш для страниц без фильтров/пагинации
+// HTML-кэш для страниц без фильтров/пагинации — ключ с хостом, чтобы 127.0.0.1 не отдавал кэш для www
 $cacheKey = '';
 $_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['diameter']) || !empty($_GET['ral']) || !empty($_GET['color']) || !empty($_GET['stock']) || !empty($_GET['price_from']) || !empty($_GET['price_to']) || !empty($_GET['sort']) || !empty($_GET['page']);
 if (!$_noCache) {
-    $cacheKey = 'katalog_' . md5($_SERVER['REQUEST_URI'] ?? '');
+    $cacheKey = 'katalog_' . md5(($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''));
     $cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $cacheKey . '.html';
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) {
         $etag = '"' . md5_file($cacheFile) . '"';

@@ -344,7 +344,7 @@ class Functions
                     'in_stock' => false,
                     'rating' => 0,
                     'badge' => 'Категория',
-                    'images' => [$categoryImages[$catTitle] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
+                    'images' => [$categoryImages[$catTitle] ?? 'https://www.kavstal.ru/public/assets/images/unknown/unknown.png'],
                     'specs' => [],
                     'seo' => [
                         'metaTitle' => ($catTitle && !in_array($catTitle, ['Категория', 'Подкатегория', 'Товар']) ? $catTitle : $catSlug) . ' | Купить в Москве | КАВ СТАЛЬ',
@@ -371,7 +371,7 @@ class Functions
                     'in_stock' => false,
                     'rating' => 0,
                     'badge' => 'Подкатегория',
-                    'images' => [$subcategoryImages[$subKey] ?? self::site()['baseUrl'] . '/public/assets/images/unknown/unknown.png'],
+                    'images' => [$subcategoryImages[$subKey] ?? 'https://www.kavstal.ru/public/assets/images/unknown/unknown.png'],
                     'specs' => [],
                     'seo' => [
                         'metaTitle' => ($subData['title'] && !in_array($subData['title'], ['Категория', 'Подкатегория', 'Товар']) ? $subData['title'] : $subData['slug']) . ' в ' . $subData['parent_title'] . ' | Купить в Москве | КАВ СТАЛЬ',
@@ -546,7 +546,7 @@ class Functions
         $catSlugs = [];
         $catCounts = [];
         $subCounts = [];
-        $baseUrl = self::site()['baseUrl'];
+        $baseUrl = 'https://www.kavstal.ru';
 
         if (is_dir($csvDir)) {
             $tables = self::listCsvTables($csvDir);
@@ -933,9 +933,9 @@ class Functions
         if ($фото !== '') {
             $images = array_values(array_filter(array_map('trim', explode(';', (string) $фото))));
         }
-        // Fallback: если локальный файл изображения отсутствует — подставляем заглушку
+        // Fallback: если локальный файл изображения отсутствует — подставляем заглушку (канонический домен, чтобы кэш не содержал 127.0.0.1)
         $root = dirname(__DIR__, 3);
-        $baseUrl = self::site()['baseUrl'];
+        $baseUrl = 'https://www.kavstal.ru';
         $unknownImg = $baseUrl . '/public/assets/images/unknown/unknown.png';
         foreach ($images as &$img) {
             $local = $img;
