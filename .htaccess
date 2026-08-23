@@ -5,13 +5,6 @@ RewriteBase /
 # требуют >= 256MB при декоде JSON на страницах товара и маркета.
 <IfModule mod_php.c>
   php_value memory_limit 256M
-  php_flag expose_php off
-</IfModule>
-<IfModule mod_php7.c>
-  php_flag expose_php off
-</IfModule>
-<IfModule mod_php8.c>
-  php_flag expose_php off
 </IfModule>
 
 # Принудительный HTTPS + www (канонический домен)
@@ -25,17 +18,16 @@ RewriteCond %{HTTPS} off
 RewriteCond %{HTTP_X_FORWARDED_PROTO} !https
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-# Security headers + CMS fingerprint (как у конкурента Bitrix → x-powered-cms)
+# Security headers
 <IfModule mod_headers.c>
-  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
-  Header always set X-Frame-Options "SAMEORIGIN"
-  Header always set X-Content-Type-Options "nosniff"
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
-  Header always set X-XSS-Protection "0"
-  Header always set Cross-Origin-Opener-Policy "same-origin"
-  Header always set X-Powered-CMS "QweesCore 2.1.0"
-  Header always set X-Powered-By "QweesCore"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+  Header set X-XSS-Protection "0"
+  Header set Cross-Origin-Opener-Policy "same-origin"
+  Header set X-Powered-CMS "QweesCore 2.1.0"
+  Header set X-Powered-By "QweesCore"
 </IfModule>
 
 # Кеш для статических ассетов
@@ -55,14 +47,9 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   ExpiresByType font/ttf "access plus 1 year"
 </IfModule>
 <IfModule mod_headers.c>
-  # Immutable только с версионированием (?v=filemtime) — безопасно 1 год
   <FilesMatch "\.(webp|avif|png|jpe?g|svg|css|js|woff2?|ttf|eot)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
     Header set Vary "Accept-Encoding"
-  </FilesMatch>
-  # HTML не кешируем жёстко
-  <FilesMatch "\.(html|php)$">
-    Header set Cache-Control "no-cache"
   </FilesMatch>
 </IfModule>
 
@@ -72,9 +59,6 @@ RewriteRule ^favicon\.ico$ public/assets/images/icons/favicon/favicon.ico [L]
 # Сжатие
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml font/woff2
-</IfModule>
-<IfModule mod_brotli.c>
-  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
 </IfModule>
 
 # Если файл или директория существуют, используем их напрямую
