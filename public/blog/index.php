@@ -575,7 +575,7 @@ function estimateReadTime(string $content): int {
 <script>
 var currentFilter = 'all';
 var searchQuery = '';
-var pageSize = 9;
+var pageSize = 100;
 var visibleCount = pageSize;
 
 document.addEventListener('DOMContentLoaded', function () {
