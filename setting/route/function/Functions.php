@@ -767,7 +767,7 @@ class Functions
             'fields' => [
                 'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
                 'CATEGORY_ID' => 5,
-                'STAGE_ID' => 1,
+                'STAGE_ID' => "C5:NEW",
                 'COMMENTS' => $info,
             ]
         ]);
