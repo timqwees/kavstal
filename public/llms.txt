@@ -30,3 +30,18 @@
 - Резка металла
 - Газгольдерное оборудование
 - Труба обечайка
+
+## Блог (топ-10 горячих)
+- [Цены на металлопрокат осень-зима 2026: прогноз по арматуре, трубе, листу](https://www.kavstal.ru/blog/tseny-na-metalloprokat-osen-zima-2026-prognoz-po-armature-tr)
+- [Почему дорожает металл в сентябре — что закупать сейчас](https://www.kavstal.ru/blog/pochemu-dorozhaet-metall-v-sentyabre-chto-zakupat-seychas)
+- [Как хранить металлопрокат зимой на открытом складе](https://www.kavstal.ru/blog/kak-khranit-metalloprokat-zimoy-na-otkrytom-sklade)
+- [Зимнее бетонирование: какая арматура и добавки нужны при -15°](https://www.kavstal.ru/blog/zimnee-betonirovanie-kakaya-armatura-i-dobavki-nuzhny-pri-15)
+- [Фундамент осенью: арматура, сетка, проволока — полный сметный расчет](https://www.kavstal.ru/blog/fundament-osenyu-armatura-setka-provoloka-polnyy-smetnyy-ras)
+- [Кровля под зиму: профнастил vs металлочерепица — что успеть смонтировать](https://www.kavstal.ru/blog/krovlya-pod-zimu-profnastil-vs-metallocherepitsa-chto-uspet)
+- [Антикоррозийная защита металла перед зимой: грунт, оцинковка, покраска](https://www.kavstal.ru/blog/antikorroziynaya-zashchita-metalla-pered-zimoy-grunt-otsinko)
+- [Закупка металлопроката впрок — как сэкономить 15% до весеннего роста](https://www.kavstal.ru/blog/zakupka-metalloprokata-vprok-kak-sekonomit-15-do-vesennego-r)
+- [Доставка металла в МО зимой: как не встать из-за снега (кейс КАВ СТАЛЬ)](https://www.kavstal.ru/blog/dostavka-metalla-v-mo-zimoy-kak-ne-vstat-iz-za-snega-keys-ka)
+- [Резка металла в размер осенью — экономия на отходах](https://www.kavstal.ru/blog/rezka-metalla-v-razmer-osenyu-ekonomiya-na-otkhodakh)
+
+Полный список 100 статей: https://www.kavstal.ru/llms-full.txt
+RSS: https://www.kavstal.ru/rss.xml | Sitemap: https://www.kavstal.ru/sitemap.xml

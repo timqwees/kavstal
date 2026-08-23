@@ -895,5 +895,51 @@ document.addEventListener('DOMContentLoaded', function() {
     "url": <?= json_encode($pageUrl, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>
 }
 </script>
+<?php
+// FAQPage + HowTo + BreadcrumbList — для 100 горячих статей
+$faqJson = null;
+$howToJson = null;
+if (!empty($article['content']) && str_contains($article['content'], 'FAQ')) {
+    $faqItems = [];
+    // Парсим блоки **Вопрос: ...** Ответ: ...
+    if (preg_match_all('/\*\*Вопрос:\s*(.+?)\*\*\s*Ответ:\s*(.+?)(?=\n\*\*Вопрос:|\n## |\z)/su', $article['content'], $m, PREG_SET_ORDER)) {
+        foreach ($m as $qa) {
+            $q = trim(strip_tags($qa[1]));
+            $a = trim(strip_tags($qa[2]));
+            if ($q && $a) $faqItems[] = ['@type'=>'Question','name'=>$q,'acceptedAnswer'=>['@type'=>'Answer','text'=>$a]];
+        }
+    }
+    if (count($faqItems) >= 2) {
+        $faqJson = ['@context'=>'https://schema.org','@type'=>'FAQPage','mainEntity'=>array_slice($faqItems,0,6)];
+    }
+}
+if (!empty($article['content']) && str_contains($article['content'], 'Пошаговая инструкция')) {
+    preg_match_all('/\d+\.\s+(.+)/', $article['content'], $steps);
+    $howSteps = [];
+    foreach (array_slice($steps[1] ?? [],0,6) as $s) {
+        $s = trim(strip_tags($s));
+        if ($s) $howSteps[] = ['@type'=>'HowToStep','name'=>$s,'text'=>$s];
+    }
+    if (count($howSteps) >= 2) {
+        $howToJson = ['@context'=>'https://schema.org','@type'=>'HowTo','name'=>$article['title'],'step'=>$howSteps,'totalTime'=>'PT15M'];
+    }
+}
+if ($faqJson): ?>
+<script type="application/ld+json"><?= json_encode($faqJson, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT) ?></script>
+<?php endif; ?>
+<?php if ($howToJson): ?>
+<script type="application/ld+json"><?= json_encode($howToJson, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES|JSON_PRETTY_PRINT) ?></script>
+<?php endif; ?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {"@type":"ListItem","position":1,"name":"Главная","item":"<?= $site['baseUrl'] ?>/"},
+    {"@type":"ListItem","position":2,"name":"Блог","item":"<?= $site['baseUrl'] ?>/blog"},
+    {"@type":"ListItem","position":3,"name":<?= json_encode($article['title'], JSON_UNESCAPED_UNICODE) ?>,"item":<?= json_encode($pageUrl, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES) ?>}
+  ]
+}
+</script>
 </body>
 </html>

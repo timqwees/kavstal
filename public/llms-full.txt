@@ -1,12 +1,12 @@
 # КАВ СТАЛЬ — Полная информация о компании
-> Дата обновления: 2026-07-14
+> Дата обновления: 2026-08-23
 
 ## О компании
 ООО «КАВ Сталь» (ИНН 9719080724, ОГРН 1257700303838) — поставщик металлопроката по Москве и Московской области. Работаем напрямую с заводами-производителями, обеспечиваем сертификаты качества ГОСТ на всю продукцию.
 
 ### Контактная информация
 - Полное наименование: ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ «КАВ СТАЛЬ»
-- Юридический адрес: г. Москва, ул. Семёновская площадь, дом 7
+- Юридический адрес: г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2
 - Фактический адрес: Проектируемый проезд №8342 вл. 5 (Хованская промзона)
 - Телефон: +7 (495) 989-24-20
 - Email: zakaz@kavstal.ru
@@ -21,80 +21,54 @@
 ## Каталог продукции
 
 ### Сортовой прокат
-- Арматура А500С (диаметр 10-40 мм)
-- Балка двутавровая (№10-№30)
-- Швеллер (№5-№30)
-- Уголок равнополочный (25x25-200x200 мм)
-- Круг стальной
-- Квадрат стальной
-- Полоса стальная
-- Катанка
+- Арматура А500С (диаметр 10-40 мм) — /market/katalog/armatura
+- Балка двутавровая (№10-№30) — /market/katalog/balki
+- Швеллер (№5-№30) — /market/katalog/shveller
+- Уголок равнополочный (25x25-200x200 мм) — /market/katalog/ugolok
+- Круг стальной — /market/katalog/krug-kvadrat-polosa
+- Квадрат стальной — /market/katalog/krug-kvadrat-polosa
+- Полоса стальная — /market/katalog/krug-kvadrat-polosa
+- Катанка — /market/katalog/provoloka
 
 ### Листовой прокат
-- Лист горячекатаный (1.5-20 мм)
-- Лист холоднокатаный
-- Лист рифленый
-- Лист оцинкованный
-- Просечно-вытяжной лист
-- Профнастил (оцинкованный, окрашенный)
+- Лист горячекатаный (1.5-20 мм) — /market/katalog/listovoy-prokat
+- Лист холоднокатаный — /market/katalog/listovoy-prokat
+- Лист рифленый — /market/katalog/listovoy-prokat
+- Лист оцинкованный — /market/katalog/listovoy-prokat
+- Просечно-вытяжной лист — /market/katalog/listovoy-prokat
+- Профнастил (оцинкованный, окрашенный) — /market/katalog/profnastil
 
 ### Трубы
-- Труба электросварная
-- Труба водогазопроводная (черная и оцинкованная)
-- Труба профильная (20x20-400x200 мм)
-- Труба бесшовная
-- Труба нержавеющая
-- Труба чугунная
+- Труба электросварная — /market/katalog/truby
+- Труба водогазопроводная (черная и оцинкованная) — /market/katalog/truby
+- Труба профильная (20x20-400x200 мм) — /market/katalog/truby
+- Труба бесшовная — /market/katalog/truby
+- Труба нержавеющая — /market/katalog/nerzhaveyushchaya-stal
 
 ### Нержавеющая сталь
-- Лист нержавеющий
-- Круг нержавеющий
-- Квадрат нержавеющий
-- Шестигранник нержавеющий
-- Труба нержавеющая
-- Проволока нержавеющая
+- Лист нержавеющий — /market/katalog/nerzhaveyushchaya-stal
+- Круг нержавеющий — /market/katalog/nerzhaveyushchaya-stal
+- Труба нержавеющая — /market/katalog/nerzhaveyushchaya-stal
 
 ### Цветные металлы
-- Алюминиевый лист, круг, труба, профиль, проволока
-- Медный лист, круг, труба, лента
-- Латунный лист, круг, лента, шестигранник
-- Дюралевый лист, круг, плита, шестигранник
-- Бронзовый круг
+- Алюминиевый лист, круг, труба — /market/katalog/tsvetnye-metally
+- Медный лист, круг, труба — /market/katalog/tsvetnye-metally
+- Латунный прокат — /market/katalog/tsvetnye-metally
 
-### Профнастил
-- Профнастил оцинкованный
-- Профнастил окрашенный
-
-### Крепеж и метизы
-- Болты, гайки, шайбы, винты, шурупы, саморезы
-- Шплинты, шпильки, дюбеля, анкерная техника
-- Гвозди, проволока, канаты, сетка
-- Электроды сварочные
-
-### Инженерные системы
-- Шаровые краны (латунные, стальные)
-- Фланцы, отводы, переходы, тройники
-- Задвижки, фильтры, клапаны
-- Теплоизоляция
-- Радиаторы, коллекторы
-
-### Резка металла
-- Лазерная резка металла до 25 мм
-- Плазменная резка до 150 мм
-- Ленточнопильная резка с точностью до 0.5 мм
-- Гибка листового металла до 12 мм
-- Ручная резка
+### Прочие
+- Крепеж и метизы — /market/katalog/krepezh-i-metizy
+- Сетка сварная/рабица — /market/katalog/setka
+- Проволока — /market/katalog/provoloka
+- Полимеры — /market/katalog/polimery-i-tekhnicheskie-materialy
+- Детали трубопроводов — /market/katalog/detali-truboprovodov
+- Трубопроводная арматура — /market/katalog/truboprovodnaya-armatura
 
 ## Услуги
-- Доставка автотранспортом по Москве и области (1-3 дня)
-- Ж/д доставка по всей России
-- Лазерная резка металла
-- Плазменная резка металла
-- Гибка металла
-- Горячее цинкование (защита от коррозии до 50 лет)
-- Изоляция труб
-- Резка металла в размер
-- Комплексные поставки металлопроката
+- Доставка автотранспортом по Москве и области (1-3 дня) — /delivery
+- Карта отгрузок 100+ городов — /delivery-map
+- Резка металла в размер — /services
+- Гибка, сварка, оцинковка — /services
+- Комплексные поставки 16000+ наименований
 
 ## Преимущества
 1. Быстрая доставка — от 24 часов
@@ -102,17 +76,124 @@
 3. Доставка в день оплаты
 4. Счет за 20 минут (до 15 позиций)
 5. Сертификаты качества ГОСТ
-6. Менеджер на связи 24/7
-7. Комплексные поставки (12000+ наименований)
-8. Прямые цены от производителей
-9. Резка в размер без остатка
+6. Комплексные поставки (16000+ наименований)
+7. Прямые цены от производителей
+8. Резка в размер без остатка
+
+## Блог — 100 горячих тем осень-зима 2026 (SEO, FAQPage/HowTo, перелинковка)
+- [Цены на металлопрокат осень-зима 2026: прогноз по арматуре, трубе, листу](https://www.kavstal.ru/blog/tseny-na-metalloprokat-osen-zima-2026-prognoz-po-armature-tr) — Справочник | цены металлопрокат 2026, прогноз, арматура цена, труба цена,
+- [Почему дорожает металл в сентябре — что закупать сейчас](https://www.kavstal.ru/blog/pochemu-dorozhaet-metall-v-sentyabre-chto-zakupat-seychas) — Справочник | металл дорожает, сентябрь, закупка, цены
+- [Как хранить металлопрокат зимой на открытом складе](https://www.kavstal.ru/blog/kak-khranit-metalloprokat-zimoy-na-otkrytom-sklade) — Справочник | хранение металла зимой, склад, коррозия, консервация
+- [Зимнее бетонирование: какая арматура и добавки нужны при -15°](https://www.kavstal.ru/blog/zimnee-betonirovanie-kakaya-armatura-i-dobavki-nuzhny-pri-15) — Сортовой прокат | зимнее бетонирование, арматура зимой, добавки, фундамент зим
+- [Фундамент осенью: арматура, сетка, проволока — полный сметный расчет](https://www.kavstal.ru/blog/fundament-osenyu-armatura-setka-provoloka-polnyy-smetnyy-ras) — Сортовой прокат | фундамент осенью, арматура, сетка, проволока, смета
+- [Кровля под зиму: профнастил vs металлочерепица — что успеть смонтировать](https://www.kavstal.ru/blog/krovlya-pod-zimu-profnastil-vs-metallocherepitsa-chto-uspet) — Листовой прокат | кровля под зиму, профнастил, металлочерепица, монтаж
+- [Антикоррозийная защита металла перед зимой: грунт, оцинковка, покраска](https://www.kavstal.ru/blog/antikorroziynaya-zashchita-metalla-pered-zimoy-grunt-otsinko) — Услуги | антикоррозия, грунт, оцинковка, покраска металла
+- [Закупка металлопроката впрок — как сэкономить 15% до весеннего роста](https://www.kavstal.ru/blog/zakupka-metalloprokata-vprok-kak-sekonomit-15-do-vesennego-r) — Справочник | закупка впрок, сэкономить, весна цены
+- [Доставка металла в МО зимой: как не встать из-за снега (кейс КАВ СТАЛЬ)](https://www.kavstal.ru/blog/dostavka-metalla-v-mo-zimoy-kak-ne-vstat-iz-za-snega-keys-ka) — Услуги | доставка зимой, МО, снег, КАВ СТАЛЬ
+- [Резка металла в размер осенью — экономия на отходах](https://www.kavstal.ru/blog/rezka-metalla-v-razmer-osenyu-ekonomiya-na-otkhodakh) — Услуги | резка металла в размер, осень, экономия
+- [Вес арматуры А500С: таблица 6-32мм, расчет тонна-метры](https://www.kavstal.ru/blog/ves-armatury-a500s-tablitsa-6-32mm-raschet-tonna-metry) — Сортовой прокат | вес арматуры, А500С, таблица, тонна метры
+- [А500С vs А240 vs А400 — какую арматуру выбрать для фундамента/плиты](https://www.kavstal.ru/blog/a500s-vs-a240-vs-a400-kakuyu-armaturu-vybrat-dlya-fundamenta) — Сортовой прокат | А500С А240 А400 сравнение, фундамент
+- [Арматура 12мм — самая ходовая: сколько метров в тонне, цена, применение](https://www.kavstal.ru/blog/armatura-12mm-samaya-khodovaya-skolko-metrov-v-tonne-tsena-p) — Сортовой прокат | арматура 12мм, метров в тонне, цена
+- [ГОСТ 34028-2016 на арматуру — что изменилось в 2026](https://www.kavstal.ru/blog/gost-34028-2016-na-armaturu-chto-izmenilos-v-2026) — Справочник | ГОСТ 34028-2016, арматура, изменения 2026
+- [Композитная vs стальная арматура — честное сравнение](https://www.kavstal.ru/blog/kompozitnaya-vs-stalnaya-armatura-chestnoe-sravnenie) — Сортовой прокат | композитная арматура, стальная, сравнение
+- [Сколько арматуры нужно на ленточный фундамент 10х10](https://www.kavstal.ru/blog/skolko-armatury-nuzhno-na-lentochnyy-fundament-10kh10) — Сортовой прокат | арматура ленточный фундамент 10х10, расчет
+- [Арматура в бухтах vs прутках — когда что выгоднее](https://www.kavstal.ru/blog/armatura-v-bukhtakh-vs-prutkakh-kogda-chto-vygodnee) — Сортовой прокат | арматура бухты прутки, выгода
+- [Ржавая арматура — можно ли использовать, как очистить](https://www.kavstal.ru/blog/rzhavaya-armatura-mozhno-li-ispolzovat-kak-ochistit) — Сортовой прокат | ржавая арматура, очистка, можно ли
+- [Вязка vs сварка арматуры — что прочнее по ГОСТ](https://www.kavstal.ru/blog/vyazka-vs-svarka-armatury-chto-prochnee-po-gost) — Сортовой прокат | вязка сварка арматуры, ГОСТ
+- [Катанка 6.5мм — применение, вес, цена](https://www.kavstal.ru/blog/katanka-6-5mm-primenenie-ves-tsena) — Сортовой прокат | катанка 6.5, вес, применение
+- [Труба профильная 40х20, 60х40, 80х80 — вес, сортамент, цена](https://www.kavstal.ru/blog/truba-profilnaya-40kh20-60kh40-80kh80-ves-sortament-tsena) — Трубный прокат | труба профильная 40х20 60х40 80х80, вес
+- [Электросварная vs бесшовная труба — где какая нужна](https://www.kavstal.ru/blog/elektrosvarnaya-vs-besshovnaya-truba-gde-kakaya-nuzhna) — Трубный прокат | электросварная бесшовная труба сравнение
+- [Труба ВГП — размеры, ГОСТ 3262, применение в отоплении](https://www.kavstal.ru/blog/truba-vgp-razmery-gost-3262-primenenie-v-otoplenii) — Трубный прокат | труба ВГП ГОСТ 3262, отопление
+- [Круглая труба 57, 76, 108, 159 — вес 1м, где применяют](https://www.kavstal.ru/blog/kruglaya-truba-57-76-108-159-ves-1m-gde-primenyayut) — Трубный прокат | труба 57 76 108 159 вес
+- [Профильная труба для забора/навеса — как выбрать толщину стенки](https://www.kavstal.ru/blog/profilnaya-truba-dlya-zabora-navesa-kak-vybrat-tolshchinu-st) — Трубный прокат | профильная труба забор навес толщина
+- [Оцинкованная труба — когда переплачивать стоит](https://www.kavstal.ru/blog/otsinkovannaya-truba-kogda-pereplachivat-stoit) — Трубный прокат | оцинкованная труба, стоит ли
+- [Таблица веса труб — круглых и профильных (скачать)](https://www.kavstal.ru/blog/tablitsa-vesa-trub-kruglykh-i-profilnykh-skachat) — Справочник | таблица веса труб, скачать
+- [Труба 100х100х4 — сколько кг в 6м, цена за метр/тонну](https://www.kavstal.ru/blog/truba-100kh100kh4-skolko-kg-v-6m-tsena-za-metr-tonnu) — Трубный прокат | труба 100х100х4 вес 6м
+- [Чем резать трубу ровно — резка на КАВ СТАЛЬ в размер](https://www.kavstal.ru/blog/chem-rezat-trubu-rovno-rezka-na-kav-stal-v-razmer) — Услуги | резать трубу ровно, резка в размер
+- [Трубы для свай — какие берут под фундамент осенью](https://www.kavstal.ru/blog/truby-dlya-svay-kakie-berut-pod-fundament-osenyu) — Трубный прокат | трубы для свай, фундамент осенью
+- [Лист г/к vs х/к vs оцинкованный — отличия и цены](https://www.kavstal.ru/blog/list-g-k-vs-kh-k-vs-otsinkovannyy-otlichiya-i-tseny) — Листовой прокат | лист г/к х/к оцинкованный отличия
+- [Лист 2мм, 3мм, 4мм, 10мм — вес 1м², раскрой](https://www.kavstal.ru/blog/list-2mm-3mm-4mm-10mm-ves-1m²-raskroy) — Листовой прокат | лист 2мм 3мм 4мм 10мм вес
+- [Рифленый лист — где нужен, ГОСТ, сортамент](https://www.kavstal.ru/blog/riflenyy-list-gde-nuzhen-gost-sortament) — Листовой прокат | рифленый лист ГОСТ сортамент
+- [Просечно-вытяжной лист (ПВЛ) — вес, применение](https://www.kavstal.ru/blog/prosechno-vytyazhnoy-list-pvl-ves-primenenie) — Листовой прокат | ПВЛ вес применение
+- [Оцинкованный лист 0.5 — для забора и кровли](https://www.kavstal.ru/blog/otsinkovannyy-list-0-5-dlya-zabora-i-krovli) — Листовой прокат | оцинкованный лист 0.5 забор кровля
+- [Вес листа: формула + онлайн-калькулятор](https://www.kavstal.ru/blog/ves-lista-formula-onlayn-kalkulyator) — Справочник | вес листа формула калькулятор
+- [Чем резать лист — гильотина vs лазер, допуски](https://www.kavstal.ru/blog/chem-rezat-list-gilotina-vs-lazer-dopuski) — Услуги | резать лист гильотина лазер допуски
+- [Балка двутавровая 16, 20, 30 — несущая способность, вес](https://www.kavstal.ru/blog/balka-dvutavrovaya-16-20-30-nesushchaya-sposobnost-ves) — Сортовой прокат | балка 16 20 30 несущая способность
+- [Швеллер 10П, 12П, 16П — размеры, ГОСТ 8240, цена](https://www.kavstal.ru/blog/shveller-10p-12p-16p-razmery-gost-8240-tsena) — Сортовой прокат | швеллер 10П 12П 16П ГОСТ 8240
+- [Уголок 50х50, 75х75, 100х100 — вес, где применяют](https://www.kavstal.ru/blog/ugolok-50kh50-75kh75-100kh100-ves-gde-primenyayut) — Сортовой прокат | уголок 50 75 100 вес
+- [Круг стальной 20, 30, 40 — сортамент, ГОСТ](https://www.kavstal.ru/blog/krug-stalnoy-20-30-40-sortament-gost) — Сортовой прокат | круг стальной 20 30 40 ГОСТ
+- [Квадрат и полоса — сортамент и применение в ковке](https://www.kavstal.ru/blog/kvadrat-i-polosa-sortament-i-primenenie-v-kovke) — Сортовой прокат | квадрат полоса сортамент ковка
+- [Гнутый швеллер vs горячекатаный — разница](https://www.kavstal.ru/blog/gnutyy-shveller-vs-goryachekatanyy-raznitsa) — Сортовой прокат | гнутый швеллер горячекатаный разница
+- [Как рассчитать балку на прогиб — простой пример](https://www.kavstal.ru/blog/kak-rasschitat-balku-na-progib-prostoy-primer) — Сортовой прокат | рассчитать балку прогиб пример
+- [Профнастил С8, С21, НС35, Н60 — какой для забора/крыши/перекрытия](https://www.kavstal.ru/blog/profnastil-s8-s21-ns35-n60-kakoy-dlya-zabora-kryshi-perekryt) — Листовой прокат | профнастил С8 С21 НС35 Н60
+- [Оцинкованный vs окрашенный профнастил — срок службы](https://www.kavstal.ru/blog/otsinkovannyy-vs-okrashennyy-profnastil-srok-sluzhby) — Листовой прокат | оцинкованный окрашенный профнастил срок
+- [Толщина профнастила 0.4 vs 0.5 — стоит ли переплачивать](https://www.kavstal.ru/blog/tolshchina-profnastila-0-4-vs-0-5-stoit-li-pereplachivat) — Листовой прокат | толщина профнастила 0.4 0.5
+- [Сколько профнастила нужно на крышу — расчет](https://www.kavstal.ru/blog/skolko-profnastila-nuzhno-na-kryshu-raschet) — Листовой прокат | сколько профнастила на крышу расчет
+- [Водосточная система — металл vs пластик зимой](https://www.kavstal.ru/blog/vodostochnaya-sistema-metall-vs-plastik-zimoy) — Листовой прокат | водосточная система металл пластик зима
+- [Нержавейка AISI 304 vs 430 — магнитит или нет](https://www.kavstal.ru/blog/nerzhaveyka-aisi-304-vs-430-magnitit-ili-net) — Нержавеющая сталь | нержавейка 304 430 магнит
+- [Лист нержавеющий 1мм, 2мм — цена, где берут](https://www.kavstal.ru/blog/list-nerzhaveyushchiy-1mm-2mm-tsena-gde-berut) — Нержавеющая сталь | лист нержавеющий 1мм 2мм цена
+- [Круг нержавеющий 12Х18Н10Т — характеристики](https://www.kavstal.ru/blog/krug-nerzhaveyushchiy-12kh18n10t-kharakteristiki) — Нержавеющая сталь | круг 12Х18Н10Т характеристики
+- [Алюминий лист/круг — веса, сплавы Д16, АМг](https://www.kavstal.ru/blog/alyuminiy-list-krug-vesa-splavy-d16-amg) — Цветные металлы | алюминий лист круг Д16 АМг
+- [Медный, латунный, бронзовый прокат — применение](https://www.kavstal.ru/blog/mednyy-latunnyy-bronzovyy-prokat-primenenie) — Цветные металлы | медный латунный бронзовый прокат
+- [Качественные стали 09Г2С, 30ХГСА — где нужны](https://www.kavstal.ru/blog/kachestvennye-stali-09g2s-30khgsa-gde-nuzhny) — Качественные и специальные стали | 09Г2С 30ХГСА где нужны
+- [Спецстали для ножей/пружин — обзор](https://www.kavstal.ru/blog/spetsstali-dlya-nozhey-pruzhin-obzor) — Качественные и специальные стали | спецстали ножи пружины обзор
+- [Болты, гайки, шпильки — классы прочности 8.8, 10.9](https://www.kavstal.ru/blog/bolty-gayki-shpilki-klassy-prochnosti-8-8-10-9) — Крепёж и метизы | болты гайки 8.8 10.9
+- [Сетка сварная, рабица, кладочная — размеры ячеек, вес](https://www.kavstal.ru/blog/setka-svarnaya-rabitsa-kladochnaya-razmery-yacheek-ves) — Сортовой прокат | сетка сварная рабица кладочная вес
+- [Проволока вязальная 1.2мм — расход на тонну арматуры](https://www.kavstal.ru/blog/provoloka-vyazalnaya-1-2mm-raskhod-na-tonnu-armatury) — Сортовой прокат | проволока вязальная 1.2 расход
+- [Полимеры и техпластина — где применяют в стройке](https://www.kavstal.ru/blog/polimery-i-tekhplastina-gde-primenyayut-v-stroyke) — Полимеры и технические материалы | полимеры техпластина стройка
+- [Отводы, тройники, переходы — сортамент](https://www.kavstal.ru/blog/otvody-troyniki-perekhody-sortament) — Детали трубопроводов | отводы тройники переходы сортамент
+- [Задвижки, фланцы — как подобрать по Ду](https://www.kavstal.ru/blog/zadvizhki-flantsy-kak-podobrat-po-du) — Трубопроводная арматура | задвижки фланцы Ду подбор
+- [ГОСТы на металлопрокат — полный список с расшифровкой](https://www.kavstal.ru/blog/gosty-na-metalloprokat-polnyy-spisok-s-rasshifrovkoy) — Справочник | ГОСТ металлопрокат список расшифровка
+- [Сортамент металлопроката — что это, таблицы](https://www.kavstal.ru/blog/sortament-metalloprokata-chto-eto-tablitsy) — Справочник | сортамент металлопроката что это
+- [Калькулятор веса металла — как считать без ошибок](https://www.kavstal.ru/blog/kalkulyator-vesa-metalla-kak-schitat-bez-oshibok) — Справочник | калькулятор веса металла
+- [Марки стали Ст3, 09Г2С, С245 — расшифровка](https://www.kavstal.ru/blog/marki-stali-st3-09g2s-s245-rasshifrovka) — Справочник | марки стали Ст3 09Г2С С245
+- [Распил, гибка, сварка, оцинковка — цены услуг КАВ СТАЛЬ](https://www.kavstal.ru/blog/raspil-gibka-svarka-otsinkovka-tseny-uslug-kav-stal) — Услуги | распил гибка сварка оцинковка цены
+- [Как проверить сертификат на металл — что должно быть](https://www.kavstal.ru/blog/kak-proverit-sertifikat-na-metall-chto-dolzhno-byt) — Справочник | проверить сертификат металл
+- [Обман при продаже металла — недовес, подмена марки](https://www.kavstal.ru/blog/obman-pri-prodazhe-metalla-nedoves-podmena-marki) — Справочник | обман металл недовес подмена
+- [Черный vs оцинкованный vs нержавейка — что выбрать](https://www.kavstal.ru/blog/chernyy-vs-otsinkovannyy-vs-nerzhaveyka-chto-vybrat) — Справочник | черный оцинкованный нержавейка выбор
+- [Стройка в дождь и грязь — как организовать площадку](https://www.kavstal.ru/blog/stroyka-v-dozhd-i-gryaz-kak-organizovat-ploshchadku) — Справочник | стройка дождь грязь площадка
+- [Склад металла осенью — как не допустить коррозии](https://www.kavstal.ru/blog/sklad-metalla-osenyu-kak-ne-dopustit-korrozii) — Справочник | склад металла осенью коррозия
+- [Забор из профнастила осенью — пошаговый монтаж](https://www.kavstal.ru/blog/zabor-iz-profnastila-osenyu-poshagovyy-montazh) — Листовой прокат | забор профнастила осенью монтаж
+- [Навес из профильной трубы своими руками — смета 2026](https://www.kavstal.ru/blog/naves-iz-profilnoy-truby-svoimi-rukami-smeta-2026) — Трубный прокат | навес профильная труба смета
+- [Теплица из трубы 20х20 — чертеж и расчет металла](https://www.kavstal.ru/blog/teplitsa-iz-truby-20kh20-chertezh-i-raschet-metalla) — Трубный прокат | теплица труба 20х20 чертеж
+- [Лестница из швеллера — расчет и монтаж](https://www.kavstal.ru/blog/lestnitsa-iz-shvellera-raschet-i-montazh) — Сортовой прокат | лестница швеллер расчет монтаж
+- [Ворота из профильной трубы — чертежи](https://www.kavstal.ru/blog/vorota-iz-profilnoy-truby-chertezhi) — Трубный прокат | ворота профильная труба чертежи
+- [Армирование отмостки — зачем и как](https://www.kavstal.ru/blog/armirovanie-otmostki-zachem-i-kak) — Сортовой прокат | армирование отмостки
+- [УШП фундамент — весь металл по смете](https://www.kavstal.ru/blog/ushp-fundament-ves-metall-po-smete) — Сортовой прокат | УШП фундамент металл смета
+- [Сравнение поставщиков металла в Москве — чек-лист](https://www.kavstal.ru/blog/sravnenie-postavshchikov-metalla-v-moskve-chek-list) — Справочник | сравнение поставщиков металла Москва
+- [Импортозамещение металлопроката — кто заменил Европу](https://www.kavstal.ru/blog/importozameshchenie-metalloprokata-kto-zamenil-evropu) — Справочник | импортозамещение металлопрокат
+- [Китайский металл — стоит ли брать](https://www.kavstal.ru/blog/kitayskiy-metall-stoit-li-brat) — Справочник | китайский металл стоит ли
+- [Санкции и логистика металла в 2026](https://www.kavstal.ru/blog/sanktsii-i-logistika-metalla-v-2026) — Справочник | санкции логистика металла 2026
+- [Как читать прайс на металл — где скрыта наценка](https://www.kavstal.ru/blog/kak-chitat-prays-na-metall-gde-skryta-natsenka) — Справочник | читать прайс металл наценка
+- [НДС 22% с 2026 — как изменится цена](https://www.kavstal.ru/blog/nds-22-s-2026-kak-izmenitsya-tsena) — Справочник | НДС 22 2026 цена
+- [Сколько весит 1м арматуры 12, 14, 16 — таблица](https://www.kavstal.ru/blog/skolko-vesit-1m-armatury-12-14-16-tablitsa) — Справочник | вес 1м арматуры 12 14 16
+- [Сколько метров трубы в тонне](https://www.kavstal.ru/blog/skolko-metrov-truby-v-tonne) — Справочник | метров трубы в тонне
+- [Чем отличается 1 тонна от 1 метра при покупке](https://www.kavstal.ru/blog/chem-otlichaetsya-1-tonna-ot-1-metra-pri-pokupke) — Справочник | тонна метр разница покупка
+- [Доставка манипулятором vs газелью — что выгоднее](https://www.kavstal.ru/blog/dostavka-manipulyatorom-vs-gazelyu-chto-vygodnee) — Услуги | доставка манипулятор газель выгоднее
+- [Самовывоз с КАВ СТАЛЬ — где склад, пропуск](https://www.kavstal.ru/blog/samovyvoz-s-kav-stal-gde-sklad-propusk) — Услуги | самовывоз КАВ СТАЛЬ склад пропуск
+- [Арматура для частного дома — полный гид 2026](https://www.kavstal.ru/blog/armatura-dlya-chastnogo-doma-polnyy-gid-2026) — Сортовой прокат | арматура частный дом гид 2026
+- [Труба для отопления частного дома — выбор диаметра](https://www.kavstal.ru/blog/truba-dlya-otopleniya-chastnogo-doma-vybor-diametra) — Трубный прокат | труба отопление частный дом диаметр
+- [Профнастил для забора 2м — сколько стоит забор под ключ](https://www.kavstal.ru/blog/profnastil-dlya-zabora-2m-skolko-stoit-zabor-pod-klyuch) — Листовой прокат | профнастил забор 2м под ключ
+- [Балка для перекрытия 6м — какую брать](https://www.kavstal.ru/blog/balka-dlya-perekrytiya-6m-kakuyu-brat) — Сортовой прокат | балка перекрытие 6м какую
+- [Лист для гаража — толщина и вес](https://www.kavstal.ru/blog/list-dlya-garazha-tolshchina-i-ves) — Листовой прокат | лист гараж толщина вес
+- [Нержавейка для бани/печи — какая не прогорит](https://www.kavstal.ru/blog/nerzhaveyka-dlya-bani-pechi-kakaya-ne-progorit) — Нержавеющая сталь | нержавейка баня печь не прогорит
+- [Сетка для стяжки пола — какую ячейку брать](https://www.kavstal.ru/blog/setka-dlya-styazhki-pola-kakuyu-yacheyku-brat) — Сортовой прокат | сетка стяжка пола ячейка
+- [Проволока для увязки — расход](https://www.kavstal.ru/blog/provoloka-dlya-uvyazki-raskhod) — Сортовой прокат | проволока увязка расход
+- [Уголок для каркаса — 50 или 75](https://www.kavstal.ru/blog/ugolok-dlya-karkasa-50-ili-75) — Сортовой прокат | уголок каркас 50 75
+- [Чек-лист приемки металла на объекте — PDF от КАВ СТАЛЬ](https://www.kavstal.ru/blog/chek-list-priemki-metalla-na-obekte-pdf-ot-kav-stal) — Справочник | чек-лист приемка металла PDF
 
 ## Документы и реквизиты
 - ОГРН: 1257700303838
 - ИНН: 9719080724
-- Юридический адрес: г. Москва, ул. Семёновская площадь, дом 7
+- Юридический адрес: г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2
+
+## Sitemap
+- https://www.kavstal.ru/sitemap.xml (google)
+- https://www.kavstal.ru/ysitemap.xml (yandex)
+- https://www.kavstal.ru/sitemap-index.xml
+- https://www.kavstal.ru/rss.xml
+- https://www.kavstal.ru/feed.yml
 
 ## Аналитика
-- Google Analytics 4: G-B3941GLKHC
 - Google Tag Manager: GTM-KPHKLMXW
 - Яндекс.Метрика: 103554843
