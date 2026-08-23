@@ -25,9 +25,7 @@ class RssFeed
         $xml .= '      <link>' . htmlspecialchars($site['baseUrl']) . '</link>' . "\n";
         $xml .= '    </image>' . "\n";
 
-        $count = 0;
         foreach ($products as $product) {
-            if ($count >= 50) break;
             $badge = $product['badge'] ?? '';
             if ($badge === 'Категория' || $badge === 'Подкатегория') continue;
             $canonicalUrl = $product['seo']['canonicalUrl'] ?? '';
@@ -52,7 +50,6 @@ class RssFeed
                 $xml .= '      <category>' . htmlspecialchars($product['categories']['title']) . '</category>' . "\n";
             }
             $xml .= '    </item>' . "\n";
-            $count++;
         }
 
         $xml .= '  </channel>' . "\n";
