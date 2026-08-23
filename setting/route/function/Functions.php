@@ -779,6 +779,9 @@ class Functions
             return;
         }
 
+        // К базовому URL вебхука добавляем метод REST API (создание сделки)
+        $apiUrl = rtrim($webhookUrl, '/') . '/crm.deal.add.json';
+
         $postData = http_build_query([
             'fields' => [
                 'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
@@ -789,7 +792,7 @@ class Functions
         ]);
 
         try {
-            $ch = curl_init($webhookUrl);
+            $ch = curl_init($apiUrl);
             curl_setopt_array($ch, [
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => $postData,
