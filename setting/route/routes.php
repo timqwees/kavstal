@@ -275,23 +275,23 @@ function redirectOldKatalog(string $katalog, ?string $subcategory = null, ?strin
             'metizy-provoloka-kach-kh-v' => 'kachestvennye-i-spetsialnye-stali',
             'metizy-stal-serebryanka' => 'kachestvennye-i-spetsialnye-stali',
             'metizy-provoloka-armir-dlya-zhbk' => 'kachestvennye-i-spetsialnye-stali',
+            // Черный металлопрокат -> новые категории
+            'chernyy-metalloprokat-armatura' => 'armatura',
+            'chernyy-metalloprokat-ugolok' => 'ugolok',
+            'chernyy-metalloprokat-shveller' => 'shveller',
+            'chernyy-metalloprokat-balki-dvutavrovye' => 'balki',
+            'chernyy-metalloprokat-krug-g-k' => 'krug-kvadrat-polosa',
+            'chernyy-metalloprokat-kvadrat-g-k' => 'krug-kvadrat-polosa',
+            'chernyy-metalloprokat-polosa-g-k' => 'krug-kvadrat-polosa',
+            'chernyy-metalloprokat-katanka' => 'armatura',
+            'chernyy-metalloprokat-shveller-gnutyy' => 'shveller',
+            'chernyy-metalloprokat-shveller-nizkolegir' => 'shveller',
+            'chernyy-metalloprokat-balki-dvutavrovye-nizkoleg' => 'balki',
+            // Кровельные и фасадные материалы -> Профнастил
+            'krovelnye-i-fasadnye-materialy-profnastil' => 'profnastil',
+            'krovelnye-i-fasadnye-materialy-profnastil-okrashennyy' => 'profnastil',
+            'krovelnye-i-fasadnye-materialy-profnastil-otsinkovannyy' => 'profnastil',
         ];
-        // Черный металлопрокат -> новые категории
-        'chernyy-metalloprokat-armatura' => 'armatura',
-        'chernyy-metalloprokat-ugolok' => 'ugolok',
-        'chernyy-metalloprokat-shveller' => 'shveller',
-        'chernyy-metalloprokat-balki-dvutavrovye' => 'balki',
-        'chernyy-metalloprokat-krug-g-k' => 'krug-kvadrat-polosa',
-        'chernyy-metalloprokat-kvadrat-g-k' => 'krug-kvadrat-polosa',
-        'chernyy-metalloprokat-polosa-g-k' => 'krug-kvadrat-polosa',
-        'chernyy-metalloprokat-katanka' => 'armatura',
-        'chernyy-metalloprokat-shveller-gnutyy' => 'shveller',
-        'chernyy-metalloprokat-shveller-nizkolegir' => 'shveller',
-        'chernyy-metalloprokat-balki-dvutavrovye-nizkoleg' => 'balki',
-        // Кровельные и фасадные материалы -> Профнастил
-        'krovelnye-i-fasadnye-materialy-profnastil' => 'profnastil',
-        'krovelnye-i-fasadnye-materialy-profnastil-okrashennyy' => 'profnastil',
-        'krovelnye-i-fasadnye-materialy-profnastil-otsinkovannyy' => 'profnastil',
         $overrideKey = $katalog . '-' . $subcategory;
         if (isset($subOverrides[$overrideKey])) {
             $defaultNew = $subOverrides[$overrideKey];
