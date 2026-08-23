@@ -73,11 +73,11 @@ function estimateReadTime(string $content): int {
     <!-- Structured Data -->
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"<?= $site['baseUrl'] ?>#contact","name":"КАВ СТАЛЬ","url":"<?= $site['baseUrl'] ?>","telephone":"+7-495-989-24-20","email":"<?= $site['email'] ?>","address":{"@type":"PostalAddress","streetAddress":"Семёновская площадь, 7","addressLocality":"Москва","addressRegion":"Московская область","postalCode":"115035","addressCountry":"RU"},"openingHours":"Mo-Su 09:00-18:00"},{"@type":"Store","@id":"<?= $site['baseUrl'] ?>/market","name":"КАВ СТАЛЬ","url":"<?= $site['baseUrl'] ?>","telephone":"+7-495-989-24-20","email":"<?= $site['email'] ?>","address":{"@type":"PostalAddress","streetAddress":"Семёновская площадь, 7","addressLocality":"Москва","postalCode":"107023","addressCountry":"RU"}},{"@type":"WebSite","@id":"<?= $site['baseUrl'] ?>#website","url":"<?= $site['baseUrl'] ?>","name":"КАВ СТАЛЬ","potentialAction":{"@type":"SearchAction","target":"<?= $site['baseUrl'] ?>/search?q={search_term_string}","query":"required name=search_term_string"}}]}</script>
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="stylesheet" href="/public/assets/styles/catalog.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.css') ?>">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <link rel="preload" href="/public/assets/styles/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/public/assets/styles/main.css"></noscript>
+    <link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>"></noscript>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
     <?php include_once __DIR__ . '/../components/seo-head.php'; ?>

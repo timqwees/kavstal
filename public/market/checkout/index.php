@@ -36,7 +36,7 @@ $paymentMethods = [
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
@@ -318,7 +318,7 @@ $paymentMethods = [
 
     <?php include_once './public/components/footer.php'; ?>
 
-    <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
+    <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/cart-favorites.min.js') ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/js/intlTelInputWithUtils.min.js"
         defer></script>
     <script>

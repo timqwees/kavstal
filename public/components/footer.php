@@ -3,11 +3,7 @@ $siteInfo = $siteInfo ?? $site ?? [];
 $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteInfo['phone'] ?? '+74959892420');
 ?>
 <style>
-  @media (max-width: 767px) {
-    footer.bg-white {
-      display: none;
-    }
-  }
+  /* Footer visible on all devices — mobile accordion handled via stacking, not display:none */
 </style>
 <footer class="bg-white">
   <!-- PIK-style 4-column grid -->
@@ -68,7 +64,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
             aria-label="Telegram">
             <i class="fab fa-telegram text-xl"></i>
           </a>
-          <a href="https://wa.me/74959892420" target="_blank" rel="noopener noreferrer"
+          <a href="https://wa.me/<?= htmlspecialchars(preg_replace('/[^0-9]/','', $siteInfo['whatsapp'] ?? $phone_clean)) ?>" target="_blank" rel="noopener noreferrer"
             class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
             aria-label="WhatsApp">
             <i class="fab fa-whatsapp text-xl"></i>
@@ -157,7 +153,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
                 <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 0 1-2.827 0l-4.244-4.243a8 8 0 1 1 11.314 0z" />
                 <path d="M15 11a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
               </svg>
-              <?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, Семёновская площадь, 7') ?>
+              <?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2') ?>
             </span>
           </li>
           <li>
@@ -263,6 +259,6 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
     }
   })();
 </script>
-<script src="/public/assets/scripts/ajax-forms.js?v=2" defer></script>
+<script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/ajax-forms.js') ?>" defer></script>
 <?php include_once __DIR__ . '/modal.php'; ?>
 <?php include_once __DIR__ . '/widget-chatwoot.php'; ?>

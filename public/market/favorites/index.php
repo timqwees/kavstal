@@ -15,7 +15,7 @@ $cartCount = App\Models\Cart\Cart::getCount();
         href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml"
         href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.svg" />
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
     <noscript>

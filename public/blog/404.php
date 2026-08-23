@@ -8,8 +8,8 @@ $site = $site ?? Setting\route\function\Functions::site();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Страница не найдена — КАВ СТАЛЬ</title>
     <meta name="robots" content="noindex, follow">
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="stylesheet" href="/public/assets/styles/catalog.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.css') ?>">
     <style>
         *, *::before, *::after { box-sizing: border-box; }
         body {

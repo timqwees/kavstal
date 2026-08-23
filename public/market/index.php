@@ -45,8 +45,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
     <link rel="icon" type="image/svg+xml" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon.svg" />
     <link rel="shortcut icon" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Металл" />
-    <link rel="manifest" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/site.webmanifest" />
+    <meta name="apple-mobile-web-app-title" content="КАВ СТАЛЬ" />
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -76,11 +75,11 @@ $noindexMarket = $hasFilters || $marketPage > 1;
     </script>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
-    <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/public/assets/styles/catalog.min.css"></noscript>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/cart-favorites.min.js') ?>" defer></script>
+    <link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.min.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.min.css') ?>"></noscript>
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"></noscript>
   <?php include_once __DIR__ . "/../components/seo-head.php"; ?>
@@ -230,7 +229,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                 </style>
 
                 <div class="max-w-7xl mx-auto mt-6 mb-4 pl-2 sm:pl-0">
-                    <h1 class="text-base sm:text-lg font-semibold text-zinc-900 leading-snug mb-1">Интернет-магазин металлопроката КАВ СТАЛЬ</h1>
+                    <h2 class="text-base sm:text-lg font-semibold text-zinc-900 leading-snug mb-1">Интернет-магазин металлопроката КАВ СТАЛЬ</h2>
                     <p class="text-xs sm:text-sm text-zinc-400 leading-relaxed">Прямые поставки от производителей. Склад в Москве. Доставка по России.</p>
                 </div>
 
@@ -656,7 +655,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js" defer></script>
-    <script src="/public/assets/scripts/components/catalog.min.js" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/catalog.min.js') ?>" defer></script>
     <script>
     function __initCatalog(){ if (typeof window.catalogAPI !== 'undefined') { window.catalogAPI.init(); } }
     if (window.jQuery) { jQuery(__initCatalog); } else { document.addEventListener('DOMContentLoaded', __initCatalog); }

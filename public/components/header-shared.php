@@ -9,14 +9,14 @@ $tree = \Setting\route\function\Functions::getCatalogTree();
 $catalogCategories = $tree['categories'];
 $catalogSubcategories = $tree['subcategories'];
 ?>
-<link rel="preload" href="/public/assets/styles/catalog-mega.min.css" as="style"
+<link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog-mega.min.css') ?>" as="style"
   onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
-  <link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
+  <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog-mega.min.css') ?>">
 </noscript>
-<link rel="preload" href="/public/assets/styles/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
-  <link rel="stylesheet" href="/public/assets/styles/main.css">
+  <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>">
 </noscript>
 <!-- Fixed header wrapper -->
 <div class="fixed inset-x-0 top-0 z-50 bg-white">
@@ -332,7 +332,7 @@ $catalogSubcategories = $tree['subcategories'];
             </svg>
           </span>
           <span
-            class="text-[13px] text-gray-700 leading-tight max-w-[180px]"><?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, ул 8-я Текстильщиков, д. 8') ?></span>
+            class="text-[13px] text-gray-700 leading-tight max-w-[180px]"><?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2') ?></span>
         </div>
 
         <button id="mobileSearchBtn" class="lg:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-600"
@@ -594,7 +594,7 @@ $drawerCls = function ($paths) use ($bnmActive) {
             <circle cx="12" cy="10" r="3" stroke="#888888" stroke-width="1.8" stroke-linecap="round"
               stroke-linejoin="round"></circle>
           </svg>
-          <?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, ул 8-я Текстильщиков, д. 8') ?>
+          <?= htmlspecialchars($siteInfo['address'] ?? 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2') ?>
         </div>
       </div>
     </nav>
@@ -683,5 +683,5 @@ $drawerCls = function ($paths) use ($bnmActive) {
   });
 </script>
 
-<script src="/public/assets/scripts/components/catalog-mega.min.js" defer></script>
-<script src="/public/assets/scripts/components/search.min.js" defer></script>
+<script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/catalog-mega.min.js') ?>" defer></script>
+<script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/search.min.js') ?>" defer></script>

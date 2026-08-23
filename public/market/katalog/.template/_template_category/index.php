@@ -6,6 +6,16 @@ if (!$_noCache) {
     $cacheKey = 'katalog_' . md5($_SERVER['REQUEST_URI'] ?? '');
     $cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $cacheKey . '.html';
     if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) {
+        $etag = '"' . md5_file($cacheFile) . '"';
+        $lm = gmdate('D, d M Y H:i:s', filemtime($cacheFile)) . ' GMT';
+        header('ETag: ' . $etag);
+        header('Last-Modified: ' . $lm);
+        header('Cache-Control: public, max-age=3600');
+        if ((isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) === $etag) ||
+            (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= filemtime($cacheFile))) {
+            http_response_code(304);
+            return;
+        }
         readfile($cacheFile);
         return;
     }
@@ -353,8 +363,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
     <link rel="shortcut icon" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180"
         href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/apple-touch-icon.png">
-    <meta name="apple-mobile-web-app-title" content="Металл">
-    <link rel="manifest" href="<?= $site['baseUrl'] ?>/public/assets/images/icons/favicon/site.webmanifest">
+    <meta name="apple-mobile-web-app-title" content="КАВ СТАЛЬ">
     <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ" href="<?= $site['baseUrl'] ?>/rss.xml">
 
     <script type="application/ld+json">
@@ -373,15 +382,15 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     </noscript>
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="stylesheet" href="/public/assets/styles/main.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/cart-favorites.min.js') ?>" defer></script>
 
-    <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style"
+    <link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.min.css') ?>" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="/public/assets/styles/catalog.min.css">
+        <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.min.css') ?>">
     </noscript>
 
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style"
@@ -483,9 +492,9 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                             <span class="truncate"><?= htmlspecialchars($cat['title']) ?></span>
                                             <span class="w-11 h-11 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-100 shrink-0 flex items-center justify-center">
                                                 <?php if ($catThumb): ?>
-                                                    <img src="<?= htmlspecialchars($catThumb) ?>" alt="" class="w-full h-full object-cover" loading="lazy">
+                                                    <img src="<?= htmlspecialchars($catThumb) ?>" alt="<?= htmlspecialchars($cat["name"] ?? $cat["title"] ?? "Категория") ?>" class="w-full h-full object-cover" loading="lazy">
                                                 <?php elseif ($catIcon): ?>
-                                                    <img src="<?= $catIcon ?>" alt="" class="w-6 h-6 object-contain" loading="lazy">
+                                                    <img src="<?= $catIcon ?>" alt="<?= htmlspecialchars($cat["name"] ?? "") ?> иконка" class="w-6 h-6 object-contain" loading="lazy">
                                                 <?php else: ?>
                                                     <i class="fas fa-folder-open text-xs <?= $isActive ? 'text-red-400' : 'text-zinc-300' ?>"></i>
                                                 <?php endif; ?>
@@ -556,9 +565,9 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                             <span class="truncate"><?= htmlspecialchars($subAliases[$sub['categories']['id'] ?? '']['display'] ?? $sub['name']) ?></span>
                                             <span class="w-11 h-11 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-100 shrink-0 flex items-center justify-center">
                                                 <?php if ($subThumb): ?>
-                                                    <img src="<?= htmlspecialchars($subThumb) ?>" alt="" class="w-full h-full object-cover" loading="lazy">
+                                                    <img src="<?= htmlspecialchars($subThumb) ?>" alt="<?= htmlspecialchars($sub["name"] ?? $sub["title"] ?? "Подкатегория") ?>" class="w-full h-full object-cover" loading="lazy">
                                                 <?php elseif ($subIcon): ?>
-                                                    <img src="<?= $subIcon ?>" alt="" class="w-6 h-6 object-contain" loading="lazy">
+                                                    <img src="<?= $subIcon ?>" alt="<?= htmlspecialchars($sub["name"] ?? "") ?> иконка" class="w-6 h-6 object-contain" loading="lazy">
                                                 <?php else: ?>
                                                     <i class="fas fa-cube text-xs text-zinc-300"></i>
                                                 <?php endif; ?>
@@ -612,9 +621,9 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                             <span class="truncate"><?= htmlspecialchars($cat['title']) ?></span>
                                             <span class="w-11 h-11 rounded-lg overflow-hidden bg-zinc-50 border border-zinc-100 shrink-0 flex items-center justify-center">
                                                 <?php if ($catThumb): ?>
-                                                    <img src="<?= htmlspecialchars($catThumb) ?>" alt="" class="w-full h-full object-cover" loading="lazy">
+                                                    <img src="<?= htmlspecialchars($catThumb) ?>" alt="<?= htmlspecialchars($cat["name"] ?? $cat["title"] ?? "Категория") ?>" class="w-full h-full object-cover" loading="lazy">
                                                 <?php elseif ($catIcon): ?>
-                                                    <img src="<?= $catIcon ?>" alt="" class="w-6 h-6 object-contain" loading="lazy">
+                                                    <img src="<?= $catIcon ?>" alt="<?= htmlspecialchars($cat["name"] ?? "") ?> иконка" class="w-6 h-6 object-contain" loading="lazy">
                                                 <?php else: ?>
                                                     <i class="fas fa-folder-open text-xs <?= $isActive ? 'text-red-400' : 'text-zinc-300' ?>"></i>
                                                 <?php endif; ?>

@@ -171,11 +171,11 @@ $readTime = estimateReadTime($article['content'] ?? '');
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link rel="preconnect" href="<?= $site['baseUrl'] ?>">
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
-    <link rel="stylesheet" href="/public/assets/styles/catalog.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.css') ?>">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <link rel="preload" href="/public/assets/styles/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/public/assets/styles/main.css"></noscript>
+    <link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>"></noscript>
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"></noscript>
     <?php include_once __DIR__ . '/../components/seo-head.php'; ?>

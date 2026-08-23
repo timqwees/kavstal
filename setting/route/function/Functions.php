@@ -153,22 +153,25 @@ class Functions
         // undefined product return
         if (!$product) {
             $product = [
-                'title' => 'Uknown',
-                'name' => 'Uknown',
-                'description' => 'Uknown',
-                'units' => ['Uknown' => 0],
+                'title' => 'Unknown',
+                'name' => 'Unknown',
+                'description' => 'Unknown',
+                'units' => ['Unknown' => 0],
                 'in_stock' => false,
                 'rating' => 0,
-                'badge' => 'Uknown',
-                'image' => 'Uknown',
+                'badge' => 'Unknown',
+                'image' => 'Unknown',
                 'specs' => [],
+                '_not_found' => true,
                 'seo' => [
-                    'metaTitle' => 'Товар | Купить в Москве | КАВ СТАЛЬ',
-                    'metaDescription' => 'Uknown',
-                    'keywords' => ['Uknown'],
-                    'canonicalUrl' => 'Uknown'
+                    'metaTitle' => 'Товар не найден | КАВ СТАЛЬ',
+                    'metaDescription' => 'Товар не найден',
+                    'keywords' => [],
+                    'canonicalUrl' => ''
                 ]
             ];
+        } else {
+            $product['_not_found'] = false;
         }
 
         return (array) $product;
@@ -211,8 +214,8 @@ class Functions
             'phone' => '+7 (495) 989-24-20',
             'phone_clean' => '74959892420',
             'email' => 'zakaz@kavstal.ru',
-            'address' => 'г. Москва, ул. Семёновская площадь, дом 7',
-            'kartaAdress' => 'г. Москва, ул. Семёновская площадь, дом 7',
+            'address' => 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2',
+            'kartaAdress' => 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2',
             'workingHours' => 'Пн-Пт: 9:00-18:00, Сб: 9:00-15:00',
             'deliveryAreas' => ['Москва', 'Московская область', 'Россия'],
             'whatsapp' => '+74959892420',
@@ -748,7 +751,12 @@ class Functions
         if ($comment)
             $info .= "\n\n{$comment}";
 
-        $webhookUrl = 'https://b24-rpu7xy.bitrix24.ru/rest/1/q9npq8wqxwhwlhi0/crm.deal.add.json';
+        $webhookUrl = $_ENV['BITRIX_WEBHOOK_URL'] ?? getenv('BITRIX_WEBHOOK_URL') ?: '';
+        if ($webhookUrl === '') {
+            // fallback для совместимости, но логируем предупреждение (не коммитить секрет в репо)
+            error_log('Bitrix24: BITRIX_WEBHOOK_URL not set in .env');
+            return;
+        }
 
         if (!function_exists('curl_init')) {
             error_log('Bitrix24: curl extension not available');
@@ -1389,6 +1397,26 @@ class Functions
 
         // Возвращаем только нужное количество
         return array_slice($allProducts, 0, $limit);
+    }
+
+    /**
+     * Версионирование статики для cache busting (immutable-safe)
+     * Возвращает /path?v=filemtime, чтобы CDN/browser не отдавал старый кэш после деплоя.
+     */
+    public static function assetVer(string $publicPath): string
+    {
+        // $publicPath ожидается вида /public/assets/...
+        $fsPath = dirname(__DIR__, 3) . $publicPath;
+        // Убираем query если уже есть
+        $qPos = strpos($publicPath, '?');
+        if ($qPos !== false) {
+            $publicPath = substr($publicPath, 0, $qPos);
+            $fsPath = dirname(__DIR__, 3) . $publicPath;
+        }
+        if (is_file($fsPath)) {
+            return $publicPath . '?v=' . filemtime($fsPath);
+        }
+        return $publicPath;
     }
 
     /**

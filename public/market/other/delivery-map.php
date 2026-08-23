@@ -44,7 +44,7 @@
     <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
         href="<?php echo $site['baseUrl']; ?>/opensearch.xml" />
 
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
@@ -343,7 +343,7 @@
     </main>
 
     <?php include_once './public/components/footer.php'; ?>
-    <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
+    <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/cart-favorites.min.js') ?>"></script>
 </body>
 
 </html>

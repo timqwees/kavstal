@@ -552,8 +552,15 @@ Routes::get('/robots.txt', function () {
     $baseUrl = Functions::site()['baseUrl'];
     $content = "User-agent: *\n";
     $content .= "Crawl-delay: 3\n";
+    $content .= "Allow: /public/assets/\n";
     $content .= "Disallow: /api/\n";
     $content .= "Disallow: /send/\n";
+    $content .= "Disallow: /cart\n";
+    $content .= "Disallow: /checkout\n";
+    $content .= "Disallow: /favorites\n";
+    $content .= "Disallow: /orders\n";
+    $content .= "Disallow: /order/\n";
+    $content .= "Disallow: /file/\n";
     $content .= "Disallow: /*?route=*\n";
     $content .= "Disallow: /*?search=*\n";
     $content .= "Disallow: /public/\n";
@@ -618,7 +625,9 @@ Routes::get('/opensearch.xml', function () {
     echo '  <Description>Поиск металлопроката на сайте КАВ СТАЛЬ</Description>' . "\n";
     echo '  <InputEncoding>UTF-8</InputEncoding>' . "\n";
     echo '  <Image width="96" height="96" type="image/png">' . $baseUrl . '/public/assets/images/icons/favicon/favicon-96x96.png</Image>' . "\n";
+    echo '  <Image width="16" height="16" type="image/vnd.microsoft.icon">' . $baseUrl . '/public/assets/images/icons/favicon/favicon.ico</Image>' . "\n";
     echo '  <Url type="text/html" method="get" template="' . $baseUrl . '/market?search={searchTerms}"/>' . "\n";
+    echo '  <Url type="application/x-suggestions+json" method="get" template="' . $baseUrl . '/api/search?q={searchTerms}"/>' . "\n";
     echo '  <moz:SearchForm>' . $baseUrl . '/market</moz:SearchForm>' . "\n";
     echo '</OpenSearchDescription>' . "\n";
 });

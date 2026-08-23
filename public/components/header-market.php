@@ -7,15 +7,15 @@ $tree = \Setting\route\function\Functions::getCatalogTree();
 $catalogCategories = $tree['categories'];
 $catalogSubcategories = $tree['subcategories'];
 ?>
-<link rel="preload" href="/public/assets/styles/catalog-mega.min.css" as="style"
+<link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog-mega.min.css') ?>" as="style"
     onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
-    <link rel="stylesheet" href="/public/assets/styles/catalog-mega.min.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog-mega.min.css') ?>">
 </noscript>
-<link rel="preload" href="/public/assets/styles/main.css" as="style"
+<link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>" as="style"
     onload="this.onload=null;this.rel='stylesheet'">
 <noscript>
-    <link rel="stylesheet" href="/public/assets/styles/main.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>">
 </noscript>
 <!-- Fixed header wrapper -->
 <div class="fixed inset-x-0 top-0 z-50 bg-white">
@@ -350,5 +350,5 @@ $bnmCls = function ($paths) use ($bnmActive) {
     </a>
 </div>
 
-<script src="/public/assets/scripts/components/catalog-mega.min.js" defer></script>
-<script src="/public/assets/scripts/components/search.min.js" defer></script>
+<script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/catalog-mega.min.js') ?>" defer></script>
+<script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/search.min.js') ?>" defer></script>

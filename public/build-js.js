@@ -11,14 +11,14 @@ const files = [
 ];
 
 const componentsDir = 'public/assets/scripts/components';
-fs.readdirSync(componentsDir).forEach(f => {
-  if (f.endsWith('.js') && !f.endsWith('.min.js')) {
-    const min = f.replace('.js', '.min.js');
-    if (fs.existsSync(path.join(componentsDir, min))) {
+if (fs.existsSync(componentsDir)) {
+  fs.readdirSync(componentsDir).forEach(f => {
+    if (f.endsWith('.js') && !f.endsWith('.min.js')) {
+      const min = f.replace('.js', '.min.js');
       files.push([path.join(componentsDir, f), path.join(componentsDir, min)]);
     }
-  }
-});
+  });
+}
 
 files.forEach(([src, dest]) => {
   if (fs.existsSync(src)) {

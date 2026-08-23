@@ -41,10 +41,7 @@
   <link rel="shortcut icon" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180"
     href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-title" content="Металл">
-  <link rel="manifest" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/site.webmanifest">
-  <meta name="theme-color" content="#ef4444">
-
+  <meta name="apple-mobile-web-app-title" content="КАВ СТАЛЬ">
   <link rel="search" type="application/opensearchdescription+xml" title="КАВ СТАЛЬ"
     href="<?php echo $site['baseUrl']; ?>/opensearch.xml">
   <link rel="alternate" type="application/rss+xml" title="КАВ СТАЛЬ — Металлопрокат в Москве"
@@ -68,11 +65,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   </noscript>
 
-  <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+  <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-  <link rel="preload" href="/public/assets/styles/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript>
-    <link rel="stylesheet" href="/public/assets/styles/main.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/main.css') ?>">
   </noscript>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
@@ -576,7 +573,7 @@
 
     <section class="hero">
       <div class="hero-shape">
-        <img class="hero-img active" src="/public/assets/images/bgpage/hero/bg.jpeg" alt="" data-slide="0">
+        <img class="hero-img active" src="/public/assets/images/bgpage/hero/bg.jpeg" alt="КАВ СТАЛЬ — комплексное снабжение металлопрокатом" fetchpriority="high" width="1920" height="1080" decoding="async" data-slide="0">
         <!-- <video class="hero-video" src="https://khoper.ru/upload/iblock/cfb/4q2lepajajkmypu2qa7d9xw33y6r6qwm.mp4"
           autoplay muted loop playsinline></video> -->
       </div>
@@ -861,7 +858,7 @@
             <a href="<?= $c['url'] ?>"
               class="relative rounded-2xl overflow-hidden bg-white border border-gray-200 hover:shadow-lg transition-shadow block group">
               <div class="h-40 relative overflow-hidden">
-                <img src="<?= $c['img'] ?>" alt="" width="<?= $hw ?>" height="<?= $hh ?>" <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> decoding="async"
+                <img src="<?= $c['img'] ?>" alt="<?= htmlspecialchars($c['title']) ?>" width="<?= $hw ?>" height="<?= $hh ?>" <?= $i === 0 ? 'fetchpriority="high"' : 'loading="lazy"' ?> decoding="async"
                   class="absolute inset-0 w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div class="absolute bottom-0 left-0 right-0 p-4 text-white z-10">
@@ -891,7 +888,7 @@
             $h = $dims[1] ?? 600;
             ?>
             <div class="flex-shrink-0 h-64 rounded-xl overflow-hidden" style="border: 1px solid #ff0404">
-              <img src="/public/assets/images/info/<?= htmlspecialchars($img) ?>" alt="" width="<?= $w ?>"
+              <img src="/public/assets/images/info/<?= htmlspecialchars($img) ?>" alt="<?= htmlspecialchars(pathinfo($img, PATHINFO_FILENAME)) ?>" width="<?= $w ?>"
                 height="<?= $h ?>" class="h-full w-auto max-w-none" loading="lazy" decoding="async">
             </div>
           <?php endforeach; ?>
@@ -1742,7 +1739,7 @@
                     <img src="<?= $first['bg'] ?>" alt="<?= htmlspecialchars($s['title']) ?>" loading="lazy">
                     <?php if ($preview2): ?>
                       <span class="story-card-media2">
-                        <img src="<?= $preview2 ?>" alt="" loading="lazy">
+                        <img src="<?= $preview2 ?>" alt="<?= htmlspecialchars($s['title']) ?> — превью" loading="lazy">
                       </span>
                     <?php endif; ?>
                     <?php if ($slidesCount > 1): ?>
@@ -2128,7 +2125,7 @@
           </div>
           <!-- Media area (image or video) -->
           <div id="storySlide" class="absolute inset-0">
-            <img id="storyImage" src="" alt="" class="absolute inset-0 w-full h-full object-cover">
+            <img id="storyImage" src="" alt="История КАВ СТАЛЬ" class="absolute inset-0 w-full h-full object-cover">
             <video id="storyVideo" preload="none" playsinline loop
               class="absolute inset-0 w-full h-full object-cover hidden"></video>
           </div>
@@ -2216,15 +2213,15 @@
   <?php include_once './public/components/footer.php'; ?>
 
   <script defer src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script defer src="/public/assets/scripts/components/swiper.min.js"></script>
-  <script defer src="/public/assets/scripts/components/lazyIMG.min.js"></script>
-  <script defer src="/public/assets/scripts/components/cart-favorites.min.js"></script>
-  <script defer src="/public/assets/scripts/main/switchUnit.min.js"></script>
+  <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/swiper.min.js') ?>"></script>
+  <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/lazyIMG.min.js') ?>"></script>
+  <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/cart-favorites.min.js') ?>"></script>
+  <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/main/switchUnit.min.js') ?>"></script>
 
   <script>
     window.__storiesData = <?php echo json_encode($stories ?? []); ?>;
   </script>
-  <script defer src="/public/assets/scripts/main/stories.min.js"></script>
+  <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/main/stories.min.js') ?>"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/js/intlTelInputWithUtils.min.js" defer></script>
   <script>

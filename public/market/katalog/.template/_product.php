@@ -1,5 +1,22 @@
 <?php
-// HTML-кэш для страниц товаров
+// $productID передан из роута как $name (последний сегмент URL)
+$productID = $name ?? basename(dirname(__FILE__));
+// =====================
+$product = Setting\route\function\Functions::showProduct($productID);
+$site = Setting\route\function\Functions::site();
+// 404 для неизвестного товара (Unknown / legacy Uknown) — до кэша, чтобы не отдавать закэшированный 200
+if (!empty($product['_not_found']) || ($product['title'] ?? '') === 'Uknown' || ($product['title'] ?? '') === 'Unknown') {
+    http_response_code(404);
+    // Удаляем битый кэш если есть
+    $_tmpKey = 'product_' . md5($_SERVER['REQUEST_URI'] ?? '');
+    $_tmpFile = __DIR__ . '/../../../../app/Storage/cache/html/' . $_tmpKey . '.html';
+    if (is_file($_tmpFile)) @unlink($_tmpFile);
+    if (ob_get_level()) { ob_end_clean(); }
+    $path = $_SERVER['REQUEST_URI'] ?? $productID;
+    include dirname(__DIR__, 4) . '/app/Models/Router/view/404/404.html';
+    return;
+}
+// HTML-кэш для страниц товаров (только для найденных)
 $_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']);
 $_cacheKey = '';
 $_cacheFile = '';
@@ -8,16 +25,22 @@ if (!$_noCache) {
     $_cacheKey = 'product_' . md5($_SERVER['REQUEST_URI'] ?? '');
     $_cacheFile = __DIR__ . '/../../../../app/Storage/cache/html/' . $_cacheKey . '.html';
     if (file_exists($_cacheFile) && (time() - filemtime($_cacheFile)) < 3600) {
+        // ETag / Last-Modified для кэша
+        $etag = '"' . md5_file($_cacheFile) . '"';
+        $lm = gmdate('D, d M Y H:i:s', filemtime($_cacheFile)) . ' GMT';
+        header('ETag: ' . $etag);
+        header('Last-Modified: ' . $lm);
+        header('Cache-Control: public, max-age=3600');
+        if ((isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) === $etag) ||
+            (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= filemtime($_cacheFile))) {
+            http_response_code(304);
+            return;
+        }
         readfile($_cacheFile);
         return;
     }
     ob_start();
 }
-// $productID передан из роута как $name (последний сегмент URL)
-$productID = $name ?? basename(dirname(__FILE__));
-// =====================
-$product = Setting\route\function\Functions::showProduct($productID);
-$site = Setting\route\function\Functions::site();
 // =====================
 // Сообщения для пользователя
 $notification = App\Models\Network\Message::controll();
@@ -84,9 +107,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     <link rel="shortcut icon" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180"
         href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Металл" />
-    <link rel="manifest" href="<?php echo $site['baseUrl']; ?>/public/assets/images/icons/favicon/site.webmanifest" />
-
+    <meta name="apple-mobile-web-app-title" content="КАВ СТАЛЬ" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap" as="style"
@@ -311,9 +332,9 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     </noscript>
 
     <!-- Tailwind CSS -->
-    <link rel="stylesheet" href="/public/assets/styles/tailwind.min.css">
+    <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/tailwind.min.css') ?>">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" defer></script>
-    <script src="/public/assets/scripts/components/cart-favorites.min.js" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/cart-favorites.min.js') ?>" defer></script>
 
     <!-- Swiper Slider CSS -->
     <link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style"
@@ -330,10 +351,10 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     </noscript>
 
     <!-- Local Styles -->
-    <link rel="preload" href="/public/assets/styles/catalog.min.css" as="style"
+    <link rel="preload" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.min.css') ?>" as="style"
         onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
-        <link rel="stylesheet" href="/public/assets/styles/catalog.min.css">
+        <link rel="stylesheet" href="<?= \Setting\route\function\Functions::assetVer('/public/assets/styles/catalog.min.css') ?>">
     </noscript>
 
     <style>
@@ -1319,10 +1340,10 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
 
     <!-- Swiper Slider JS -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" defer></script>
-    <script src="/public/assets/scripts/main/header.min.js" defer></script>
-    <script src="/public/assets/scripts/components/toggleWindow.min.js" defer></script>
-    <script src="/public/assets/scripts/components/share.min.js" defer></script>
-    <script src="/public/assets/scripts/components/swiper.min.js" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/main/header.min.js') ?>" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/toggleWindow.min.js') ?>" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/share.min.js') ?>" defer></script>
+    <script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/components/swiper.min.js') ?>" defer></script>
 
     <script>
         window.__productPrices = <?= json_encode($product['units']) ?>;
@@ -1342,7 +1363,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             }
         });
     </script>
-    <script defer src="/public/assets/scripts/main/product.min.js"></script>
+    <script defer src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/main/product.min.js') ?>"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@27.1.3/dist/js/intlTelInputWithUtils.min.js"
         defer></script>

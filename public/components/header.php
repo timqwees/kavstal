@@ -105,4 +105,4 @@
         </div>
     </div>
 </div>
-<script src="/public/assets/scripts/main/header.min.js" defer></script>
+<script src="<?= \Setting\route\function\Functions::assetVer('/public/assets/scripts/main/header.min.js') ?>" defer></script>

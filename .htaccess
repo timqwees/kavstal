@@ -5,36 +5,76 @@ RewriteBase /
 # требуют >= 256MB при декоде JSON на страницах товара и маркета.
 <IfModule mod_php.c>
   php_value memory_limit 256M
+  php_flag expose_php off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag expose_php off
+</IfModule>
+<IfModule mod_php8.c>
+  php_flag expose_php off
 </IfModule>
 
 # Принудительный HTTPS + www (канонический домен)
 # Учитываем X-Forwarded-Proto/Host для работы за Nginx-прокси (без петель редиректа)
-RewriteCond %{HTTPS} off
-RewriteCond %{HTTP_X_FORWARDED_PROTO} !https
-RewriteCond %{HTTP_HOST} !^www\.kavstal\.ru$ [NC]
-RewriteCond %{HTTP_HOST} ^(?:www\.)?kavstal\.ru$ [NC]
+# 1) non-www -> www (всегда)
+RewriteCond %{HTTP_HOST} ^kavstal\.ru$ [NC]
 RewriteRule ^ https://www.kavstal.ru%{REQUEST_URI} [R=301,L]
 
-# Кеш для статических ассетов (1 год, immutable)
+# 2) HTTP -> HTTPS
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_X_FORWARDED_PROTO} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# Security headers + CMS fingerprint (как у конкурента Bitrix → x-powered-cms)
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+  Header always set X-XSS-Protection "0"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
+  Header always set X-Powered-CMS "QweesCore 2.1.0"
+  Header always set X-Powered-By "QweesCore"
+</IfModule>
+
+# Кеш для статических ассетов
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
   ExpiresByType image/png "access plus 1 year"
   ExpiresByType image/jpeg "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
-  ExpiresByType text/css "access plus 1 month"
-  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType application/x-javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
   ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType font/ttf "access plus 1 year"
 </IfModule>
 <IfModule mod_headers.c>
-  <FilesMatch "\.(webp|png|jpe?g|svg|css|js|woff2?|ttf|eot)$">
+  # Immutable только с версионированием (?v=filemtime) — безопасно 1 год
+  <FilesMatch "\.(webp|avif|png|jpe?g|svg|css|js|woff2?|ttf|eot)$">
     Header set Cache-Control "public, max-age=31536000, immutable"
+    Header set Vary "Accept-Encoding"
+  </FilesMatch>
+  # HTML не кешируем жёстко
+  <FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache"
   </FilesMatch>
 </IfModule>
 
+# Favicon в корне
+RewriteRule ^favicon\.ico$ public/assets/images/icons/favicon/favicon.ico [L]
+
 # Сжатие
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/css application/javascript application/json image/svg+xml
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml font/woff2
+</IfModule>
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/xml text/css text/javascript application/javascript application/json image/svg+xml
 </IfModule>
 
 # Если файл или директория существуют, используем их напрямую

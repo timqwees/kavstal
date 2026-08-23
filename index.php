@@ -39,6 +39,8 @@
  */
 
 ob_start();
+header('X-Powered-CMS: QweesCore 2.1.0');
+header('X-Powered-By: QweesCore');
 
 require_once __DIR__ . '/vendor/autoload.php';
 ## env connect

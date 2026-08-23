@@ -336,6 +336,10 @@ class Network extends Session
      */
     public static function onRoute()
     {
+        if (!headers_sent()) {
+            header('X-Powered-CMS: QweesCore 2.1.0');
+            header('X-Powered-By: QweesCore');
+        }
         self::onAutoloadRegister();
         Database::getConnection();
         // Определяем HTTP-метод
