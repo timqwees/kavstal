@@ -28,8 +28,6 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
   Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
   Header set X-XSS-Protection "0"
   Header set Cross-Origin-Opener-Policy "same-origin"
-  Header set X-Powered-CMS "QweesCore 2.1.0"
-  Header set X-Powered-By "QweesCore"
 </IfModule>
 
 # Кеш для статических ассетов
