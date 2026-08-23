@@ -766,8 +766,8 @@ class Functions
         $postData = http_build_query([
             'fields' => [
                 'TITLE' => 'Заявка с сайта ' . ($_SERVER['SERVER_NAME'] ?? ''),
-                'CATEGORY_ID' => 2,
-                'STAGE_ID' => 0,
+                'CATEGORY_ID' => 5,
+                'STAGE_ID' => 1,
                 'COMMENTS' => $info,
             ]
         ]);
