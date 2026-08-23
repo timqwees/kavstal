@@ -846,7 +846,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
           <?php
           $heroCards = [
-            ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/products/Арматура/Арматура/арматура_гладкая.webp'],
+            ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/products/Арматура/АРМАТУРА/арматура_гладкая.webp'],
             ['label' => 'Каталог', 'title' => 'Труба профильная', 'subtitle' => 'от 58 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/truby', 'img' => '/public/assets/images/products/Трубы/ТРУБЫ_ЭЛЕКТРОСВАРНЫЕ/труба_электросварная.webp'],
             ['label' => 'Каталог', 'title' => 'Лист горячекатаный', 'subtitle' => 'от 51 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/listovoy-prokat', 'img' => '/public/assets/images/products/Листовой_прокат/СТАЛЬ_ЛИСТ_Г_К_КОНСТРУКЦИОННАЯ/лист.webp'],
           ];
