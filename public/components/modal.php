@@ -201,7 +201,7 @@
         var o = document.getElementById('specOverlay'), m = document.getElementById('specModal');
         if (o && m) { o.classList.add('show'); m.classList.add('show'); }
         sessionStorage.setItem('specModalShown', '1');
-      }, 30000);
+      }, 45000);
     } else if (!shown && isMobile) {
       // На мобильных показываем только по клику/скроллу 70%, не автоматом
       var fired = false;
