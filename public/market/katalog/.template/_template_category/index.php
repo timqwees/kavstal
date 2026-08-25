@@ -519,7 +519,9 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                         }
                         $crumbSubUrl = '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($subcategoryID);
                         foreach ($crumbSubs as $_cs) {
-                            if (($_cs['categories']['id'] ?? '') === $subcategoryID) {
+                            $_csId = $_cs['categories']['id'] ?? '';
+                            $_csShort = ($categoryID !== '' && str_starts_with($_csId, $categoryID . '-')) ? substr($_csId, strlen($categoryID) + 1) : $_csId;
+                            if ($_csId === $subcategoryID || $_csShort === $subcategoryID) {
                                 $crumbSubUrl = $_cs['seo']['canonicalUrl'] ?? $crumbSubUrl;
                                 break;
                             }
@@ -544,8 +546,10 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
                                 </div>
                                 <div class="grid grid-cols-1 gap-1">
                                 <?php foreach ($crumbSubs as $sub):
-                                    $isSubActive = ($sub['categories']['id'] ?? '') === $subcategoryID;
-                                    $subUrl = $sub['seo']['canonicalUrl'] ?? '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($sub['categories']['id'] ?? '');
+                                    $_subId = $sub['categories']['id'] ?? '';
+                                    $_subShort = ($categoryID !== '' && str_starts_with($_subId, $categoryID . '-')) ? substr($_subId, strlen($categoryID) + 1) : $_subId;
+                                    $isSubActive = ($_subId === $subcategoryID || $_subShort === $subcategoryID);
+                                    $subUrl = $sub['seo']['canonicalUrl'] ?? '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($_subShort);
                                     $subThumb = ($sub['images'][0] ?? '');
                                     if ($subThumb !== '' && mb_strpos($subThumb, 'unknown') !== false) {
                                         $subThumb = '';
@@ -670,7 +674,9 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
             <div class="lg:hidden relative">
             <div class="flex gap-3 overflow-x-auto pb-3 pl-2 pr-4 -mx-4 sm:flex-wrap sm:overflow-visible sm:pb-0 sm:mx-0 sm:px-0" style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;" id="sub-slider">
                 <?php foreach ($subcats as $sub):
-                    $subUrl = $sub['seo']['canonicalUrl'] ?? '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($sub['categories']['id'] ?? '');
+                    $_rawSid = $sub['categories']['id'] ?? '';
+                    $_shortSid = ($katalog !== '' && str_starts_with($_rawSid, $katalog . '-')) ? substr($_rawSid, strlen($katalog) + 1) : $_rawSid;
+                    $subUrl = $sub['seo']['canonicalUrl'] ?? '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($_shortSid);
                     $subImg = ($sub['images'][0] ?? '');
                     $sid = $sub['categories']['id'] ?? '';
                     $subCount = $subCounts[$sid] ?? 0;
@@ -709,7 +715,9 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
             </div>
             <div id="sub-desktop" style="display:none" class="gap-3">
                 <?php foreach ($subcats as $sub):
-                    $subUrl = $sub['seo']['canonicalUrl'] ?? '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($sub['categories']['id'] ?? '');
+                    $_rawSid2 = $sub['categories']['id'] ?? '';
+                    $_shortSid2 = ($katalog !== '' && str_starts_with($_rawSid2, $katalog . '-')) ? substr($_rawSid2, strlen($katalog) + 1) : $_rawSid2;
+                    $subUrl = $sub['seo']['canonicalUrl'] ?? '/market/katalog/' . htmlspecialchars($katalog) . '/' . htmlspecialchars($_shortSid2);
                     $subImg = ($sub['images'][0] ?? '');
                     $sid = $sub['categories']['id'] ?? '';
                     $subCount = $subCounts[$sid] ?? 0;

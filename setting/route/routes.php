@@ -330,6 +330,23 @@ function redirectOldKatalog(string $katalog, ?string $subcategory = null, ?strin
             exit;
         }
     }
+    // Каноникализация дубля: /cat/cat-sub -> /cat/sub (короткий canonical)
+    // ID подкатегорий хранится как "cat-sub", но canonical всегда "/cat/sub"
+    if ($subcategory !== null && str_starts_with($subcategory, $katalog . '-')) {
+        $short = substr($subcategory, strlen($katalog) + 1);
+        if ($short !== '' && $short !== $subcategory) {
+            http_response_code(301);
+            $path = '/market/katalog/' . $katalog . '/' . $short;
+            if ($name !== null) {
+                $path .= '/' . $name;
+            }
+            if (!empty($_SERVER['QUERY_STRING'])) {
+                $path .= '?' . $_SERVER['QUERY_STRING'];
+            }
+            header('Location: ' . $path);
+            exit;
+        }
+    }
     if (!$defaultNew && !array_key_exists($katalog, $catDefaults)) {
         return null; // not an old slug — реальная страница
     }

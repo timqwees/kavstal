@@ -145,6 +145,9 @@ class Cart
         $items = [];
         foreach ($rows as $row) {
             $product = Functions::showProduct($row['product_id']);
+            $rawCatId = $product['categories']['id'] ?? '';
+            $parentId = $product['categories']['parent_id'] ?? '';
+            $shortCatId = ($parentId !== '' && $rawCatId !== '' && str_starts_with($rawCatId, $parentId . '-')) ? substr($rawCatId, strlen($parentId) + 1) : $rawCatId;
             $items[] = [
                 'product_id' => $row['product_id'],
                 'product_name' => $row['product_name'],
@@ -154,8 +157,8 @@ class Cart
                 'subtotal' => round((float)$row['price'] * (float)$row['quantity'], 2),
                 'image' => $product['images'][0] ?? '/public/assets/images/unknown/unknown.png',
                 'specs' => $product['specs'] ?? [],
-                'product_url' => !empty($product['categories']['parent_id']) && !empty($product['categories']['id'])
-                    ? "/market/katalog/{$product['categories']['parent_id']}/{$product['categories']['id']}/{$row['product_id']}"
+                'product_url' => !empty($parentId) && !empty($shortCatId)
+                    ? "/market/katalog/{$parentId}/{$shortCatId}/{$row['product_id']}"
                     : ($product['seo']['canonicalUrl'] ?? '#'),
             ];
         }

@@ -513,7 +513,7 @@ class Functions
                     'pid' => self::slugify($name),
                     'name' => $name,
                     'title' => $subTitle,
-                    'url' => '/market/katalog/' . $catSlug . '/' . $catSlug . '-' . $slug,
+                    'url' => '/market/katalog/' . $catSlug . '/' . $slug,
                     'badge' => 'Подкатегория',
                     'image' => $photo,
                     'specs' => [],

@@ -75,7 +75,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
     ?>
     <title><?= htmlspecialchars($product['seo']['metaTitle'] ?? $defaultTitle) ?></title>
     <meta name="description" content="<?= htmlspecialchars($product['seo']['metaDescription'] ?? $defaultDescription) ?>">
-    <meta name="keywords" content="<?= htmlspecialchars($product['seo']['keywords'] ?? $defaultKeywords) ?>">
+    <meta name="keywords" content="<?= htmlspecialchars(isset($product['seo']['keywords']) ? (is_array($product['seo']['keywords']) ? implode(', ', $product['seo']['keywords']) : (string)$product['seo']['keywords']) : $defaultKeywords) ?>">
     <link rel="canonical" href="<?php echo $site['baseUrl']; ?><?= htmlspecialchars($product['seo']['canonicalUrl'] ?? '/') ?>">
 
     <!-- Open Graph Meta Tags -->
@@ -187,11 +187,12 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             }
 
             if ($subcategory) {
+                $shortCatId = ($parentCategory['id'] !== '' && str_starts_with($categoryId, $parentCategory['id'] . '-')) ? substr($categoryId, strlen($parentCategory['id']) + 1) : $categoryId;
                 $breadcrumbItems[] = [
                     '@type' => 'ListItem',
                     'position' => $position++,
                     'name' => $subcategory['name'] ?? $subcategory['title'] ?? $categoryId,
-                    'item' => $site['baseUrl'] . '/market/katalog/' . $parentCategory['id'] . '/' . $categoryId
+                    'item' => $site['baseUrl'] . '/market/katalog/' . $parentCategory['id'] . '/' . $shortCatId
                 ];
             }
         }
@@ -651,9 +652,13 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
             $subcategorySlug = $subcategory ?? '';
             if (!empty($subcategorySlug)) {
                 foreach ($allProducts as $p) {
-                    if (($p['badge'] ?? '') === 'Подкатегория' && ($p['categories']['id'] ?? '') === $subcategorySlug) {
-                        $subcategoryTitle = $p['name'] ?? $p['title'] ?? $subcategorySlug;
-                        break;
+                    if (($p['badge'] ?? '') === 'Подкатегория') {
+                        $_pId = $p['categories']['id'] ?? '';
+                        $_pShort = ($katalog !== '' && str_starts_with($_pId, $katalog . '-')) ? substr($_pId, strlen($katalog) + 1) : $_pId;
+                        if ($_pId === $subcategorySlug || $_pShort === $subcategorySlug) {
+                            $subcategoryTitle = $p['name'] ?? $p['title'] ?? $subcategorySlug;
+                            break;
+                        }
                     }
                 }
             }

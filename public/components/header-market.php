@@ -218,8 +218,9 @@ $catalogSubcategories = $tree['subcategories'];
                             <div class="ozon-mega-content-title"><?= htmlspecialchars($cat['name']) ?></div>
                             <div class="ozon-mega-grid">
                                 <?php foreach ($catalogSubcategories[$catSlug] ?? [] as $sub): ?>
-                                        <?php $subSlug = $sub['categories']['id'] ?? ''; ?>
+                                        <?php $rawSubId = $sub['categories']['id'] ?? ''; ?>
                                         <?php $parentId = $sub['categories']['parent_id'] ?? ''; ?>
+                                        <?php $subSlug = ($parentId !== '' && str_starts_with($rawSubId, $parentId . '-')) ? substr($rawSubId, strlen($parentId) + 1) : $rawSubId; ?>
                                         <?php $subImages = $sub['images'] ?? []; ?>
                                         <?php $img = explode(';', $subImages[0] ?? '')[0]; ?>
                                         <a href="/market/katalog/<?= htmlspecialchars($parentId) ?>/<?= htmlspecialchars($subSlug) ?>"
