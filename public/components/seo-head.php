@@ -46,11 +46,52 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
     })(window,document,'script','https://mc.yandex.ru/metrika/tag.js','ym');
     ym(<?= htmlspecialchars($ymId) ?>,'init',{clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true,ecommerce:'dataLayer',forms:false});
     window.ymGoal = function(target, params){ try { ym(<?= htmlspecialchars($ymId) ?>,'reachGoal',target, params||{}); } catch(e){} };
+    window.__ymId = "<?= htmlspecialchars($ymId) ?>";
 
-    document.addEventListener('fetchit:success', function(e){
-      var goal = (e.detail && e.detail.goal) || 'FORM_SEND';
-      try { ym(<?= htmlspecialchars($ymId) ?>,'reachGoal',goal, e.detail || {}); } catch(ex){}
-    });
+    // === KAVSTAL: обработчик триггер-события успешной отправки формы обратной связи ===
+    // Слушает событие `kav:form:success` (и legacy `fetchit:success`), которое диспатчит сама форма при успешном fetch.
+    // Если событие появилось — вызывает ym reachGoal KAVFROM. Поисковые формы исключены.
+    (function(){
+      var KAV_GOAL = 'KAVFROM';
+      var lastFire = 0, lastKey = '';
+      function isSearchEvent(e){
+        try {
+          var d = (e && e.detail) || {};
+          if (d.isSearch) return true;
+          if (d.search || d.q) return true;
+          if (d.form && d.form.matches) {
+            if (d.form.matches('form[action*="/market"], form[role="search"]')) return true;
+            if (d.form.querySelector('input[name="search"]') && !d.form.querySelector('input[name="phone"]')) return true;
+          }
+          if (d.action && String(d.action).indexOf('/market') !== -1 && String(d.method||'').toLowerCase()==='get') return true;
+        } catch(ex){}
+        return false;
+      }
+      function handleFeedbackSuccess(e){
+        if (isSearchEvent(e)) return;
+        var detail = (e && e.detail) || {};
+        // защита от случайного срабатывания на поиске по query
+        if (detail.search !== undefined || detail.q !== undefined) {
+          if (!detail.phone && !detail.email && !detail.name) return;
+        }
+        // дедупликация: если тот же KAVFROM уже стрелял <1.2с назад (kav + fetchit диспатчат оба) — игнор
+        var key = (detail.formId||'') + '|' + (detail.goal||KAV_GOAL);
+        var now = Date.now();
+        if (key === lastKey && (now - lastFire) < 1200) return;
+        lastKey = key; lastFire = now;
+        var params = {};
+        try { params = Object.assign({page: location.pathname, yclid: window.getYclid ? window.getYclid() : ''}, detail); } catch(ex){ params = detail; }
+        // Основная цель — KAVFROM (отправка всех форм обратной связи)
+        try { ym(window.__ymId,'reachGoal',KAV_GOAL, params); } catch(ex){}
+        // Дополнительно: если у формы был свой data-goal (callback, market_feedback и т.д.) — шлём и его
+        var specificGoal = detail.goal && detail.goal !== KAV_GOAL ? detail.goal : null;
+        if (specificGoal) { try { ym(window.__ymId,'reachGoal',specificGoal, params); } catch(ex){} }
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:'kav_form_success', goal: KAV_GOAL, specificGoal: specificGoal, page: location.pathname}); } catch(ex){}
+      }
+      document.addEventListener('kav:form:success', handleFeedbackSuccess);
+      document.addEventListener('fetchit:success', handleFeedbackSuccess);
+      document.addEventListener('form:success', handleFeedbackSuccess);
+    })();
   </script>
   <noscript><div><img src="https://mc.yandex.ru/watch/<?= htmlspecialchars($ymId) ?>" style="position:absolute;left:-9999px" alt=""></div></noscript>
   <?php endif; ?>
@@ -81,13 +122,38 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
       <?php if ($ga4Id): ?>try { gtag('event', target, params); } catch(e){}<?php endif; ?>
     };
 
+    // Fallback-обработчик для GA4/dataLayer когда Метрика не подключена (YM_ID пустой)
+    // Если YM_ID есть — основной обработчик уже выше, здесь только GA4
+    (function(){
+      var KAV_GOAL = 'KAVFROM';
+      var lastFire = 0, lastKey = '';
+      function handleFallback(e){
+        if (window.__ymId) return;
+        var detail = (e && e.detail) || {};
+        if (detail.search !== undefined || detail.q !== undefined) return;
+        var key = (detail.formId||'') + '|' + (detail.goal||KAV_GOAL);
+        var now = Date.now();
+        if (key === lastKey && (now - lastFire) < 1200) return;
+        lastKey = key; lastFire = now;
+        var params = {};
+        try { params = Object.assign({page: location.pathname, yclid: window.getYclid ? window.getYclid() : ''}, detail); } catch(ex){ params = detail; }
+        <?php if ($ga4Id): ?>try { gtag('event', KAV_GOAL, params); } catch(ex){}<?php endif; ?>
+        try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:'kav_form_success', goal: KAV_GOAL, page: location.pathname}); } catch(ex){}
+      }
+      document.addEventListener('kav:form:success', handleFallback);
+      document.addEventListener('fetchit:success', handleFallback);
+    })();
+
     document.addEventListener('DOMContentLoaded', function(){
       var yclid = window.getYclid();
 
-      // Внедряем yclid в каждую форму как скрытое поле
+      // Внедряем yclid в каждую форму как скрытое поле (кроме поисковых — им yclid не нужен, но не мешает)
       if (yclid) {
         document.querySelectorAll('form').forEach(function(form){
           if (!form.querySelector('[name="yclid"]')) {
+            // не добавляем в поисковую форму GET /market — у неё свой yclid через URL не нужен
+            if (form.matches && form.matches('form[method="get"][action*="/market"]')) return;
+            if (form.querySelector('input[name="search"]') && !form.querySelector('input[name="phone"]')) return;
             var inp = document.createElement('input');
             inp.type = 'hidden'; inp.name = 'yclid'; inp.value = yclid;
             form.appendChild(inp);
@@ -95,14 +161,12 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
         });
       }
 
-      // Авто-трекинг отправки любой формы с data-goal
-      document.querySelectorAll('form[data-goal]').forEach(function(form){
-        form.addEventListener('submit', function(){
-          window.trackGoal(form.getAttribute('data-goal'), {page: location.pathname});
-        });
-      });
+      // Формы обратной связи с data-goal: цель KAVFROM теперь срабатывает ТОЛЬКО через
+      // центральный обработчик события `kav:form:success` (которое диспатчит сама форма при успешном fetch + checkValidity).
+      // Прямой submit-трекинг отключён, чтобы поиск (GET /market?search=...) не попадал в цель "отправка всех форм".
+      // Специфичные цели (callback, market_feedback и т.д.) также отправляются через тот же обработчик на событии успеха.
 
-      // Кнопки с data-goal
+      // Кнопки с data-goal (не формы) — оставляем клик-трекинг
       document.querySelectorAll('[data-goal]').forEach(function(el){
         if (el.tagName === 'FORM') return;
         el.addEventListener('click', function(){

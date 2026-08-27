@@ -278,6 +278,7 @@
         });
         document.getElementById('specForm')?.addEventListener('submit', async function (e) {
             e.preventDefault();
+            if (!this.checkValidity || !this.checkValidity()) return;
             const status = document.getElementById('specFormStatus');
             const btn = this.querySelector('button[type="submit"]');
             btn.disabled = true;
@@ -287,6 +288,15 @@
                 const res = await fetch('/send/email', { method: 'POST', body: fd });
                 const data = await res.json();
                 if (data.success) {
+                    // === Триггер-событие — обработчик в seo-head поймает и вызовет KAVFROM ===
+                    try {
+                        var detail = {goal: 'KAVFROM', formId: this.id, page: location.pathname, yclid: window.getYclid ? window.getYclid() : '', response: data};
+                        if (window.__kavFireFeedbackSuccess) window.__kavFireFeedbackSuccess(this, detail);
+                        else {
+                            try { document.dispatchEvent(new CustomEvent('kav:form:success', {detail: detail, bubbles: true})); } catch(e){}
+                            try { document.dispatchEvent(new CustomEvent('fetchit:success', {detail: detail, bubbles: true})); } catch(e){}
+                        }
+                    } catch(err){}
                     status.className = 'mt-4 text-sm font-medium text-green-600';
                     status.textContent = 'Заявка отправлена! Мы свяжемся с вами в ближайшее время.';
                     this.reset();

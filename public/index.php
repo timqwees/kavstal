@@ -1882,6 +1882,7 @@
 
         form.addEventListener('submit', async function (e) {
           e.preventDefault();
+          if (!form.checkValidity || !form.checkValidity()) return;
           status.classList.add('hidden');
           status.style.color = '';
           var btn = form.querySelector('button[type="submit"]');
@@ -1891,6 +1892,15 @@
             var res = await fetch('/send/email', { method: 'POST', body: new FormData(form) });
             var data = await res.json();
             if (data.success) {
+              // === Триггер-событие — обработчик в seo-head поймает и вызовет KAVFROM ===
+              try {
+                var detail = {goal: 'KAVFROM', formId: form.id, page: location.pathname, yclid: window.getYclid ? window.getYclid() : '', response: data};
+                if (window.__kavFireFeedbackSuccess) window.__kavFireFeedbackSuccess(form, detail);
+                else {
+                  try { document.dispatchEvent(new CustomEvent('kav:form:success', {detail: detail, bubbles: true})); } catch(e){}
+                  try { document.dispatchEvent(new CustomEvent('fetchit:success', {detail: detail, bubbles: true})); } catch(e){}
+                }
+              } catch(err){}
               status.textContent = 'Заявка отправлена! Мы свяжемся с вами в ближайшее время';
               status.style.color = '#16a34a';
               form.reset();

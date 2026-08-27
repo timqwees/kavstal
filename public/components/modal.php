@@ -227,12 +227,22 @@
 
     document.getElementById('specModalForm').onsubmit = async function (e) {
       e.preventDefault();
+      if (!this.checkValidity || !this.checkValidity()) return;
       var btn = this.querySelector('button[type="submit"]');
       btn.disabled = true; btn.innerHTML = 'Отправка...';
       try {
         var res = await fetch('/send/email', { method: 'POST', body: new FormData(this) });
         var data = await res.json();
         if (data.success) {
+          // === Триггер-событие успешной отправки — ловит обработчик в seo-head и шлёт KAVFROM ===
+          try {
+            var detail = {goal: 'KAVFROM', formId: this.id, page: location.pathname, yclid: window.getYclid ? window.getYclid() : '', response: data};
+            if (window.__kavFireFeedbackSuccess) window.__kavFireFeedbackSuccess(this, detail);
+            else {
+              try { document.dispatchEvent(new CustomEvent('kav:form:success', {detail: detail, bubbles: true})); } catch(e){}
+              try { document.dispatchEvent(new CustomEvent('fetchit:success', {detail: detail, bubbles: true})); } catch(e){}
+            }
+          } catch(err){}
           this.style.display = 'none';
           document.getElementById('specModalStatus').style.display = 'none';
           document.getElementById('specAgree').style.display = 'none';
