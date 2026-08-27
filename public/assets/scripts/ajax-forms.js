@@ -24,6 +24,7 @@ document.head.insertAdjacentHTML('beforeend', '<style>@keyframes spin{to{transfo
       yclid: (window.getYclid && window.getYclid()) || ''
     }, extraDetail || {});
     // Триггер-событие — сама отправка формы вызывает событие, обработчик его ловит
+    try { console.log('[KAVSTAL] 📤 Триггер kav:form:success', detail); } catch(e){}
     // Диспатчим только kav:form:success, fetchit:success для обратной совместимости — дедуп в обработчике отсеет дубль
     try { document.dispatchEvent(new CustomEvent('kav:form:success', {detail: detail, bubbles: true})); } catch(e) {}
     try { document.dispatchEvent(new CustomEvent('fetchit:success', {detail: detail, bubbles: true})); } catch(e) {}
@@ -62,6 +63,7 @@ document.head.insertAdjacentHTML('beforeend', '<style>@keyframes spin{to{transfo
 
         // === УСПЕХ — триггерим событие, обработчик в seo-head поймает и вызовет reachGoal KAVFROM ===
         fireFeedbackSuccess(this, {response: data, goal: this.getAttribute('data-goal') || KAV_GOAL});
+        try { console.info('Заявка отправлена! Мы свяжемся с вами в ближайшее время'); console.log('[KAVSTAL] ✅ Форма успешно отправлена', this.id || this.getAttribute('data-goal') || 'ajax-form'); } catch(e){}
 
         this.innerHTML = '<div class="py-8 text-center"><div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg></div><p class="text-lg font-semibold">Спасибо!</p><p class="text-sm text-zinc-500 mt-1">Мы свяжемся с вами в ближайшее время.</p></div>';
 

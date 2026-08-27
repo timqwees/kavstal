@@ -87,6 +87,7 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
         var specificGoal = detail.goal && detail.goal !== KAV_GOAL ? detail.goal : null;
         if (specificGoal) { try { ym(window.__ymId,'reachGoal',specificGoal, params); } catch(ex){} }
         try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:'kav_form_success', goal: KAV_GOAL, specificGoal: specificGoal, page: location.pathname}); } catch(ex){}
+        try { console.log('[KAVSTAL] ✅ Метрика KAVFROM отправлена', {goal: KAV_GOAL, specificGoal: specificGoal, params: params}); console.info('Заявка отправлена! Мы свяжемся с вами в ближайшее время'); } catch(ex){}
       }
       document.addEventListener('kav:form:success', handleFeedbackSuccess);
       document.addEventListener('fetchit:success', handleFeedbackSuccess);
@@ -139,6 +140,7 @@ $gadsId = $_ENV['GADS_ID'] ?? '';
         try { params = Object.assign({page: location.pathname, yclid: window.getYclid ? window.getYclid() : ''}, detail); } catch(ex){ params = detail; }
         <?php if ($ga4Id): ?>try { gtag('event', KAV_GOAL, params); } catch(ex){}<?php endif; ?>
         try { window.dataLayer = window.dataLayer || []; window.dataLayer.push({event:'kav_form_success', goal: KAV_GOAL, page: location.pathname}); } catch(ex){}
+        try { console.log('[KAVSTAL] ✅ KAVFROM (fallback) отправлен', params); console.info('Заявка отправлена! Мы свяжемся с вами в ближайшее время'); } catch(ex){}
       }
       document.addEventListener('kav:form:success', handleFallback);
       document.addEventListener('fetchit:success', handleFallback);
