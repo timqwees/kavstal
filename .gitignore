@@ -10,6 +10,7 @@ file/sitemap_yandex.xml
 file/feed.yml
 public/file/cache/
 app/Storage/cache/
+app/Storage/cache/html/
+setting/config/excel_bak/
 *.min.css
 *.min.js
-app/Storage/cache/html/

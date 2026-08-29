@@ -1630,6 +1630,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
         if (!is_dir($dir))
             mkdir($dir, 0755, true);
         file_put_contents($cacheFile, ob_get_contents(), LOCK_EX);
+        if (mt_rand(1, 100) === 1) Setting\route\function\Functions::cleanHtmlCache();
         ob_end_flush();
     endif; ?>
 </body>

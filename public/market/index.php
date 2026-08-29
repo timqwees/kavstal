@@ -333,7 +333,7 @@ $noindexMarket = $hasFilters || $marketPage > 1;
 
                 if (!$useCache) {
                     shuffle($productsOnly);
-                    file_put_contents($cacheFile, serialize(['key' => $cacheKey, 'order' => array_map(fn($p) => $p['id'], $productsOnly)]));
+                    @file_put_contents($cacheFile, serialize(['key' => $cacheKey, 'order' => array_map(fn($p) => $p['id'], $productsOnly)]));
                 }
 
                 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;

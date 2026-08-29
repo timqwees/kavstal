@@ -1437,6 +1437,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         if (!is_dir($_dir))
             mkdir($_dir, 0755, true);
         file_put_contents($_cacheFile, ob_get_contents(), LOCK_EX);
+        if (mt_rand(1, 100) === 1) Setting\route\function\Functions::cleanHtmlCache();
         ob_end_flush();
     endif; ?>
 </body>

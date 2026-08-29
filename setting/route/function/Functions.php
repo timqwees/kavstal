@@ -65,6 +65,11 @@ class Functions
             @unlink($file);
             return null;
         }
+        $json = @gzdecode($json);
+        if ($json === false) {
+            @unlink($file);
+            return null;
+        }
         $data = json_decode($json, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
             @unlink($file);
@@ -77,7 +82,7 @@ class Functions
     {
         $file = self::getCacheDir() . '/' . $key . '.json';
         $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
-        file_put_contents($file, $json, LOCK_EX);
+        @file_put_contents($file, gzencode($json, 9), LOCK_EX);
     }
 
     public static function cacheClear(): void
@@ -88,8 +93,21 @@ class Functions
                 unlink($file);
             }
         }
+        self::cleanHtmlCache();
         self::$_productsCache = null;
         self::$_randomProductsCache = null;
+    }
+
+    public static function cleanHtmlCache(): void
+    {
+        $htmlDir = dirname(self::getCacheDir()) . '/html';
+        if (!is_dir($htmlDir)) return;
+        $now = time();
+        foreach (glob($htmlDir . '/*.html') as $file) {
+            if (($now - filemtime($file)) > 3700) {
+                @unlink($file);
+            }
+        }
     }
 
     //======СПИСОК ФУНКЦИЙ / LIST FUNCTIONS===========//

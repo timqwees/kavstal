@@ -74,7 +74,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
 
       <!-- Products -->
       <div>
-        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Продукция</h4>
+        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Продукция</h2>
         <ul class="space-y-2">
           <li><a href="/market/katalog/truby"
               class="text-sm text-gray-600 hover:text-red-600 transition-colors">Трубы</a></li>
@@ -93,7 +93,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
 
       <!-- Services -->
       <div>
-        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Контакты</h4>
+        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Контакты</h2>
         <ul class="space-y-2">
           <li><a href="/contacts" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Связаться с
               нами</a></li>
@@ -107,7 +107,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
 
       <!-- Blog -->
       <div>
-        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Полезное</h4>
+        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Полезное</h2>
         <ul class="space-y-2">
           <li><a href="/blog" class="text-sm text-gray-600 hover:text-red-600 transition-colors">Блог о
               металлопрокате</a></li>
@@ -122,7 +122,7 @@ $phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteIn
 
       <!-- Contacts -->
       <div>
-        <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Контакты</h4>
+        <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Контакты</h2>
         <ul class="space-y-3">
           <li>
             <a href="tel:<?= htmlspecialchars($phone_clean) ?>"
