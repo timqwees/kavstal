@@ -1,26 +1,8 @@
 <?php
-// HTML-кэш для страниц без фильтров/пагинации — ключ с хостом, чтобы 127.0.0.1 не отдавал кэш для www
+// HTML-кэш полностью отключён для экономии диска (13GB лимит) — каждый запрос рендерится без записи на диск
 $cacheKey = '';
-$_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['diameter']) || !empty($_GET['ral']) || !empty($_GET['color']) || !empty($_GET['stock']) || !empty($_GET['price_from']) || !empty($_GET['price_to']) || !empty($_GET['sort']) || !empty($_GET['page']);
-if (!$_noCache) {
-    $cacheKey = 'katalog_' . md5(($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''));
-    $cacheFile = __DIR__ . '/../../../../../app/Storage/cache/html/' . $cacheKey . '.html';
-    if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < 3600) {
-        $etag = '"' . md5_file($cacheFile) . '"';
-        $lm = gmdate('D, d M Y H:i:s', filemtime($cacheFile)) . ' GMT';
-        header('ETag: ' . $etag);
-        header('Last-Modified: ' . $lm);
-        header('Cache-Control: public, max-age=3600');
-        if ((isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) === $etag) ||
-            (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= filemtime($cacheFile))) {
-            http_response_code(304);
-            return;
-        }
-        readfile($cacheFile);
-        return;
-    }
-    ob_start();
-}
+$cacheFile = '';
+$_noCache = true;
 
 $allProducts = Setting\route\function\Functions::getMarketProducts();
 $site = Setting\route\function\Functions::site();
@@ -1625,14 +1607,7 @@ usort($subIconKeys, fn($a, $b) => strlen($b) <=> strlen($a));
             });
         });
     </script>
-    <?php if (!$_noCache):
-        $dir = dirname($cacheFile);
-        if (!is_dir($dir))
-            mkdir($dir, 0755, true);
-        file_put_contents($cacheFile, ob_get_contents(), LOCK_EX);
-        if (mt_rand(1, 100) === 1) Setting\route\function\Functions::cleanHtmlCache();
-        ob_end_flush();
-    endif; ?>
+    <?php /* HTML-кэш отключён — ничего не пишем на диск */ ?>
 </body>
 
 </html>

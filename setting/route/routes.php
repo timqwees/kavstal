@@ -872,17 +872,15 @@ Routes::get('/order/{id}/success', function ($id) {
     }
     Routes::auto_element(dirname(__DIR__, 2) . '/public/market/order/success.php', array_merge(get_defined_vars(), ['order' => $order]));
 });
-//==================================================================================================//ORDER PDF
+//==================================================================================================//ORDER PDF (стримим из памяти, без записи на диск)
 Routes::get('/order/{id}/pdf', function ($id) {
     try {
-        $html = Order::generatePdf((int) $id);
-        $pdfPath = Order::savePdf((int) $id, $html);
-        if ($pdfPath) {
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename="order-' . $id . '.pdf"');
-            readfile($pdfPath);
-            exit;
-        }
+        $pdfContent = Order::generatePdf((int) $id);
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: inline; filename="order-' . $id . '.pdf"');
+        header('Content-Length: ' . strlen($pdfContent));
+        echo $pdfContent;
+        exit;
     } catch (\Exception $e) {
         error_log("PDF generation error: " . $e->getMessage());
     }

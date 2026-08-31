@@ -363,15 +363,12 @@ class Database extends Network
       if (in_array($queryType, ['UPDATE', 'INSERT', 'DELETE'])) {
         $rowCount = $stmt->rowCount();
         if ($rowCount === 0 && $queryType === 'UPDATE') {
-          $errorMsg = "WARNING: UPDATE запрос выполнен, но не обновил ни одной строки (0 rows affected) | SQL: $sql | Параметры: " . json_encode($params, JSON_UNESCAPED_UNICODE);
-          error_log($errorMsg);
           return false;
         }
         // Для INSERT возвращаем true, если execute был успешным (даже если rowCount === 0 для некоторых СУБД)
         if ($queryType === 'INSERT') {
           return $result === true ? true : false;
         }
-        error_log("DEBUG: Запрос $queryType выполнен успешно, затронуто строк: $rowCount");
       }
 
       // Для остальных запросов возвращаем true/false об успехе execute

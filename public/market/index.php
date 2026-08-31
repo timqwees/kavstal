@@ -308,33 +308,8 @@ $noindexMarket = $hasFilters || $marketPage > 1;
                 }
                 $productsOnly = array_values($productsOnly);
 
-                $cacheDir = __DIR__ . '/../file/cache';
-                if (!is_dir($cacheDir))
-                    @mkdir($cacheDir, 0755, true);
-                $cacheFile = $cacheDir . '/catalog_shuffle.cache';
-                $cacheKey = md5(implode(',', array_map(fn($p) => $p['id'] ?? '', $productsOnly)) . count($productsOnly));
-
-                $useCache = false;
-                if (file_exists($cacheFile)) {
-                    $cached = @unserialize(file_get_contents($cacheFile));
-                    if (is_array($cached) && ($cached['key'] ?? '') === $cacheKey) {
-                        $cachedIds = $cached['order'];
-                        $idMap = [];
-                        foreach ($productsOnly as $p)
-                            $idMap[$p['id']] = $p;
-                        $productsOnly = [];
-                        foreach ($cachedIds as $id) {
-                            if (isset($idMap[$id]))
-                                $productsOnly[] = $idMap[$id];
-                        }
-                        $useCache = true;
-                    }
-                }
-
-                if (!$useCache) {
-                    shuffle($productsOnly);
-                    @file_put_contents($cacheFile, serialize(['key' => $cacheKey, 'order' => array_map(fn($p) => $p['id'], $productsOnly)]));
-                }
+                // Кэш перемешивания каталога отключён — просто перемешиваем без записи на диск
+                shuffle($productsOnly);
 
                 $page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int) $_GET['page'] : 1;
                 $itemsPerPage = 48;

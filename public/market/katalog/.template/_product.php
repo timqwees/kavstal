@@ -16,31 +16,11 @@ if (!empty($product['_not_found']) || ($product['title'] ?? '') === 'Uknown' || 
     include dirname(__DIR__, 4) . '/app/Models/Router/view/404/404.html';
     return;
 }
-// HTML-кэш для страниц товаров (только для найденных) — ключ с хостом, чтобы 127.0.0.1 не отдавал кэш для www
-$_noCache = !empty($_GET['search']) || !empty($_GET['marka']) || !empty($_GET['gost']) || !empty($_GET['size']) || !empty($_GET['price_from']) || !empty($_GET['price_to']);
+// HTML-кэш полностью отключён для экономии диска (13GB лимит)
+$_noCache = true;
 $_cacheKey = '';
 $_cacheFile = '';
 $katalog = $katalog ?? '';
-if (!$_noCache) {
-    $_cacheKey = 'product_' . md5(($_SERVER['HTTP_HOST'] ?? '') . ($_SERVER['REQUEST_URI'] ?? ''));
-    $_cacheFile = __DIR__ . '/../../../../app/Storage/cache/html/' . $_cacheKey . '.html';
-    if (file_exists($_cacheFile) && (time() - filemtime($_cacheFile)) < 3600) {
-        // ETag / Last-Modified для кэша
-        $etag = '"' . md5_file($_cacheFile) . '"';
-        $lm = gmdate('D, d M Y H:i:s', filemtime($_cacheFile)) . ' GMT';
-        header('ETag: ' . $etag);
-        header('Last-Modified: ' . $lm);
-        header('Cache-Control: public, max-age=3600');
-        if ((isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim($_SERVER['HTTP_IF_NONE_MATCH']) === $etag) ||
-            (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) && strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) >= filemtime($_cacheFile))) {
-            http_response_code(304);
-            return;
-        }
-        readfile($_cacheFile);
-        return;
-    }
-    ob_start();
-}
 // =====================
 // Сообщения для пользователя
 $notification = App\Models\Network\Message::controll();
@@ -1432,14 +1412,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
         });
     </script>
 
-    <?php if (!$_noCache):
-        $_dir = dirname($_cacheFile);
-        if (!is_dir($_dir))
-            mkdir($_dir, 0755, true);
-        file_put_contents($_cacheFile, ob_get_contents(), LOCK_EX);
-        if (mt_rand(1, 100) === 1) Setting\route\function\Functions::cleanHtmlCache();
-        ob_end_flush();
-    endif; ?>
+    <?php /* HTML-кэш отключён — ничего не пишем на диск */ ?>
 </body>
 
 </html>

@@ -44,53 +44,30 @@ class ProductFeed
     }
 
     /**
-     * Отдача YML с gzip сжатием
-     * @param bool $createFile создать файл если его нет
+     * Отдача YML — без записи на диск (экономия места)
+     * @param bool $createFile игнорируется
      */
     public static function outputCompressed(bool $createFile = false): void
     {
-        $filePath = dirname(__DIR__, 3) . '/file/feed.yml';
-
-        // Регенерируем, если файла нет или он старше 1 часа
-        $needsRegenerate = true;
-        if (file_exists($filePath)) {
-            $fileAge = time() - filemtime($filePath);
-            if ($fileAge < 3600) {
-                $needsRegenerate = false;
-                $etag = md5_file($filePath);
-                if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-                    http_response_code(304);
-                    return;
-                }
-                header('Content-Type: text/xml; charset=utf-8');
-                header('ETag: ' . $etag);
-                header('Cache-Control: public, max-age=3600');
-                readfile($filePath);
-                return;
-            }
-        }
-
         $yml = self::generate();
-
-        if ($createFile) {
-            self::saveToFile($filePath, $yml);
+        $etag = md5($yml);
+        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
+            http_response_code(304);
+            return;
         }
-
         header('Content-Type: text/xml; charset=utf-8');
+        header('ETag: ' . $etag);
+        header('Cache-Control: public, max-age=3600');
         header('Content-Length: ' . strlen($yml));
         echo $yml;
     }
 
     /**
-     * Сохранение фида в файл
+     * Сохранение фида в файл — ОТКЛЮЧЕНО
      */
     public static function saveToFile(string $path, string $content): bool
     {
-        $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        return file_put_contents($path, $content) !== false;
+        return false;
     }
 
     /**

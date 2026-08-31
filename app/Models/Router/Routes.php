@@ -311,9 +311,7 @@ class Routes extends Network
             if (!empty($params)) {
                 extract($params, EXTR_SKIP);
             }
-            error_log("auto_element START: " . $path);
             include_once $path;
-            error_log("auto_element END: " . $path);
         } else {
             self::error_404($_SERVER['REQUEST_URI']);
         }

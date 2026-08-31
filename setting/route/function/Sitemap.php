@@ -19,54 +19,27 @@ class Sitemap
     }
 
     /**
-     * Сохранение sitemap в файл
+     * Сохранение sitemap в файл — ОТКЛЮЧЕНО (экономия диска)
      */
     public static function saveToFile(string $path, string $content): bool
     {
-        $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        return file_put_contents($path, $content) !== false;
+        return false;
     }
 
     /**
-     * Отдача XML с gzip сжатием
+     * Отдача XML — без записи на диск
      * @param string $format 'yandex' или 'google'
-     * @param bool $createFile создать файл если его нет
+     * @param bool $createFile игнорируется, файл не создаётся
      */
     public static function outputCompressed(string $format = 'yandex', bool $createFile = false): void
     {
-        $filePath = './file/sitemap_' . $format . '.xml';
-
-        // Проверяем кэш (1 час)
-        if (file_exists($filePath)) {
-            $fileAge = time() - filemtime($filePath);
-            if ($fileAge < 3600) {
-                $etag = md5_file($filePath);
-                if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-                    http_response_code(304);
-                    return;
-                }
-                header('Content-Type: application/xml; charset=utf-8');
-                header('ETag: ' . $etag);
-                header('Cache-Control: public, max-age=3600');
-                readfile($filePath);
-                return;
-            }
-        }
-
-        // Генерируем свежий sitemap
+        // Файловый кэш sitemap отключён — всегда генерируем on-the-fly
         $xml = self::generate($format);
         $etag = md5($xml);
 
         if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
             http_response_code(304);
             return;
-        }
-
-        if ($createFile) {
-            self::saveToFile($filePath, $xml);
         }
 
         header('Content-Type: application/xml; charset=utf-8');

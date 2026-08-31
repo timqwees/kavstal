@@ -93,7 +93,8 @@ class Order
 
         try {
             $pdfContent = self::generatePdf((int)$orderId);
-            $pdfPath = self::savePdf((int)$orderId, $pdfContent);
+            // Отправляем PDF как вложение из памяти, без сохранения на диск (экономия места)
+            $pdfAttachment = ['name' => 'order-' . $orderId . '.pdf', 'data' => $pdfContent];
 
             $order = self::getById((int)$orderId);
             $data = (object)[
@@ -107,8 +108,7 @@ class Order
                 'Чек (PDF)' => 'прикреплён к письму',
                 'both' => true,
             ];
-            Functions::sendMail($data, $pdfPath);
-            @unlink($pdfPath);
+            Functions::sendMail($data, [$pdfAttachment]);
         } catch (\Exception $e) {
             error_log('Order email error: ' . $e->getMessage());
         }
@@ -501,12 +501,9 @@ class Order
 
     public static function savePdf(int $orderId, string $pdfContent): string
     {
-        $dir = dirname(__DIR__, 3) . '/app/Storage/orders';
-        if (!is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-        $path = $dir . '/order-' . $orderId . '.pdf';
-        file_put_contents($path, $pdfContent);
-        return $path;
+        // Сохранение PDF на диск отключено для экономии места (13GB лимит).
+        // Метод оставлен для обратной совместимости, но не пишет файл.
+        // PDF отдаётся напрямую из памяти, либо как string-attachment в письме.
+        return '';
     }
 }
