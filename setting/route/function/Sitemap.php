@@ -18,30 +18,30 @@ class Sitemap
         return $instance->buildXml($format);
     }
 
-    /**
-     * Сохранение sitemap в файл — ОТКЛЮЧЕНО (экономия диска)
-     */
     public static function saveToFile(string $path, string $content): bool
     {
-        return false;
+        $dir = dirname($path);
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+        return file_put_contents($path, $content) !== false;
     }
 
-    /**
-     * Отдача XML — без записи на диск
-     * @param string $format 'yandex' или 'google'
-     * @param bool $createFile игнорируется, файл не создаётся
-     */
+    // Лёгкий кэш: 2 файла sitemap_*.xml (~3МБ каждый), TTL 1ч, не растёт
     public static function outputCompressed(string $format = 'yandex', bool $createFile = false): void
     {
-        // Файловый кэш sitemap отключён — всегда генерируем on-the-fly
-        $xml = self::generate($format);
-        $etag = md5($xml);
-
-        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-            http_response_code(304);
+        $filePath = './file/sitemap_' . $format . '.xml';
+        if (file_exists($filePath) && (time() - filemtime($filePath)) < 3600) {
+            $etag = md5_file($filePath);
+            if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) { http_response_code(304); return; }
+            header('Content-Type: application/xml; charset=utf-8');
+            header('ETag: ' . $etag);
+            header('Cache-Control: public, max-age=3600');
+            readfile($filePath);
             return;
         }
-
+        $xml = self::generate($format);
+        $etag = md5($xml);
+        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) { http_response_code(304); return; }
+        if ($createFile) self::saveToFile($filePath, $xml);
         header('Content-Type: application/xml; charset=utf-8');
         header('ETag: ' . $etag);
         header('Cache-Control: public, max-age=3600');

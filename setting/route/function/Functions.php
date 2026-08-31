@@ -45,50 +45,72 @@ class Functions
 
     private static function getCacheDir(): string
     {
-        // Кэширование полностью отключено — дисковые файлы не создаём
+        if (!is_dir(self::$_cacheDir)) {
+            mkdir(self::$_cacheDir, 0755, true);
+        }
         return self::$_cacheDir;
     }
 
+    // Лёгкий файловый кэш — только 4 фиксированных ключа, ~25МБ макс, не растёт
     private static function cacheGet(string $key, int $ttl = 300): mixed
     {
-        // Файловый кэш отключён для экономии диска (13GB лимит)
-        return null;
+        $file = self::getCacheDir() . '/' . $key . '.json';
+        if (!file_exists($file)) return null;
+        if ((time() - filemtime($file)) > $ttl) {
+            @unlink($file);
+            return null;
+        }
+        $json = @file_get_contents($file);
+        if ($json === false || $json === '') {
+            @unlink($file);
+            return null;
+        }
+        $json = @gzdecode($json);
+        if ($json === false) {
+            @unlink($file);
+            return null;
+        }
+        $data = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            @unlink($file);
+            return null;
+        }
+        return is_array($data) ? $data : null;
     }
 
     private static function cacheSet(string $key, mixed $data): void
     {
-        // Файловый кэш отключён — ничего не пишем на диск
+        $file = self::getCacheDir() . '/' . $key . '.json';
+        $json = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR);
+        @file_put_contents($file, gzencode($json, 9), LOCK_EX);
     }
 
     public static function cacheClear(): void
     {
-        // Очищаем только внутрипроцессный кэш, файлового кэша больше нет
-        self::$_productsCache = null;
-        self::$_randomProductsCache = null;
-        self::$_marketProductsCache = null;
-        // Удаляем остатки старых файлов если есть (одноразовая зачистка)
-        $dir = self::$_cacheDir;
+        $dir = self::getCacheDir();
         if (is_dir($dir)) {
             foreach ((glob($dir . '/*.json') ?: []) as $file) {
                 @unlink($file);
             }
         }
         self::cleanHtmlCache();
+        self::$_productsCache = null;
+        self::$_randomProductsCache = null;
+        self::$_marketProductsCache = null;
     }
 
     public static function cleanHtmlCache(): void
     {
-        // HTML-кэш отключён — удаляем все остатки
+        // HTML-кэш отключён полностью — удаляем остатки, чтобы не рос диск на 7 сайтах
         $htmlDir = dirname(self::$_cacheDir) . '/html';
-        if (!is_dir($htmlDir)) return;
-        foreach ((glob($htmlDir . '/*.html') ?: []) as $file) {
-            @unlink($file);
+        if (is_dir($htmlDir)) {
+            foreach ((glob($htmlDir . '/*.html') ?: []) as $file) {
+                @unlink($file);
+            }
         }
+        // shuffle/file/orders уже отключены — чистим если остались
         $shuffle = dirname(__DIR__, 3) . '/public/file/cache/catalog_shuffle.cache';
         if (file_exists($shuffle)) @unlink($shuffle);
-        foreach ((glob(dirname(__DIR__, 3) . '/file/*.xml') ?: []) as $f) @unlink($f);
-        foreach ((glob(dirname(__DIR__, 3) . '/file/*.yml') ?: []) as $f) @unlink($f);
-        foreach ((glob(dirname(__DIR__, 3) . '/app/Storage/orders/*.pdf') ?: []) as $f) @unlink($f);
     }
 
     //======СПИСОК ФУНКЦИЙ / LIST FUNCTIONS===========//

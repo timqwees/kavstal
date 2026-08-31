@@ -58,15 +58,25 @@ class RssFeed
         return $xml;
     }
 
+    // Лёгкий кэш: 1 файл file/rss.xml (~10МБ), TTL 1ч
     public static function output(): void
     {
-        // Файловый кэш RSS отключён — генерируем on-the-fly без записи на диск
-        $xml = self::generate();
-        $etag = md5($xml);
-        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) {
-            http_response_code(304);
+        $filePath = './file/rss.xml';
+        if (file_exists($filePath) && (time() - filemtime($filePath)) < 3600) {
+            $etag = md5_file($filePath);
+            if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) { http_response_code(304); return; }
+            header('Content-Type: application/rss+xml; charset=utf-8');
+            header('ETag: ' . $etag);
+            header('Cache-Control: public, max-age=3600');
+            readfile($filePath);
             return;
         }
+        $xml = self::generate();
+        $etag = md5($xml);
+        if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && $_SERVER['HTTP_IF_NONE_MATCH'] === $etag) { http_response_code(304); return; }
+        $dir = dirname($filePath);
+        if (!is_dir($dir)) mkdir($dir, 0755, true);
+        @file_put_contents($filePath, $xml);
         header('Content-Type: application/rss+xml; charset=utf-8');
         header('ETag: ' . $etag);
         header('Cache-Control: public, max-age=3600');
