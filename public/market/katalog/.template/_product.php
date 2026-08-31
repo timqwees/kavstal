@@ -928,7 +928,7 @@ $errorMessage = $notification['type'] === 'error' ? $notification['message'] : '
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                        <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
+                        <a href="tel:<?= '+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+') ?>"
                             class="flex items-center justify-center gap-2 border border-zinc-200 text-zinc-700 py-3 px-4 rounded-xl hover:bg-zinc-50 transition font-medium text-sm">
                             <i class="fas fa-phone-alt text-red-500"></i> Заказать по звонку
                         </a>

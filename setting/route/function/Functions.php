@@ -234,6 +234,14 @@ class Functions
             $cached['baseUrl'] = $baseUrl;
             $cached['canonical'] = $canonical;
             $cached['logo'] = $baseUrl . '/public/assets/images/icons/logo/favicon.svg';
+            // Нормализуем phone_clean из старого кэша (+ обязателен)
+            $pc = $cached['phone_clean'] ?? '';
+            $pc = '+' . ltrim(preg_replace('/[^0-9]/', '', (string)$pc), '0+');
+            if ($pc === '+') $pc = '+74959892420';
+            $cached['phone_clean'] = $pc;
+            if (empty($cached['phone']) || !str_contains($cached['phone'], '+')) {
+                $cached['phone'] = '+7 (495) 989-24-20';
+            }
             return $cached;
         }
 
@@ -290,6 +298,12 @@ class Functions
                     $data['instagram'] = $row['instagram'];
             }
         }
+
+        // Гарантируем + в phone_clean перед кэшем/возвратом
+        $pc = $data['phone_clean'] ?? '';
+        $pc = '+' . ltrim(preg_replace('/[^0-9]/', '', (string)$pc), '0+');
+        if ($pc === '+') $pc = '+74959892420';
+        $data['phone_clean'] = $pc;
 
         self::cacheSet('site_data', $data);
         return $data;

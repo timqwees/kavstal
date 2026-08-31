@@ -667,7 +667,7 @@ $readTime = estimateReadTime($article['content'] ?? '');
                             </div>
                         </div>
                         <div class="article-author-cta">
-                            <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="btn-cta btn-cta--primary">
+                            <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>" class="btn-cta btn-cta--primary">
                                 Позвонить
                             </a>
                             <a href="/contacts" class="btn-cta btn-cta--outline">
@@ -761,7 +761,7 @@ $readTime = estimateReadTime($article['content'] ?? '');
                     <div class="sidebar-cta-gradient">
                         <div class="sidebar-cta-gradient__title">Расчёт стоимости</div>
                         <div class="sidebar-cta-gradient__desc">Ответим за 5 минут · Бесплатно</div>
-                        <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="sidebar-cta-gradient__btn">
+                        <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>" class="sidebar-cta-gradient__btn">
                             Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?>
                             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </a>
@@ -800,7 +800,7 @@ $readTime = estimateReadTime($article['content'] ?? '');
                 <div class="cta-section__title">Нужна консультация по закупке металла?</div>
                 <p class="cta-section__desc">Позвоните или напишите — подберём оптимальный сорт, рассчитаем вес и стоимость.</p>
                 <div class="cta-section__actions">
-                    <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="btn-cta btn-cta--primary">Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?></a>
+                    <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>" class="btn-cta btn-cta--primary">Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?></a>
                     <a href="/contacts" class="btn-cta btn-cta--outline">Написать нам</a>
                 </div>
             </div>

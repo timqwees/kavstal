@@ -1044,7 +1044,7 @@
           <h3 class="text-xl md:text-2xl font-bold mb-2">Нужна консультация?</h3>
           <p class="text-sm text-gray-500 mb-5">Поможем подобрать металлопрокат, рассчитать стоимость и организовать
             доставку</p>
-          <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>"
+          <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>"
             class="inline-flex items-center gap-3 bg-red-500 text-white px-8 py-4 rounded-full text-base font-bold hover:bg-red-500 transition-all duration-300 shadow-lg shadow-red-500/20 hover:shadow-red-500/30">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path

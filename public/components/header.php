@@ -20,7 +20,7 @@
             <!-- Desktop Contact -->
             <div class="hidden lg:flex items-stretch items-end gap-6">
                 <div class="flex flex-col justify-center items-center lg:hidden xl:flex">
-                    <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
+                    <a href="tel:<?= '+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+') ?>"
                         class="text-xl font-bold text-gray-800"><?= htmlspecialchars($site['phone']) ?></a>
                     <p class="text-sm text-gray-600">
                         <?= htmlspecialchars($site['workingHours']) ?>
@@ -94,7 +94,7 @@
 
         <div class="border-t pt-6">
             <div class="text-center mb-6">
-                <a href="tel:<?= preg_replace('/[^0-9+]/', '', $site['phone']) ?>"
+                <a href="tel:<?= '+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+') ?>"
                     class="text-2xl font-bold text-gray-800 block mb-2">
                     <?= htmlspecialchars($site['phone']) ?>
                 </a>

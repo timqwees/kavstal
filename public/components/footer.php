@@ -1,6 +1,6 @@
 <?php
 $siteInfo = $siteInfo ?? $site ?? [];
-$phone_clean = $siteInfo['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $siteInfo['phone'] ?? '+74959892420');
+$phone_clean = '+' . ltrim(preg_replace('/[^0-9]/', '', $siteInfo['phone_clean'] ?? $siteInfo['phone'] ?? '+74959892420'), '0+');
 ?>
 <style>
   /* Footer visible on all devices — mobile accordion handled via stacking, not display:none */

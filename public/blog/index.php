@@ -561,7 +561,7 @@ function estimateReadTime(string $content): int {
                 <div class="cta-section__title">Нужна консультация по закупке металла?</div>
                 <p class="cta-section__desc">Позвоните или напишите — подберём оптимальный сорт, рассчитаем вес и стоимость, организуем доставку.</p>
                 <div class="cta-section__actions">
-                    <a href="tel:<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>" class="cta-btn cta-btn--primary">Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?></a>
+                    <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>" class="cta-btn cta-btn--primary">Позвонить: <?= htmlspecialchars($site['phone'] ?? '+7 (495) 989-24-20') ?></a>
                     <a href="/contacts" class="cta-btn cta-btn--outline">Написать нам</a>
                 </div>
             </div>

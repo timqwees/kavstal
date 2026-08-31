@@ -63,14 +63,14 @@
         "contactPoint": [
             {
                 "@type": "ContactPoint",
-                "telephone": "<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>",
+                "telephone": "<?= htmlspecialchars($site['phone_clean'] ?? '+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>",
                 "contactType": "sales",
                 "areaServed": "RU",
                 "availableLanguage": ["Russian"]
             },
             {
                 "@type": "ContactPoint",
-                "telephone": "<?= htmlspecialchars($site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone'])) ?>",
+                "telephone": "<?= htmlspecialchars($site['phone_clean'] ?? '+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>",
                 "contactType": "customer service",
                 "areaServed": "RU",
                 "availableLanguage": ["Russian"]
@@ -121,7 +121,7 @@
                             </div>
                             <div>
                                 <p class="text-sm text-gray-500 mb-1">Телефон</p>
-                                <a href="tel:<?= htmlspecialchars(preg_replace('/[^0-9+]/', '', $site['phone'])) ?>"
+                                <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>"
                                     class="text-xl font-bold text-gray-900 hover:text-red-500 transition"><?= htmlspecialchars($site['phone']) ?></a>
                                 <p class="text-sm text-gray-500 mt-1">Звоните ежедневно с 9:00 до 18:00</p>
                             </div>
@@ -257,7 +257,7 @@
                 <p class="text-lg mb-8 opacity-90">Позвоните нам или напишите — мы ответим в течение 15 минут в рабочее
                     время</p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="tel:<?= htmlspecialchars(preg_replace('/[^0-9+]/', '', $site['phone'])) ?>"
+                    <a href="tel:<?= htmlspecialchars('+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+')) ?>"
                         class="bg-white text-red-500 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition flex items-center justify-center">
                         <i class="fas fa-phone mr-3"></i>Позвонить сейчас
                     </a>

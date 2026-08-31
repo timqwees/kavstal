@@ -2,7 +2,7 @@
 $site = $site ?? Setting\route\function\Functions::site();
 $siteInfo = $siteInfo ?? $site ?? [];
 $cartCount = isset($cartCount) ? $cartCount : \App\Models\Cart\Cart::getCount();
-$phone_clean = $site['phone_clean'] ?? preg_replace('/[^0-9+]/', '', $site['phone']);
+$phone_clean = '+' . ltrim(preg_replace('/[^0-9]/', '', $site['phone_clean'] ?? $site['phone'] ?? '+74959892420'), '0+');
 
 // Load catalog data for mega-menu
 $tree = \Setting\route\function\Functions::getCatalogTree();
