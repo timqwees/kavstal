@@ -243,7 +243,7 @@ class Functions
             'company' => 'КАВ СТАЛЬ',
             'logo' => $baseUrl . '/public/assets/images/icons/logo/favicon.svg',
             'phone' => '+7 (495) 989-24-20',
-            'phone_clean' => '74959892420',
+            'phone_clean' => '+74959892420',
             'email' => 'zakaz@kavstal.ru',
             'address' => 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2',
             'kartaAdress' => 'г. Москва, пл. Семёновская, д. 7, к. 17, пом. 2/2',
@@ -263,8 +263,13 @@ class Functions
                 $row = $rows[0];
                 if (!empty($row['телефон']))
                     $data['phone'] = $row['телефон'];
-                if (!empty($row['phone_clean']))
-                    $data['phone_clean'] = $row['phone_clean'];
+                if (!empty($row['phone_clean'])) {
+                    $pc = preg_replace('/[^0-9]/', '', $row['phone_clean']);
+                    $data['phone_clean'] = $pc ? '+' . ltrim($pc, '+') : '+74959892420';
+                    if (!str_starts_with($data['phone_clean'], '+')) {
+                        $data['phone_clean'] = '+' . ltrim($data['phone_clean'], '+');
+                    }
+                }
                 if (!empty($row['почта']))
                     $data['email'] = $row['почта'];
                 if (!empty($row['адрес']))

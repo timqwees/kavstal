@@ -118,7 +118,7 @@ $catalogSubcategories = $tree['subcategories'];
                 </svg>
                 <span>Категории</span>
             </button>
-            <a href="tel:<?= htmlspecialchars($site['phone']) ?>" class=" ozon-catalog-btn" aria-label="Позвонить"
+            <a href="tel:<?= htmlspecialchars($phone_clean) ?>" class=" ozon-catalog-btn" aria-label="Позвонить"
                 aria-expanded="false">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path
