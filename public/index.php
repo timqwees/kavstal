@@ -848,7 +848,7 @@
           $heroCards = [
             ['label' => 'Скидки до 15%', 'title' => 'Арматура А500С', 'subtitle' => 'от 45 000 ₽/т при заказе от 10 т', 'url' => '/market/katalog/armatura', 'img' => '/public/assets/images/products/Арматура/АРМАТУРА/арматура_гладкая.webp'],
             ['label' => 'Каталог', 'title' => 'Труба профильная', 'subtitle' => 'от 58 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/truby', 'img' => '/public/assets/images/products/Трубы/ТРУБЫ_ЭЛЕКТРОСВАРНЫЕ/труба_электросварная.webp'],
-            ['label' => 'Каталог', 'title' => 'Лист горячекатаный', 'subtitle' => 'от 51 000 ₽/т, уточняйте наличие', 'url' => '/market/katalog/listovoy-prokat', 'img' => '/public/assets/images/products/Листовой_прокат/СТАЛЬ_ЛИСТ_Г_К_КОНСТРУКЦИОННАЯ/лист.webp'],
+            ['label' => 'Подбор', 'title' => 'Комплексное снабжение', 'subtitle' => 'металлопрокат под вашу задачу', 'url' => '/services', 'img' => '/public/assets/images/bgpage/market.png'],
           ];
           foreach ($heroCards as $i => $c):
             $hd = @getimagesize(__DIR__ . $c['img']);
@@ -1031,7 +1031,137 @@
       <style>@media (min-width: 1024px) { #cat-desktop-home { display: grid !important; grid-template-columns: repeat(5, 1fr); } }</style>
     </section>
 
-    <!-- CTA Banner -->
+    <!-- Комплексное снабжение + Популярные товары -->
+<section class="py-10 lg:py-14 bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 lg:px-8">
+    <!-- Section header -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <span class="inline-block bg-red-50 text-red-500 text-xs font-semibold px-3 py-1 rounded-full mb-2">Услуга</span>
+        <h2 class="section-title">Комплексное снабжение металлопрокатом</h2>
+      </div>
+      <a href="/services" class="text-sm font-medium text-red-500 hover:underline hidden sm:block">Все услуги →</a>
+    </div>
+    <p class="text-gray-500 text-sm mb-8 max-w-2xl">Организуем полное снабжение объекта металлопрокатом и комплектующими под ключ — от расчёта до доставки. Подберём оптимальные условия по цене и срокам для вашей задачи.</p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <!-- Main offer card -->
+      <div class="lg:col-span-5 rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm">
+        <div class="p-6 lg:p-8 flex flex-col justify-between" style="min-height: 380px;">
+          <div>
+            <span class="inline-block bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full mb-3">ЛЕДУЩАЯ УСЛУГА</span>
+            <h3 class="text-xl lg:text-2xl font-bold text-gray-900 mb-3">Комплексное снабжение<br>металлопрокатом</h3>
+            <p class="text-gray-500 text-sm leading-relaxed mb-5">Работаем с поставщиками по всей России. Подбираем оптимальные условия по цене и срокам. Оставьте заявку — подберём материал под вашу задачу.</p>
+            <ul class="space-y-2 mb-6">
+              <li class="flex items-center gap-2 text-sm text-gray-600">
+                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                Подбор и расчёт по ТЗ
+              </li>
+              <li class="flex items-center gap-2 text-sm text-gray-600">
+                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                Более 16 000 наименований
+              </li>
+              <li class="flex items-center gap-2 text-sm text-gray-600">
+                <svg class="w-5 h-5 text-red-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"/></svg>
+                Доставка по всей России
+              </li>
+            </ul>
+          </div>
+          <a href="#spec" class="inline-flex items-center gap-2 bg-red-500 text-white px-6 py-3 rounded-xl text-sm font-semibold hover:bg-red-600 transition-colors w-fit">
+            Получить предложение
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Popular products grid -->
+      <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-3">
+        <!-- Product card: Газгольдеры -->
+        <a href="/market/katalog/izdeliya-i-proektnye-pozitsii/gazgoldernaya" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-blue-500 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Газгольдеры</div>
+          <div class="text-xs text-gray-400 mt-0.5">Баллоны, ёмкости, мембранные</div>
+        </a>
+
+        <!-- Product card: Шифер -->
+        <a href="/market/katalog/izdeliya-i-proektnye-pozitsii/shifer-asbestotsementnyy" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-purple-500 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.25m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-9 2.626 2.626a3 3 0 012.517 2.517l.488 1.912"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Шифер</div>
+          <div class="text-xs text-gray-400 mt-0.5">Волновой, плоский, цветной</div>
+        </a>
+
+        <!-- Product card: Крепёж -->
+        <a href="/market/katalog/krepezh-i-metizy" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-green-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Крепёж и метизы</div>
+          <div class="text-xs text-gray-400 mt-0.5">Болты, гайки, штифты, анкеры</div>
+        </a>
+
+        <!-- Product card: Профнастил -->
+        <a href="/market/katalog/profnastil" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-orange-500 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Профнастил RAL</div>
+          <div class="text-xs text-gray-400 mt-0.5">Оцинкованный, окрашенный, С8/С21</div>
+        </a>
+
+        <!-- Product card: Цветные металлы -->
+        <a href="/market/katalog/tsvetnye-metally" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-cyan-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-cyan-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.864 4.243A7.5 7.5 0 0119.5 10.5c0 2.92-.556 5.709-1.568 8.268M5.742 6.364A7.465 7.465 0 004.5 10.5a48.667 48.667 0 00-1.37 8.532 1.48 1.48 0 001.683 1.274 1.48 1.48 0 001.378-1.274 1.48 1.48 0 001.378-1.274A48.637 48.637 0 0110.5 10.5a7.5 7.5 0 0114.08 3.84"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Цветные металлы</div>
+          <div class="text-xs text-gray-400 mt-0.5">Алюминий, медь, латунь, бронза</div>
+        </a>
+
+        <!-- Product card: Проволока -->
+        <a href="/market/katalog/provoloka" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-yellow-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-yellow-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Проволока</div>
+          <div class="text-xs text-gray-400 mt-0.5">Вязальная, оцинкованная, нержавейка</div>
+        </a>
+
+        <!-- Product card: Сетка -->
+        <a href="/market/katalog/setka" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-indigo-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.25m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-9 2.626 2.626a3 3 0 012.517 2.517l.488 1.912"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Сетка рабица</div>
+          <div class="text-xs text-gray-400 mt-0.5">Плетеная, сварная, оцинковка</div>
+        </a>
+
+        <!-- Product card: Арматура -->
+        <a href="/market/katalog/armatura" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-rose-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-rose-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Арматура А500С</div>
+          <div class="text-xs text-gray-400 mt-0.5">От 45 000 ₽/т при заказе от 10 т</div>
+        </a>
+
+        <!-- Product card: Трубы -->
+        <a href="/market/katalog/truby" class="group rounded-xl bg-white border border-gray-200 p-4 hover:shadow-lg hover:border-red-300 transition-all duration-200 block">
+          <div class="w-10 h-10 rounded-lg bg-teal-50 flex items-center justify-center mb-3 group-hover:bg-red-50 transition-colors">
+            <svg class="w-5 h-5 text-teal-600 group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"/></svg>
+          </div>
+          <div class="text-sm font-semibold text-gray-800 group-hover:text-red-500 transition-colors">Трубы профильные</div>
+          <div class="text-xs text-gray-400 mt-0.5">От 58 000 ₽/т, уточняйте наличие</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Banner -->
     <div class="max-w-7xl mx-auto px-4 lg:px-8">
       <div
         class="rounded-2xl px-8 py-10 md:px-12 md:py-12 text-center text-gray-900 relative overflow-hidden bg-white border border-gray-200">
@@ -1065,6 +1195,7 @@
       ['title' => 'Гибка металла', 'desc' => 'Точная гибка листового металла', 'video' => $vid . 'gibkametalla.MP4', 'bg' => $img . 'ПРОФНАСТИЛ.webp'],
       ['title' => 'Плазменная резка', 'desc' => 'Резка толстого металла до 150 мм', 'video' => $vid . 'plazma.MP4', 'bg' => $img . 'БАЛКА.webp'],
       ['title' => 'Доставка металлопроката', 'desc' => 'В день оплаты по Москве и МО', 'video' => $vid . 'dostavka.MP4', 'bg' => $img . 'ШВЕЛЛЕР.webp'],
+      ['title' => 'Комплексное снабжение', 'desc' => 'Металлопрокат под вашу задачу', 'video' => $vid . 'postavka_sortovogo.MP4', 'bg' => $img . 'БАЛКА.webp'],
       ['title' => 'Комплексная доставка на объект', 'desc' => 'Кран-борт, манипулятор, разгрузка', 'video' => $vid . 'dostavkaKD.MP4', 'bg' => $img . 'СВАИ.webp'],
       ['title' => 'Горячее цинкование', 'desc' => 'Защита от коррозии на 50+ лет', 'video' => $vid . 'gorachiethinkirovanie.MP4', 'bg' => $img . 'УГОЛОК.webp'],
       ['title' => 'Ленточнопильная резка', 'desc' => 'Точная резка балок и труб', 'video' => $vid . 'lentochnopilnik.MP4', 'bg' => $img . 'БАЛКА.webp'],
